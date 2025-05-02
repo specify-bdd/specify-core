@@ -4,9 +4,9 @@ Feature: Rerun Failed Tests
     In order to verify that changes I've made fixed the cause of the failure
 
     Background:
-        Given that I have a command line prompt
-        And that the `[appname] core test runner` NPM package is installed
+        Given that the `[appname] core test runner` NPM package is installed
         And that the `[appname] command line testing library` NPM package is installed
+        And that I have a command line prompt
 
     Rule: Failed tests can be easily re-run after making fixes
 

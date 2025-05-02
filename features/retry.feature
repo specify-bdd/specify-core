@@ -4,9 +4,9 @@ Feature: Retry Flaky Tests
     In order to ensure that flaky tests don't trigger alarms for transitory issues
 
     Background:
-        Given that I have a command line prompt
-        And that the `[appname] core test runner` NPM package is installed
+        Given that the `[appname] core test runner` NPM package is installed
         And that the `[appname] command line testing library` NPM package is installed
+        And that I have a command line prompt
 
     Rule: Flaky tests can be retried and any success among retries counts as passing
 

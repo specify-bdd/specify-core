@@ -4,9 +4,9 @@ Feature: Basic Test Execution
     In order to ensure that my software functions as the specs say it should
 
     Background:
-        Given that I have a command line prompt
-        And that the `[appname] core test runner` NPM package is installed
+        Given that the `[appname] core test runner` NPM package is installed
         And that the `[appname] command line testing library` NPM package is installed
+        And that I have a command line prompt
 
     Rule: The run should succeed if all tests pass
 
