@@ -11,6 +11,7 @@ Feature: Browser Testing Mode
 
     Rule: Tests executed in grid mode run remotely
 
+        @manual
         Scenario: Run a test in grid mode
             And that I have a Selenium Grid available at http://localhost:4444
             When I input the command npx [appname] test --grid http://localhost:4444
@@ -19,6 +20,7 @@ Feature: Browser Testing Mode
 
     Rule: Tests executed in visual mode run locally and are observable
 
+        @manual
         Scenario: Run a test in visual mode
             When I input the command npx [appname] test --visual
             Then the tests should open browser windows
@@ -26,6 +28,7 @@ Feature: Browser Testing Mode
 
     Rule: Tests executed in headless mode run locally but are not observable
 
+        @manual
         Scenario: Run a test in headless mode
             When I input the command npx [appname] test --headless
             Then the tests should not open browser windows
@@ -33,6 +36,7 @@ Feature: Browser Testing Mode
 
     Rule: Tests execute in headless mode by default
 
+        @manual
         Scenario: Headless mode is the default
             When I input the command npx [appname] test
             Then the tests should not open browser windows
