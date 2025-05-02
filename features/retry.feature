@@ -13,12 +13,12 @@ Feature: Retry Flaky Tests
         Scenario: Run a test that should fail with 2 retries
             Given that I have a `Gherkin feature that should pass on the 3rd retry` file located at `./features`
             When I input the command `npx [appname] test --retry 2`
-            Then the command should return a status of `1`
+            Then the command should return a `failure` status code
 
         Scenario: Run a test that should pass with 3 retries
             Given that I have a `Gherkin feature that should pass on the 3rd retry` file located at `./features`
             When I input the command `npx [appname] test --retry 3`
-            Then the command should return a status of `0`
+            Then the command should return a `success` status code
 
     Rule: Tags can be used to retry only certain tests
 
@@ -26,6 +26,6 @@ Feature: Retry Flaky Tests
             Given that I have a `Gherkin feature that should pass on the 3rd retry` file located at `./features`
             And that I have a `Gherkin feature that fails after 5 seconds` file located at `./features`
             When I input the command `npx [appname] test --retry 3 --retry-tag "@retry"`
-            Then the command shoult return a status of `1`
+            Then the command should return a `failure` status code
             And the elapsed time should be less than `10s`
 
