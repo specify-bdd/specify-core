@@ -4,9 +4,9 @@ Feature: Parallel Execution
     So that testing is faster and more efficient
 
     Background:
-        Given that I have a command line prompt
-        And that the `[appname] core test runner` NPM package is installed
+        Given that the `[appname] core test runner` NPM package is installed
         And that the `[appname] command line testing library` NPM package is installed
+        And that I have a command line prompt
         And that I have a `Gherkin feature that passes after 5 seconds` file located at `./features`
         And that I have a `Gherkin feature that fails after 5 seconds` file located at `./features`
 
