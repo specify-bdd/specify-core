@@ -7,6 +7,7 @@ Feature: Browser Testing Mode
         Given that the `[appname] core test runner` NPM package is installed
         And that the `[appname] browser testing library` NPM package is installed
         And that the `[appname] command line testing library` NPM package is installed
+        And that I have a command line prompt
         And that I have a `Gherkin browser test feature` file located at `./features`
 
     Rule: Tests executed in grid mode run remotely
