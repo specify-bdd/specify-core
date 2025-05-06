@@ -19,7 +19,9 @@
   "homepage": "https://github.com/software-pirates/runner#readme",
   "dependencies": {
     "@cucumber/cucumber": "^11.2.0",
-    "tsx": "^4.19.4",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.4"
   }
 }

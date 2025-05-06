@@ -3,7 +3,10 @@ const cucumber: object = {
             "progress-bar",
             // [ "html", "./reports/cucumber.html" ] // do we want this?
         ],
-        "import": [],
+        "import": [
+            // step definitions and support file paths go here
+            // but everything we add here will be a default inclusion for everyone
+        ],
         "language": "en",
         "loader": [
             "ts-node/esm"
@@ -11,7 +14,8 @@ const cucumber: object = {
         "name": [],
         "order": "defined",
         "paths": [
-            "features/**/*.feature"
+            // gherkin feature file paths go here
+            // so we should leave this blank so there are no features forcibly included
         ],
         "parallel": 1,
         "retry": 0,
