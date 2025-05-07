@@ -1,6 +1,12 @@
 {
     "compilerOptions": {
+        "allowJs": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "module": "Preserve",
+        "moduleDetection": "force",
         "outDir": "./build",
+        "resolveJsonModule": true,
         "target": "es2024"
     },
     "include": [

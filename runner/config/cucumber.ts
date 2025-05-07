@@ -9,7 +9,8 @@ const cucumber: object = {
         ],
         "language": "en",
         "loader": [
-            "ts-node/esm"
+            // "ts-node/esm"
+            // "tsx"
         ],
         "name": [],
         "order": "defined",
