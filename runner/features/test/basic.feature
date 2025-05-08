@@ -75,4 +75,20 @@ Feature: Basic Test Execution
             Given that I have a `Gherkin feature with tags` file located at `./features`
             When I input the command `npx [appname] test --tags "@pass"`
             Then the command should return a `success` status code
+    
+    Rule: Malformed commands display errors to the user
 
+        Scenario: Running command with an unknown argument displays the help message
+            When I input the command `npx [appname] testx`
+            Then the command should return a `failure` status code
+            And I should see `help message` console output
+
+        Scenario: Running command with an unsupported option displays the help message
+            When I input the command `npx [appname] --unsupported-option`
+            Then the command should return a `failure` status code
+            And I should see `help message` console output
+        
+        Scenario: Running command with a mix of supported and unsupported options displays the help message
+            When I input the command `npx [appname] --visual --unsupported-option`
+            Then the command should return a `failure` status code
+            And I should see `help message` console output
