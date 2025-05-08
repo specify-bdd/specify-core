@@ -1,25 +1,30 @@
 import {
     loadConfiguration,
-    loadSources,
     runCucumber
 } from '@cucumber/cucumber/api';
 
-import fs       from "node:fs/promises";
-import path     from "node:path";
-import minimist from "minimist";
-import resolve  from "resolve/sync";
+import {
+    IResolvedConfiguration,
+    IRunResult
+} from "@cucumber/cucumber/types";
+
+import minimist  from "minimist";
+import * as fs   from "node:fs/promises";
+import * as path from "node:path";
+import resolve   from "resolve/sync";
 
 import {
     cucumber as cucumber_cfg,
     paths    as paths_cfg,
     plugins  as plugins_cfg
-} from "./config/all.ts";
+} from "./config/all";
 
-const argv: any = minimist(process.argv.slice(2));
+const argv = minimist(process.argv.slice(2));
 
-let gherkin_paths: array  = [ path.resolve(paths_cfg.gherkin) ];
-let cucumber_opts: object;
-let cucumber_res:  object;
+let gherkin_paths = [ path.resolve(paths_cfg.gherkin) ];
+
+let cucumber_opts: IResolvedConfiguration;
+let cucumber_res:  IRunResult;
 
 // add plugins to Cucumber config
 cucumber_cfg.import.push(...plugins_cfg.map((plugin) => path.join(getPluginPath(plugin), "**/*.js")));
@@ -41,7 +46,7 @@ process.exit(cucumber_res.success ? 0 : 1);
  * Resolve a plugin name into a path for that plugin, unless the name is a file
  * system location that already exists.
  */
-async function getPluginPath(plugin_name):string {
+async function getPluginPath(plugin_name: string):string {
     let plugin_path = path.resolve(plugin_name);
 
     // first see if the plugin name works as a file system path
