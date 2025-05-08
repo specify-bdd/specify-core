@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "module": "Preserve",
+        "moduleDetection": "force",
+        "outDir": "./dist",
+        "resolveJsonModule": true,
+        "target": "es2024"
+    },
+    "exclude": [
+        "dist",
+        "node_modules",
+        "**/*.spec.ts"
+    ],
+    "include": [
+        "main.ts"
+    ]
+}
