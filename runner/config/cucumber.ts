@@ -19,7 +19,7 @@ const cucumber: object = {
             // so we should leave this blank so there are no features forcibly included
         ],
         "parallel": 1,
-        "retry": 0,
+        "retry": 1,
         "retryTagFilter": "@retry",
         "strict": true,
         "worldParameters": {}

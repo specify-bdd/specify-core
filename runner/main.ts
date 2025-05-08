@@ -1,5 +1,6 @@
 import {
     loadConfiguration,
+    loadSources,
     runCucumber
 } from '@cucumber/cucumber/api';
 
@@ -14,11 +15,11 @@ import {
     plugins  as plugins_cfg
 } from "./config/all.ts";
 
-const argv:any = minimist(process.argv.slice(2));
+const argv: any = minimist(process.argv.slice(2));
 
-let gherkin_paths:array  = [ path.resolve(paths_cfg.gherkin) ];
-let cucumber_opts:object = {};
-let cucumber_res:any     = null;
+let gherkin_paths: array  = [ path.resolve(paths_cfg.gherkin) ];
+let cucumber_opts: object;
+let cucumber_res:  object;
 
 // add plugins to Cucumber config
 cucumber_cfg.import.push(...plugins_cfg.map((plugin) => path.join(getPluginPath(plugin), "**/*.js")));
@@ -29,10 +30,8 @@ if (argv._.length) {
 }
 cucumber_cfg.paths.push(...gherkin_paths);
 
-cucumber_opts = await loadConfiguration(cucumber_cfg);
+cucumber_opts = await loadConfiguration({ "provided": cucumber_cfg });
 cucumber_res  = await runCucumber(cucumber_opts.runConfiguration);
-
-console.debug(cucumber_res);
 
 process.exit(cucumber_res.success ? 0 : 1);
 
