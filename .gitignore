@@ -137,4 +137,4 @@ dist
 
 # OS chaff
 **/.DS_Store
-
+**/.vscode
