@@ -1,6 +1,7 @@
 import eslint from "@eslint/js";
 import globals from "globals";
 import eslintPluginPrettier from "eslint-plugin-prettier";
+import eslintPluginTSDoc from "eslint-plugin-tsdoc";
 import tseslint from "typescript-eslint";
 import path from "node:path";
 import { fileURLToPath } from "url";
@@ -28,6 +29,7 @@ export default tseslint.config(
         },
         plugins: {
             prettier: eslintPluginPrettier,
+            tsdoc: eslintPluginTSDoc,
         },
         rules: {
             "@typescript-eslint/no-floating-promises": "error",
@@ -41,6 +43,7 @@ export default tseslint.config(
                     tabWidth: 4,
                 },
             ],
+            "tsdoc/syntax": ["warn"],
         },
     },
     {

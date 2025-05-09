@@ -1,22 +1,9 @@
 {
+    "extends": "../tsconfig.json",
     "compilerOptions": {
-        "allowJs": true,
         "baseUrl": ".",
-        "esModuleInterop": true,
-        "isolatedModules": true,
-        "module": "Preserve",
-        "moduleDetection": "force",
-        "outDir": "./dist",
         "paths": {
             "@/*": ["./*"]
-        },
-        "resolveJsonModule": true,
-        "target": "es2024"
-    },
-    "exclude": [
-        "**/node_modules/**",
-    ],
-    "include": [
-        "**/*.ts",
-    ]
+        }
+    }
 }

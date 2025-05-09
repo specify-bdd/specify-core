@@ -36,10 +36,12 @@ const cucumber_res = await runCucumber(cucumber_opts.runConfiguration);
 process.exit(cucumber_res.success ? 0 : 1);
 
 /**
- * @todo test
- *
  * Resolve a plugin name into a path for that plugin, unless the name is a file
  * system location that already exists.
+ *
+ * @param plugin_name - The name of the plugin to resolve.
+ *
+ * @returns The path to the plugin.
  */
 async function getPluginPath(plugin_name: string): Promise<string> {
     const plugin_path = path.resolve(plugin_name);
