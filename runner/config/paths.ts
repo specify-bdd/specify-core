@@ -1,5 +1,5 @@
 const paths: Record<string, string> = {
-    gherkin: "./features/**/*.feature",
+    "gherkin": "./features/**/*.feature",
 };
 
 export { paths };

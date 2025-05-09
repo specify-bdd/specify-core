@@ -1,0 +1,38 @@
+{
+  "name": "name-tbd",
+  "version": "0.1.0",
+  "description": "Core repository description",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "tsc --noEmit --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/software-pirates/runner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/software-pirates/runner/issues"
+  },
+  "homepage": "https://github.com/software-pirates/runner#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.26.0",
+    "@microsoft/tsdoc": "^0.15.1",
+    "@microsoft/tsdoc-config": "^0.17.1",
+    "@stylistic/eslint-plugin-js": "^4.2.0",
+    "eslint-plugin-jsonc": "^2.20.0",
+    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-tsdoc": "^0.4.0",
+    "jiti": "^2.4.2",
+    "jsonc-eslint-parser": "^2.4.0",
+    "prettier": "^3.5.3",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.0"
+  }
+}
