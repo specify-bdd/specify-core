@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch"
   },
@@ -30,13 +30,17 @@
     "@eslint/js": "^9.26.0",
     "@microsoft/tsdoc": "^0.15.1",
     "@microsoft/tsdoc-config": "^0.17.1",
+    "@types/jest": "^29.5.14",
     "@types/minimist": "^1.2.5",
     "@types/node": "^22.15.17",
     "@types/resolve": "^1.20.6",
     "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-tsdoc": "^0.4.0",
+    "jest": "^29.7.0",
     "jiti": "^2.4.2",
     "prettier": "^3.5.3",
+    "ts-jest": "^29.3.2",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.0"
