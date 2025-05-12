@@ -4,9 +4,9 @@ Feature: Browser Testing Mode
     So that I can prioritize system resource usage and test observability according to my needs and preferences
 
     Background:
-        Given that the `[appname] core test runner` NPM package is installed
-        And that the `[appname] browser testing library` NPM package is installed
-        And that the `[appname] command line testing library` NPM package is installed
+        Given that the `specify core test runner` NPM package is installed
+        And that the `specify browser testing library` NPM package is installed
+        And that the `specify command line testing library` NPM package is installed
         And that I have a command line prompt
         And that I have a `Gherkin browser test feature` file located at `./features`
 
@@ -15,7 +15,7 @@ Feature: Browser Testing Mode
         @manual
         Scenario: Run a test in grid mode
             And that I have a Selenium Grid available at http://localhost:4444
-            When I input the command npx [appname] test --grid http://localhost:4444
+            When I input the command npx specify test --grid http://localhost:4444
             Then the tests should execute on the Selenium Grid
             And the command should return a `success` status code
 
@@ -23,7 +23,7 @@ Feature: Browser Testing Mode
 
         @manual
         Scenario: Run a test in visual mode
-            When I input the command npx [appname] test --visual
+            When I input the command npx specify test --visual
             Then the tests should open browser windows
             And the command should return a `success` status code
 
@@ -31,7 +31,7 @@ Feature: Browser Testing Mode
 
         @manual
         Scenario: Run a test in headless mode
-            When I input the command npx [appname] test --headless
+            When I input the command npx specify test --headless
             Then the tests should not open browser windows
             And the command should return a `success` status code
 
@@ -39,6 +39,6 @@ Feature: Browser Testing Mode
 
         @manual
         Scenario: Headless mode is the default
-            When I input the command npx [appname] test
+            When I input the command npx specify test
             Then the tests should not open browser windows
             And the command should return a `success` status code

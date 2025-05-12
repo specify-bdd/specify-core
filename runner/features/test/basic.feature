@@ -4,15 +4,15 @@ Feature: Basic Test Execution
     In order to ensure that my software functions as the specs say it should
 
     Background:
-        Given that the `[appname] core test runner` NPM package is installed
-        And that the `[appname] command line testing library` NPM package is installed
+        Given that the `specify core test runner` NPM package is installed
+        And that the `specify command line testing library` NPM package is installed
         And that I have a command line prompt
 
     Rule: The run should succeed if all tests pass
 
         Scenario: Run a test that should pass
             Given that I have a `Gherkin feature that should pass` file located at `./features`
-            When I input the command `npx [appname] test`
+            When I input the command `npx specify test`
             Then the command should return a `success` status code
             And I should see `passing test result` console output
 
@@ -20,33 +20,33 @@ Feature: Basic Test Execution
 
         Scenario: Run a test that should fail
             Given that I have a `Gherkin feature that should fail` file located at `./features`
-            When I input the command `npx [appname] test`
+            When I input the command `npx specify test`
             Then the command should return a `failure` status code
             And I should see `failing test result` console output
 
         Scenario: Run multiple tests that should fail
             Given that I have a `Gherkin feature that should pass` file located at `./features`
             And that I have a `Gherkin feature that should fail` file located at `./features`
-            When I input the command `npx [appname] test`
+            When I input the command `npx specify test`
             Then the command should return a `failure` status code
 
     Rule: Execution without a subcommand should default to testing
 
         Scenario: Run a test with no subcommand
             Given that I have a `Gherkin feature that should pass` file located at `./features`
-            When I input the command `npx [appname]`
+            When I input the command `npx specify`
             Then the command should return a `success` status code
 
         Scenario: Run a test with no subcommand and additional arguments
             Given that I have a `Gherkin feature that should pass` file located at `./features`
-            When I input the command `npx [appname] additional arguments`
+            When I input the command `npx specify additional arguments`
             Then the command should return a `success` status code
 
     Rule: The run should fail if there are no test specs
 
         Scenario: Run a test with no gherkin files in the default location
             Given that the file location ./features is empty
-            When I input the command `npx [appname] test`
+            When I input the command `npx specify test`
             Then the command should return a `failure` status code
             And I should see `no features error` console output
 
@@ -54,12 +54,12 @@ Feature: Basic Test Execution
 
         Scenario: Run a test with a gherkin file in a custom location
             Given that I have a `Gherkin feature that should pass` file located at `./custom`
-            When I input the command `npx [appname] test ./custom`
+            When I input the command `npx specify test ./custom`
             Then the command should return a `success` status code
 
         Scenario: Run a test with no gherkin files in a custom location
             Given that the file location ./custom is empty
-            When I input the command `npx [appname] test ./custom`
+            When I input the command `npx specify test ./custom`
             Then the command should return a `failure` status code
             And I should see `no features error` console output
 
@@ -68,27 +68,27 @@ Feature: Basic Test Execution
         Scenario: Run a subset of tests based on file path
             Given that I have a `Gherkin feature that should pass` file located at `./features/pass`
             And that I have a `Gherkin feature that should fail` file located at `./features/fail`
-            When I input the command `npx [appname] test ./features/pass`
+            When I input the command `npx specify test ./features/pass`
             Then the command should return a `success` status code
 
         Scenario: Run a subset of tests based tags
             Given that I have a `Gherkin feature with tags` file located at `./features`
-            When I input the command `npx [appname] test --tags "@pass"`
+            When I input the command `npx specify test --tags "@pass"`
             Then the command should return a `success` status code
     
     Rule: Malformed commands display errors to the user
 
         Scenario: Running command with an unknown argument displays the help message
-            When I input the command `npx [appname] testx`
+            When I input the command `npx specify testx`
             Then the command should return a `failure` status code
             And I should see `help message` console output
 
         Scenario: Running command with an unsupported option displays the help message
-            When I input the command `npx [appname] --unsupported-option`
+            When I input the command `npx specify --unsupported-option`
             Then the command should return a `failure` status code
             And I should see `help message` console output
         
         Scenario: Running command with a mix of supported and unsupported options displays the help message
-            When I input the command `npx [appname] --visual --unsupported-option`
+            When I input the command `npx specify --visual --unsupported-option`
             Then the command should return a `failure` status code
             And I should see `help message` console output
