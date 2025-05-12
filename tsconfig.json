@@ -8,15 +8,14 @@
         "moduleDetection": "force",
         "outDir": "./dist",
         "paths": {
-            "@config/*": ["./config/*"]
+            "@config/*": [ "./config/*" ]
         },
         "resolveJsonModule": true,
         "target": "es2024"
     },
-    "exclude": [
-        "**/node_modules/**",
-    ],
+    "exclude": [ "**/node_modules/**", ],
     "include": [
         "**/*.ts",
+        "**/*.json",
     ]
 }

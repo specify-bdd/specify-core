@@ -3,7 +3,7 @@ import { loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
 import minimist from "minimist";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { sync as resolve } from "resolve";
+import resolve from "resolve";
 
 import {
     cucumber as cucumber_cfg,
@@ -30,7 +30,7 @@ if (argv._.length) {
 
 cucumber_cfg.paths.push(...gherkin_paths);
 
-const cucumber_opts = await loadConfiguration({ provided: cucumber_cfg });
+const cucumber_opts = await loadConfiguration({ "provided": cucumber_cfg });
 const cucumber_res = await runCucumber(cucumber_opts.runConfiguration);
 
 process.exit(cucumber_res.success ? 0 : 1);
@@ -56,5 +56,5 @@ async function getPluginPath(plugin_name: string): Promise<string> {
     }
 
     // if not, resolve the package name into a path
-    return resolve(plugin_name);
+    return resolve.sync(plugin_name);
 }
