@@ -2,6 +2,7 @@
     "extends": "./tsconfig.base.json",
     "include": [
         "eslint.config.ts",
+        "jest.config.ts",
         "types/**/*.ts",
         "config/**/*.ts",
         "runner/**/*.ts"
