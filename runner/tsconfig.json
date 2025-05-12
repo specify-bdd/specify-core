@@ -1,9 +1,15 @@
 {
-    "extends": "../tsconfig.json",
+    "extends": "../tsconfig.base.json",
     "compilerOptions": {
         "baseUrl": ".",
+        "composite": true,
         "paths": {
             "@/*": [ "./*" ]
         }
-    }
+    },
+    "exclude": [ "**/node_modules/**" ],
+    "include": [
+        "**/*.ts",
+        "**/*.json",
+    ]
 }

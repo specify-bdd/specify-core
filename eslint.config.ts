@@ -46,7 +46,7 @@ export default tseslint.config(
                 "ecmaVersion": "latest",
                 "sourceType": "module",
                 "extraFileExtensions": [".json"],
-                "project": "./tsconfig.json",
+                "project": "./tsconfig.eslint.json",
                 "tsconfigRootDir": __dirname,
             },
             "globals": {

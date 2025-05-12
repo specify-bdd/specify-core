@@ -7,8 +7,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "type-check": "tsc --noEmit",
-    "type-check:watch": "tsc --noEmit --watch"
+    "type-check": "tsc -b --noEmit",
+    "type-check:watch": "tsc -b --noEmit --watch"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "@microsoft/tsdoc": "^0.15.1",
     "@microsoft/tsdoc-config": "^0.17.1",
     "@stylistic/eslint-plugin-js": "^4.2.0",
+    "@types/node": "^22.15.17",
     "eslint-plugin-jsonc": "^2.20.0",
     "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-tsdoc": "^0.4.0",
