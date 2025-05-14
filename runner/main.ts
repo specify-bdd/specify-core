@@ -5,13 +5,14 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import resolve from "resolve";
 
-import {
-    cucumber as cucumber_cfg,
-    paths as paths_cfg,
-    plugins as plugins_cfg,
-} from "@/config/all";
+import { config } from "@/config/all";
 
 const argv = minimist(process.argv.slice(2));
+const {
+    "cucumber": cucumber_cfg,
+    "paths": paths_cfg,
+    "plugins": plugins_cfg,
+} = config;
 
 // add plugins to Cucumber config
 const resolved_plugin_paths = await Promise.all(

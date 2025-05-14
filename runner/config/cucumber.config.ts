@@ -1,6 +1,8 @@
 import type { IConfiguration } from "@cucumber/cucumber/api";
 
-const cucumber: Partial<IConfiguration> = {
+export type CucumberConfig = Partial<IConfiguration>;
+
+export const cucumber: CucumberConfig = {
     "format": [
         "progress-bar",
         // [ "html", "./reports/cucumber.html" ] // do we want this?
@@ -26,5 +28,3 @@ const cucumber: Partial<IConfiguration> = {
     "strict": true,
     "worldParameters": {},
 };
-
-export { cucumber };
