@@ -4,15 +4,25 @@ Feature: Rerun Failed Tests
     In order to verify that changes I've made fixed the cause of the failure
 
     Background:
-        Given that the `specify core test runner` NPM package is installed
-        And that the `specify command line testing library` NPM package is installed
-        And that I have a command line prompt
+        Given that the "specify core test runner" NPM package is installed
+        And that the "specify cli testing library" NPM package is installed
+        And that a command line prompt is available
 
-    Rule: Failed tests can be easily re-run after making fixes
+    Rule: Failed tests can be targeted for reruns
 
-        Scenario: Re-run a subset of tests that failed
-            Given that I have a `Gherkin feature that should pass` file located at `./features`
-            And that I have a `Gherkin feature that should fail` file located at `./features`
-            And that I ran a test that failed
-            When I input the command `npx specify test --rerun`
-            And I should see `failing test result` console output
+        Scenario: Rerun a subset of tests that failed
+            Given that a "passing feature" file exists at "./features"
+            And that a "failing feature" file exists at "./features"
+            When a user runs the command "npx specify test"
+            And a user runs the command "npx specify test --rerun"
+            Then the command should exit with a "failure" status code
+            And the console output should include "failing test result"
+            And the console output should not include "passing test result"
+
+    Rule: No rerun happens if there was no failure in the previous run
+
+        Scenario: A passing test suite doesn't rerun
+            Given that a "passing feature" file exists at "./features"
+            When a user runs the command "npx specify test"
+            And a user runs the command "npx specify test --rerun"
+            Then the console output should be "no tests to rerun"
