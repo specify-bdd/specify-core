@@ -5,10 +5,13 @@
         "composite": true,
         "outDir": "./dist",
         "paths": {
-            "@/*": ["./*"]
+            "@/*": [ "./*" ]
         }
     },
-    "exclude": ["**/node_modules/**"],
+    "exclude": [
+        "dist",
+        "**/node_modules/**"
+    ],
     "include": [
         "**/*.ts",
         "**/*.json",

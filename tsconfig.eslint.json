@@ -5,6 +5,8 @@
         "jest.config.ts",
         "types/**/*.ts",
         "config/**/*.ts",
-        "runner/**/*.ts"
+        "quick-ref/**/*.ts",
+        "runner/**/*.ts",
+        "runner-plugin-cli/**/*.ts"
     ]
 }

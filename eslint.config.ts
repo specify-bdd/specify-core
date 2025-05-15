@@ -80,7 +80,7 @@ export default tseslint.config(
             "**/.DS_Store/**",
             "**/.vscode/**",
             "**/node_modules/**",
-            "dist/**",
+            "**/dist/**",
             "**/package.json",
             "**/package-lock.json",
         ],
