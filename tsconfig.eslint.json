@@ -4,5 +4,5 @@
         "**/*.d.ts",
         "**/node_modules/*"
     ],
-    "include": [ "**/*.ts", ]
+    "include": [ "**/*.ts" ]
 }

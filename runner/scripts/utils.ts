@@ -80,7 +80,7 @@ export const generateInterfaceTypeExport = (
                                 "index.d.ts",
                             );
 
-                        const import_path = getRelativeSourceFilePath(
+                        const import_path = getRelativeSourceFileImportPath(
                             file,
                             output_path,
                         );
@@ -105,14 +105,14 @@ ${entries.join("\n")}
 };
 
 /**
- * Gets the path of a source file relative to the given output path.
+ * Gets the import path of a source file relative to the given output path.
  *
  * @param source_file - The source file to get the relative path for.
  * @param output_path - The path to the output file.
  *
  * @returns The relative path to the source file from the output path.
  */
-export const getRelativeSourceFilePath = (
+export const getRelativeSourceFileImportPath = (
     source_file: SourceFile,
     output_path: string,
 ): string => {

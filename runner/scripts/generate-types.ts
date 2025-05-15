@@ -12,16 +12,12 @@ import { globbySync } from "globby";
 import type { InterfaceExportOptions } from "@/scripts/utils";
 
 const __dirname = new URL(".", import.meta.url).pathname;
-const script_ext = ".ts";
 const output_file = path.join(__dirname, "..", "types", "index.d.ts");
 
-const type_scripts = globbySync(
-    [path.join(__dirname, "types", `*${script_ext}`)],
-    {
-        "absolute": true,
-        "onlyFiles": true,
-    },
-);
+const type_scripts = globbySync([path.join(__dirname, "types", `*.ts`)], {
+    "absolute": true,
+    "onlyFiles": true,
+});
 
 const exports = [] as string[];
 
