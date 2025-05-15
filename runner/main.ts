@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
-import * as cucumber from "@cucumber/cucumber";
 
 import minimist from "minimist";
 import * as fs from "node:fs";
@@ -30,11 +29,8 @@ if (argv._.length) {
 cucumber_cfg.paths.push(...gherkin_paths);
 
 // add plugins to Cucumber config
-console.log("registering plugins");
-await Promise.all(plugins_cfg.map((plugin) => registerPlugin(plugin, cucumber)));
-
 // TODO: this glob pattern needs to match JS not TS
-// cucumber_cfg.import.push(...plugins_cfg.map((plugin) => path.join(getPluginPath(plugin), "**/*.ts")));
+cucumber_cfg.import.push(...plugins_cfg.map((plugin) => path.join(getPluginPath(plugin), "**/*.ts")));
 
 // import quick ref data
 await refs.addFile(path.resolve(paths_cfg.refs));
@@ -69,10 +65,4 @@ function getPluginPath(plugin_name: string): string {
     plugin_path = url.fileURLToPath(import.meta.resolve(plugin_name));
 
     return path.dirname(plugin_path);
-}
-
-async function registerPlugin(name: string, ...args: array<any>): Promise<void> {
-    const plugin = await import(name);
-
-    plugin.register(...args);
 }

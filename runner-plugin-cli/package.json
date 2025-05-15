@@ -12,10 +12,11 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "quick-ref": "file:../quick-ref"
-  },
   "devDependencies": {
     "@types/node": "^22.15.17"
+  },
+  "peerDependencies": {
+    "specify-quick-ref": "file:../quick-ref",
+    "specify-runner": "file:../runner"
   }
 }

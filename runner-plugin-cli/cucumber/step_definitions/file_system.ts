@@ -1,23 +1,12 @@
 import { FileParam   } from "@/types/params";
-// import { Given, When } from "@cucumber/cucumber";
+import { Given, When } from "@cucumber/cucumber";
 import * as fs         from "node:fs/promises";
 
 
 
-// Given('that a(n) "{ref:file}" file exists at "{path}"', writeFile);
-// Given('that I have a(n) `{ref:file}` file located at `{path}`', writeFile);
+Given('that a(n) "{ref:file}" file exists at "{path}"', writeFile);
 
-// When('a/the user puts a(n) "{ref:file}" file in "{path}"', writeFile);
-
-
-
-export function register(cucumber: any): void {
-    console.log("registering fs steps");
-    cucumber.Given('that a(n) "{ref:file}" file exists at "{path}"', writeFile);
-    cucumber.Given('that I have a(n) `{ref:file}` file located at `{path}`', writeFile);
-
-    cucumber.When('a/the user puts a(n) "{ref:file}" file in "{path}"', writeFile);
-}
+When('a/the user puts a(n) "{ref:file}" file in "{path}"', writeFile);
 
 
 
