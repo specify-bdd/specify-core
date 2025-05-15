@@ -6,7 +6,6 @@
         "isolatedModules": true,
         "module": "Preserve",
         "moduleDetection": "force",
-        "outDir": "./dist",
         "paths": {
             "@/*": [ "./*" ],
             "@config/*": [ "./config/*" ]
