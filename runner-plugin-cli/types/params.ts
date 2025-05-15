@@ -1,7 +1,6 @@
-export { FileParam };
-
-type FileParam = {
-    "content": string | Buffer,
-    "encoding": string,
-    "mode": integer
+export type FileParam = {
+    "content": string | Buffer;
+    "encoding": string;
+    "mode": number;
+    "name": string;
 };

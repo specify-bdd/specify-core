@@ -4,15 +4,12 @@ import { lookup } from "quick-ref";
 
 import * as path from "node:path";
 
-
-
 defineParameterType({
     "name": "ref:file",
     "regexp": /[^"]*/,
     transformer(name: string): FileParam {
         return lookup("file", name);
     },
-    "type": "FileParam"
 });
 
 defineParameterType({
@@ -21,5 +18,4 @@ defineParameterType({
     transformer(name: string): string {
         return path.resolve(name);
     },
-    "type": "string"
 });

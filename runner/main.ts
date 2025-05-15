@@ -5,7 +5,7 @@ import minimist from "minimist";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as url from "node:url";
-import refs from "quick-ref"; // TODO: Why is this acting like a * import?  quick ref has no default
+import * as refs from "quick-ref";
 
 import {
     cucumber as cucumber_cfg,
@@ -13,11 +13,9 @@ import {
     plugins as plugins_cfg,
 } from "@/config/all";
 
-
-
 const argv = minimist(process.argv.slice(2));
 
-let gherkin_paths = [ path.resolve(paths_cfg.gherkin) ];
+let gherkin_paths = [path.resolve(paths_cfg.gherkin)];
 
 // process arguments
 // TODO: this should handle options, subcommands, etc. in addition to path args
@@ -30,18 +28,18 @@ cucumber_cfg.paths.push(...gherkin_paths);
 
 // add plugins to Cucumber config
 // TODO: this glob pattern needs to match JS not TS
-cucumber_cfg.import.push(...plugins_cfg.map((plugin) => path.join(getPluginPath(plugin), "**/*.ts")));
+cucumber_cfg.import.push(
+    ...plugins_cfg.map((plugin) => path.join(getPluginPath(plugin), "**/*.ts")),
+);
 
 // import quick ref data
 await refs.addFile(path.resolve(paths_cfg.refs));
 
 // execute cucumber tests
 const cucumber_opts = await loadConfiguration({ "provided": cucumber_cfg });
-const cucumber_res  = await runCucumber(cucumber_opts.runConfiguration);
+const cucumber_res = await runCucumber(cucumber_opts.runConfiguration);
 
 process.exit(cucumber_res.success ? 0 : 1);
-
-
 
 /**
  * Resolve a plugin name into a path for that plugin, unless the name is a file
