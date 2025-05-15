@@ -1,9 +1,12 @@
+#!/usr/bin/env node
 import { loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
+import * as cucumber from "@cucumber/cucumber";
 
 import minimist from "minimist";
-import * as fs from "node:fs/promises";
+import * as fs from "node:fs";
 import * as path from "node:path";
-import resolve from "resolve";
+import * as url from "node:url";
+import refs from "quick-ref"; // TODO: Why is this acting like a * import?  quick ref has no default
 
 import {
     cucumber as cucumber_cfg,
@@ -11,29 +14,38 @@ import {
     plugins as plugins_cfg,
 } from "@/config/all";
 
+
+
 const argv = minimist(process.argv.slice(2));
 
-// add plugins to Cucumber config
-const resolved_plugin_paths = await Promise.all(
-    plugins_cfg.map(async (plugin) =>
-        path.join(await getPluginPath(plugin), "**/*.js"),
-    ),
-);
-cucumber_cfg.import.push(...resolved_plugin_paths);
+let gherkin_paths = [ path.resolve(paths_cfg.gherkin) ];
 
-let gherkin_paths = [path.resolve(paths_cfg.gherkin)];
-
-// add Gherkin to Cucumber config
+// process arguments
+// TODO: this should handle options, subcommands, etc. in addition to path args
 if (argv._.length) {
     gherkin_paths = argv._.map((gherkin_path) => path.resolve(gherkin_path));
 }
 
+// add Gherkin to Cucumber config
 cucumber_cfg.paths.push(...gherkin_paths);
 
+// add plugins to Cucumber config
+console.log("registering plugins");
+await Promise.all(plugins_cfg.map((plugin) => registerPlugin(plugin, cucumber)));
+
+// TODO: this glob pattern needs to match JS not TS
+// cucumber_cfg.import.push(...plugins_cfg.map((plugin) => path.join(getPluginPath(plugin), "**/*.ts")));
+
+// import quick ref data
+await refs.addFile(path.resolve(paths_cfg.refs));
+
+// execute cucumber tests
 const cucumber_opts = await loadConfiguration({ "provided": cucumber_cfg });
-const cucumber_res = await runCucumber(cucumber_opts.runConfiguration);
+const cucumber_res  = await runCucumber(cucumber_opts.runConfiguration);
 
 process.exit(cucumber_res.success ? 0 : 1);
+
+
 
 /**
  * Resolve a plugin name into a path for that plugin, unless the name is a file
@@ -43,18 +55,24 @@ process.exit(cucumber_res.success ? 0 : 1);
  *
  * @returns The path to the plugin.
  */
-async function getPluginPath(plugin_name: string): Promise<string> {
-    const plugin_path = path.resolve(plugin_name);
+function getPluginPath(plugin_name: string): string {
+    let plugin_path = path.resolve(plugin_name);
 
     // first see if the plugin name works as a file system path
-    try {
-        await fs.access(plugin_path, fs.constants.R_OK);
-
+    if (fs.existsSync(plugin_path)) {
         return plugin_path;
-    } catch {
-        // if it doesn't, we need to resolve the plugin name into a path (below)
     }
 
     // if not, resolve the package name into a path
-    return resolve.sync(plugin_name);
+    // NOTE: Node.js import.meta.resolve is at stability index 1.2 ("Experimental release candidate") at time of
+    // writing and may change without notice.  We need to verify this still works when upgrading Node versions.
+    plugin_path = url.fileURLToPath(import.meta.resolve(plugin_name));
+
+    return path.dirname(plugin_path);
+}
+
+async function registerPlugin(name: string, ...args: array<any>): Promise<void> {
+    const plugin = await import(name);
+
+    plugin.register(...args);
 }
