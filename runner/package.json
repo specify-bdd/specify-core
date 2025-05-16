@@ -25,7 +25,7 @@
     "@cucumber/cucumber": "^11.2.0",
     "globby": "^14.1.0",
     "minimist": "^1.2.8",
-    "specify-quick-ref": "file:../quick-ref/dist"
+    "specify-quick-ref": "workspace:quick-ref"
   },
   "devDependencies": {
     "@types/minimist": "^1.2.5",
@@ -35,6 +35,6 @@
     "ts-morph": "^25.0.1"
   },
   "optionalDependencies": {
-    "specify-runner-plugin-cli": "file:../runner-plugin-cli/dist"
+    "specify-runner-plugin-cli": "workspace:runner-plugin-cli"
   }
 }
