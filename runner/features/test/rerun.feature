@@ -4,8 +4,8 @@ Feature: Rerun Failed Tests
     In order to verify that changes I've made fixed the cause of the failure
 
     Background:
-        Given that the "specify core test runner" NPM package is installed
-        And that the "specify cli testing library" NPM package is installed
+        Given that the "specify-runner" NPM package is installed
+        And that the "specify-runner-plugin-cli" NPM package is installed
         And that a command line prompt is available
 
     Rule: Failed tests can be targeted for reruns

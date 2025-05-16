@@ -4,9 +4,9 @@ Feature: Browser Testing Mode
     So that I can prioritize system resource usage and test observability according to my needs and preferences
 
     Background:
-        Given that the "specify core test runner" NPM package is installed
-        And that the "specify browser testing library" NPM package is installed
-        And that the "specify cli testing library" NPM package is installed
+        Given that the "specify-runner" NPM package is installed
+        And that the "specify-runner-plugin-browser" NPM package is installed
+        And that the "specify-runner-plugin-cli" NPM package is installed
         And that a command line prompt is available
         And that a "passing browser feature" file exists at "./features"
 
@@ -15,16 +15,16 @@ Feature: Browser Testing Mode
         @manual
         Scenario: Headless testing is the default
             When a user runs the command "npx specify test"
-            Then no browser window should open
+            Then a browser window should not open
             And the command should exit with a "success" status code
 
     Rule: Headless mode testing is local and non-visible
 
         @manual
         Scenario: Headless testing is local
-            And that a Selenium Grid is not available at "http://localhost:4444"
             When a user runs the command "npx specify test --headless"
             Then the command should exit with a "success" status code
+            And the test ran locally
 
         @manual
         Scenario: Headless testing is not visible
@@ -35,9 +35,9 @@ Feature: Browser Testing Mode
 
         @manual
         Scenario: Visual testing is local
-            And that a Selenium Grid is not available at "http://localhost:4444"
             When a user runs the command "npx specify test --visual"
             Then the command should exit with a "success" status code
+            And the test ran locally
         
         @manual
         Scenario: Visual testing is visible
@@ -48,14 +48,14 @@ Feature: Browser Testing Mode
 
         @manual
         Scenario: Grid testing is remote
-            And that a Selenium Grid is available at "http://localhost:4444"
+            Given that a Selenium Grid is available at "http://localhost:4444"
             When a user runs the command "npx specify test --grid http://localhost:4444"
             Then the Selenium Grid should execute the tests
             And the command should exit with a "success" status code
 
         @manual
         Scenario: Grid testing fails without a grid
-            And that a Selenium Grid is not available at "http://localhost:4444"
+            Given that a Selenium Grid is not available at "http://localhost:4444"
             When the user runs the command "npx specify test --grid http://localhost:4444"
             Then the command should exit with an "error" status code
             And the console output should include "unable to connect to Selenium Grid"

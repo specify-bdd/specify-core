@@ -4,8 +4,8 @@ Feature: Basic Test Execution
     In order to ensure that my software functions as the specs say it should
 
     Background:
-        Given that the "specify core test runner" NPM package is installed
-        And that the "specify cli testing library" NPM package is installed
+        Given that the "specify-runner" NPM package is installed
+        And that the "specify-runner-plugin-cli" NPM package is installed
         And that a command line prompt is available
 
     Rule: The run should succeed if all tests pass
@@ -30,13 +30,12 @@ Feature: Basic Test Execution
             When a user runs the command "npx specify test"
             Then the command should exit with a "failure" status code
     
-    Rule: The run should error if there are invalid features
-
-        @dependency
         Scenario: Feature contains no scenarios
             Given that an "empty feature" file exists at "./features"
             When a user runs the command "npx specify test"
-            Then the command should exit with an "error" status code
+            Then the command should exit with an "failure" status code
+    
+    Rule: The run should error if there are invalid features
         
         @dependency
         Scenario: Feature has a Gherkin syntax error
@@ -139,12 +138,13 @@ Feature: Basic Test Execution
             When a user runs the command "npx specify --bad-option"
             Then the command should exit with a "failure" status code
             And the console output should be "help message"
-        
+
         Scenario: Mix of supported and unsupported options
             When a user runs the command "npx specify --parallel 2 --bad-option"
             Then the command should exit with a "failure" status code
             And the console output should be "help message"
 
+    # the only character that should be printed is a single double-quote (")
     Scenario: User can escape string characters
-        When a user runs the command "echo \'"
-        Then the console output should be "\'"
+        When a user runs the command "echo \\\""
+        Then the console output should be "\""
