@@ -30,8 +30,5 @@
     "@types/resolve": "^1.20.6",
     "deepmerge": "^4.3.1",
     "ts-morph": "^25.0.1"
-  },
-  "optionalDependencies": {
-    "specify-runner-plugin-cli": "file:../runner-plugin-cli"
   }
 }
