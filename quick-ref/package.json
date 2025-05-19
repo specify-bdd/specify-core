@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "A utility for referencing test param data quickly and easily.",
   "main": "main.ts",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,8 +11,5 @@
   "license": "ISC",
   "dependencies": {
     "deep-extend": "^0.6.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.15.17"
   }
 }

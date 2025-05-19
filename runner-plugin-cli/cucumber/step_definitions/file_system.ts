@@ -1,3 +1,13 @@
+/**
+ * File System Step Defintions Module
+ * 
+ * Cucumber step definitions covering interactions with a file system.
+ * 
+ * @author Adam Lacoste <adam.lacoste@hotmail.com>
+ *
+ * @copyright 2025
+ */
+
 import { FileParam } from "@/types/params";
 import { Given, When } from "@cucumber/cucumber";
 import * as fs from "node:fs/promises";
@@ -10,6 +20,9 @@ When('a/the user puts a(n) "{ref:file}" file in "{path}"', writeFile);
 
 /**
  * Writes a defined file's contents to a specific file system location.
+ * 
+ * @param file      - The referenced file object to write
+ * @param dest_path - The location to write the file to
  */
 async function writeFile(file: FileParam, dest_path: string): Promise<void> {
     const opts = {

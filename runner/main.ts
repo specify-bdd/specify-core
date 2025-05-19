@@ -1,17 +1,28 @@
 #!/usr/bin/env node
+
+/**
+ * Runner Module
+ * 
+ * A Cucumber-based testing tool built to support behavior-driven development.
+ * 
+ * @author Adam Lacoste <adam.lacoste@hotmail.com>
+ *
+ * @copyright 2025
+ */
+
 import { loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
 
 import minimist from "minimist";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as url from "node:url";
-import * as refs from "quick-ref";
+import * as refs from "specify-quick-ref";
 
 import {
     cucumber as cucumber_cfg,
     paths as paths_cfg,
     plugins as plugins_cfg,
-} from "@/config/all";
+} from "./config/all";
 
 const argv = minimist(process.argv.slice(2));
 

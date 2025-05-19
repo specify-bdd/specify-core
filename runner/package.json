@@ -4,7 +4,7 @@
   "description": "The standalone engine for Specify.",
   "main": "main.ts",
   "bin": {
-    "specify": "dist/main.js"
+    "specify": "main.ts"
   },
   "type": "module",
   "scripts": {
@@ -23,14 +23,13 @@
   "dependencies": {
     "@cucumber/cucumber": "^11.2.0",
     "minimist": "^1.2.8",
-    "quick-ref": "file:../quick-ref"
+    "specify-quick-ref": "file:../quick-ref/dist"
   },
   "devDependencies": {
     "@types/minimist": "^1.2.5",
-    "@types/node": "^22.15.17",
     "@types/resolve": "^1.20.6"
   },
   "optionalDependencies": {
-    "specify-runner-plugin-cli": "file:../runner-plugin-cli"
+    "specify-runner-plugin-cli": "file:../runner-plugin-cli/dist"
   }
 }

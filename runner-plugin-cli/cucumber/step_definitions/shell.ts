@@ -1,3 +1,14 @@
+/**
+ * Shell Step Definitions Module
+ * 
+ * Cucumber step definitions covering the provisioning of an OS shell for 
+ * testing purposes.
+ * 
+ * @author Adam Lacoste <adam.lacoste@hotmail.com>
+ *
+ * @copyright 2025
+ */
+
 // Given that I have a command line prompt
 // When I input the command `{string}`
 // Then the command should return a `{def:status}` status code
