@@ -11,7 +11,7 @@
 
 import { FileParam } from "@/types/params";
 import { defineParameterType } from "@cucumber/cucumber";
-import { lookup } from "quick-ref";
+import { lookup } from "specify-quick-ref";
 
 import * as path from "node:path";
 
