@@ -8,8 +8,8 @@
     "lint:fix": "eslint . --fix",
     "test": "npm run test:jest",
     "test:jest": "jest",
-    "type-check": "tsc -b --noEmit",
-    "type-check:watch": "tsc -b --noEmit --watch"
+    "type-check": "rimraf dist/tsconfig.tsbuildinfo && tsc -b --noEmit",
+    "type-check:watch": "rimraf dist/tsconfig.tsbuildinfo && tsc -b --noEmit --watch"
   },
   "repository": {
     "type": "git",
@@ -40,6 +40,7 @@
     "jiti": "^2.4.2",
     "jsonc-eslint-parser": "^2.4.0",
     "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
     "ts-jest": "^29",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",

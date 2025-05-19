@@ -11,6 +11,7 @@
  */
 
 import { loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
+import { config } from "@/config/all";
 
 import minimist from "minimist";
 import * as fs from "node:fs";
@@ -18,15 +19,9 @@ import * as path from "node:path";
 import * as url from "node:url";
 import * as refs from "specify-quick-ref";
 
-import {
-    cucumber as cucumber_cfg,
-    paths as paths_cfg,
-    plugins as plugins_cfg,
-} from "./config/all";
-
 const argv = minimist(process.argv.slice(2));
 
-let gherkin_paths = [path.resolve(paths_cfg.gherkin)];
+let gherkin_paths = [path.resolve(config.paths.gherkin)];
 
 // process arguments
 // TODO: this should handle options, subcommands, etc. in addition to path args
@@ -35,19 +30,19 @@ if (argv._.length) {
 }
 
 // add Gherkin to Cucumber config
-cucumber_cfg.paths.push(...gherkin_paths);
+config.cucumber.paths.push(...gherkin_paths);
 
 // add plugins to Cucumber config
 // TODO: this glob pattern needs to match JS not TS
-cucumber_cfg.import.push(
-    ...plugins_cfg.map((plugin) => path.join(getPluginPath(plugin), "**/*.ts")),
+config.cucumber.import.push(
+    ...config.plugins.map((plugin) => path.join(getPluginPath(plugin), "**/*.ts")),
 );
 
 // import quick ref data
-await refs.addFile(path.resolve(paths_cfg.refs));
+await refs.addFile(path.resolve(config.paths.refs));
 
 // execute cucumber tests
-const cucumber_opts = await loadConfiguration({ "provided": cucumber_cfg });
+const cucumber_opts = await loadConfiguration({ "provided": config.cucumber });
 const cucumber_res = await runCucumber(cucumber_opts.runConfiguration);
 
 process.exit(cucumber_res.success ? 0 : 1);

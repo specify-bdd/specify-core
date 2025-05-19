@@ -77,6 +77,7 @@ export default tseslint.config(
     },
     {
         "ignores": [
+            "**/*.d.ts",
             "**/.DS_Store/**",
             "**/.vscode/**",
             "**/node_modules/**",

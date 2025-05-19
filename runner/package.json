@@ -8,6 +8,7 @@
   },
   "type": "module",
   "scripts": {
+    "generate-types": "tsx ./scripts/generate-types.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,12 +23,16 @@
   "homepage": "https://github.com/software-pirates/specify-core#readme",
   "dependencies": {
     "@cucumber/cucumber": "^11.2.0",
+    "globby": "^14.1.0",
     "minimist": "^1.2.8",
     "specify-quick-ref": "file:../quick-ref/dist"
   },
   "devDependencies": {
     "@types/minimist": "^1.2.5",
-    "@types/resolve": "^1.20.6"
+    "@types/node": "^22.15.17",
+    "@types/resolve": "^1.20.6",
+    "deepmerge": "^4.3.1",
+    "ts-morph": "^25.0.1"
   },
   "optionalDependencies": {
     "specify-runner-plugin-cli": "file:../runner-plugin-cli/dist"

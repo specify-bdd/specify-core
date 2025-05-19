@@ -1,12 +1,8 @@
 {
     "extends": "./tsconfig.base.json",
-    "include": [
-        "eslint.config.ts",
-        "jest.config.ts",
-        "types/**/*.ts",
-        "config/**/*.ts",
-        "quick-ref/**/*.ts",
-        "runner/**/*.ts",
-        "runner-plugin-cli/**/*.ts"
-    ]
+    "exclude": [
+        "**/*.d.ts",
+        "**/node_modules/*"
+    ],
+    "include": [ "**/*.ts" ]
 }
