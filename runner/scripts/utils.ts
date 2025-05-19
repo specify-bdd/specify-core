@@ -91,15 +91,16 @@ export const generateInterfaceTypeExport = (
                     }
                 }
 
-                entries.push(`    ${name}: ${type_text};`);
+                entries.push(`${name}: ${type_text};`);
             }
         }
     }
 
-    const output = `export interface ${interface_name} {
-${entries.join("\n")}
-}
-`;
+    const spacer = " ".repeat(4);
+    const output =
+        `export interface ${interface_name} {\n` +
+        `${spacer}${entries.join(`\n${spacer}`)}\n` +
+        "}";
 
     return output;
 };
