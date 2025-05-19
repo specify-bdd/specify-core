@@ -118,16 +118,18 @@ export const getRelativeSourceFileImportPath = (
     output_path: string,
 ): string => {
     // import paths are relative to the output path
-    let import_path = path
-        .relative(path.dirname(output_path), source_file.getFilePath())
-        .replace(/\.ts$/, "") // remove the .ts extension
-        .replace(/\\/g, "/"); // convert backslashes to forward slashes
+    let import_path = path.relative(
+        path.dirname(output_path),
+        source_file.getFilePath(),
+    );
 
     if (!import_path.startsWith(".")) {
         import_path = "./" + import_path;
     }
 
-    return import_path;
+    const path_parts = import_path.split(".");
+
+    return path_parts.slice(0, -1).join(".");
 };
 
 /**
