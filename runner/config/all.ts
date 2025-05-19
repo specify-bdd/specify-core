@@ -6,7 +6,7 @@ import { pathToFileURL } from "node:url";
 
 import type { RunnerConfig } from "@/types";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = path.dirname(import.meta.filename);
 
 // the user's override file should be in the *current working directory*
 const config_path = `${process.cwd()}/specify.config.json`;

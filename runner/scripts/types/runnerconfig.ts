@@ -10,7 +10,7 @@ import {
 
 import type { InterfaceExportOptions } from "@/scripts/utils";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = path.dirname(import.meta.filename);
 const CONFIGS_GLOB = path.resolve(
     __dirname,
     "..",

@@ -8,7 +8,7 @@ import ts from "typescript";
 
 import type { SourceFile } from "ts-morph";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = path.dirname(import.meta.filename);
 
 export type InterfaceExportOptions = {
     output_file: string;

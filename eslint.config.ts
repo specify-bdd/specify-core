@@ -9,7 +9,7 @@ import tseslint from "typescript-eslint";
 import path from "node:path";
 import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(import.meta.filename);
 
 export default tseslint.config(
     eslint.configs.recommended,
