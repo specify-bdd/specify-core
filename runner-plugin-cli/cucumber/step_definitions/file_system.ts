@@ -8,10 +8,10 @@
  * @copyright 2025
  */
 
-import { FileParam } from "@/types/params";
 import { Given, When } from "@cucumber/cucumber";
 import * as fs from "node:fs/promises";
 
+import type { FileParam } from "@/types/params";
 import type { ObjectEncodingOptions } from "node:fs";
 
 Given('that a(n) "{ref:file}" file exists at "{path}"', writeFile);
