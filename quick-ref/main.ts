@@ -4,10 +4,6 @@
  * A utility for referencing test param data quickly and easily.  Stored values 
  * are keyed with an arbitrary string and namespaced by data type.  Refs files 
  * are expected to conform to JSON format.
- * 
- * @author Adam Lacoste <adam.lacoste@hotmail.com>
- *
- * @copyright 2025
  */
 
 import extend from "deep-extend";

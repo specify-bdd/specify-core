@@ -2,10 +2,6 @@
  * File System Step Defintions Module
  * 
  * Cucumber step definitions covering interactions with a file system.
- * 
- * @author Adam Lacoste <adam.lacoste@hotmail.com>
- *
- * @copyright 2025
  */
 
 import { Given, When } from "@cucumber/cucumber";

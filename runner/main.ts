@@ -4,10 +4,6 @@
  * Runner Module
  * 
  * A Cucumber-based testing tool built to support behavior-driven development.
- * 
- * @author Adam Lacoste <adam.lacoste@hotmail.com>
- *
- * @copyright 2025
  */
 
 import { loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
