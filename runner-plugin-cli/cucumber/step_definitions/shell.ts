@@ -1,7 +1,7 @@
 /**
  * Shell Step Definitions Module
- * 
- * Cucumber step definitions covering the provisioning of an OS shell for 
+ *
+ * Cucumber step definitions covering the provisioning of an OS shell for
  * testing purposes.
  */
 

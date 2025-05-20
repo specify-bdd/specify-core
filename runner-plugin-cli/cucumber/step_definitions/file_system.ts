@@ -1,6 +1,6 @@
 /**
  * File System Step Defintions Module
- * 
+ *
  * Cucumber step definitions covering interactions with a file system.
  */
 
@@ -16,7 +16,7 @@ When('a/the user puts a(n) "{ref:file}" file in "{path}"', writeFile);
 
 /**
  * Writes a defined file's contents to a specific file system location.
- * 
+ *
  * @param file      - The referenced file object to write
  * @param dest_path - The location to write the file to
  */

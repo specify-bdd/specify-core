@@ -1,6 +1,6 @@
 /**
  * Package Step Definitions Module
- * 
+ *
  * Cucumber step definitions covering Node.js package management.
  */
 

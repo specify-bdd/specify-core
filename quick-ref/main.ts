@@ -1,8 +1,8 @@
 /**
  * Quick Refs Module
- * 
- * A utility for referencing test param data quickly and easily.  Stored values 
- * are keyed with an arbitrary string and namespaced by data type.  Refs files 
+ *
+ * A utility for referencing test param data quickly and easily.  Stored values
+ * are keyed with an arbitrary string and namespaced by data type.  Refs files
  * are expected to conform to JSON format.
  */
 
@@ -15,11 +15,9 @@ export const refs = {};
 /**
  * Add the contents of a JSON file to the quick ref store.  As with addJSON,
  * you can specify a namespace to store the JSON object under.
- * 
- * @async
- * 
+ *
  * @param file_path - The path to the JSON file to read and store
- * @param namespace - The namespace under which the file's contents should be 
+ * @param namespace - The namespace under which the file's contents should be
  *                    stored
  */
 export async function addFile(
@@ -38,9 +36,7 @@ export async function addFile(
  * Add an arbitrary JSON structure to the quick ref store.  Optionally, you can
  * specify a namespace to store the object under; if omitted, object will
  * be merged with the root level.
- * 
- * @async
- * 
+ *
  * @param json      - The JSON object to store
  * @param namespace - The namespace under which JSON object should be stored
  */
@@ -63,10 +59,8 @@ export function addJSON(
 
 /**
  * Look up a reference by namespace and name.
- * 
- * @async
- * 
- * @param name      - The name of the reference to retrieve 
+ *
+ * @param name      - The name of the reference to retrieve
  * @param namespace - The namespace under which the reference was stored
  */
 export function lookup(name: string, namespace: string = ""): any {

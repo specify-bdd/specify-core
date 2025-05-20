@@ -2,7 +2,7 @@
 
 /**
  * Runner Module
- * 
+ *
  * A Cucumber-based testing tool built to support behavior-driven development.
  */
 
@@ -31,7 +31,9 @@ config.cucumber.paths.push(...gherkin_paths);
 // add plugins to Cucumber config
 // TODO: this glob pattern needs to match JS not TS
 config.cucumber.import.push(
-    ...config.plugins.map((plugin) => path.join(getPluginPath(plugin), "**/*.ts")),
+    ...config.plugins.map((plugin) =>
+        path.join(getPluginPath(plugin), "**/*.ts"),
+    ),
 );
 
 // import quick ref data

@@ -1,7 +1,7 @@
 /**
  * Param Types Module
- * 
- * Cucumber parameter type definitions for all custom params used by this 
+ *
+ * Cucumber parameter type definitions for all custom params used by this
  * package's step definitions.
  */
 
