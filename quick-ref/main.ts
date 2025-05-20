@@ -41,7 +41,7 @@ export async function addFile(
  * @param namespace - The namespace under which JSON object should be stored
  */
 export function addJSON(
-    json: Record<string, any>,
+    json: Record<string, unknown>,
     namespace: string = "",
 ): void {
     let target = refs;
@@ -63,6 +63,6 @@ export function addJSON(
  * @param name      - The name of the reference to retrieve
  * @param namespace - The namespace under which the reference was stored
  */
-export function lookup(name: string, namespace: string = ""): any {
+export function lookup(name: string, namespace: string = ""): unknown {
     return refs[namespace]?.[name];
 }
