@@ -1,0 +1,20 @@
+{
+  "name": "specify-runner-plugin-cli",
+  "version": "0.0.1",
+  "description": "A plugin for Specify adding CLI testing support.",
+  "main": "main.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/software-pirates/specify-core.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "specify-quick-ref": "file:../quick-ref/dist",
+    "specify-runner": "file:../runner/dist"
+  }
+}

@@ -1,6 +1,6 @@
 {
-  "name": "name-tbd",
-  "version": "0.1.0",
+  "name": "specify",
+  "version": "0.0.1",
   "description": "Core repository description",
   "type": "module",
   "scripts": {
@@ -13,14 +13,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/software-pirates/runner.git"
+    "url": "git+https://github.com/software-pirates/specify-core.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/software-pirates/runner/issues"
+    "url": "https://github.com/software-pirates/specify-core/issues"
   },
-  "homepage": "https://github.com/software-pirates/runner#readme",
+  "homepage": "https://github.com/software-pirates/specify-core#readme",
+  "dependencies": {
+    "specify-quick-ref": "file:quick-ref",
+    "specify-runner": "file:runner",
+    "specify-runner-plugin-cli": "file:runner-plugin-cli"
+  },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
     "@microsoft/tsdoc": "^0.15.1",

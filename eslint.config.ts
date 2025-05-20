@@ -7,9 +7,6 @@ import eslintPluginTSDoc from "eslint-plugin-tsdoc";
 import stylisticJs from "@stylistic/eslint-plugin-js";
 import tseslint from "typescript-eslint";
 import path from "node:path";
-import { fileURLToPath } from "url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default tseslint.config(
     eslint.configs.recommended,
@@ -47,7 +44,7 @@ export default tseslint.config(
                 "sourceType": "module",
                 "extraFileExtensions": [".json"],
                 "project": "./tsconfig.eslint.json",
-                "tsconfigRootDir": __dirname,
+                "tsconfigRootDir": import.meta.dirname,
             },
             "globals": {
                 ...globals.node,
@@ -81,7 +78,7 @@ export default tseslint.config(
             "**/.DS_Store/**",
             "**/.vscode/**",
             "**/node_modules/**",
-            "dist/**",
+            "**/dist/**",
             "**/package.json",
             "**/package-lock.json",
         ],

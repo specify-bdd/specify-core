@@ -6,8 +6,6 @@ import { pathToFileURL } from "node:url";
 
 import type { RunnerConfig } from "@/types";
 
-const __dirname = new URL(".", import.meta.url).pathname;
-
 // the user's override file should be in the *current working directory*
 const config_path = `${process.cwd()}/specify.config.json`;
 
@@ -19,7 +17,7 @@ if (fs.existsSync(config_path)) {
 }
 
 export const entries = await Promise.all(
-    globbySync(path.join(__dirname, "*.config.ts"), {
+    globbySync(path.join(import.meta.dirname, "*.config.ts"), {
         "absolute": true,
     }).map(async (module_path) => {
         const module = await import(pathToFileURL(module_path).href);
