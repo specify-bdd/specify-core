@@ -8,8 +8,6 @@ import ts from "typescript";
 
 import type { SourceFile } from "ts-morph";
 
-const __dirname = path.dirname(import.meta.filename);
-
 export type InterfaceExportOptions = {
     output_file: string;
 };
@@ -74,7 +72,7 @@ export const generateInterfaceTypeExport = (
                         const output_path =
                             opts?.output_file ||
                             path.resolve(
-                                __dirname,
+                                import.meta.dirname,
                                 "..",
                                 "types",
                                 "index.d.ts",

@@ -10,9 +10,8 @@ import {
 
 import type { InterfaceExportOptions } from "@/scripts/utils";
 
-const __dirname = path.dirname(import.meta.filename);
 const CONFIGS_GLOB = path.resolve(
-    __dirname,
+    import.meta.dirname,
     "..",
     "..",
     "config",

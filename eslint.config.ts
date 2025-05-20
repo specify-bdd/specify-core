@@ -8,8 +8,6 @@ import stylisticJs from "@stylistic/eslint-plugin-js";
 import tseslint from "typescript-eslint";
 import path from "node:path";
 
-const __dirname = path.dirname(import.meta.filename);
-
 export default tseslint.config(
     eslint.configs.recommended,
     tseslint.configs.recommended,
@@ -46,7 +44,7 @@ export default tseslint.config(
                 "sourceType": "module",
                 "extraFileExtensions": [".json"],
                 "project": "./tsconfig.eslint.json",
-                "tsconfigRootDir": __dirname,
+                "tsconfigRootDir": import.meta.dirname,
             },
             "globals": {
                 ...globals.node,
