@@ -141,3 +141,4 @@ dist
 
 # Specify user overrides
 specify.config.json
+specify.refs.json
