@@ -36,17 +36,17 @@ Feature: Parallel Execution
         Scenario: Multiple integers are rejected
             When a user runs the command "npx specify test --parallel 1 2"
             Then the command should exit with an "error" status code
-            And the console output should be "help message"
+            And the console output should be a "help message"
         
         Scenario: Floats are rejected
             When a user runs the command "npx specify test --parallel 0.5"
             Then the command should exit with an "error" status code
-            And the console output should be "help message"
+            And the console output should be a "help message"
         
         Scenario: Non-numeric values are rejected
             When a user runs the command "npx specify test --parallel 'bad-value'"
             Then the command should exit with an "error" status code
-            And the console output should be "help message"
+            And the console output should be a "help message"
 
         @todo
         Scenario: A value of 0 is rejected (or handled gracefully)

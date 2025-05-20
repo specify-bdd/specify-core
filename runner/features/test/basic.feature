@@ -14,7 +14,7 @@ Feature: Basic Test Execution
             Given that a "passing feature" file exists at "./features"
             When a user runs the command "npx specify test"
             Then the command should exit with a "success" status code
-            And the console output should be "passing test result"
+            And the console output should be a "passing test result"
 
     Rule: The run should fail if any tests fail
 
@@ -22,7 +22,7 @@ Feature: Basic Test Execution
             Given that a "failing feature" file exists at "./features"
             When a user runs the command "npx specify test"
             Then the command should exit with a "failure" status code
-            And the console output should be "failing test result"
+            And the console output should be a "failing test result"
 
         Scenario: Mixed pass/fail tests
             Given that a "passing feature" file exists at "./features"
@@ -55,20 +55,20 @@ Feature: Basic Test Execution
             Given that the path "./features" is empty
             When a user runs the command "npx specify test"
             Then the command should exit with a "error" status code
-            And the console output should be "no features error"
+            And the console output should be a "no features error"
 
         Scenario: Default path contains no features
             Given that the path "./features" has no files matching "*.feature"
             When a user runs the command "npx specify test"
             Then the command should exit with a "error" status code
-            And the console output should be "no features error"
+            And the console output should be a "no features error"
 
         @dependency
         Scenario: Feature file is unreadable
             Given that an "unreadable passing feature" file exists at "./features"
             When a user runs the command "npx specify test"
             Then the command should exit with a "error" status code
-            And the console output should be "no features error"
+            And the console output should be a "no features error"
 
     Rule: Users can override the default features path
 
@@ -81,19 +81,19 @@ Feature: Basic Test Execution
             Given that the path "./custom" does not exist
             When a user runs the command "npx specify test ./custom"
             Then the command should exit with a "error" status code
-            And the console output should be "path not found error"
+            And the console output should be a "path not found error"
 
         Scenario: User-specified path is empty
             Given that the path "./custom" is empty
             When a user runs the command "npx specify test ./custom"
             Then the command should exit with a "error" status code
-            And the console output should be "no features error"
+            And the console output should be a "no features error"
         
         Scenario: User-specified path contains no features
             Given that the path "./custom" has no files matching "*.feature"
             When a user runs the command "npx specify test ./custom"
             Then the command should exit with a "error" status code
-            And the console output should be "no features error"
+            And the console output should be a "no features error"
     
     Rule: Execution without a subcommand should default to testing
 
@@ -125,24 +125,24 @@ Feature: Basic Test Execution
             Given that a "passing feature" file exists at "./features"
             When a user runs the command "npx specify test --tags '@fail'"
             Then the command should exit with a "error" status code
-            And the console output should be "no features error"
+            And the console output should be a "no features error"
     
     Rule: Invalid commands display usage help
 
         Scenario: Unsupported subcommand
             When a user runs the command "npx specify bad-subcommand"
             Then the command should exit with a "failure" status code
-            And the console output should be "help message"
+            And the console output should be a "help message"
 
         Scenario: Unsupported option
             When a user runs the command "npx specify --bad-option"
             Then the command should exit with a "failure" status code
-            And the console output should be "help message"
+            And the console output should be a "help message"
 
         Scenario: Mix of supported and unsupported options
             When a user runs the command "npx specify --parallel 2 --bad-option"
             Then the command should exit with a "failure" status code
-            And the console output should be "help message"
+            And the console output should be a "help message"
 
     # the only character that should be printed is a single double-quote (")
     Scenario: User can escape string characters

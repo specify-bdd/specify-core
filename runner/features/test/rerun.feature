@@ -24,7 +24,7 @@ Feature: Rerun Failed Tests
             When a user runs the command "npx specify test"
             And a user runs the command "npx specify test --rerun"
             Then the command should exit with an "error" status code
-            And the console output should be "no tests to rerun"
+            And the console output should be a "no tests to rerun"
         
          Scenario: A previously failing test passes after a rerun
             Given that a "failing feature" file exists at "./features"
@@ -38,4 +38,4 @@ Feature: Rerun Failed Tests
             Given that a "failing feature" file exists at "./features"
             When the user runs the command "npx specify test --rerun"
             Then the command should exit with an "error" status code
-            And the console output should be "no tests to rerun"
+            And the console output should be a "no tests to rerun"
