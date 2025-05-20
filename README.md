@@ -1,6 +1,6 @@
 # Specify Core
 
-A developer-friendly BDD suite of tools built on Gherkin, Cucumber, and Selenium, with batteries-included step definitions / param types and support for adding your own.
+A developer-friendly suite of BDD tools built on Gherkin, Cucumber, and Selenium, with batteries-included step definitions / param types and support for adding your own.
 
 <!-- ![CI](https://img.shields.io/github/actions/workflow/status/your-org/specify/ci.yml?branch=main) -->
 [![npm version](https://img.shields.io/npm/v/specify)](https://www.npmjs.com/package/specify)
@@ -17,12 +17,10 @@ A developer-friendly BDD suite of tools built on Gherkin, Cucumber, and Selenium
 
 ## Available Packages/Plugins
 - [Runner](https://github.com/software-pirates/specify-core/tree/main/runner#readme)
-  - CLI
   - Browser
-  - Step Definitions
-  - Parameter Definitions
+  - CLI
 
-## Environment setup
+## Development environment setup
 
 Setup is as easy as running `npm ci` from your root project directory, no configuration required!
 

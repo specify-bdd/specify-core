@@ -2,7 +2,7 @@
 
 ### Prerequisites
 
-- Node.js v18 or newer
+- Node.js v22 or newer
 - If browser testing locally:
   - Chrome, Edge, Firefox, or Safari browser install
 
@@ -11,9 +11,9 @@
 ```
 your-project/
 ├── features/
-│   ├── *.feature           # Your Gherkin feature files
-│   └── steps/              # Custom step definitions (optional)
-├── specify.config.js       # Specify config (optional)
+│   ├── *.feature        # Your Gherkin feature files
+│   └── steps/           # Custom step definitions (optional)
+├── specify.config.json  # Specify config (optional)
 └── ...
 ```
 
@@ -64,10 +64,9 @@ npx specify [subcommand] [options] [argument]
 Specify is designed to be extensible:
 
 - Plug in custom step definitions
-- Configure runtime behavior via `specify.config.js`
+- Configure runtime behavior via `specify.config.json` in your project's `root` directory
 - Integrate with any WebDriver-compatible browser
 
 ### Custom Step Definitions
 
 **I AM A STUB, FIX ME @adamlacoste**
-
