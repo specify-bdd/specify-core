@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "specify-quick-ref": "file:../quick-ref/dist",
-    "specify-runner": "file:../runner/dist"
+    "specify-quick-ref": "workspace:quick-ref",
+    "specify-runner": "workspace:runner"
   }
 }
