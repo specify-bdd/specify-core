@@ -16,20 +16,20 @@ export const refs = {};
  * Add the contents of a JSON file to the quick ref store.  As with addJSON,
  * you can specify a namespace to store the JSON object under.
  *
- * @param file_path - The path to the JSON file to read and store
+ * @param filePath - The path to the JSON file to read and store
  * @param namespace - The namespace under which the file's contents should be
  *                    stored
  */
 export async function addFile(
-    file_path: string,
+    filePath: string,
     namespace: string = "",
 ): Promise<void> {
-    const json_raw = await fs.readFile(path.resolve(file_path), {
+    const jsonRaw = await fs.readFile(path.resolve(filePath), {
         "encoding": "utf8",
     });
-    const json_parsed = JSON.parse(json_raw);
+    const jsonParsed = JSON.parse(jsonRaw);
 
-    addJSON(json_parsed, namespace);
+    addJSON(jsonParsed, namespace);
 }
 
 /**

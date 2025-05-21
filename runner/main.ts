@@ -17,16 +17,16 @@ import * as refs from "specify-quick-ref";
 
 const argv = minimist(process.argv.slice(2));
 
-let gherkin_paths = [path.resolve(config.paths.gherkin)];
+let gherkinPaths = [path.resolve(config.paths.gherkin)];
 
 // process arguments
 // TODO: this should handle options, subcommands, etc. in addition to path args
 if (argv._.length) {
-    gherkin_paths = argv._.map((gherkin_path) => path.resolve(gherkin_path));
+    gherkinPaths = argv._.map((gherkinPath) => path.resolve(gherkinPath));
 }
 
 // add Gherkin to Cucumber config
-config.cucumber.paths.push(...gherkin_paths);
+config.cucumber.paths.push(...gherkinPaths);
 
 // add plugins to Cucumber config
 // TODO: this glob pattern needs to match JS not TS
@@ -40,31 +40,31 @@ config.cucumber.import.push(
 await refs.addFile(path.resolve(config.paths.refs));
 
 // execute cucumber tests
-const cucumber_opts = await loadConfiguration({ "provided": config.cucumber });
-const cucumber_res = await runCucumber(cucumber_opts.runConfiguration);
+const cucumberOpts = await loadConfiguration({ "provided": config.cucumber });
+const cucumberRes = await runCucumber(cucumberOpts.runConfiguration);
 
-process.exit(cucumber_res.success ? 0 : 1);
+process.exit(cucumberRes.success ? 0 : 1);
 
 /**
  * Resolve a plugin name into a path for that plugin, unless the name is a file
  * system location that already exists.
  *
- * @param plugin_name - The name of the plugin to resolve.
+ * @param pluginName - The name of the plugin to resolve.
  *
  * @returns The path to the plugin.
  */
-function getPluginPath(plugin_name: string): string {
-    let plugin_path = path.resolve(plugin_name);
+function getPluginPath(pluginName: string): string {
+    let pluginPath = path.resolve(pluginName);
 
     // first see if the plugin name works as a file system path
-    if (fs.existsSync(plugin_path)) {
-        return plugin_path;
+    if (fs.existsSync(pluginPath)) {
+        return pluginPath;
     }
 
     // if not, resolve the package name into a path
     // NOTE: Node.js import.meta.resolve is at stability index 1.2 ("Experimental release candidate") at time of
     // writing and may change without notice.  We need to verify this still works when upgrading Node versions.
-    plugin_path = url.fileURLToPath(import.meta.resolve(plugin_name));
+    pluginPath = url.fileURLToPath(import.meta.resolve(pluginName));
 
-    return path.dirname(plugin_path);
+    return path.dirname(pluginPath);
 }

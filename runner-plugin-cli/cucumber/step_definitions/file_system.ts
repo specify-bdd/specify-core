@@ -18,13 +18,13 @@ When('a/the user puts a(n) "{ref:file}" file in "{path}"', writeFile);
  * Writes a defined file's contents to a specific file system location.
  *
  * @param file      - The referenced file object to write
- * @param dest_path - The location to write the file to
+ * @param destPath - The location to write the file to
  */
-async function writeFile(file: FileParam, dest_path: string): Promise<void> {
+async function writeFile(file: FileParam, destPath: string): Promise<void> {
     const opts = {
         "encoding": file.encoding || "utf8",
         "mode": file.mode || 0o644,
     } as Partial<ObjectEncodingOptions>;
 
-    await fs.writeFile(dest_path, file.content, opts);
+    await fs.writeFile(destPath, file.content, opts);
 }

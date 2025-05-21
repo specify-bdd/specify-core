@@ -7,20 +7,20 @@ import { pathToFileURL } from "node:url";
 import type { RunnerConfig } from "@/types";
 
 // the user's override file should be in the *current working directory*
-const config_path = `${process.cwd()}/specify.config.json`;
+const configPath = `${process.cwd()}/specify.config.json`;
 
-let user_config = {} as Partial<RunnerConfig>;
+let userConfig = {} as Partial<RunnerConfig>;
 
-if (fs.existsSync(config_path)) {
-    user_config = (await import(pathToFileURL(config_path).href))
+if (fs.existsSync(configPath)) {
+    userConfig = (await import(pathToFileURL(configPath).href))
         .default as Partial<RunnerConfig>;
 }
 
 export const entries = await Promise.all(
     globbySync(path.join(import.meta.dirname, "*.config.ts"), {
         "absolute": true,
-    }).map(async (module_path) => {
-        const module = await import(pathToFileURL(module_path).href);
+    }).map(async (modulePath) => {
+        const module = await import(pathToFileURL(modulePath).href);
         const [key] = Object.keys(module);
 
         return [key, module[key]];
@@ -29,5 +29,5 @@ export const entries = await Promise.all(
 
 export const config = deepmerge(
     Object.fromEntries(entries),
-    user_config,
+    userConfig,
 ) as RunnerConfig;
