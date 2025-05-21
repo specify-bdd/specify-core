@@ -20,7 +20,7 @@ A developer-friendly suite of BDD tools built on Gherkin, Cucumber, and Selenium
   - Browser
   - CLI
 
-## Development environment setup
+## Development Environment Setup
 
 Setup is as easy as running `npm ci` from your root project directory, no configuration required!
 
