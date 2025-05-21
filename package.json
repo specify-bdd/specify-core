@@ -43,6 +43,7 @@
     "jest": "^29",
     "jiti": "^2.4.2",
     "jsonc-eslint-parser": "^2.4.0",
+    "pnpm": "^10.11.0",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
     "ts-jest": "^29",
