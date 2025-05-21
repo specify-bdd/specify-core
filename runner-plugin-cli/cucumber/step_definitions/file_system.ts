@@ -17,7 +17,7 @@ When('a/the user puts a(n) "{ref:file}" file in "{path}"', writeFile);
 /**
  * Writes a defined file's contents to a specific file system location.
  *
- * @param file      - The referenced file object to write
+ * @param file     - The referenced file object to write
  * @param destPath - The location to write the file to
  */
 async function writeFile(file: FileParam, destPath: string): Promise<void> {

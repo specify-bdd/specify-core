@@ -16,7 +16,7 @@ export const refs = {};
  * Add the contents of a JSON file to the quick ref store.  As with addJSON,
  * you can specify a namespace to store the JSON object under.
  *
- * @param filePath - The path to the JSON file to read and store
+ * @param filePath  - The path to the JSON file to read and store
  * @param namespace - The namespace under which the file's contents should be
  *                    stored
  */
