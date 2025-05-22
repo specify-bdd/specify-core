@@ -12,13 +12,18 @@ const configPath = `${process.cwd()}/specify.config.json`;
 let userConfig = {} as Partial<RunnerConfig>;
 
 if (fs.existsSync(configPath)) {
-    userConfig = (await import(pathToFileURL(configPath).href))
-        .default as Partial<RunnerConfig>;
+    userConfig = (
+        await import(pathToFileURL(configPath).href, {
+            "with": { "type": "json" },
+        })
+    ).default as Partial<RunnerConfig>;
 }
 
 export const entries = await Promise.all(
-    globbySync(path.join(import.meta.dirname, "*.config.ts"), {
+    globbySync(path.join(import.meta.dirname, "*.config.*"), {
         "absolute": true,
+        "ignore": ["**/*.d.ts"],
+        "onlyFiles": true,
     }).map(async (modulePath) => {
         const module = await import(pathToFileURL(modulePath).href);
         const [key] = Object.keys(module);

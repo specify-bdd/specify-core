@@ -15,7 +15,7 @@ defineParameterType({
     "name": "ref:file",
     "regexp": /[^"]*/,
     transformer(name: string): FileParam {
-        return lookup(name, "file");
+        return lookup(name, "file") as FileParam;
     },
 });
 

@@ -4,14 +4,16 @@
   "description": "Core repository description",
   "type": "module",
   "scripts": {
-    "build": "tsc -b",
-    "generate-types": "pnpm -r run generate-types --if-present",
+    "build": "pnpm -r --if-present run build",
+    "dev:watch": "tsx scripts/dev-watcher.ts",
+    "generate-types": "pnpm -r --if-present run generate-types",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "prepare": "pnpm run build && pnpm run type-check",
     "test": "pnpm run test:jest",
     "test:jest": "jest",
-    "type-check": "rimraf dist/tsconfig.tsbuildinfo && tsc -b --noEmit",
-    "type-check:watch": "rimraf dist/tsconfig.tsbuildinfo && tsc -b --noEmit --watch"
+    "type-check": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit",
+    "type-check:watch": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit --watch"
   },
   "repository": {
     "type": "git",
@@ -34,21 +36,31 @@
     "@microsoft/tsdoc-config": "^0.17.1",
     "@stylistic/eslint-plugin-js": "^4.2.0",
     "@types/jest": "^29.5.14",
+    "@types/lodash": "^4.17.17",
     "@types/node": "^22.15.17",
+    "chalk": "^5.4.1",
+    "chokidar": "^4.0.3",
     "eslint": "^9.27.0",
     "eslint-plugin-jsonc": "^2.20.0",
     "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-tsdoc": "^0.4.0",
     "globals": "^16.1.0",
+    "globby": "^14.1.0",
     "jest": "^29",
     "jiti": "^2.4.2",
     "jsonc-eslint-parser": "^2.4.0",
+    "lodash": "^4.17.21",
     "pnpm": "^10.11.0",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
     "ts-jest": "^29",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.0"
+  },
+  "peerDependencies": {
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.8.3"
   }
 }

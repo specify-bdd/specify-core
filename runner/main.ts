@@ -15,6 +15,8 @@ import * as path from "node:path";
 import * as url from "node:url";
 import * as refs from "specify-quick-ref";
 
+const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
+
 const argv = minimist(process.argv.slice(2));
 
 let gherkinPaths = [path.resolve(config.paths.gherkin)];
@@ -29,10 +31,12 @@ if (argv._.length) {
 config.cucumber.paths.push(...gherkinPaths);
 
 // add plugins to Cucumber config
-// TODO: this glob pattern needs to match JS not TS
 config.cucumber.import.push(
     ...config.plugins.map((plugin) =>
-        path.join(getPluginPath(plugin), "**/*.ts"),
+        path.join(
+            getPluginPath(plugin),
+            `**/*.{${CUCUMBER_PLUGIN_EXTENSIONS.join(",")}}`,
+        ),
     ),
 );
 

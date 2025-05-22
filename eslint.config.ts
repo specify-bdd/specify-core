@@ -68,6 +68,7 @@ export default tseslint.config(
                 {
                     "selector": "import",
                     "format": ["camelCase", "PascalCase"],
+                    "leadingUnderscore": "allow", // allow `_` for lodash
                 },
                 {
                     "selector": "variable",
