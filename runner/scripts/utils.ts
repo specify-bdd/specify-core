@@ -9,7 +9,7 @@ import ts from "typescript";
 import type { SourceFile } from "ts-morph";
 
 export type InterfaceExportOptions = {
-    output_file: string;
+    outputFile: string;
 };
 
 /**
@@ -40,37 +40,37 @@ export type InterfaceExportOptions = {
  * ```
  */
 export const generateInterfaceTypeExport = (
-    interface_name: string,
-    source_files: SourceFile[],
+    interfaceName: string,
+    sourceFiles: SourceFile[],
     opts?: InterfaceExportOptions,
 ): string => {
     const entries: string[] = [];
 
-    for (const file of source_files) {
-        const alias_map = new Map(
+    for (const file of sourceFiles) {
+        const aliasMap = new Map(
             file.getTypeAliases().map((alias) => [alias.getName(), alias]),
         );
 
         for (const [name, declarations] of file.getExportedDeclarations()) {
-            const var_declarations = declarations.filter((declaration) => {
+            const varDeclarations = declarations.filter((declaration) => {
                 return declaration.getKindName() === "VariableDeclaration";
             });
 
-            for (const declaration of var_declarations) {
-                const var_declaration = declaration.asKindOrThrow(
+            for (const declaration of varDeclarations) {
+                const varDeclaration = declaration.asKindOrThrow(
                     ts.SyntaxKind.VariableDeclaration,
                 );
 
-                const type_node = var_declaration.getTypeNode();
+                const typeNode = varDeclaration.getTypeNode();
 
-                let type_text: string;
+                let typeText: string;
 
-                if (type_node) {
-                    const type_name = type_node.getText();
+                if (typeNode) {
+                    const typeName = typeNode.getText();
 
-                    if (alias_map.has(type_name)) {
-                        const output_path =
-                            opts?.output_file ||
+                    if (aliasMap.has(typeName)) {
+                        const outputPath =
+                            opts?.outputFile ||
                             path.resolve(
                                 import.meta.dirname,
                                 "..",
@@ -78,25 +78,25 @@ export const generateInterfaceTypeExport = (
                                 "index.d.ts",
                             );
 
-                        const import_path = getRelativeSourceFileImportPath(
+                        const importPath = getRelativeSourceFileImportPath(
                             file,
-                            output_path,
+                            outputPath,
                         );
 
-                        type_text = `import("${import_path}").${type_name}`;
+                        typeText = `import("${importPath}").${typeName}`;
                     } else {
-                        type_text = type_name;
+                        typeText = typeName;
                     }
                 }
 
-                entries.push(`${name}: ${type_text};`);
+                entries.push(`${name}: ${typeText};`);
             }
         }
     }
 
     const spacer = " ".repeat(4);
     const output =
-        `export interface ${interface_name} {\n` +
+        `export interface ${interfaceName} {\n` +
         `${spacer}${entries.join(`\n${spacer}`)}\n` +
         "}";
 
@@ -106,28 +106,28 @@ export const generateInterfaceTypeExport = (
 /**
  * Gets the import path of a source file relative to the given output path.
  *
- * @param source_file - The source file to get the relative path for.
- * @param output_path - The path to the output file.
+ * @param sourceFile - The source file to get the relative path for.
+ * @param outputPath - The path to the output file.
  *
  * @returns The relative path to the source file from the output path.
  */
 export const getRelativeSourceFileImportPath = (
-    source_file: SourceFile,
-    output_path: string,
+    sourceFile: SourceFile,
+    outputPath: string,
 ): string => {
     // import paths are relative to the output path
-    let import_path = path.relative(
-        path.dirname(output_path),
-        source_file.getFilePath(),
+    let importPath = path.relative(
+        path.dirname(outputPath),
+        sourceFile.getFilePath(),
     );
 
-    if (!import_path.startsWith(".")) {
-        import_path = "./" + import_path;
+    if (!importPath.startsWith(".")) {
+        importPath = "./" + importPath;
     }
 
-    const path_parts = import_path.split(".");
+    const pathParts = importPath.split(".");
 
-    return path_parts.slice(0, -1).join(".");
+    return pathParts.slice(0, -1).join(".");
 };
 
 /**
