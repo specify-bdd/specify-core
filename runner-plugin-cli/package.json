@@ -16,8 +16,6 @@
   "license": "ISC",
   "peerDependencies": {
     "@cucumber/cucumber": "^11.3.0",
-    "specify-quick-ref": "workspace:quick-ref",
-    "specify-runner": "workspace:runner",
     "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3"
   }

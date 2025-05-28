@@ -13,7 +13,6 @@ import minimist from "minimist";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as url from "node:url";
-import * as refs from "specify-quick-ref";
 
 const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
 
@@ -32,6 +31,7 @@ config.cucumber.paths.push(...gherkinPaths);
 
 // add plugins to Cucumber config
 config.cucumber.import.push(
+    path.resolve(import.meta.dirname, "cucumber"), // Runner's Cucumber support code
     ...config.plugins.map((plugin) =>
         path.join(
             getPluginPath(plugin),
@@ -39,9 +39,6 @@ config.cucumber.import.push(
         ),
     ),
 );
-
-// import quick ref data
-await refs.addFile(path.resolve(config.paths.refs));
 
 // execute cucumber tests
 const cucumberOpts = await loadConfiguration({ "provided": config.cucumber });
