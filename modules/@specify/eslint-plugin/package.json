@@ -1,0 +1,12 @@
+{
+  "name": "@specify/eslint-plugin",
+  "version": "0.0.1",
+  "description": "Align the equals sign in assignments for better readability.",
+  "private": true,
+  "type": "module",
+  "main": "main.ts",
+  "peerDependencies": {
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.8.3"
+  }
+}

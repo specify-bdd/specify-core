@@ -1,4 +1,5 @@
 import eslint from "@eslint/js";
+import specifyESLintPlugin from "@specify/eslint-plugin";
 import globals from "globals";
 import eslintParserJSONC from "jsonc-eslint-parser";
 import eslintPluginJSONC from "eslint-plugin-jsonc";
@@ -50,11 +51,13 @@ export default tseslint.config(
             },
         },
         "plugins": {
+            "@specify-eslint": specifyESLintPlugin, // ???
             "@stylistic/js": stylisticJs,
             "prettier": eslintPluginPrettier,
             "tsdoc": eslintPluginTSDoc,
         },
         "rules": {
+            "@specify-eslint/align-assignments": "error",
             "@stylistic/js/quote-props": ["error", "always"],
             "@typescript-eslint/explicit-module-boundary-types": "warn",
             "@typescript-eslint/naming-convention": [
@@ -96,7 +99,11 @@ export default tseslint.config(
         },
     },
     {
-        "files": ["eslint.config.ts", "jest.config.ts"],
+        "files": [
+            "eslint.config.ts",
+            "jest.config.ts",
+            "eslint-plugin/**/*.ts",
+        ],
         "rules": {
             "@typescript-eslint/naming-convention": "off",
         },
