@@ -9,7 +9,7 @@
     "generate-types": "pnpm -r --if-present run generate-types",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepare": "pnpm run build && pnpm run type-check",
+    "prepare": "bash ./scripts/prepare.sh",
     "test": "pnpm run test:jest",
     "test:jest": "jest",
     "type-check": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit",
@@ -58,9 +58,5 @@
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.0"
-  },
-  "peerDependencies": {
-    "tsc-alias": "^1.8.16",
-    "typescript": "^5.8.3"
   }
 }

@@ -9,10 +9,10 @@
  */
 
 import { watch } from "chokidar";
-import { spawn } from "child_process";
-import { clear, log } from "console";
 import { globbySync } from "globby";
-import { dirname } from "path";
+import { spawn } from "node:child_process";
+import { clear, log } from "node:console";
+import { dirname } from "node:path";
 
 import _ from "lodash";
 import chalk from "chalk";
