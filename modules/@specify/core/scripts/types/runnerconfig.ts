@@ -3,17 +3,15 @@
  */
 
 import path from "path";
-import {
-    generateInterfaceTypeExport,
-    getSourceFilesFromGlob,
-} from "@/scripts/utils";
+import { generateInterfaceTypeExport, getSourceFilesFromGlob } from "../utils";
 
-import type { InterfaceExportOptions } from "@/scripts/utils";
+import type { InterfaceExportOptions } from "../utils";
 
 const CONFIGS_GLOB = path.resolve(
     import.meta.dirname,
     "..",
     "..",
+    "src",
     "config",
     "*.config.ts",
 );

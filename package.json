@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "build": "pnpm -r --if-present run build",
+    "dev:reset": "bash ./scripts/dev-reset.sh",
     "dev:watch": "tsx scripts/dev-watcher.ts",
     "generate-types": "pnpm -r --if-present run generate-types",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepare": "bash ./scripts/prepare.sh",
+    "prepare": "pnpm generate-types && pnpm -r --if-present run build",
     "test": "pnpm run test:jest",
     "test:jest": "jest",
     "type-check": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit",
@@ -26,9 +27,9 @@
   },
   "homepage": "https://github.com/software-pirates/specify-core#readme",
   "dependencies": {
-    "specify-quick-ref": "workspace:quick-ref",
-    "specify-runner": "workspace:runner",
-    "specify-runner-plugin-cli": "workspace:runner-plugin-cli"
+    "@specify/core": "workspace:*",
+    "@specify/plugin-cli": "workspace:*",
+    "@specify/quick-ref": "workspace:*"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
@@ -56,6 +57,7 @@
     "ts-jest": "^29",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.19.4",
+    "type-fest": "^4.41.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.0"
   }

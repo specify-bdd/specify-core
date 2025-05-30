@@ -1,5 +1,5 @@
 {
-  "name": "specify-runner",
+  "name": "@specify/core",
   "version": "0.0.1",
   "description": "The standalone engine for Specify.",
   "main": "dist/main.js",
@@ -24,8 +24,8 @@
   "homepage": "https://github.com/software-pirates/specify-core#readme",
   "dependencies": {
     "@cucumber/cucumber": "^11.3.0",
-    "minimist": "^1.2.8",
-    "specify-quick-ref": "workspace:quick-ref"
+    "@specify/quick-ref": "workspace:*",
+    "minimist": "^1.2.8"
   },
   "devDependencies": {
     "@types/minimist": "^1.2.5",
@@ -34,7 +34,7 @@
     "globby": "^14.1.0",
     "ts-morph": "^25.0.1"
   },
-  "optionalDependencies": {
-    "specify-runner-plugin-cli": "workspace:runner-plugin-cli"
+  "engines": {
+    "node": ">=22.0.0"
   }
 }

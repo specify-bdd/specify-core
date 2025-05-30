@@ -5,7 +5,7 @@
  * package's step definitions.
  */
 
-import { FileParam } from "@/types/params";
+import { FileParam } from "~/types/params";
 import { defineParameterType } from "@cucumber/cucumber";
 
 import * as path from "node:path";

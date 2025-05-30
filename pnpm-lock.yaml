@@ -8,15 +8,15 @@ importers:
 
   .:
     dependencies:
-      specify-quick-ref:
-        specifier: workspace:quick-ref
-        version: link:quick-ref
-      specify-runner:
-        specifier: workspace:runner
-        version: link:runner
-      specify-runner-plugin-cli:
-        specifier: workspace:runner-plugin-cli
-        version: link:runner-plugin-cli
+      '@specify/core':
+        specifier: workspace:*
+        version: link:modules/@specify/core
+      '@specify/plugin-cli':
+        specifier: workspace:*
+        version: link:modules/@specify/plugin-cli
+      '@specify/quick-ref':
+        specifier: workspace:*
+        version: link:modules/@specify/quick-ref
     devDependencies:
       '@eslint/js':
         specifier: ^9.26.0
@@ -93,6 +93,9 @@ importers:
       tsx:
         specifier: ^4.19.4
         version: 4.19.4
+      type-fest:
+        specifier: ^4.41.0
+        version: 4.41.0
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -100,23 +103,17 @@ importers:
         specifier: ^8.32.0
         version: 8.32.1(eslint@9.27.0(jiti@2.4.2))(typescript@5.8.3)
 
-  quick-ref:
-    dependencies:
-      globby:
-        specifier: ^14.1.0
-        version: 14.1.0
-
-  runner:
+  modules/@specify/core:
     dependencies:
       '@cucumber/cucumber':
         specifier: ^11.3.0
         version: 11.3.0
+      '@specify/quick-ref':
+        specifier: workspace:*
+        version: link:../quick-ref
       minimist:
         specifier: ^1.2.8
         version: 1.2.8
-      specify-quick-ref:
-        specifier: workspace:quick-ref
-        version: link:../quick-ref
     devDependencies:
       '@types/minimist':
         specifier: ^1.2.5
@@ -133,16 +130,18 @@ importers:
       ts-morph:
         specifier: ^25.0.1
         version: 25.0.1
-    optionalDependencies:
-      specify-runner-plugin-cli:
-        specifier: workspace:runner-plugin-cli
-        version: link:../runner-plugin-cli
 
-  runner-plugin-cli:
+  modules/@specify/plugin-cli:
     dependencies:
       '@cucumber/cucumber':
         specifier: ^11.3.0
         version: 11.3.0
+
+  modules/@specify/quick-ref:
+    dependencies:
+      globby:
+        specifier: ^14.1.0
+        version: 14.1.0
 
 packages:
 

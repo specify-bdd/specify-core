@@ -1,5 +1,5 @@
 {
-  "name": "specify-runner-plugin-cli",
+  "name": "@specify/plugin-cli",
   "version": "0.0.1",
   "description": "A plugin for Specify adding CLI testing support.",
   "main": "dist/main.js",

@@ -1,5 +1,5 @@
 {
-  "name": "specify-quick-ref",
+  "name": "@specify/quick-ref",
   "version": "0.0.1",
   "description": "A utility for referencing test param data quickly and easily.",
   "main": "dist/main.js",

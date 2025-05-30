@@ -22,7 +22,7 @@ your-project/
 1. Installation
 
     ```bash
-    npm i -D specify-runner
+    npm i -D @specify/core
     ```
 
 1. Execute the features

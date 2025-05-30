@@ -9,7 +9,7 @@ import { writeFileSync } from "node:fs";
 import path from "node:path";
 import { globbySync } from "globby";
 
-import type { InterfaceExportOptions } from "@/scripts/utils";
+import type { InterfaceExportOptions } from "./utils";
 
 const __dirname = import.meta.dirname;
 const outputFile = path.join(__dirname, "..", "types", "index.d.ts");
