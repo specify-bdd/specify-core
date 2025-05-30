@@ -141,3 +141,6 @@ dist
 
 # Specify user overrides
 specify.config.json
+
+# Ignore npm package-lock.json
+**/package-lock.json

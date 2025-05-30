@@ -1,0 +1,6 @@
+packages:
+  - quick-ref
+  - runner
+  - runner-plugin-cli
+onlyBuiltDependencies:
+  - esbuild
