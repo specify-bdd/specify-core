@@ -1,11 +1,7 @@
-import {
-    IWorldOptions,
-    setWorldConstructor,
-    World
-} from "@cucumber/cucumber";
-
+import { setWorldConstructor, World } from "@cucumber/cucumber";
 import * as refs from "specify-quick-ref";
 
+import type { IWorldOptions } from "@cucumber/cucumber";
 import type { QuickRef } from "specify-quick-ref";
 
 /**
