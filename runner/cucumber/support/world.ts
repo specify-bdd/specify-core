@@ -15,7 +15,7 @@ class SpecifyWorld extends World {
      *
      * @param opts - Options to pass through to the base World class constructor
      */
-    constructor(opts: IWorldOptions) {
+    constructor(opts: Partial<IWorldOptions>) {
         super(opts);
 
         this.quickRef = refs;

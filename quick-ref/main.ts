@@ -17,11 +17,13 @@ export const entries = await Promise.all(
         "absolute": true,
         "onlyFiles": true,
     }).map(async (modulePath) => {
-        const module = await import(pathToFileURL(modulePath).href, { "with": { "type": "json" } });
+        const module = await import(pathToFileURL(modulePath).href, {
+            "with": { "type": "json" },
+        });
         const [key] = Object.keys(module.default);
 
         return [key, module.default[key]];
-    })
+    }),
 );
 
 export const refs = Object.fromEntries(entries);
@@ -39,27 +41,28 @@ export const refs = Object.fromEntries(entries);
  * If the provided address segments do not exist in the reference object hierarchy
  */
 export function lookup(...segments: string[]): unknown {
-    const used_segments = [];
+    const usedSegments = [];
 
-    let location: any = refs;
+    let location = refs;
 
     while (segments.length) {
-        let segment = segments.shift();
+        const segment = segments.shift();
 
         if (!(segment in location)) {
-            throw new Error(`Invalid address: couldn't find "${segment}" in ${used_segments.join(".")}.`);
+            throw new Error(
+                `Invalid address: couldn't find "${segment}" in ${usedSegments.join(".")}.`,
+            );
         }
 
         location = location[segment];
-        used_segments.push(segment);
+        usedSegments.push(segment);
     }
 
     return location;
 }
 
-
 export type QuickRef = {
-    "entries": Array<Array<unknown>>,
-    "refs": Record<string, unknown>,
-    "lookup": Function
+    "entries": Array<Array<unknown>>;
+    "refs": Record<string, unknown>;
+    "lookup": () => unknown;
 };
