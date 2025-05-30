@@ -2,14 +2,18 @@
   "name": "specify-quick-ref",
   "version": "0.0.1",
   "description": "A utility for referencing test param data quickly and easily.",
-  "main": "main.ts",
+  "main": "dist/main.js",
   "type": "module",
   "scripts": {
+    "build": "tsc && tsc-alias --resolve-full-paths",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "deep-extend": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/deep-extend": "^0.6.2"
   }
 }
