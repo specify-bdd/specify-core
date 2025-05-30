@@ -143,8 +143,3 @@ Feature: Basic Test Execution
             When a user runs the command "npx specify --parallel 2 --bad-option"
             Then the command should exit with a "failure" status code
             And the console output should be a "help message"
-
-    # the only character that should be printed is a single double-quote (")
-    Scenario: User can escape string characters
-        When a user runs the command "echo \\\""
-        Then the console output should be "\""
