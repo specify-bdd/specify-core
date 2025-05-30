@@ -12,9 +12,5 @@
   "license": "ISC",
   "dependencies": {
     "globby": "^14.1.0"
-  },
-  "peerDependencies": {
-    "tsc-alias": "^1.8.16",
-    "typescript": "^5.8.3"
   }
 }

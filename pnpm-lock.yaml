@@ -105,46 +105,31 @@ importers:
       globby:
         specifier: ^14.1.0
         version: 14.1.0
-      tsc-alias:
-        specifier: ^1.8.16
-        version: 1.8.16
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
 
   runner:
     dependencies:
       '@cucumber/cucumber':
         specifier: ^11.3.0
         version: 11.3.0
-      globby:
-        specifier: ^14.1.0
-        version: 14.1.0
       minimist:
         specifier: ^1.2.8
         version: 1.2.8
       specify-quick-ref:
         specifier: workspace:quick-ref
         version: link:../quick-ref
-      tsc-alias:
-        specifier: ^1.8.16
-        version: 1.8.16
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
     devDependencies:
       '@types/minimist':
         specifier: ^1.2.5
         version: 1.2.5
-      '@types/node':
-        specifier: ^22.15.17
-        version: 22.15.18
       '@types/resolve':
         specifier: ^1.20.6
         version: 1.20.6
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
+      globby:
+        specifier: ^14.1.0
+        version: 14.1.0
       ts-morph:
         specifier: ^25.0.1
         version: 25.0.1
@@ -158,12 +143,6 @@ importers:
       '@cucumber/cucumber':
         specifier: ^11.3.0
         version: 11.3.0
-      tsc-alias:
-        specifier: ^1.8.16
-        version: 1.8.16
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
 
 packages:
 
