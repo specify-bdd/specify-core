@@ -102,13 +102,9 @@ importers:
 
   quick-ref:
     dependencies:
-      deep-extend:
-        specifier: ^0.6.0
-        version: 0.6.0
-    devDependencies:
-      '@types/deep-extend':
-        specifier: ^0.6.2
-        version: 0.6.2
+      globby:
+        specifier: ^14.1.0
+        version: 14.1.0
 
   runner:
     dependencies:
@@ -147,12 +143,6 @@ importers:
       '@cucumber/cucumber':
         specifier: ^11.3.0
         version: 11.3.0
-      specify-quick-ref:
-        specifier: workspace:quick-ref
-        version: link:../quick-ref
-      specify-runner:
-        specifier: workspace:runner
-        version: link:../runner
 
 packages:
 
@@ -751,9 +741,6 @@ packages:
   '@types/babel__traverse@7.20.7':
     resolution: {integrity: sha512-dkO5fhS7+/oos4ciWxyEyjWe48zmG6wbCheo/G2ZnHx4fs3EU6YC6UM8rk56gAjNJ9P3MTH2jo5jb92/K6wbng==}
 
-  '@types/deep-extend@0.6.2':
-    resolution: {integrity: sha512-SXvrJf/OSxNJVyzPCocXkrOjn9see3FyeksyYvs201vjROikZTccZLqGbtnjfaEhgj4UG3yFo/OXcIoCiUn/Lw==}
-
   '@types/estree@1.0.7':
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
 
@@ -1089,10 +1076,6 @@ packages:
     peerDependenciesMeta:
       babel-plugin-macros:
         optional: true
-
-  deep-extend@0.6.0:
-    resolution: {integrity: sha512-LOHxIOaPYdHlJRtCQfDIVZtfw/ufM8+rVj649RIHzcm/vGwQRXFt6OPqIFWsm2XEMrNIEtWR64sY1LEKD2vAOA==}
-    engines: {node: '>=4.0.0'}
 
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
@@ -3151,8 +3134,6 @@ snapshots:
     dependencies:
       '@babel/types': 7.27.1
 
-  '@types/deep-extend@0.6.2': {}
-
   '@types/estree@1.0.7': {}
 
   '@types/graceful-fs@4.1.9':
@@ -3532,8 +3513,6 @@ snapshots:
       supports-color: 8.1.1
 
   dedent@1.6.0: {}
-
-  deep-extend@0.6.0: {}
 
   deep-is@0.1.4: {}
 

@@ -7,7 +7,6 @@
 
 import { FileParam } from "@/types/params";
 import { defineParameterType } from "@cucumber/cucumber";
-import { lookup } from "specify-quick-ref";
 
 import * as path from "node:path";
 
@@ -15,7 +14,7 @@ defineParameterType({
     "name": "ref:file",
     "regexp": /[^"]*/,
     transformer(name: string): FileParam {
-        return lookup(name, "file") as FileParam;
+        return this.quickRef.lookup("file", name) as FileParam;
     },
 });
 

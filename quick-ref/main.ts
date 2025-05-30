@@ -6,63 +6,63 @@
  * are expected to conform to JSON format.
  */
 
-import extend from "deep-extend";
-import * as fs from "node:fs/promises";
+import { globbySync } from "globby";
 import * as path from "node:path";
+import { pathToFileURL } from "node:url";
 
-export const refs = {};
+const cwd = process.cwd();
 
-/**
- * Add the contents of a JSON file to the quick ref store.  As with addJSON,
- * you can specify a namespace to store the JSON object under.
- *
- * @param filePath  - The path to the JSON file to read and store
- * @param namespace - The namespace under which the file's contents should be
- *                    stored
- */
-export async function addFile(
-    filePath: string,
-    namespace: string = "",
-): Promise<void> {
-    const jsonRaw = await fs.readFile(path.resolve(filePath), {
-        "encoding": "utf8",
-    });
-    const jsonParsed = JSON.parse(jsonRaw);
+export const entries = await Promise.all(
+    globbySync(path.join(cwd, "*.refs.json"), {
+        "absolute": true,
+        "onlyFiles": true,
+    }).map(async (modulePath) => {
+        const module = await import(pathToFileURL(modulePath).href, {
+            "with": { "type": "json" },
+        });
+        const [key] = Object.keys(module.default);
 
-    addJSON(jsonParsed, namespace);
-}
+        return [key, module.default[key]];
+    }),
+);
+
+export const refs = Object.fromEntries(entries);
 
 /**
- * Add an arbitrary JSON structure to the quick ref store.  Optionally, you can
- * specify a namespace to store the object under; if omitted, object will
- * be merged with the root level.
+ * Look up a reference by its address.  Params drill down through the reference object hierarchy in the sequence
+ * provided.
  *
- * @param json      - The JSON object to store
- * @param namespace - The namespace under which JSON object should be stored
+ * @param segments - The address segments to look up.  For example, ("foo", "bar", "baz") will retrieve the value of
+ *                   refs.foo.bar.baz.
+ *
+ * @returns The value found at given address
+ *
+ * @throws {@link Error}
+ * If the provided address segments do not exist in the reference object hierarchy
  */
-export function addJSON(
-    json: Record<string, unknown>,
-    namespace: string = "",
-): void {
-    let target = refs;
+export function lookup(...segments: string[]): unknown {
+    const usedSegments = [];
 
-    if (namespace) {
-        if (!(namespace in refs)) {
-            refs[namespace] = {};
+    let location = refs;
+
+    while (segments.length) {
+        const segment = segments.shift();
+
+        if (!(segment in location)) {
+            throw new Error(
+                `Invalid address: couldn't find "${segment}" in ${usedSegments.join(".")}.`,
+            );
         }
 
-        target = refs[namespace];
+        location = location[segment];
+        usedSegments.push(segment);
     }
 
-    extend(target, json);
+    return location;
 }
 
-/**
- * Look up a reference by namespace and name.
- *
- * @param name      - The name of the reference to retrieve
- * @param namespace - The namespace under which the reference was stored
- */
-export function lookup(name: string, namespace: string = ""): unknown {
-    return refs[namespace]?.[name];
-}
+export type QuickRef = {
+    "entries": Array<Array<unknown>>;
+    "refs": Record<string, unknown>;
+    "lookup": () => unknown;
+};

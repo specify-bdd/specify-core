@@ -15,8 +15,6 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "@cucumber/cucumber": "^11.3.0",
-    "specify-quick-ref": "workspace:quick-ref",
-    "specify-runner": "workspace:runner"
+    "@cucumber/cucumber": "^11.3.0"
   }
 }
