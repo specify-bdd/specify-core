@@ -4,28 +4,63 @@ Feature: Retry Flaky Tests
     In order to ensure that flaky tests don't trigger alarms for transitory issues
 
     Background:
-        Given that the `[appname] core test runner` NPM package is installed
-        And that the `[appname] command line testing library` NPM package is installed
-        And that I have a command line prompt
+        Given that the "specify-runner" NPM package is installed
+        And that the "specify-runner-plugin-cli" NPM package is installed
+        And that a command line prompt is available
+
+    @todo
+    Scenario: The default value for the retry is ???
+
+    @todo
+    Scenario: The retry-tag option can/cannot be used without the retry option
 
     Rule: Flaky tests can be retried and any success among retries counts as passing
 
-        Scenario: Run a test that should fail with 2 retries
-            Given that I have a `Gherkin feature that should pass on the 3rd retry` file located at `./features`
-            When I input the command `npx [appname] test --retry 2`
-            Then the command should return a `failure` status code
+        Scenario: A test run that fails with 2 retries
+            Given that a "3rd retry passing feature" file exists at "./features"
+            When a user runs the command "npx specify test --retry 2"
+            Then the command should exit with a "failure" status code
 
-        Scenario: Run a test that should pass with 3 retries
-            Given that I have a `Gherkin feature that should pass on the 3rd retry` file located at `./features`
-            When I input the command `npx [appname] test --retry 3`
-            Then the command should return a `success` status code
+        Scenario: A test run that passes with 3 retries
+            Given that a "3rd retry passing feature" file exists at "./features"
+            When a user runs the command "npx specify test --retry 3"
+            Then the command should exit with a "success" status code
 
-    Rule: Tags can be used to retry only certain tests
+    Rule: Tags can be used to limit retries to specific tests
 
-        Scenario: Run a test that should pass with 3 retries, plus a slow test with no retries
-            Given that I have a `Gherkin feature that should pass on the 3rd retry` file located at `./features`
-            And that I have a `Gherkin feature that fails after 5 seconds` file located at `./features`
-            When I input the command `npx [appname] test --retry 3 --retry-tag "@retry"`
-            Then the command should return a `failure` status code
-            And the elapsed time should be less than `10s`
+        Scenario: Retry-tag limits retries to matching tagged tests
+            Given that a "3rd retry passing feature" file exists at "./features"
+            And that a "5 second failing feature" file exists at "./features"
+            When a user runs the command "npx specify test --retry 3 --retry-tag '@retry'"
+            Then the command should exit with a "failure" status code
+            And the elapsed time should be less than "10" seconds
+    
+    Rule: Retry option only accepts a single integer argument
 
+        Scenario: Multiple integers are rejected
+            When a user runs the command "npx specify test --retry 1 2"
+            Then the command should exit with an "error" status code
+            And the console output should be a "help message"
+        
+        Scenario: Floats are rejected
+            When a user runs the command "npx specify test --retry 0.5"
+            Then the command should exit with an "error" status code
+            And the console output should be a "help message"
+        
+        Scenario: Text is rejected
+            When a user runs the command "npx specify test --retry 'bad-value'"
+            Then the command should exit with an "error" status code
+            And the console output should be a "help message"
+    
+    Rule: Retry-tag option must be a valid tag
+
+        Scenario: Invalid tags are rejected
+            When a user runs the command "npx specify test --retry-tag 'bad-tag'"
+            Then the command should exit with an "error" status code
+            And the console output should be a "help message"
+    
+    @todo
+    Scenario: A retry value of 0 disables retries
+
+    @todo
+    Scenario: An excessively high retry value is rejected (or handled gracefully) 
