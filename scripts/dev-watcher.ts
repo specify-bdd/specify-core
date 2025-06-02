@@ -12,7 +12,8 @@ import { watch } from "chokidar";
 import { globbySync } from "globby";
 import { spawn } from "node:child_process";
 import { clear, log } from "node:console";
-import { dirname, join, sep } from "node:path";
+import { existsSync } from "node:fs";
+import { dirname, join, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import _ from "lodash";
@@ -120,6 +121,10 @@ async function rebuildPackage<
  * @param moduleSrcDir - The directory of the module to monitor for changes.
  */
 function watchModule(moduleSrcDir: string): void {
+    if (!existsSync(resolve(moduleSrcDir, "..", "package.json"))) {
+        return;
+    }
+
     const debouncedRebuild = _.debounce((event: EventName, path: string) => {
         void rebuildPackage({ event, path, moduleSrcDir });
     }, REBUILD_DEBOUNCE_MS);
