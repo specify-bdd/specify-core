@@ -91,6 +91,14 @@ async function rebuildPackage<
 
     logMessage(`${label} ${event}: ${path}`);
 
+    if (!packageConfig.scripts?.build) {
+        logMessage(
+            label + chalk.yellow(" No build script defined, skipping rebuild."),
+        );
+
+        return;
+    }
+
     logMessage(`${label} Rebuilding...`);
     const child = spawn("pnpm", ["run", "build"], {
         "cwd": moduleSrcDir,
