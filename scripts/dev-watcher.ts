@@ -12,12 +12,15 @@ import { watch } from "chokidar";
 import { globbySync } from "globby";
 import { spawn } from "node:child_process";
 import { clear, log } from "node:console";
-import { dirname } from "node:path";
+import { existsSync } from "node:fs";
+import { dirname, join, resolve, sep } from "node:path";
+import { pathToFileURL } from "node:url";
 
 import _ from "lodash";
 import chalk from "chalk";
 
-const PACKAGE_PREFIX = "specify-"; // todo: remove this when we reorganize the packages
+import type { PackageJson } from "type-fest";
+
 const REBUILD_DEBOUNCE_MS = 500;
 
 const prefix = chalk.cyan("[dev-watcher]");
@@ -37,15 +40,15 @@ const wrapLabel = (label: string) => {
     return chalk.cyan("[") + chalk.greenBright(label) + chalk.cyan("]");
 };
 
-const packageFiles = globbySync("**/package.json", {
+const moduleSrcDirs = globbySync(join("modules", "**", "src"), {
     "absolute": true,
-    "onlyFiles": true,
+    "onlyDirectories": true,
     "cwd": process.cwd(),
-    "ignore": ["./package.json", "**/node_modules/**", "**/dist/**"],
+    "ignore": ["**/node_modules/**", "**/dist/**"],
 });
 
 clearAndLogMessage("Watching for file changes...");
-packageFiles.forEach((packageFile) => watchPackage(packageFile));
+moduleSrcDirs.forEach((moduleSrcDir) => watchModule(moduleSrcDir));
 
 /*******************************************************************************
  * Supporting Functions
@@ -67,22 +70,38 @@ type EventName =
  *
  * @param PackageOpts - Options for the package rebuild.
  */
-function rebuildPackage<
+async function rebuildPackage<
     PackageOpts extends {
         event: EventName;
         path: string;
-        packageDir: string;
+        moduleSrcDir: string;
     },
->({ event, path, packageDir }: PackageOpts): void {
+>({ event, path, moduleSrcDir }: PackageOpts): Promise<void> {
+    const moduleRootDir = dirname(moduleSrcDir);
+    const packageConfig = (
+        await import(pathToFileURL(join(moduleRootDir, "package.json")).href, {
+            "with": { "type": "json" },
+        })
+    ).default as PackageJson;
+
     const buildStartTime = new Date();
-    const packageName = `${PACKAGE_PREFIX}${packageDir.split("/").slice(-1)[0]}`;
+    const packageName =
+        packageConfig.name || moduleRootDir.split(sep).slice(-2).join("/");
     const label = wrapLabel(packageName);
 
     logMessage(`${label} ${event}: ${path}`);
 
+    if (!packageConfig.scripts?.build) {
+        logMessage(
+            label + chalk.yellow(" No build script defined, skipping rebuild."),
+        );
+
+        return;
+    }
+
     logMessage(`${label} Rebuilding...`);
     const child = spawn("pnpm", ["run", "build"], {
-        "cwd": packageDir,
+        "cwd": moduleSrcDir,
         "shell": false,
     });
 
@@ -107,21 +126,18 @@ function rebuildPackage<
  * Watches a package directory for changes and triggers a rebuild when files
  * are modified.
  *
- * @param packageFile - The path to the package.json file of the package to
- *                      watch.
+ * @param moduleSrcDir - The directory of the module to monitor for changes.
  */
-function watchPackage(packageFile: string): void {
-    const packageDir = dirname(packageFile);
+function watchModule(moduleSrcDir: string): void {
+    if (!existsSync(resolve(moduleSrcDir, "..", "package.json"))) {
+        return;
+    }
+
     const debouncedRebuild = _.debounce((event: EventName, path: string) => {
-        rebuildPackage({ event, path, packageDir });
+        void rebuildPackage({ event, path, moduleSrcDir });
     }, REBUILD_DEBOUNCE_MS);
 
-    watch(packageDir, {
-        "ignored": [
-            /[/\\]node_modules[/\\]/,
-            /[/\\]dist[/\\]/,
-            /package\.json$/,
-        ],
+    watch(moduleSrcDir, {
         "ignoreInitial": true, // don't trigger on watcher start
         "persistent": true, // keep the watcher running
         "followSymlinks": false, // don't follow symlinks (prevent recursion)

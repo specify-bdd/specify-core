@@ -1,8 +1,8 @@
 {
     "files": [],
     "references": [
-        { "path": "./quick-ref" },
-        { "path": "./runner" },
-        { "path": "./runner-plugin-cli" },
+        { "path": "./modules/@specify/quick-ref" },
+        { "path": "./modules/@specify/core" },
+        { "path": "./modules/@specify/plugin-cli" },
     ]
 }

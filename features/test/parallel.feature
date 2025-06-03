@@ -4,8 +4,8 @@ Feature: Parallel Execution
     So that testing is faster and more efficient
 
     Background:
-        Given that the "specify-runner" NPM package is installed
-        And that the "specify-runner-plugin-cli" NPM package is installed
+        Given that the "@specify/core" NPM package is installed
+        And that the "@specify/plugin-cli" NPM package is installed
         And that a command line prompt is available
         And that a "5 second passing feature" file exists at "./features"
         And that a "5 second failing feature" file exists at "./features"
