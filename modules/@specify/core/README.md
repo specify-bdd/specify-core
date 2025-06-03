@@ -1,4 +1,4 @@
-# Specify Runner
+# Specify Core
 
 ### Prerequisites
 

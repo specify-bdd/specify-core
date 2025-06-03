@@ -4,8 +4,8 @@ Feature: Basic Test Execution
     In order to ensure that my software functions as the specs say it should
 
     Background:
-        Given that the "specify-runner" NPM package is installed
-        And that the "specify-runner-plugin-cli" NPM package is installed
+        Given that the "@specify/core" NPM package is installed
+        And that the "@specify/plugin-cli" NPM package is installed
         And that a command line prompt is available
 
     Rule: The run should succeed if all tests pass

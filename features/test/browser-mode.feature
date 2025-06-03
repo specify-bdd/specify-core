@@ -4,9 +4,9 @@ Feature: Browser Testing Mode
     So that I can prioritize system resource usage and test observability according to my needs and preferences
 
     Background:
-        Given that the "specify-runner" NPM package is installed
-        And that the "specify-runner-plugin-browser" NPM package is installed
-        And that the "specify-runner-plugin-cli" NPM package is installed
+        Given that the "@specify/core" NPM package is installed
+        And that the "@specify/plugin-browser" NPM package is installed
+        And that the "@specify/plugin-cli" NPM package is installed
         And that a command line prompt is available
         And that a "passing browser feature" file exists at "./features"
 
