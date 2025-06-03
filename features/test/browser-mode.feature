@@ -5,7 +5,7 @@ Feature: Browser Testing Mode
 
     Background:
         Given that the "@specify/core" NPM package is installed
-        And that the "@specify/core-plugin-browser" NPM package is installed
+        And that the "@specify/plugin-browser" NPM package is installed
         And that the "@specify/plugin-cli" NPM package is installed
         And that a command line prompt is available
         And that a "passing browser feature" file exists at "./features"
