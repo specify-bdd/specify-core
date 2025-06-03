@@ -4,8 +4,8 @@ Feature: Retry Flaky Tests
     In order to ensure that flaky tests don't trigger alarms for transitory issues
 
     Background:
-        Given that the "specify-runner" NPM package is installed
-        And that the "specify-runner-plugin-cli" NPM package is installed
+        Given that the "@specify/core" NPM package is installed
+        And that the "@specify/plugin-cli" NPM package is installed
         And that a command line prompt is available
 
     @todo

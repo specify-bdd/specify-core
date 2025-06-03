@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Runner Module
+ * Core Module
  *
  * A Cucumber-based testing tool built to support behavior-driven development.
  */
@@ -31,7 +31,7 @@ config.cucumber.paths.push(...gherkinPaths);
 
 // add plugins to Cucumber config
 config.cucumber.import.push(
-    path.resolve(import.meta.dirname, "cucumber"), // Runner's Cucumber support code
+    path.resolve(import.meta.dirname, "cucumber"), // Core's Cucumber support code
     ...config.plugins.map((plugin) =>
         path.join(
             getPluginPath(plugin),

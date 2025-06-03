@@ -1,5 +1,5 @@
 /**
- * Generates the RunnerConfig type definition file.
+ * Generates the CoreConfig type definition file.
  */
 
 import path from "path";
@@ -18,7 +18,7 @@ const CONFIGS_GLOB = path.resolve(
 
 export const generateTypeExport = (opts: InterfaceExportOptions): string =>
     generateInterfaceTypeExport(
-        "RunnerConfig",
+        "CoreConfig",
         getSourceFilesFromGlob(CONFIGS_GLOB),
         opts,
     );

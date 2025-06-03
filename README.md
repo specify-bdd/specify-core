@@ -16,9 +16,9 @@ A developer-friendly suite of BDD tools built on Gherkin, Cucumber, and Selenium
 - Retry and rerun support for flaky or failed tests
 
 ## Available Packages/Plugins
-- [Runner](https://github.com/software-pirates/specify-core/tree/main/runner#readme)
+- [Core](https://github.com/software-pirates/specify-core/tree/main/modules/@specify/core#readme)
   - Browser
-  - CLI
+  - [CLI](https://github.com/software-pirates/specify-core/tree/main/modules/@specify/plugin-cli#readme)
 
 ## Development Environment Setup
 
