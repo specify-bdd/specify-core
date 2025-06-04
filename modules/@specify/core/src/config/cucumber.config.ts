@@ -26,5 +26,7 @@ export const cucumber: CucumberConfig = {
     "retry": 1,
     "retryTagFilter": "@retry",
     "strict": true,
-    "worldParameters": {},
+    "worldParameters": {
+        "userPath": process.env.PATH,
+    },
 };

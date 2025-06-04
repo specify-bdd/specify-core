@@ -19,6 +19,14 @@ defineParameterType({
 });
 
 defineParameterType({
+    "name": "ref:statusCode",
+    "regexp": /[^"\\]+/,
+    transformer(name: string): number {
+        return this.quickRef.lookup("statusCode", name);
+    },
+});
+
+defineParameterType({
     "name": "path",
     "regexp": /[^"]*/,
     transformer(name: string): string {

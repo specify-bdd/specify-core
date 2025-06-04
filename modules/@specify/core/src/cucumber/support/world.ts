@@ -8,7 +8,8 @@ import type { QuickRef } from "@specify/quick-ref";
  * Specify's custom Cucumber World class
  */
 class SpecifyWorld extends World {
-    quickRef: QuickRef;
+    #quickRef: QuickRef;
+    #userPath: string;
 
     /**
      * Constructor override which adds a QuickRef handle to the world instance.
@@ -18,7 +19,16 @@ class SpecifyWorld extends World {
     constructor(opts: IWorldOptions) {
         super(opts);
 
-        this.quickRef = refs;
+        this.#quickRef = refs;
+        this.#userPath = opts.parameters.userPath;
+    }
+
+    public get quickRef(): QuickRef {
+        return this.#quickRef;
+    }
+
+    public get userPath(): string {
+        return this.#userPath;
     }
 }
 
