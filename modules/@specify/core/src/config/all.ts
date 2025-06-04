@@ -19,18 +19,23 @@ if (fs.existsSync(configPath)) {
     ).default as Partial<CoreConfig>;
 }
 
-export const entries = await Promise.all(
-    globbySync(path.join(import.meta.dirname, "*.config.*"), {
-        "absolute": true,
-        "ignore": ["**/*.d.ts"],
-        "onlyFiles": true,
-    }).map(async (modulePath) => {
-        const module = await import(pathToFileURL(modulePath).href);
-        const [key] = Object.keys(module);
+export const entries: Array<Array<unknown>> = await new Promise(async (resolve) => {
+    const modulePaths = globbySync(
+        path.join(import.meta.dirname, "*.config.*"),
+        { "absolute": true, "ignore": ["**/*.d.ts"], "onlyFiles": true }
+    );
+    const entries = [];
 
-        return [key, module[key]];
-    }),
-);
+    for (const modulePath of modulePaths) {
+        const module = await import(pathToFileURL(modulePath).href);
+
+        for (const key of Object.keys(module)) {
+            entries.push([ key, module[key] ]);
+        }
+    }
+
+    resolve(entries);
+});
 
 export const config = deepmerge(
     Object.fromEntries(entries),

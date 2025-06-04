@@ -12,19 +12,20 @@ import { pathToFileURL } from "node:url";
 
 const cwd = process.cwd();
 
-export const entries = await Promise.all(
-    globbySync(path.join(cwd, "*.refs.json"), {
-        "absolute": true,
-        "onlyFiles": true,
-    }).map(async (modulePath) => {
-        const module = await import(pathToFileURL(modulePath).href, {
-            "with": { "type": "json" },
-        });
-        const [key] = Object.keys(module.default);
+export const entries: Array<Array<unknown>> = await new Promise(async (resolve) => {
+    const modulePaths = globbySync(path.join(cwd, "*.refs.json"), { "absolute": true, "onlyFiles": true });
+    const entries = [];
 
-        return [key, module.default[key]];
-    }),
-);
+    for (const modulePath of modulePaths) {
+        const module = await import(pathToFileURL(modulePath).href, { "with": { "type": "json" } });
+
+        for (const key of Object.keys(module.default)) {
+            entries.push([ key, module.default[key] ]);
+        }
+    }
+
+    resolve(entries);
+});
 
 export const refs = Object.fromEntries(entries);
 
@@ -41,7 +42,7 @@ export const refs = Object.fromEntries(entries);
  * If the provided address segments do not exist in the reference object hierarchy
  */
 export function lookup(...segments: string[]): unknown {
-    const usedSegments = [];
+    const usedSegments = [ "<refs>" ];
 
     let location = refs;
 
