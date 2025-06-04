@@ -12,28 +12,6 @@ import { pathToFileURL } from "node:url";
 
 const cwd = process.cwd();
 
-// export const entries: Array<Array<unknown>> = await new Promise(
-//     async (resolve) => {
-//         const modulePaths = globbySync(path.join(cwd, "*.refs.json"), {
-//             "absolute": true,
-//             "onlyFiles": true,
-//         });
-//         const entries = [];
-
-//         for (const modulePath of modulePaths) {
-//             const module = await import(pathToFileURL(modulePath).href, {
-//                 "with": { "type": "json" },
-//             });
-
-//             for (const key of Object.keys(module.default)) {
-//                 entries.push([key, module.default[key]]);
-//             }
-//         }
-
-//         resolve(entries);
-//     },
-// );
-
 const modulePaths = globbySync(path.join(cwd, "*.refs.json"), {
     "absolute": true,
     "onlyFiles": true,
