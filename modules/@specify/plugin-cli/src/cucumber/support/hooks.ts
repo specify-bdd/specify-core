@@ -7,7 +7,7 @@
 import { After, AfterAll, Before, BeforeAll } from "@cucumber/cucumber";
 import * as fs from "node:fs/promises";
 
-const cliFiles = [];
+const cliFiles: Array<string> = [];
 
 BeforeAll(async function () {
     // beforeall actions
