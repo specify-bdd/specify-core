@@ -30,7 +30,7 @@ export const entries = await Promise.all(
 
         if (keys.length > 1) {
             throw new Error(
-                `Config modules should only have one export, but ${modulePath} has ${keys.length}.`,
+                `Config modules should only have 1 export, but ${modulePath} has ${keys.length}.`,
             );
         }
 
