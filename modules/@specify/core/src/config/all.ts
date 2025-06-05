@@ -19,23 +19,24 @@ if (fs.existsSync(configPath)) {
     ).default as Partial<CoreConfig>;
 }
 
-const modulePaths = globbySync(path.join(import.meta.dirname, "*.config.*"), {
-    "absolute": true,
-    "ignore": ["**/*.d.ts"],
-    "onlyFiles": true,
-});
+export const entries = await Promise.all(
+    globbySync(path.join(import.meta.dirname, "*.config.*"), {
+        "absolute": true,
+        "ignore": ["**/*.d.ts"],
+        "onlyFiles": true,
+    }).map(async (modulePath) => {
+        const module = await import(pathToFileURL(modulePath).href);
+        const keys = Object.keys(module);
 
-const modules = await Promise.all(
-    modulePaths.map((modulePath) => import(pathToFileURL(modulePath).href)),
+        if (keys.length > 1) {
+            throw new Error(`Config modules should only have one export, but ${modulePath} has ${keys.length}.`);
+        }
+
+        const key = keys.shift();
+
+        return [key, module[key]];
+    }),
 );
-
-export const entries = [];
-
-for (const module of modules) {
-    for (const key of Object.keys(module)) {
-        entries.push([key, module[key]]);
-    }
-}
 
 export const config = deepmerge(
     Object.fromEntries(entries),
