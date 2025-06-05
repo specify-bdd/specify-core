@@ -29,7 +29,9 @@ export const entries = await Promise.all(
         const keys = Object.keys(module);
 
         if (keys.length > 1) {
-            throw new Error(`Config modules should only have one export, but ${modulePath} has ${keys.length}.`);
+            throw new Error(
+                `Config modules should only have one export, but ${modulePath} has ${keys.length}.`,
+            );
         }
 
         const key = keys.shift();
