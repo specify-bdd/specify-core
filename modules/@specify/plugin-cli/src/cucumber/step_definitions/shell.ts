@@ -24,17 +24,17 @@ Then(
 );
 
 async function executeCommand(command: string) {
-    await this.cli.run(command);
+    await this.cli.shell.run(command);
 }
 
 function setupCLI(): void {
-    this.cli = new Commander(this.userPath);
+    this.cli.shell = new Commander(this.userPath);
 }
 
 function verifyCLIOutput(consoleOutput: RegExp) {
-    assert.ok(consoleOutput.test(this.cli.output));
+    assert.ok(consoleOutput.test(this.cli.shell.output));
 }
 
 function verifyCLIStatusCode(statusCode: string) {
-    assert.strictEqual(this.cli.statusCode, statusCode);
+    assert.strictEqual(this.cli.shell.statusCode, statusCode);
 }
