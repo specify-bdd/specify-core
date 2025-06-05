@@ -7,11 +7,11 @@
 
 import { Given, Then, When } from "@cucumber/cucumber";
 import { Commander } from "@/commander";
-import assert from "assert";
+import assert from "node:assert/strict";
 
 Given("that a command line prompt is available", setupCLI);
 
-When("a/the user runs the command {string}", executeCommand);
+When("a/the user runs the command {string}", runCommand);
 
 Then(
     'the command should exit with a(n)/the "{ref:statusCode}" status code',
@@ -23,7 +23,7 @@ Then(
     verifyCLIOutput,
 );
 
-async function executeCommand(command: string) {
+async function runCommand(command: string) {
     await this.cli.shell.run(command);
 }
 
@@ -36,5 +36,5 @@ function verifyCLIOutput(consoleOutput: RegExp) {
 }
 
 function verifyCLIStatusCode(statusCode: string) {
-    assert.strictEqual(this.cli.shell.statusCode, statusCode);
+    assert.equal(this.cli.shell.statusCode, statusCode);
 }

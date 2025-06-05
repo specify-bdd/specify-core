@@ -1,13 +1,14 @@
-import {
-    spawn,
+import { spawn } from "node:child_process";
+
+import type {
     ChildProcessWithoutNullStreams,
     SpawnOptions,
-} from "child_process";
+} from "node:child_process";
 
 export class Commander {
     #cli: ChildProcessWithoutNullStreams;
-    #commandReject;
-    #commandResolve;
+    // #commandReject: (reason?: any) => void;
+    #commandResolve: (value: void | PromiseLike<void>) => void;
     #output: string;
     // status code for the result of the last completed command
     #statusCode: number;
@@ -27,41 +28,21 @@ export class Commander {
         this.#cli = spawn("sh", options);
 
         this.#cli.stdout.on("data", (data) => this.#processOutput(data));
-        this.#cli.stderr.on("data", (data) => this.#processError(data));
+        // this.#cli.stderr.on("data", (data) => this.#processError(data));
     }
 
-    public get output(): string {
+    get output(): string {
         return this.#output;
     }
 
-    public get statusCode(): number {
+    get statusCode(): number {
         return this.#statusCode;
     }
 
-    #processOutput(output: Buffer) {
-        const str: string = output.toString();
-
-        // console.log(str);
-
-        if (str.includes("status code: ")) {
-            this.#statusCode = parseInt(str.match(/\d+/)[0]);
-
-            this.#commandResolve();
-        } else {
-            this.#output += str;
-        }
-    }
-
-    #processError(error: Buffer) {
-        // console.log(error.toString());
-        // this.#commandReject();
-        // throw error.toString();
-    }
-
-    public async run(command: string): Promise<void> {
-        return new Promise((resolve, reject) => {
+    async run(command: string): Promise<void> {
+        return new Promise((resolve) => {
             this.#commandResolve = resolve;
-            this.#commandReject = reject;
+            // this.#commandReject = reject;
             this.#output = "";
 
             this.#cli.stdin.write(`${command};echo "status code: $?"\n`);
@@ -76,4 +57,24 @@ export class Commander {
 
     //     return command + `; echo "$?${this.delimiter}"\n`;
     // }
+
+    // #processError(error: Buffer) {
+    //     console.log(error.toString());
+    //     this.#commandReject();
+    //     throw error.toString();
+    // }
+
+    #processOutput(output: Buffer) {
+        const str: string = output.toString();
+
+        // console.log(str);
+
+        if (str.includes("status code: ")) {
+            this.#statusCode = parseInt(str.match(/\d+/)[0]);
+
+            this.#commandResolve();
+        } else {
+            this.#output += str;
+        }
+    }
 }

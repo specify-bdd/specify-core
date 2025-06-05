@@ -27,6 +27,8 @@ export const cucumber: CucumberConfig = {
     "retryTagFilter": "@retry",
     "strict": true,
     "worldParameters": {
+        // similar value as to what you'd see if you ran $PATH in your terminal,
+        // but there is also some node-specific path info added to it.
         "userPath": process.env.PATH,
     },
 };

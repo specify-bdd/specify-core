@@ -17,22 +17,8 @@ Given('that a(n) "{ref:file}" file exists at "{path}"', copyFile);
 When('a/the user puts a(n) "{ref:file}" file in "{path}"', copyFile);
 
 /**
- * Writes a defined file's contents to a specific file system location.
- *
- * @param file     - The referenced file object to write
- * @param destPath - The location to write the file to
- */
-// async function writeFile(file: FileParam, destPath: string): void {
-//     const opts = {
-//         "encoding": file.encoding || "utf8",
-//         "mode": file.mode || 0o644,
-//     } as Partial<ObjectEncodingOptions>;
-
-//     await fs.writeFile(destPath, file.name), file.content, opts);
-// }
-
-/**
- * Copies an existing file to a specific file system location.
+ * Copies an existing file to a specific file system location. Will not overwrite
+ * or throw if the destination path already exists.
  *
  * @param file     - The referenced file object to copy
  * @param destPath - The location to copy the file to
@@ -50,3 +36,18 @@ function copyFile(file: FileParam, destPath: string): void {
         }
     }
 }
+
+/**
+ * Writes a defined file's contents to a specific file system location.
+ *
+ * @param file     - The referenced file object to write
+ * @param destPath - The location to write the file to
+ */
+// async function writeFile(file: FileParam, destPath: string): void {
+//     const opts = {
+//         "encoding": file.encoding || "utf8",
+//         "mode": file.mode || 0o644,
+//     } as Partial<ObjectEncodingOptions>;
+
+//     await fs.writeFile(destPath, file.name), file.content, opts);
+// }
