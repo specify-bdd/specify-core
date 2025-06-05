@@ -23,11 +23,11 @@ class SpecifyWorld extends World {
         this.#userPath = opts.parameters.userPath;
     }
 
-    public get quickRef(): QuickRef {
+    get quickRef(): QuickRef {
         return this.#quickRef;
     }
 
-    public get userPath(): string {
+    get userPath(): string {
         return this.#userPath;
     }
 }
