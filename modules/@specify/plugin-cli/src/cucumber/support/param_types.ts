@@ -11,6 +11,14 @@ import { defineParameterType } from "@cucumber/cucumber";
 import * as path from "node:path";
 
 defineParameterType({
+    "name": "ref:consoleOutput",
+    "regexp": /[^"\\]+/,
+    transformer(name: string): RegExp {
+        return new RegExp(this.quickRef.lookup("consoleOutput", name));
+    },
+});
+
+defineParameterType({
     "name": "ref:file",
     "regexp": /[^"]*/,
     transformer(name: string): FileParam {
