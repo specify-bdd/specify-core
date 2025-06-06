@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { randomUUID } from "node:crypto";
 
 import type {
     ChildProcessWithoutNullStreams,
@@ -6,12 +7,13 @@ import type {
 } from "node:child_process";
 
 export class Commander {
-    #cli: ChildProcessWithoutNullStreams;
-    // #commandReject: (reason?: any) => void;
+    #childProcess: ChildProcessWithoutNullStreams;
     #commandResolve: (value: void | PromiseLike<void>) => void;
+    #delimiter: string;
     #output: string;
     // status code for the result of the last completed command
     #statusCode: number;
+    #statusCodeKey = "STATUS_CODE=";
 
     constructor(userPath?: string) {
         const options: SpawnOptions = {
@@ -25,10 +27,11 @@ export class Commander {
             };
         }
 
-        this.#cli = spawn("sh", options);
+        this.#childProcess = spawn("sh", options);
 
-        this.#cli.stdout.on("data", (data) => this.#processOutput(data));
-        // this.#cli.stderr.on("data", (data) => this.#processError(data));
+        this.#childProcess.stdout.on("data", (data) =>
+            this.#processOutput(data),
+        );
     }
 
     get output(): string {
@@ -42,35 +45,30 @@ export class Commander {
     async run(command: string): Promise<void> {
         return new Promise((resolve) => {
             this.#commandResolve = resolve;
-            // this.#commandReject = reject;
             this.#output = "";
 
-            this.#cli.stdin.write(`${command};echo "status code: $?"\n`);
-            // this.#cli.stdin.write(this.#delimitCommand(command));
+            this.#childProcess.stdin.write(
+                `${command};echo "${this.#delimiter}$?"\n`,
+            );
+            this.#childProcess.stdin.write(this.#delimitCommand(command));
         });
     }
 
-    // #delimitCommand(command: string): string {
-    //     // random hash to prevent false delimits
-    //     this.delimiter =
-    //         "__SPECIFY__" + "062185161098465106549846510619801065108";
+    #delimitCommand(command: string): string {
+        // random hash to prevent false delimits
+        this.#delimiter = randomUUID();
 
-    //     return command + `; echo "$?${this.delimiter}"\n`;
-    // }
-
-    // #processError(error: Buffer) {
-    //     console.log(error.toString());
-    //     this.#commandReject();
-    //     throw error.toString();
-    // }
+        // example output: SPECIFY STATUS_CODE=127 23db01af-068b-4a3b-9124-09d1f619df4b
+        return command + `; echo "SPECIFY STATUS_CODE=$? ${this.#delimiter}"\n`;
+    }
 
     #processOutput(output: Buffer) {
         const str: string = output.toString();
 
-        // console.log(str);
+        if (str.includes(this.#delimiter)) {
+            const matcher = new RegExp(`${this.#statusCodeKey}(\\d+)`);
 
-        if (str.includes("status code: ")) {
-            this.#statusCode = parseInt(str.match(/\d+/)[0]);
+            this.#statusCode = parseInt(str.match(matcher)[1], 10);
 
             this.#commandResolve();
         } else {
