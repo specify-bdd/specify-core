@@ -30,7 +30,7 @@ defineParameterType({
     "name": "ref:statusCode",
     "regexp": /[^"\\]+/,
     transformer(name: string): number {
-        return this.quickRef.lookup("statusCode", name);
+        return parseInt(this.quickRef.lookup("statusCode", name), 10);
     },
 });
 
