@@ -136,6 +136,9 @@ importers:
       '@cucumber/cucumber':
         specifier: ^11.3.0
         version: 11.3.0
+      validate-npm-package-name:
+        specifier: ^6.0.1
+        version: 6.0.1
 
   modules/@specify/quick-ref:
     dependencies:
@@ -2365,6 +2368,10 @@ packages:
 
   validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
+
+  validate-npm-package-name@6.0.1:
+    resolution: {integrity: sha512-OaI//3H0J7ZkR1OqlhGA8cA+Cbk/2xFOQpJOt5+s27/ta9eZwpeervh4Mxh4w0im/kdgktowaqVNR7QOrUd7Yg==}
+    engines: {node: ^18.17.0 || >=20.5.0}
 
   walker@1.0.8:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
@@ -4919,6 +4926,8 @@ snapshots:
     dependencies:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
+
+  validate-npm-package-name@6.0.1: {}
 
   walker@1.0.8:
     dependencies:

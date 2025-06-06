@@ -5,39 +5,43 @@
  * package's step definitions.
  */
 
-import { FileParam } from "~/types/params";
 import { defineParameterType } from "@cucumber/cucumber";
-
 import * as path from "node:path";
+
+import type { FileParam } from "~/types/params";
+
+defineParameterType({
+    "name": "path",
+    "regexp": /[^"]*/,
+    transformer(input: string): string {
+        return path.resolve(input);
+    },
+    "useForSnippets": false
+});
 
 defineParameterType({
     "name": "ref:consoleOutput",
     "regexp": /[^"\\]+/,
-    transformer(name: string): RegExp {
-        return new RegExp(this.quickRef.lookup("consoleOutput", name));
+    transformer(input: string): RegExp {
+        return new RegExp(this.quickRef.lookup("consoleOutput", input));
     },
+    "useForSnippets": false
 });
 
 defineParameterType({
     "name": "ref:file",
     "regexp": /[^"]*/,
-    transformer(name: string): FileParam {
-        return this.quickRef.lookup("file", name) as FileParam;
+    transformer(input: string): FileParam {
+        return this.quickRef.lookup("file", input) as FileParam;
     },
+    "useForSnippets": false
 });
 
 defineParameterType({
     "name": "ref:statusCode",
     "regexp": /[^"\\]+/,
-    transformer(name: string): number {
-        return parseInt(this.quickRef.lookup("statusCode", name), 10);
+    transformer(input: string): number {
+        return parseInt(this.quickRef.lookup("statusCode", input), 10);
     },
-});
-
-defineParameterType({
-    "name": "path",
-    "regexp": /[^"]*/,
-    transformer(name: string): string {
-        return path.resolve(name);
-    },
+    "useForSnippets": false
 });
