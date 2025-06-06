@@ -9,7 +9,6 @@ import type { QuickRef } from "@specify/quick-ref";
  */
 class SpecifyWorld extends World {
     #quickRef: QuickRef;
-    #userPath: string;
 
     /**
      * Constructor override which adds a QuickRef handle to the world instance.
@@ -20,15 +19,10 @@ class SpecifyWorld extends World {
         super(opts);
 
         this.#quickRef = refs;
-        this.#userPath = opts.parameters.userPath;
     }
 
     get quickRef(): QuickRef {
         return this.#quickRef;
-    }
-
-    get userPath(): string {
-        return this.#userPath;
     }
 }
 

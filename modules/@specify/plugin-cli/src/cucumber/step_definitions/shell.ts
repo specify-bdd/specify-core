@@ -28,7 +28,7 @@ async function runCommand(command: string) {
 }
 
 function setupCLI(): void {
-    this.cli.shell = new Commander(this.userPath);
+    this.cli.shell = new Commander(this.parameters.userPath);
 }
 
 function verifyCLIOutput(consoleOutput: RegExp) {
