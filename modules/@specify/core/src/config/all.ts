@@ -26,7 +26,15 @@ export const entries = await Promise.all(
         "onlyFiles": true,
     }).map(async (modulePath) => {
         const module = await import(pathToFileURL(modulePath).href);
-        const [key] = Object.keys(module);
+        const keys = Object.keys(module);
+
+        if (keys.length > 1) {
+            throw new Error(
+                `Config modules should only have 1 export, but ${modulePath} has ${keys.length}.`,
+            );
+        }
+
+        const key = keys.shift();
 
         return [key, module[key]];
     }),
