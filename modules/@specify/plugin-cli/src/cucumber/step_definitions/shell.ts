@@ -7,7 +7,7 @@
 
 import { Given, Then, When } from "@cucumber/cucumber";
 import { Commander } from "@/commander";
-import assert from "node:assert/strict";
+import assert, { AssertionError } from "node:assert/strict";
 
 Given("that a command line prompt is available", setupCLI);
 
@@ -32,9 +32,18 @@ function setupCLI(): void {
 }
 
 function verifyCLIOutput(consoleOutput: RegExp) {
-    assert.ok(consoleOutput.test(this.cli.shell.output));
+    assert.ok(
+        consoleOutput.test(this.cli.shell.output),
+        new AssertionError({
+            "message": `Command output did not match expectations. Output:\n${this.cli.shell.output}`,
+        }),
+    );
 }
 
 function verifyCLIStatusCode(statusCode: string) {
-    assert.equal(this.cli.shell.statusCode, statusCode);
+    assert.equal(
+        this.cli.shell.statusCode,
+        statusCode,
+        "Command's status code did not match expected.",
+    );
 }
