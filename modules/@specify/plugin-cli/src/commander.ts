@@ -29,9 +29,7 @@ export class Commander {
 
         this.#childProcess = spawn("sh", options);
 
-        this.#childProcess.stdout.on("data", (data) =>
-            this.#processOutput(data),
-        );
+        this.#childProcess.stdout.on("data", this.#processOutput.bind(this));
     }
 
     get output(): string {
@@ -47,9 +45,6 @@ export class Commander {
             this.#commandResolve = resolve;
             this.#output = "";
 
-            this.#childProcess.stdin.write(
-                `${command};echo "${this.#delimiter}$?"\n`,
-            );
             this.#childProcess.stdin.write(this.#delimitCommand(command));
         });
     }
@@ -63,7 +58,7 @@ export class Commander {
     }
 
     #processOutput(output: Buffer) {
-        const str: string = output.toString();
+        const str: string = output.toString("utf8");
 
         if (str.includes(this.#delimiter)) {
             const matcher = new RegExp(`${this.#statusCodeKey}(\\d+)`);
