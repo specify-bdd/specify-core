@@ -5,9 +5,10 @@
  * testing purposes.
  */
 
-import { Given, Then, When } from "@cucumber/cucumber";
-import { Commander } from "@/commander";
 import assert, { AssertionError } from "node:assert/strict";
+import { Given, Then, When } from "@cucumber/cucumber";
+import { Commander } from "@/Commander";
+import { ShellSession } from "@/ShellSession";
 
 Given("that a command line prompt is available", setupCLI);
 
@@ -28,7 +29,7 @@ async function runCommand(command: string) {
 }
 
 function setupCLI(): void {
-    this.cli.shell = new Commander(this.parameters.userPath);
+    this.cli.shell = new Commander(new ShellSession(this.parameters.userPath));
 }
 
 function verifyCLIOutput(consoleOutput: RegExp) {
