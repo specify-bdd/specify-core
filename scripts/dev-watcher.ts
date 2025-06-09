@@ -85,7 +85,7 @@ async function rebuildPackage<
     ).default as PackageJson;
 
     const buildStartTime = new Date();
-    const packageName =
+    const packageName    =
         packageConfig.name || moduleRootDir.split(sep).slice(-2).join("/");
     const label = wrapLabel(packageName);
 
@@ -110,7 +110,7 @@ async function rebuildPackage<
     });
 
     child.on("exit", (code) => {
-        const buildEndTime = new Date();
+        const buildEndTime  = new Date();
         const buildDuration =
             (buildEndTime.getTime() - buildStartTime.getTime()) / 1000;
 

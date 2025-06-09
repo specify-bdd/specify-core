@@ -3,7 +3,6 @@ import specifyESLintPlugin from "@specify/eslint-plugin";
 import globals from "globals";
 import eslintParserJSONC from "jsonc-eslint-parser";
 import eslintPluginJSONC from "eslint-plugin-jsonc";
-import eslintPluginPrettier from "eslint-plugin-prettier";
 import eslintPluginTSDoc from "eslint-plugin-tsdoc";
 import stylisticJs from "@stylistic/eslint-plugin-js";
 import tseslint from "typescript-eslint";
@@ -53,7 +52,6 @@ export default tseslint.config(
         "plugins": {
             "@specify-eslint": specifyESLintPlugin, // ???
             "@stylistic/js": stylisticJs,
-            "prettier": eslintPluginPrettier,
             "tsdoc": eslintPluginTSDoc,
         },
         "rules": {
@@ -64,7 +62,7 @@ export default tseslint.config(
                 "error",
                 {
                     "selector": "default",
-                    "format": ["camelCase", "UPPER_CASE"],
+                    "format": ["camelCase", "PascalCase", "UPPER_CASE"],
                     "leadingUnderscore": "allow",
                     "trailingUnderscore": "allow",
                 },
@@ -87,14 +85,6 @@ export default tseslint.config(
             "@typescript-eslint/no-floating-promises": "error",
             "no-console": "warn",
             "prefer-const": "error",
-            "prettier/prettier": [
-                "error",
-                {
-                    "endOfLine": "auto",
-                    "quoteProps": "preserve", // hugely important; conflicts with @stylistic/js/quote-props if not set
-                    "tabWidth": 4,
-                },
-            ],
             "tsdoc/syntax": ["warn"],
         },
     },

@@ -8,5 +8,8 @@
   "peerDependencies": {
     "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/utils": "^8.33.1"
   }
 }
