@@ -112,7 +112,7 @@ describe("Commander", () => {
 
     it("throws if output contains malformed delimiter", async () => {
         // this promise will never resolve because malformed delimiter doesn't trigger resolution
-        const promise = commander.run("echo bad");
+        void commander.run("echo bad");
 
         let error: Error | null;
 
@@ -129,8 +129,9 @@ describe("Commander", () => {
 
     it("throws if run() is called while another command is in progress", async () => {
         const command = "long-running command";
+
         // this promise will never resolve due to the throw
-        const promise = commander.run("long-running command");
+        void commander.run("long-running command");
 
         await expect(commander.run("overlapping command")).rejects.toThrow(
             `A command is already running: ${command}`,

@@ -8,7 +8,7 @@ export class FakeShellSession implements SystemIOSession {
     #errorCallbacks: ((str: string) => void)[] = [];
     #outputCallbacks: ((str: string) => void)[] = [];
 
-    emitClose() {
+    emitClose(): void {
         this.#closeCallbacks.forEach((callback) => callback());
     }
 
@@ -25,21 +25,21 @@ export class FakeShellSession implements SystemIOSession {
         this.emitOutput(processedDelimiter);
     }
 
-    emitOutput(str: string) {
+    emitOutput(str: string): void {
         this.#outputCallbacks.forEach((callback) => callback(str + "\n"));
     }
 
     kill = jest.fn();
 
-    onClose(callback: () => void) {
+    onClose(callback: () => void): void {
         this.#closeCallbacks.push(callback);
     }
 
-    onError(callback: (data: string) => void) {
+    onError(callback: (data: string) => void): void {
         this.#errorCallbacks.push(callback);
     }
 
-    onOutput(callback: (data: string) => void) {
+    onOutput(callback: (data: string) => void): void {
         this.#outputCallbacks.push(callback);
     }
 
