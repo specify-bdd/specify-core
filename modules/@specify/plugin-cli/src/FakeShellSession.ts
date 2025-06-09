@@ -12,6 +12,19 @@ export class FakeShellSession implements SystemIOSession {
         this.#closeCallbacks.forEach((callback) => callback());
     }
 
+    emitDelimiter(statusCode: number): void {
+        const match = this.#curCommand.match(/;echo\s"(.+)"$/);
+
+        assert.ok(match, "Delimiter not found in command!");
+
+        const processedDelimiter = match[1].replace(
+            /\$\?/,
+            statusCode.toString(),
+        );
+
+        this.emitOutput(processedDelimiter);
+    }
+
     emitOutput(str: string) {
         this.#outputCallbacks.forEach((callback) => callback(str + "\n"));
     }
@@ -33,17 +46,4 @@ export class FakeShellSession implements SystemIOSession {
     write = jest.fn((command: string) => {
         this.#curCommand = command;
     });
-
-    emitDelimiter(statusCode: number): void {
-        const match = this.#curCommand.match(/;echo\s"(.+)"$/);
-
-        assert.ok(match, "Delimiter not found in command!");
-
-        const processedDelimiter = match[1].replace(
-            /\$\?/,
-            statusCode.toString(),
-        );
-
-        this.emitOutput(processedDelimiter);
-    }
 }
