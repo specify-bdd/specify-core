@@ -1,8 +1,12 @@
 import { Commander } from "./Commander";
-import { ShellSession } from "./ShellSession.mock";
+import { ShellSession } from "./ShellSession";
+
+import type { MockShellSession } from "./__mocks__/ShellSession";
+
+jest.mock("./ShellSession");
 
 describe("Commander", () => {
-    let session: ShellSession;
+    let session: MockShellSession;
     let commander: Commander;
 
     beforeEach(() => {
