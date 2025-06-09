@@ -11,10 +11,6 @@ const shellSession = jest.fn().mockImplementation(() => {
         closeCallbacks.forEach((cb) => cb());
     });
 
-    const emitOutput = jest.fn((output: string) => {
-        outputCallbacks.forEach((cb) => cb(output + "\n"));
-    });
-
     const emitDelimiter = jest.fn((statusCode: number, malformed?: boolean) => {
         const match = curCommand.match(/;echo\s"(.+)"$/);
 
@@ -26,6 +22,10 @@ const shellSession = jest.fn().mockImplementation(() => {
         );
 
         emitOutput(delimiter);
+    });
+
+    const emitOutput = jest.fn((output: string) => {
+        outputCallbacks.forEach((cb) => cb(output + "\n"));
     });
 
     return {
@@ -46,7 +46,7 @@ const shellSession = jest.fn().mockImplementation(() => {
             curCommand = command;
         }),
     };
-}) as jest.Mock;
+});
 
 export { shellSession as ShellSession };
 
