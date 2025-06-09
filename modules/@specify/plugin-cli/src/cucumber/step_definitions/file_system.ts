@@ -42,7 +42,7 @@ async function copyFile(file: FileParam, destPath: string): Promise<void> {
  * @param file     - The referenced file object to write
  * @param destPath - The location to write the file to
  */
-// async function writeFile(file: FileParam, destPath: string): void {
+// async function writeFile(file: FileParam, destPath: string): Promise<void> {
 //     const opts = {
 //         "encoding": file.encoding || "utf8",
 //         "mode": file.mode || 0o644,
