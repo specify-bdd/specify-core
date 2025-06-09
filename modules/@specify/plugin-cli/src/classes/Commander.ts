@@ -76,7 +76,9 @@ export class Commander {
      * Only one command may be active at a time. Output and status code are
      * available via `output` and `statusCode` once resolved.
      *
-     * Note: multiple commands can be chained in a single command string
+     * @remarks
+     *
+     * Multiple commands can be chained in a single command string
      * with "&" or ";". Ex: `echo first;echo second`
      *
      * @param command - The command to execute
