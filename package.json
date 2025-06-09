@@ -11,8 +11,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "pnpm generate-types && pnpm -r --if-present run build",
-    "test": "pnpm run test:jest",
-    "test:jest": "jest",
+    "test": "pnpm run test:unit",
+    "test:unit": "jest",
     "type-check": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit",
     "type-check:watch": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit --watch"
   },
