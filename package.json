@@ -13,6 +13,8 @@
     "prepare": "pnpm generate-types && pnpm -r --if-present run build",
     "test": "pnpm run test:unit",
     "test:unit": "jest",
+    "test:unit:watch": "jest --watch",
+    "test:unit:watchAll": "jest --watchAll",
     "type-check": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit",
     "type-check:watch": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit --watch"
   },
@@ -60,5 +62,6 @@
     "type-fest": "^4.41.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.0"
-  }
+  },
+  "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977"
 }
