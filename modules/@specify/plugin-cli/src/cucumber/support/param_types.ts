@@ -16,7 +16,7 @@ defineParameterType({
     transformer(input: string): string {
         return path.resolve(input);
     },
-    "useForSnippets": false
+    "useForSnippets": false,
 });
 
 defineParameterType({
@@ -25,7 +25,7 @@ defineParameterType({
     transformer(input: string): RegExp {
         return new RegExp(this.quickRef.lookup("consoleOutput", input));
     },
-    "useForSnippets": false
+    "useForSnippets": false,
 });
 
 defineParameterType({
@@ -34,7 +34,7 @@ defineParameterType({
     transformer(input: string): FileParam {
         return this.quickRef.lookup("file", input) as FileParam;
     },
-    "useForSnippets": false
+    "useForSnippets": false,
 });
 
 defineParameterType({
@@ -43,5 +43,5 @@ defineParameterType({
     transformer(input: string): number {
         return parseInt(this.quickRef.lookup("statusCode", input), 10);
     },
-    "useForSnippets": false
+    "useForSnippets": false,
 });
