@@ -12,14 +12,14 @@ export class FakeShellSession implements SystemIOSession {
         this.#closeCallbacks.forEach((callback) => callback());
     }
 
-    emitDelimiter(statusCode: number): void {
+    emitDelimiter(statusCode: number, malformed?: boolean): void {
         const match = this.#curCommand.match(/;echo\s"(.+)"$/);
 
         assert.ok(match, "Delimiter not found in command!");
 
         const processedDelimiter = match[1].replace(
             /\$\?/,
-            statusCode.toString(),
+            malformed ? "badvalue" : statusCode.toString(),
         );
 
         this.emitOutput(processedDelimiter);

@@ -110,24 +110,20 @@ describe("Commander", () => {
         expect(commander.output).toBe("");
     });
 
-    // this test can't be automated since the delimiter is private to the class.
-    // instead, you can test it's behaving as intended by replacing "$?" from the
-    // delimiter string with non-numeric characters.
     it("throws if output contains malformed delimiter", async () => {
         // this promise will never resolve because malformed delimiter doesn't trigger resolution
         const promise = commander.run("echo bad");
 
-        let error: Error | null = null;
+        let error: Error | null;
 
         try {
-            session.emitDelimiter(0);
+            session.emitDelimiter(0, true);
         } catch (err) {
             error = err;
         }
 
-        // expect(error).toBeFalsy();
-        expect(error?.message || "").not.toMatch(
-            "IO session output missing delimiter!",
+        expect(error!.message).toMatch(
+            /^Output does not contain a value for ".+"$/,
         );
     });
 

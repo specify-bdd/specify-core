@@ -131,7 +131,9 @@ export class Commander {
         key: string,
         parseAsInt?: boolean,
     ): string | number {
-        const match = output.match(new RegExp(`${key}=(\\w+)`));
+        const match = output.match(
+            new RegExp(`${key}=${parseAsInt ? "(\\d+)" : "(\\w+)"}`),
+        );
 
         assert.ok(match, `Output does not contain a value for "${key}"`);
 
