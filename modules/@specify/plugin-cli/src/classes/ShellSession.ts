@@ -10,7 +10,7 @@ import type {
     ChildProcessWithoutNullStreams,
     SpawnOptions,
 } from "node:child_process";
-import type { ISystemIOSession } from "./ISystemIOSession";
+import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
 
 /**
  * Wraps an interactive `sh` process for use with the Commander interface.

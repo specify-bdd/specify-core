@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import type { ISystemIOSession } from "./ISystemIOSession";
+import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
 
 export class FakeShellSession implements ISystemIOSession {
     #curCommand = "";

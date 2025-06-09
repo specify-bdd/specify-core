@@ -9,7 +9,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 
-import type { ISystemIOSession } from "./ISystemIOSession";
+import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
 
 /**
  * Internal structure used to identify and match command boundaries in the

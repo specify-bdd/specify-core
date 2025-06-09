@@ -7,8 +7,8 @@
 
 import assert, { AssertionError } from "node:assert/strict";
 import { Given, Then, When } from "@cucumber/cucumber";
-import { Commander } from "@/Commander";
-import { ShellSession } from "@/ShellSession";
+import { Commander } from "@/classes/Commander";
+import { ShellSession } from "@/classes/ShellSession";
 
 Given("that a command line prompt is available", setupCLI);
 
