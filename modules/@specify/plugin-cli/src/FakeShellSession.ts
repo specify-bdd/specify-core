@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 
-import type { SystemIOSession } from "./SystemIOSession";
+import type { ISystemIOSession } from "./ISystemIOSession";
 
-export class FakeShellSession implements SystemIOSession {
+export class FakeShellSession implements ISystemIOSession {
     #curCommand = "";
     #closeCallbacks: (() => void)[] = [];
     #errorCallbacks: ((str: string) => void)[] = [];

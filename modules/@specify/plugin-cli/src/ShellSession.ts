@@ -10,7 +10,7 @@ import type {
     ChildProcessWithoutNullStreams,
     SpawnOptions,
 } from "node:child_process";
-import type { SystemIOSession } from "./SystemIOSession";
+import type { ISystemIOSession } from "./ISystemIOSession";
 
 /**
  * Wraps an interactive `sh` process for use with the Commander interface.
@@ -18,7 +18,7 @@ import type { SystemIOSession } from "./SystemIOSession";
  * Supports writing commands to stdin, reading stdout, and handling process
  * closure or errors.
  */
-export class ShellSession implements SystemIOSession {
+export class ShellSession implements ISystemIOSession {
     private childProcess: ChildProcessWithoutNullStreams;
 
     /**

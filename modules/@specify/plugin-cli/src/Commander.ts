@@ -2,14 +2,14 @@
  * Commander Module
  *
  * Provides an interface for executing interactive shell commands via
- * SystemIOSession. Commands are tracked with delimiters and expose
+ * ISystemIOSession. Commands are tracked with delimiters and expose
  * output and status code results.
  */
 
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 
-import type { SystemIOSession } from "./SystemIOSession";
+import type { ISystemIOSession } from "./ISystemIOSession";
 
 /**
  * Internal structure used to identify and match command boundaries in the
@@ -26,7 +26,7 @@ export class Commander {
     #curCommand = "";
     #delimiter: Delimiter;
     #output = "";
-    #session: SystemIOSession;
+    #session: ISystemIOSession;
     #statusCode: number; // the result of the last completed command
     #statusCodeKey = "STATUS_CODE";
 
@@ -38,7 +38,7 @@ export class Commander {
      *
      * @param session - An interactive system session (e.g. child process)
      */
-    constructor(session: SystemIOSession) {
+    constructor(session: ISystemIOSession) {
         this.#session = session;
 
         this.#session.onOutput(this.#processOutput.bind(this));
