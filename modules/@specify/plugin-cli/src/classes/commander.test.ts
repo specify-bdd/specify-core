@@ -1,12 +1,12 @@
 import { Commander } from "./Commander";
-import { FakeShellSession } from "./FakeShellSession";
+import { ShellSession } from "./ShellSession.mock";
 
 describe("Commander", () => {
-    let session: FakeShellSession;
+    let session: ShellSession;
     let commander: Commander;
 
     beforeEach(() => {
-        session = new FakeShellSession();
+        session = new ShellSession();
         commander = new Commander(session);
     });
 
