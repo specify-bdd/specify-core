@@ -1,7 +1,7 @@
 import { Commander } from "./Commander";
 import { ShellSession } from "./ShellSession";
 
-import type { MockShellSession } from "./__mocks__/ShellSession";
+import type { ShellSession as MockShellSession } from "./__mocks__/ShellSession";
 
 jest.mock("./ShellSession");
 
@@ -10,7 +10,7 @@ describe("Commander", () => {
     let commander: Commander;
 
     beforeEach(() => {
-        session = new ShellSession();
+        session = new ShellSession() as unknown as MockShellSession;
         commander = new Commander(session);
     });
 

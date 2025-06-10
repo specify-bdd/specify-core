@@ -1,18 +1,17 @@
 import assert from "node:assert/strict";
 
-const shellSession = jest.fn().mockImplementation(() => {
-    const closeCallbacks: (() => void)[] = [];
-    const errorCallbacks: ((data: string) => void)[] = [];
-    const outputCallbacks: ((data: string) => void)[] = [];
+export class ShellSession {
+    #curCommand: string;
+    #closeCallbacks: (() => void)[] = [];
+    #errorCallbacks: ((data: string) => void)[] = [];
+    #outputCallbacks: ((data: string) => void)[] = [];
 
-    let curCommand = "";
-
-    const emitClose = jest.fn(() => {
-        closeCallbacks.forEach((cb) => cb());
+    emitClose = jest.fn(() => {
+        this.#closeCallbacks.forEach((cb) => cb());
     });
 
-    const emitDelimiter = jest.fn((statusCode: number, malformed?: boolean) => {
-        const match = curCommand.match(/;echo\s"(.+)"$/);
+    emitDelimiter = jest.fn((statusCode: number, malformed?: boolean) => {
+        const match = this.#curCommand.match(/;echo\s"(.+)"$/);
 
         assert.ok(match, "Delimiter not found in command!");
 
@@ -21,33 +20,28 @@ const shellSession = jest.fn().mockImplementation(() => {
             malformed ? "badvalue" : statusCode.toString(),
         );
 
-        emitOutput(delimiter);
+        this.emitOutput(delimiter);
     });
 
-    const emitOutput = jest.fn((output: string) => {
-        outputCallbacks.forEach((cb) => cb(output + "\n"));
+    emitOutput = jest.fn((output: string) => {
+        this.#outputCallbacks.forEach((cb) => cb(output + "\n"));
     });
 
-    return {
-        emitClose,
-        emitOutput,
-        emitDelimiter,
-        "kill": jest.fn(),
-        "onClose": jest.fn((callback: () => void) =>
-            closeCallbacks.push(callback),
-        ),
-        "onError": jest.fn((callback: () => void) =>
-            errorCallbacks.push(callback),
-        ),
-        "onOutput": jest.fn((callback: () => void) =>
-            outputCallbacks.push(callback),
-        ),
-        "write": jest.fn((command: string) => {
-            curCommand = command;
-        }),
-    };
-});
+    kill = jest.fn();
 
-export { shellSession as ShellSession };
+    onClose = jest.fn((callback: () => void) =>
+        this.#closeCallbacks.push(callback),
+    );
 
-export type MockShellSession = ReturnType<typeof shellSession>;
+    onError = jest.fn((callback: () => void) =>
+        this.#errorCallbacks.push(callback),
+    );
+
+    onOutput = jest.fn((callback: () => void) =>
+        this.#outputCallbacks.push(callback),
+    );
+
+    write = jest.fn((command: string) => {
+        this.#curCommand = command;
+    });
+}
