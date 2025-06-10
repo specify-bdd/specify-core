@@ -73,7 +73,7 @@ describe("Commander", () => {
 
         await promise;
 
-        expect(commander.output).toBe(`${output[0]}\n${output[1]}`);
+        expect(commander.output).toBe(output.join("\n"));
     });
 
     it("captures command's status code", async () => {
@@ -105,7 +105,7 @@ describe("Commander", () => {
     });
 
     it("ignores delimiter-only output", async () => {
-        const promise = commander.run("no output");
+        const promise = commander.run("cd .");
 
         session.emitDelimiter(0);
 
@@ -118,27 +118,19 @@ describe("Commander", () => {
         // this promise will never resolve because malformed delimiter doesn't trigger resolution
         void commander.run("echo bad");
 
-        let error: Error | null;
-
-        try {
+        expect(() => {
             session.emitDelimiter(0, true);
-        } catch (err) {
-            error = err;
-        }
-
-        expect(error!.message).toMatch(
-            /^Output does not contain a value for ".+"$/,
-        );
+        }).toThrow(/^Output does not contain a value for ".+"$/);
     });
 
     it("throws if run() is called while another command is in progress", async () => {
-        const command = "long-running command";
+        const command = 'echo "long-running command"';
 
         // this promise will never resolve due to the throw
-        void commander.run("long-running command");
+        void commander.run(command);
 
-        await expect(commander.run("overlapping command")).rejects.toThrow(
-            `A command is already running: ${command}`,
-        );
+        await expect(
+            commander.run('echo "overlapping command"'),
+        ).rejects.toThrow(`A command is already running: ${command}`);
     });
 });
