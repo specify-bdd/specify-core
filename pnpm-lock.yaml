@@ -139,6 +139,9 @@ importers:
 
   modules/@specify/quick-ref:
     dependencies:
+      deepmerge:
+        specifier: ^4.3.1
+        version: 4.3.1
       globby:
         specifier: ^14.1.0
         version: 14.1.0

@@ -7,8 +7,12 @@
  */
 
 import { globbySync } from "globby";
-import * as path from "node:path";
+import path from "node:path";
 import { pathToFileURL } from "node:url";
+
+export { QuickRef } from "./lib/quick-ref";
+
+export type { QuickRef } from "./lib/quick-ref";
 
 const cwd = process.cwd();
 
@@ -26,51 +30,4 @@ const modules = await Promise.all(
     ),
 );
 
-export const entries = [];
-
-for (const module of modules) {
-    for (const key of Object.keys(module.default)) {
-        entries.push([key, module.default[key]]);
-    }
-}
-
-export const refs = Object.fromEntries(entries);
-
-/**
- * Look up a reference by its address.  Params drill down through the reference object hierarchy in the sequence
- * provided.
- *
- * @param segments - The address segments to look up.  For example, ("foo", "bar", "baz") will retrieve the value of
- *                   refs.foo.bar.baz.
- *
- * @returns The value found at given address
- *
- * @throws {@link Error}
- * If the provided address segments do not exist in the reference object hierarchy
- */
-export function lookup(...segments: string[]): unknown {
-    const usedSegments = ["<refs>"];
-
-    let location = refs;
-
-    while (segments.length) {
-        const segment = segments.shift();
-
-        if (!(segment in location)) {
-            throw new Error(
-                `Invalid address: couldn't find "${segment}" in ${usedSegments.join(".")}.`,
-            );
-        }
-
-        location = location[segment];
-        usedSegments.push(segment);
-    }
-
-    return location;
-}
-
-export type QuickRef = {
-    "entries": Array<Array<unknown>>;
-    "refs": Record<string, unknown>;
-    "lookup": () => unknown;
-};
+export default new QuickRef(modules.map((mod) => mod.default));
