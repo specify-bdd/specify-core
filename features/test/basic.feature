@@ -12,7 +12,7 @@ Feature: Basic Test Execution
 
         Scenario: All tests pass
             # Given that a "passing feature" file exists at "./features/passing.feature"
-            When a user runs the command "npx specify test ./assets/tests/passing.feature"
+            When a user runs the command "npx specify test ./assets/gherkin/passing.feature"
             Then the command should exit with a "success" status code
             And the console output should be a "passing test result"
 
