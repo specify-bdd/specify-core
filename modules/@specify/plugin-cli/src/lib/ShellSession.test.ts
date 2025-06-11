@@ -11,11 +11,11 @@ describe("ShellSession", () => {
 
     beforeEach(() => {
         mockChildProcess = {
-            "stdout": new Writable(),
+            "kill": jest.fn(),
+            "on": jest.fn(),
             "stderr": new Writable(),
             "stdin": { "write": jest.fn() } as unknown as NodeJS.WritableStream,
-            "on": jest.fn(),
-            "kill": jest.fn(),
+            "stdout": new Writable(),
         } as unknown as ChildProcessWithoutNullStreams;
 
         jest.mocked(spawn).mockReturnValue(mockChildProcess);
@@ -70,8 +70,8 @@ describe("ShellSession", () => {
     });
 
     it("registers onOutput listener to stdout", () => {
-        const mockData = Buffer.from("test output");
         const callback = jest.fn();
+        const mockData = Buffer.from("test output");
 
         new ShellSession().onOutput(callback);
         mockChildProcess.stdout.emit("data", mockData);
@@ -80,8 +80,8 @@ describe("ShellSession", () => {
     });
 
     it("registers onError listener to stderr", () => {
-        const mockData = Buffer.from("error occurred");
         const callback = jest.fn();
+        const mockData = Buffer.from("error occurred");
 
         new ShellSession().onError(callback);
         mockChildProcess.stderr.emit("data", mockData);
