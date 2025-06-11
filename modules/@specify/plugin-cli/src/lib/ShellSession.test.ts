@@ -76,7 +76,7 @@ describe("ShellSession", () => {
         new ShellSession().onOutput(callback);
         mockChildProcess.stdout.emit("data", mockData);
 
-        expect(callback).toHaveBeenCalledWith("test output");
+        expect(callback).toHaveBeenCalledWith(mockData.toString());
     });
 
     it("registers onError listener to stderr", () => {
@@ -86,6 +86,6 @@ describe("ShellSession", () => {
         new ShellSession().onError(callback);
         mockChildProcess.stderr.emit("data", mockData);
 
-        expect(callback).toHaveBeenCalledWith("error occurred");
+        expect(callback).toHaveBeenCalledWith(mockData.toString());
     });
 });
