@@ -24,14 +24,14 @@ jobs:
       - name: Archive PNPM installation
         uses: actions/upload-artifact@v4
         with:
-          name: pnpm-install
+          name: pnpm-install-${{ matrix.node-version }}
           path: |
             node_modules
             ${{ steps.step2.outputs.bin_dest }}
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-dist
+          name: build-dist-${{ matrix.node-version }}
           path: |
             **/dist
             !**/dist/**/*.d.ts
@@ -42,7 +42,7 @@ jobs:
       - name: Download PNPM installation
         uses: actions/download-artifact@v4
         with:
-          name: pnpm-install
+          name: pnpm-install-22.x
       - name: Lint
         run: pnpm lint
   test:
@@ -52,6 +52,6 @@ jobs:
       - name: Download PNPM installation
         uses: actions/download-artifact@v4
         with:
-          name: pnpm-install
+          name: pnpm-install-22.x
       - name: Test
         run: pnpm test
