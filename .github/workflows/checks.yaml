@@ -1,0 +1,33 @@
+name: Automated Checks
+on: pull_request
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [ 20.x, 22.x, 24.x ]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install PNPM
+        run: npm install -g pnpm@latest-10
+      - name: Install dependencies and build
+        run: pnpm i
+  lint:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint
+        run: pnpm lint
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: pnpm test
