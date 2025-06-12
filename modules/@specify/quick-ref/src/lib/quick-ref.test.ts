@@ -61,11 +61,11 @@ describe("QuickRef", () => {
     });
 
     it("overwrites arrays at the same address", () => {
-        const quickRef = new QuickRef({ "a": [ 1 ] });
+        const quickRef = new QuickRef({ "a": [1] });
 
-        quickRef.add({ "a": [ 2 ] });
+        quickRef.add({ "a": [2] });
 
-        expect(quickRef.refs).toEqual({ "a": [ 2 ] });
+        expect(quickRef.refs).toEqual({ "a": [2] });
     });
 
     describe("looks up refs with", () => {

@@ -36,9 +36,9 @@ export class QuickRef {
      */
     add(...refs: Record<string, any>[]): QuickRef {
         const opts = {
-            arrayMerge(targ, src, opts) {
+            arrayMerge(targ, src) {
                 return src;
-            }
+            },
             // NOTE: the following function will cause deepmerge to combine arrays instead of overwriting them,
             // but it's not clear at this time whether that should be the intended behavior.
             // arrayMerge(targ, src, opts) {
