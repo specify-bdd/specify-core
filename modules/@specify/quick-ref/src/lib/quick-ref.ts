@@ -62,7 +62,7 @@ export class QuickRef {
 
     /**
      * Look up a reference by its address.  Params drill down through the
-     * reference object hierarchy in the sequenceprovided.
+     * reference object hierarchy in the sequence provided.
      *
      * @param segments - The address segments to look up.  For example, ("foo",
      *                   "bar", "baz") will retrieve the value of
