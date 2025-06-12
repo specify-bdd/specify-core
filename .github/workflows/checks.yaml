@@ -8,9 +8,9 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Install PNPM
+      - name: Setup PNPM
         uses: pnpm/action-setup@v4
-      - name: Use Node.js ${{ env.node_version }}
+      - name: Setup Node.js ${{ env.node_version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node_version }}
@@ -20,10 +20,10 @@ jobs:
       - name: Archive dependencies
         uses: actions/upload-artifact@v4
         with:
+          include-hidden-files: true
           name: pnpm-dependencies-${{ env.node_version }}-${{ github.run_id }}
           path: |
             node_modules
-            node_modules/.bin
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -38,9 +38,9 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Install PNPM
+      - name: Setup PNPM
         uses: pnpm/action-setup@v4
-      - name: Use Node.js ${{ env.node_version }}
+      - name: Setup Node.js ${{ env.node_version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node_version }}
@@ -57,9 +57,9 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Install PNPM
+      - name: Setup PNPM
         uses: pnpm/action-setup@v4
-      - name: Use Node.js ${{ env.node_version }}
+      - name: Setup Node.js ${{ env.node_version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node_version }}
