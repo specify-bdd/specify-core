@@ -1,73 +1,98 @@
 import { QuickRef } from "./quick-ref";
 
 describe("QuickRef", () => {
-    it("initializes refs from a single reference object param", () => {
-        const quickRef = new QuickRef({ "a": 1 });
+    describe("initializes refs from", () => {
+        it("a single reference object param", () => {
+            const input = { "a": 1 };
+            const quickRef = new QuickRef(input);
 
-        expect("a" in quickRef.refs).toBe(true);
-        expect(quickRef.refs.a).toBe(1);
-    });
+            expect(quickRef.refs).toEqual(input);
+        });
 
-    it("initializes refs from multiple, non-overlapping reference object params", () => {
-        const inputs = [{ "a": 1 }, { "b": 2 }],
-            quickRef = new QuickRef(...inputs);
+        it("multiple, non-overlapping reference object params", () => {
+            const inputs = [{ "a": 1 }, { "b": 2 }];
+            const quickRef = new QuickRef(...inputs);
 
-        expect("a" in quickRef.refs).toBe(true);
-        expect(quickRef.refs.a).toBe(1);
-        expect("b" in quickRef.refs).toBe(true);
-        expect(quickRef.refs.b).toBe(2);
-    });
+            expect(quickRef.refs).toEqual({ "a": 1, "b": 2 });
+        });
 
-    it("initializes refs from multiple, overlapping reference object params", () => {
-        const inputs = [{ "a": { "b": 1 } }, { "a": { "c": 2 } }],
-            quickRef = new QuickRef(...inputs);
+        it("multiple, overlapping reference object params", () => {
+            const inputs = [{ "a": { "b": 1 } }, { "a": { "c": 2 } }];
+            const quickRef = new QuickRef(...inputs);
 
-        expect("a" in quickRef.refs).toBe(true);
-        expect("b" in quickRef.refs.a).toBe(true);
-        expect(quickRef.refs.a.b).toBe(1);
-        expect("c" in quickRef.refs.a).toBe(true);
-        expect(quickRef.refs.a.c).toBe(2);
-    });
+            expect(quickRef.refs).toEqual({ "a": { "b": 1, "c": 2 } });
+        });
 
-    it("initializes refs from multiple, conflicting reference object params", () => {
-        const inputs = [{ "a": 1 }, { "a": 2 }],
-            quickRef = new QuickRef(...inputs);
+        it("multiple, conflicting reference object params", () => {
+            const inputs = [{ "a": 1 }, { "a": 2 }];
+            const quickRef = new QuickRef(...inputs);
 
-        expect("a" in quickRef.refs).toBe(true);
-        expect(quickRef.refs.a).toBe(2);
+            expect(quickRef.refs).toEqual({ "a": 2 });
+        });
+
+        it("no params", () => {
+            const quickRef = new QuickRef();
+
+            expect(quickRef.refs).toEqual({});
+        });
     });
 
     it("allows read-only access to refs", () => {
         const quickRef = new QuickRef();
 
-        expect(quickRef.refs).toBeTruthy();
         expect(() => (quickRef.refs = {})).toThrow();
     });
 
     it("adds reference objects after initialization", () => {
-        const inputs = [{ "a": 1 }, { "b": 2 }],
-            quickRef = new QuickRef(inputs[0]);
+        const quickRef = new QuickRef({ "a": 1 });
 
-        expect("a" in quickRef.refs).toBe(true);
-        expect(quickRef.refs.a).toBe(1);
+        quickRef.add({ "b": 2 });
 
-        quickRef.add(inputs[1]);
-
-        expect("a" in quickRef.refs).toBe(true);
-        expect(quickRef.refs.a).toBe(1);
-        expect("b" in quickRef.refs).toBe(true);
-        expect(quickRef.refs.b).toBe(2);
+        expect(quickRef.refs).toEqual({ "a": 1, "b": 2 });
     });
 
-    it("looks up refs with valid addresses", () => {
-        const quickRef = new QuickRef({ "a": { "b": { "c": 1 } } });
+    it("does nothing when adding nothing", () => {
+        const input = { "a": 1 };
+        const quickRef = new QuickRef(input);
 
-        expect(quickRef.lookup("a", "b", "c")).toBe(1);
+        quickRef.add();
+
+        expect(quickRef.refs).toEqual(input);
     });
 
-    it("throws for refs with invalid addresses", () => {
-        const quickRef = new QuickRef({ "a": { "b": 1 } });
+    it("overwrites arrays at the same address", () => {
+        const quickRef = new QuickRef({ "a": [ 1 ] });
 
-        expect(() => quickRef.lookup("a", "b", "c")).toThrow();
+        quickRef.add({ "a": [ 2 ] });
+
+        expect(quickRef.refs).toEqual({ "a": [ 2 ] });
+    });
+
+    describe("looks up refs with", () => {
+        it("valid, shallow addresses", () => {
+            const quickRef = new QuickRef({ "a": 1 });
+
+            expect(quickRef.lookup("a")).toBe(1);
+        });
+
+        it("valid, deep addresses", () => {
+            const quickRef = new QuickRef({ "a": { "b": { "c": 1 } } });
+
+            expect(quickRef.lookup("a", "b", "c")).toBe(1);
+        });
+
+        it("no address", () => {
+            const quickRef = new QuickRef();
+
+            expect(quickRef.lookup()).toEqual({});
+        });
+    });
+
+    describe("throws for ref lookups with", () => {
+        it("invalid addresses", () => {
+            const quickRef = new QuickRef({ "a": { "b": 1 } });
+
+            expect(() => quickRef.lookup("a", "b", "c")).toThrow();
+        });
     });
 });

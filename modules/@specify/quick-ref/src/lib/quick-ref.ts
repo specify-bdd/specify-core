@@ -15,14 +15,14 @@ export class QuickRef {
      *
      * @param refs - One or more reference objects to combine and cache
      */
-    constructor(...refs: object[]) {
+    constructor(...refs: Record<string, any>[]) {
         this.add(...refs);
     }
 
     /**
      * The cached reference objects aggregated into one JSON hierarchy
      */
-    get refs(): object {
+    get refs(): Record<string, any> {
         return this.#refs;
     }
 
@@ -34,8 +34,11 @@ export class QuickRef {
      *
      * @returns This instance
      */
-    add(...refs: object[]): QuickRef {
+    add(...refs: Record<string, any>[]): QuickRef {
         const opts = {
+            arrayMerge(targ, src, opts) {
+                return src;
+            }
             // NOTE: the following function will cause deepmerge to combine arrays instead of overwriting them,
             // but it's not clear at this time whether that should be the intended behavior.
             // arrayMerge(targ, src, opts) {
@@ -95,5 +98,3 @@ export class QuickRef {
         return location;
     }
 }
-
-export type QuickRef = QuickRef;

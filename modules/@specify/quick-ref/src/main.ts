@@ -30,5 +30,3 @@ const modules = await Promise.all(
 export default new QuickRef(modules.map((mod) => mod.default));
 
 export { QuickRef };
-
-export type * from "./lib/quick-ref";
