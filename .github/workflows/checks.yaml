@@ -21,7 +21,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pnpm-dependencies-${{ env.node_version }}-${{ github.run_id }}
-          path: node_modules
+          path: |
+            node_modules
+            node_modules/.bin
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
