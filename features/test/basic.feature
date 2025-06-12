@@ -4,9 +4,9 @@ Feature: Basic Test Execution
     In order to ensure that my software functions as the specs say it should
 
     Background:
-        # Given that the "@specify/core" NPM package is installed
-        # And that the "@specify/plugin-cli" NPM package is installed
-        Given that a command line prompt is available
+        Given that the "@specify/core" NPM package is installed
+        And that the "@specify/plugin-cli" NPM package is installed
+        And that a command line prompt is available
 
     Rule: The run should succeed if all tests pass
 
@@ -29,20 +29,20 @@ Feature: Basic Test Execution
             And that a "failing feature" file exists at "./features"
             When a user runs the command "npx specify test"
             Then the command should exit with a "failure" status code
-    
+
         Scenario: Feature contains no scenarios
             Given that an "empty feature" file exists at "./features"
             When a user runs the command "npx specify test"
             Then the command should exit with an "failure" status code
-    
+
     Rule: The run should error if there are invalid features
-        
+
         @dependency
         Scenario: Feature has a Gherkin syntax error
             Given that an "invalid feature" file exists at "./features"
             When a user runs the command "npx specify test"
             Then the command should exit with an "error" status code
-        
+
         @dependency
         Scenario: Feature contains undefined step definitions
             Given that an "undefined step feature" file exists at "./features"
@@ -88,13 +88,13 @@ Feature: Basic Test Execution
             When a user runs the command "npx specify test ./custom"
             Then the command should exit with a "error" status code
             And the console output should be a "no features error"
-        
+
         Scenario: User-specified path contains no features
             Given that the path "./custom" has no files matching "*.feature"
             When a user runs the command "npx specify test ./custom"
             Then the command should exit with a "error" status code
             And the console output should be a "no features error"
-    
+
     Rule: Execution without a subcommand should default to testing
 
         Scenario: Passing test without subcommand
@@ -120,13 +120,13 @@ Feature: Basic Test Execution
             And that a "failing feature" file exists at "./features"
             When a user runs the command "npx specify test --tags '@pass'"
             Then the command should exit with a "success" status code
-        
+
         Scenario: Unmatched tags cause an error
             Given that a "passing feature" file exists at "./features"
             When a user runs the command "npx specify test --tags '@fail'"
             Then the command should exit with a "error" status code
             And the console output should be a "no features error"
-    
+
     Rule: Invalid commands display usage help
 
         Scenario: Unsupported subcommand
