@@ -1,25 +1,68 @@
 name: PR Checks
 on: pull_request
+env:
+  node_version: 22.x
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        node-version: [ 22.x ] # we'll use only the current LTS version for PR checks
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install PNPM
         uses: pnpm/action-setup@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js $node_version
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: $node_version
           cache: 'pnpm'
       - name: Install dependencies and build
         run: pnpm install
+      - name: Archive dependencies
+        uses: actions/upload-artifact@v4
+        with:
+          name: pnpm-dependencies-$node_version-${{ github.run_id }}
+          path: node_modules
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-$node_version-${{ github.run_id }}
+          path: |
+            **/dist
+            !node_modules
+            !**/dist/**/*.d.ts
+  lint:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install PNPM
+        uses: pnpm/action-setup@v4
+      - name: Use Node.js $node_version
+        uses: actions/setup-node@v4
+        with:
+          node-version: $node_version
+          cache: 'pnpm'
+      - name: Download dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: pnpm-dependencies-$node_version-${{ github.run_id }}
       - name: Lint
         run: pnpm lint
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install PNPM
+        uses: pnpm/action-setup@v4
+      - name: Use Node.js $node_version
+        uses: actions/setup-node@v4
+        with:
+          node-version: $node_version
+          cache: 'pnpm'
+      - name: Download dependencies
+        uses: actions/download-artifact@v4
       - name: Test
         run: pnpm test
