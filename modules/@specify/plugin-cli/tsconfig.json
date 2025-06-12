@@ -13,7 +13,8 @@
     "exclude": [
         "dist",
         "**/node_modules/**",
-        "**/*.test.*"
+        "**/*.test.*",
+        "**/__mocks__"
     ],
     "include": [
         "./src/**/*.ts",
