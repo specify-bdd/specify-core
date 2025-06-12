@@ -1,0 +1,23 @@
+name: PR Checks
+on: pull_request
+env:
+  node_version: 22.x
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+      - name: Setup Node.js ${{ env.node_version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.node_version }}
+          cache: 'pnpm'
+      - name: Install dependencies and build
+        run: pnpm install
+      - name: Lint
+        run: pnpm lint
+      - name: Test
+        run: pnpm test
