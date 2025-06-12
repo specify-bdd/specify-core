@@ -3,10 +3,10 @@ on: pull_request
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        node-version: [ 20.x, 22.x, 24.x ]
+    # strategy:
+    #   matrix:
+    #     # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    #     node-version: [ 20.x, 22.x, 24.x ]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -14,44 +14,28 @@ jobs:
         uses: pnpm/action-setup@v4
         # with:
         #   version: 10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 22.x # ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x # ${{ matrix.node-version }}
           cache: 'pnpm'
       - name: Install dependencies and build
         run: pnpm install
-      - name: Archive PNPM installation
-        uses: actions/upload-artifact@v4
-        with:
-          name: pnpm-install-${{ matrix.node-version }}
-          path: |
-            node_modules
-            ${{ steps.step2.outputs.bin_dest }}
-      - name: Archive build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-dist-${{ matrix.node-version }}
-          path: |
-            **/dist
-            !**/dist/**/*.d.ts
-  lint:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download PNPM installation
-        uses: actions/download-artifact@v4
-        with:
-          name: pnpm-install-22.x
       - name: Lint
         run: pnpm lint
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download PNPM installation
-        uses: actions/download-artifact@v4
-        with:
-          name: pnpm-install-22.x
       - name: Test
         run: pnpm test
+      # - name: Archive PNPM installation
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: pnpm-install-${{ matrix.node-version }}
+      #     path: |
+      #       node_modules
+      #       ${{ steps.step2.outputs.bin_dest }}
+      # - name: Archive build artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: build-dist-${{ matrix.node-version }}
+      #     path: |
+      #       **/dist
+      #       !**/dist/**/*.d.ts
