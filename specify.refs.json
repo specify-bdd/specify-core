@@ -1,8 +1,13 @@
 {
+    "consoleOutput": {
+        "passing test result": "\\(\\d+ passed\\)\\n.*\\(\\d+ passed\\)"
+    },
     "file": {
-        "Gherkin feature that should pass" : {
-            "content": "Feature: Gherking feature file that should pass\nScenario: Scenario that should pass\nGiven that I have a command line prompt",
-            "name": "passing.feature"
+        "passing feature" : {
+            "sourcePath": "./assets/tests/passing.feature"
         }
+    },
+    "statusCode": {
+        "success": 0
     }
 }

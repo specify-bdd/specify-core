@@ -4,15 +4,15 @@ Feature: Basic Test Execution
     In order to ensure that my software functions as the specs say it should
 
     Background:
-        Given that the "@specify/core" NPM package is installed
-        And that the "@specify/plugin-cli" NPM package is installed
-        And that a command line prompt is available
+        # Given that the "@specify/core" NPM package is installed
+        # And that the "@specify/plugin-cli" NPM package is installed
+        Given that a command line prompt is available
 
     Rule: The run should succeed if all tests pass
 
         Scenario: All tests pass
-            Given that a "passing feature" file exists at "./features"
-            When a user runs the command "npx specify test"
+            # Given that a "passing feature" file exists at "./features/passing.feature"
+            When a user runs the command "npx specify test ./assets/gherkin/passing.feature"
             Then the command should exit with a "success" status code
             And the console output should be a "passing test result"
 

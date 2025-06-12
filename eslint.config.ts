@@ -61,7 +61,7 @@ export default tseslint.config(
                 "error",
                 {
                     "selector": "default",
-                    "format": ["camelCase"],
+                    "format": ["camelCase", "UPPER_CASE"],
                     "leadingUnderscore": "allow",
                     "trailingUnderscore": "allow",
                 },
