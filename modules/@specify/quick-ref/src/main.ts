@@ -9,10 +9,7 @@
 import { globbySync } from "globby";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-
-export { QuickRef } from "./lib/quick-ref";
-
-export type { QuickRef } from "./lib/quick-ref";
+import { QuickRef } from "./lib/quick-ref";
 
 const cwd = process.cwd();
 
@@ -31,3 +28,7 @@ const modules = await Promise.all(
 );
 
 export default new QuickRef(modules.map((mod) => mod.default));
+
+export { QuickRef };
+
+export type * from "./lib/quick-ref";
