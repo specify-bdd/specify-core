@@ -1,4 +1,4 @@
-name: Automated Checks
+name: PR Checks
 on: pull_request
 jobs:
   build:
@@ -6,7 +6,7 @@ jobs:
     strategy:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        node-version: [ 22.x, 24.x ] #20.x,
+        node-version: [ 22.x ] # we'll use only the current LTS version for PR checks
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
