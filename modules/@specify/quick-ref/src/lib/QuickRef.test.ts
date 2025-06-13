@@ -1,4 +1,4 @@
-import { QuickRef } from "./quick-ref";
+import { QuickRef } from "./QuickRef";
 
 describe("QuickRef", () => {
     describe("initializes refs from", () => {

@@ -9,7 +9,7 @@
 import { globbySync } from "globby";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { QuickRef } from "./lib/quick-ref";
+import { QuickRef } from "./lib/QuickRef";
 
 import type { JsonObject } from "type-fest";
 
