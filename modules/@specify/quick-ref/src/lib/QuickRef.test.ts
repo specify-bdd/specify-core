@@ -82,9 +82,10 @@ describe("QuickRef", () => {
         });
 
         it("no address", () => {
-            const quickRef = new QuickRef();
+            const input = { "a": 1 };
+            const quickRef = new QuickRef(input);
 
-            expect(quickRef.lookup()).toEqual({});
+            expect(quickRef.lookup()).toEqual(input);
         });
     });
 
