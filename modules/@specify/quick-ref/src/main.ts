@@ -6,29 +6,4 @@
  * are expected to conform to JSON format.
  */
 
-import { globbySync } from "globby";
-import path from "node:path";
-import { pathToFileURL } from "node:url";
-import { QuickRef } from "./lib/QuickRef";
-
-import type { JsonObject } from "type-fest";
-
-const cwd = process.cwd();
-
-const modulePaths = globbySync(path.join(cwd, "*.refs.json"), {
-    "absolute": true,
-    "onlyFiles": true,
-});
-
-const modules = await Promise.all(
-    modulePaths.map(
-        (modulePath) =>
-            import(pathToFileURL(modulePath).href, {
-                "with": { "type": "json" },
-            }),
-    ),
-);
-
-export default new QuickRef(...modules.map((mod) => mod.default as JsonObject));
-
-export { QuickRef };
+export { QuickRef } from "./lib/QuickRef";

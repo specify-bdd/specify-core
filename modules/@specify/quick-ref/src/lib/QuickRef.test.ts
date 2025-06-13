@@ -93,7 +93,9 @@ describe("QuickRef", () => {
         it("invalid addresses", () => {
             const quickRef = new QuickRef({ "a": { "b": 1 } });
 
-            expect(() => quickRef.lookup("a", "b", "c")).toThrow(/Invalid address/);
+            expect(() => quickRef.lookup("a", "b", "c")).toThrow(
+                /Invalid address/,
+            );
         });
     });
 });

@@ -10,7 +10,7 @@ import merge from "deepmerge";
 import type { JsonObject, JsonValue } from "type-fest";
 
 export class QuickRef {
-    #refs = {};
+    #refs: JsonObject = {};
 
     /**
      * Initialize the reference object hierarchy with one or more JSON objects.
@@ -60,7 +60,7 @@ export class QuickRef {
             // }
         };
 
-        this.#refs = merge.all([this.#refs, ...refs], opts);
+        this.#refs = merge.all([this.#refs, ...refs], opts) as JsonObject;
 
         return this;
     }
@@ -82,12 +82,12 @@ export class QuickRef {
     lookup(...segments: string[]): JsonValue {
         const usedSegments = ["<refs>"];
 
-        let location = this.#refs;
+        let location: JsonValue = this.#refs;
 
         while (segments.length) {
             const segment = segments.shift();
 
-            if (!(segment in location)) {
+            if (typeof location !== "object" || !(segment in location)) {
                 throw new Error(
                     `Invalid address: couldn't find "${segment}" in ${usedSegments.join(".")}.`,
                 );

@@ -1,8 +1,7 @@
 import { setWorldConstructor, World } from "@cucumber/cucumber";
-import quickRef from "@specify/quick-ref";
+import { QuickRef } from "@specify/quick-ref";
 
 import type { IWorldOptions } from "@cucumber/cucumber";
-import type { QuickRef } from "@specify/quick-ref";
 
 /**
  * Specify's custom Cucumber World class
@@ -18,7 +17,7 @@ class SpecifyWorld extends World {
     constructor(opts: IWorldOptions) {
         super(opts);
 
-        this.#quickRef = quickRef;
+        this.#quickRef = new QuickRef();
     }
 
     get quickRef(): QuickRef {
