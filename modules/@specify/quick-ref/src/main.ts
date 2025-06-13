@@ -11,6 +11,8 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { QuickRef } from "./lib/quick-ref";
 
+import type { JsonObject } from "type-fest";
+
 const cwd = process.cwd();
 
 const modulePaths = globbySync(path.join(cwd, "*.refs.json"), {
@@ -27,6 +29,6 @@ const modules = await Promise.all(
     ),
 );
 
-export default new QuickRef(modules.map((mod) => mod.default));
+export default new QuickRef(...modules.map((mod) => mod.default as JsonObject));
 
 export { QuickRef };

@@ -7,6 +7,8 @@
 
 import merge from "deepmerge";
 
+import type { JsonObject, JsonValue } from "type-fest";
+
 export class QuickRef {
     #refs = {};
 
@@ -15,14 +17,14 @@ export class QuickRef {
      *
      * @param refs - One or more reference objects to combine and cache
      */
-    constructor(...refs: Record<string, any>[]) {
+    constructor(...refs: JsonObject[]) {
         this.add(...refs);
     }
 
     /**
      * The cached reference objects aggregated into one JSON hierarchy
      */
-    get refs(): Record<string, any> {
+    get refs(): JsonObject {
         return this.#refs;
     }
 
@@ -34,7 +36,7 @@ export class QuickRef {
      *
      * @returns This instance
      */
-    add(...refs: Record<string, any>[]): QuickRef {
+    add(...refs: JsonObject[]): QuickRef {
         const opts = {
             arrayMerge(targ, src) {
                 return src;
@@ -77,7 +79,7 @@ export class QuickRef {
      * If the provided address segments do not exist in the reference object
      * hierarchy
      */
-    lookup(...segments: string[]): unknown {
+    lookup(...segments: string[]): JsonValue {
         const usedSegments = ["<refs>"];
 
         let location = this.#refs;
