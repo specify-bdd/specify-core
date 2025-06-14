@@ -31,5 +31,5 @@ BeforeAll(async function () {
 });
 
 Before({ "name": "Core before hook" }, async function () {
-    this.quickRef.add(refsMods);
+    this.quickRef.add(...refsMods);
 });

@@ -87,10 +87,10 @@ export class QuickRef {
         while (segments.length) {
             const segment = segments.shift();
 
-            if (typeof location !== "object" || !(segment in location)) {
-                throw new Error(
-                    `Invalid address: couldn't find "${segment}" in ${usedSegments.join(".")}.`,
-                );
+            if (typeof location !== "object") {
+                throw new Error(`Invalid address: ${usedSegments.join(".")} is not an object and cannot be traversed.`);
+            } else if (!(segment in location)) {
+                throw new Error(`Invalid address: couldn't fine "${segment}" in ${usedSegments.join(".")}.`);
             }
 
             location = location[segment];
