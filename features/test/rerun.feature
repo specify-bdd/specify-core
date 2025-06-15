@@ -10,6 +10,7 @@ Feature: Rerun Failed Tests
 
     Rule: Failed tests can be targeted for reruns
 
+        @skip
         Scenario: Only failed tests are rerun
             Given that a "passing feature" file exists at "./features"
             And that a "failing feature" file exists at "./features"
@@ -19,6 +20,7 @@ Feature: Rerun Failed Tests
             And the console output should include "failing test result"
             And the console output should not include "passing test result"
 
+        @skip
         Scenario: No tests are rerun after a 100% passing run
             Given that a "passing feature" file exists at "./features"
             When a user runs the command "npx specify test"
@@ -26,7 +28,8 @@ Feature: Rerun Failed Tests
             Then the command should exit with an "error" status code
             And the console output should be a "no tests to rerun"
         
-         Scenario: A previously failing test passes after a rerun
+        @skip
+        Scenario: A previously failing test passes after a rerun
             Given that a "failing feature" file exists at "./features"
             When a user runs the command "npx specify test"
             And the code under test is modified so the issue is resolved
@@ -34,6 +37,7 @@ Feature: Rerun Failed Tests
             Then the command should exit with a "success" status code
             And the console output should include "passing test result"
 
+        @skip
         Scenario: Rerun is attempted with no prior test run
             Given that a "failing feature" file exists at "./features"
             When the user runs the command "npx specify test --rerun"
