@@ -116,6 +116,10 @@ Feature: Basic Test Execution
             And that a "failing feature" file exists at "./features"
             When a user runs the command "npx specify test --tags '@pass'"
             Then the command should exit with a "success" status code
+        
+        Scenario: Do not run tests with the specified inverted tag
+            When a user runs the command "npx specify test ./assets/gherkin --tags 'not @fail'"
+            Then the command should exit with a "success" status code
 
         Scenario: Unmatched tags cause an error
             Given that a "passing feature" file exists at "./features"
