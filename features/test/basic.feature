@@ -11,7 +11,6 @@ Feature: Basic Test Execution
     Rule: The run should succeed if all tests pass
 
         Scenario: All tests pass
-            # Given that a "passing feature" file exists at "./features/passing.feature"
             When a user runs the command "npx specify test ./assets/gherkin/passing.feature"
             Then the command should exit with a "success" status code
             And the console output should be a "passing test result"
@@ -24,9 +23,7 @@ Feature: Basic Test Execution
             And the console output should be a "failing test result"
 
         Scenario: Mixed pass/fail tests
-            Given that a "passing feature" file exists at "./features"
-            And that a "failing feature" file exists at "./features"
-            When a user runs the command "npx specify test"
+            When a user runs the command "npx specify test ./assets/gherkin/passing.feature ./assets/gherkin/failing.feature"
             Then the command should exit with a "failure" status code
 
         Scenario: Feature contains no scenarios
