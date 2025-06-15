@@ -6,7 +6,11 @@
  * A Cucumber-based testing tool built to support behavior-driven development.
  */
 
-import { loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
+import {
+    IConfiguration,
+    loadConfiguration,
+    runCucumber,
+} from "@cucumber/cucumber/api";
 import { config } from "@/config/all";
 
 import minimist from "minimist";
@@ -16,18 +20,9 @@ import * as url from "node:url";
 
 const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
 
-const argv = minimist(process.argv.slice(2));
-
-let gherkinPaths = [path.resolve(config.paths.gherkin)];
-
-// process arguments
-// TODO: this should handle options, subcommands, etc. in addition to path args
-if (argv._.length) {
-    gherkinPaths = argv._.map((gherkinPath) => path.resolve(gherkinPath));
-}
-
-// add Gherkin to Cucumber config
-config.cucumber.paths.push(...gherkinPaths);
+processCucumberArgs(config.cucumber, process.argv.slice(2), [
+    path.resolve(config.paths.gherkin),
+]);
 
 // add plugins to Cucumber config
 config.cucumber.import.push(
@@ -68,4 +63,35 @@ function getPluginPath(pluginName: string): string {
     pluginPath = url.fileURLToPath(import.meta.resolve(pluginName));
 
     return path.dirname(pluginPath);
+}
+
+/**
+ * Parse the arguments and options passed to Specify from the CLI and set their
+ * keys/values in the Cucumber configuration object.
+ *
+ * @param cucumberConfig the object to be used for Cucumber config. It will be mutated!
+ * @param argv           the CLI arguments to parse, usually obtained via `process.argv.slice(2)`
+ * @param gerkinPaths    the paths to use to find Cucumber scenarios
+ */
+function processCucumberArgs(
+    cucumberConfig: Partial<IConfiguration>,
+    argv: string[],
+    gerkinPaths: string[],
+): void {
+    const minimistArgv = minimist(argv);
+
+    let paths = gerkinPaths;
+
+    if (minimistArgv._.length) {
+        paths = minimistArgv._.map((gerkinPaths) => path.resolve(gerkinPaths));
+    }
+
+    cucumberConfig.paths.push(...paths);
+
+    delete minimistArgv._;
+
+    // add all options to cucumber config
+    Object.entries(minimistArgv).forEach(
+        (entry) => (cucumberConfig[entry[0]] = entry[1]),
+    );
 }
