@@ -130,7 +130,7 @@ Feature: Basic Test Execution
             Then the command should exit with a "success" status code
         
         Scenario: Do not run tests with the specified inverted tag
-            When a user runs the command "npx specify test ./assets/gherkin --tags 'not @fail'"
+            When a user runs the command "npx specify test ./assets/gherkin --tags 'not @fail and not @skip'"
             Then the command should exit with a "success" status code
 
         @skip
