@@ -1,5 +1,6 @@
 {
     "consoleOutput": {
+        "failing test result": "\\(\\d+ failed.*\\n.*\\(\\d+ failed",
         "passing test result": "\\(\\d+ passed\\)\\n.*\\(\\d+ passed\\)"
     },
     "file": {
@@ -8,6 +9,7 @@
         }
     },
     "statusCode": {
+        "failure": 1,
         "success": 0
     }
 }
