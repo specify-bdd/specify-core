@@ -6,11 +6,7 @@
  * A Cucumber-based testing tool built to support behavior-driven development.
  */
 
-import {
-    IConfiguration,
-    loadConfiguration,
-    runCucumber,
-} from "@cucumber/cucumber/api";
+import { loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
 import { config } from "@/config/all";
 
 import minimist from "minimist";
@@ -18,6 +14,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as url from "node:url";
 
+import type { IConfiguration } from "@cucumber/cucumber/api";
 import type { ParsedArgs } from "minimist";
 
 const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
