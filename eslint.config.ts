@@ -50,7 +50,7 @@ export default tseslint.config(
             },
         },
         "plugins": {
-            "@specify-eslint": specifyESLintPlugin, // ???
+            "@specify-eslint": specifyESLintPlugin,
             "@stylistic/js": stylisticJs,
             "tsdoc": eslintPluginTSDoc,
         },
