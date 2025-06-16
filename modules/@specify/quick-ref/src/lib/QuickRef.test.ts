@@ -3,28 +3,28 @@ import { QuickRef } from "./QuickRef";
 describe("QuickRef", () => {
     describe("initializes refs from", () => {
         it("a single reference object param", () => {
-            const input = { "a": 1 };
+            const input    = { "a": 1 };
             const quickRef = new QuickRef(input);
 
             expect(quickRef.refs).toEqual(input);
         });
 
         it("multiple, non-overlapping reference object params", () => {
-            const inputs = [{ "a": 1 }, { "b": 2 }];
+            const inputs   = [{ "a": 1 }, { "b": 2 }];
             const quickRef = new QuickRef(...inputs);
 
             expect(quickRef.refs).toEqual({ "a": 1, "b": 2 });
         });
 
         it("multiple, overlapping reference object params", () => {
-            const inputs = [{ "a": { "b": 1 } }, { "a": { "c": 2 } }];
+            const inputs   = [{ "a": { "b": 1 } }, { "a": { "c": 2 } }];
             const quickRef = new QuickRef(...inputs);
 
             expect(quickRef.refs).toEqual({ "a": { "b": 1, "c": 2 } });
         });
 
         it("multiple, conflicting reference object params", () => {
-            const inputs = [{ "a": 1 }, { "a": 2 }];
+            const inputs   = [{ "a": 1 }, { "a": 2 }];
             const quickRef = new QuickRef(...inputs);
 
             expect(quickRef.refs).toEqual({ "a": 2 });
@@ -52,7 +52,7 @@ describe("QuickRef", () => {
     });
 
     it("does nothing when adding nothing", () => {
-        const input = { "a": 1 };
+        const input    = { "a": 1 };
         const quickRef = new QuickRef(input);
 
         quickRef.add();
@@ -82,7 +82,7 @@ describe("QuickRef", () => {
         });
 
         it("no address", () => {
-            const input = { "a": 1 };
+            const input    = { "a": 1 };
             const quickRef = new QuickRef(input);
 
             expect(quickRef.lookup()).toEqual(input);
