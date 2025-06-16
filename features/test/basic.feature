@@ -11,19 +11,19 @@ Feature: Basic Test Execution
     Rule: The run should succeed if all tests pass
 
         Scenario: All tests pass
-            When a user runs the command "npx specify test ./assets/gherkin/passing.feature"
+            When a user runs the command "npx specify test ./assets/gherkin/binary/passing.feature"
             Then the command should exit with a "success" status code
             And the console output should be a "passing test result"
 
     Rule: The run should fail if any tests fail
 
         Scenario: All tests fail
-            When a user runs the command "npx specify test ./assets/gherkin/failing.feature"
+            When a user runs the command "npx specify test ./assets/gherkin/binary/failing.feature"
             Then the command should exit with a "failure" status code
             And the console output should be a "failing test result"
 
         Scenario: Mixed pass/fail tests
-            When a user runs the command "npx specify test ./assets/gherkin/passing.feature ./assets/gherkin/failing.feature"
+            When a user runs the command "npx specify test ./assets/gherkin/binary"
             Then the command should exit with a "failure" status code
 
         @skip
@@ -130,7 +130,7 @@ Feature: Basic Test Execution
             Then the command should exit with a "success" status code
         
         Scenario: Do not run tests with the specified inverted tag
-            When a user runs the command "npx specify test ./assets/gherkin --tags 'not @fail and not @skip'"
+            When a user runs the command "npx specify test ./assets/gherkin/binary --tags 'not @fail and not @skip'"
             Then the command should exit with a "success" status code
 
         @skip
