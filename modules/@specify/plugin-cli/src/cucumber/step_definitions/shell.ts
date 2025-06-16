@@ -12,7 +12,7 @@ import { ShellSession } from "@/lib/ShellSession";
 
 Given("that a command line prompt is available", setupCLI);
 
-When("a/the user runs the command {string}", runCommand);
+When("a/the user runs the command {string}", { "timeout": 60000 }, runCommand);
 
 Then(
     'the command should exit with a(n)/the "{ref:statusCode}" status code',

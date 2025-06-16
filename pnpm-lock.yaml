@@ -111,9 +111,15 @@ importers:
       '@specify/quick-ref':
         specifier: workspace:*
         version: link:../quick-ref
+      globby:
+        specifier: ^14.1.0
+        version: 14.1.0
       minimist:
         specifier: ^1.2.8
         version: 1.2.8
+      type-fest:
+        specifier: ^4.41.0
+        version: 4.41.0
     devDependencies:
       '@types/minimist':
         specifier: ^1.2.5
@@ -124,9 +130,6 @@ importers:
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
-      globby:
-        specifier: ^14.1.0
-        version: 14.1.0
       ts-morph:
         specifier: ^25.0.1
         version: 25.0.1
@@ -142,9 +145,12 @@ importers:
 
   modules/@specify/quick-ref:
     dependencies:
-      globby:
-        specifier: ^14.1.0
-        version: 14.1.0
+      deepmerge:
+        specifier: ^4.3.1
+        version: 4.3.1
+      type-fest:
+        specifier: ^4.41.0
+        version: 4.41.0
 
 packages:
 
