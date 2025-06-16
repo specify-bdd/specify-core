@@ -19,8 +19,7 @@ Feature: Basic Test Execution
     Rule: The run should fail if any tests fail
 
         Scenario: All tests fail
-            Given that a "failing feature" file exists at "./features"
-            When a user runs the command "npx specify test"
+            When a user runs the command "npx specify test ./assets/gherkin/failing.feature"
             Then the command should exit with a "failure" status code
             And the console output should be a "failing test result"
 
