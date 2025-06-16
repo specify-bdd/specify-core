@@ -2,7 +2,8 @@ import { log } from "node:console";
 
 const foobar: number         = 123;
 const barfooasdfasdf: number = 456;
-const foobarbar              = 789;
+
+const foobarbar = 789;
 
 if (foobar === 123) {
     const foobar: number         = 123;

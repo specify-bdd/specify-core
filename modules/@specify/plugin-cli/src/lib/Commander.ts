@@ -107,7 +107,7 @@ export class Commander {
      * @returns the new delimiter
      */
     #createDelimiter(): Delimiter {
-        const uuid = randomUUID(); // used to prevent false delimits
+        const uuid   = randomUUID(); // used to prevent false delimits
         const prefix = "SPECIFY";
 
         return {

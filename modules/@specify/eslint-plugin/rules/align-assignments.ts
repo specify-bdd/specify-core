@@ -6,7 +6,9 @@ import { TSESTree } from "@typescript-eslint/utils";
 type Assignment =
     TSESTree.AssignmentExpression |
     TSESTree.ExpressionStatement |
-    TSESTree.VariableDeclaration
+    TSESTree.VariableDeclaration;
+
+type AssignmentNodeType = "VariableDeclaration" | "AssignmentExpression";
 
 export default {
     "meta": {
@@ -25,7 +27,7 @@ export default {
 
         function getAssignmentGroup(
             startNode: Assignment,
-            nodeType: "VariableDeclaration" | "AssignmentExpression",
+            nodeType: AssignmentNodeType,
         ): Assignment[] {
             const group = [startNode] as Assignment[];
             const parentBody = (nodeType === "VariableDeclaration") ? 
@@ -34,28 +36,6 @@ export default {
 
             if (startNode.loc.start.line !== startNode.loc.end.line || !parentBody?.indexOf) {
                 return group;
-            }
-
-            const isAdjacentNodeValidGroupMember = (
-                node: Assignment,
-                adjacentNodeStartLine: number,
-                offset: number,
-            ): boolean => {
-                if (node.type === "VariableDeclaration") {
-                    return (
-                        node.declarations.length === 1 &&
-                        node.declarations[0].init &&
-                        node.loc.start.line === adjacentNodeStartLine + offset
-                    );
-                } else if (node.type === "ExpressionStatement" && node.expression.type === "AssignmentExpression") {
-                    log(node.expression.left.type, node.loc.start.line, adjacentNodeStartLine + offset);
-                    return (
-                        node.expression.left.type === "Identifier" &&
-                        node.loc.start.line === adjacentNodeStartLine + offset
-                    );
-                }
-
-                return false;
             }
 
             const getAdjacentNodes = (direction: "next" | "previous"): Assignment[] => {
@@ -123,58 +103,28 @@ export default {
             return null;
         }
 
+        function isAdjacentNodeValidGroupMember(
+            node: Assignment,
+            adjacentNodeStartLine: number,
+            offset: number,
+        ): boolean {
+            if (node.type === "VariableDeclaration") {
+                return (
+                    node.declarations.length === 1 &&
+                    node.declarations[0].init &&
+                    node.loc.start.line === adjacentNodeStartLine + offset
+                );
+            } else if (node.type === "ExpressionStatement" && node.expression.type === "AssignmentExpression") {
+                return (
+                    node.expression.left.type === "Identifier" &&
+                    node.loc.start.line === adjacentNodeStartLine + offset
+                );
+            }
+
+            return false;
+        }
+
         return {
-            AssignmentExpression(currentNode) {
-                const node = currentNode as TSESTree.AssignmentExpression;
-                const assignmentGroup =
-                    getAssignmentGroup(node, "AssignmentExpression") as TSESTree.AssignmentExpression[];
-
-                const isAdjustable = (node: Assignment): boolean => {
-                    return (
-                        node.type === "AssignmentExpression" &&
-                        node.left.type === "Identifier" &&
-                        node.operator === "=" &&
-                        !processedNodes.has(node)
-                    );
-                };
-
-                if (!isAdjustable(node)) {
-                    return;
-                }
-
-                assignmentGroup.forEach((groupNode) => processedNodes.add(groupNode));
-
-                const maxIdentifierColumn = Math.max(...assignmentGroup.map(getIdentifierEndColumn));
-
-                for (const groupNode of assignmentGroup) {
-                    const equalToken = getAssignmentOperatorToken(groupNode);
-
-                    if (!equalToken) {
-                        continue;
-                    }
-
-                    const identifierEndColumn = getIdentifierEndColumn(groupNode);
-                    const expectedSpaces = maxIdentifierColumn - identifierEndColumn + 1;
-                    const actualSpaces = equalToken.loc.start.column - identifierEndColumn;
-
-                    if (actualSpaces !== expectedSpaces) {
-                        context.report({
-                            "node": groupNode as any,
-                            "message": "Assignment operators should be aligned in adjacent assignments",
-
-                            fix(fixer) {
-                                const spaceBefore = context.sourceCode.getTokenBefore(equalToken);
-
-                                return fixer.replaceTextRange(
-                                    [spaceBefore.range[1], equalToken.range[0]],
-                                    " ".repeat(expectedSpaces),
-                                );
-                            },
-                        });
-                    }
-                }
-            },
-
             VariableDeclaration(currentNode) {
                 const node = currentNode as TSESTree.VariableDeclaration; // re-cast for clarity
                 const variableGroup = getAssignmentGroup(node, "VariableDeclaration") as TSESTree.VariableDeclaration[];
@@ -195,11 +145,7 @@ export default {
 
                 variableGroup.forEach((groupNode) => processedNodes.add(groupNode));
 
-                const maxDeclaratorColumn = Math.max(...variableGroup.map((groupNode) => {
-                    const declarator = groupNode.declarations[0];
-
-                    return declarator.id.loc.end.column;
-                }));
+                const maxDeclaratorColumn = Math.max(...variableGroup.map(getIdentifierEndColumn));
 
                 for (const groupNode of variableGroup) {
                     const declarator = groupNode.declarations[0];
@@ -208,9 +154,7 @@ export default {
                         continue;
                     }
 
-                    const equalToken = context.sourceCode.getTokenAfter(declarator.id, {
-                        filter: (token) => token.value === "=",
-                    });
+                    const equalToken = getAssignmentOperatorToken(groupNode);
 
                     if (!equalToken) {
                         continue;

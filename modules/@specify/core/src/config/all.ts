@@ -26,7 +26,7 @@ export const entries = await Promise.all(
         "onlyFiles": true,
     }).map(async (modulePath) => {
         const module = await import(pathToFileURL(modulePath).href);
-        const keys = Object.keys(module);
+        const keys   = Object.keys(module);
 
         if (keys.length > 1) {
             throw new Error(
