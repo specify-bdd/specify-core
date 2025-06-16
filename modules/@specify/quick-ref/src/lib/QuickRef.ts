@@ -32,6 +32,12 @@ export class QuickRef {
      * Add one or more new JSON objects to the unified reference object
      * hierarchy.
      *
+     * @remarks
+     * When multiple arrays are assigned to the same address, the arrays are
+     * not concatenated, but instead overwrite.  An alternative implementation
+     * that concatenates is commented out and should remain here until we're
+     * certain that we know how we want this to behave.
+     *
      * @param refs - One or more reference objects to combine and cache
      *
      * @returns This instance
@@ -41,8 +47,6 @@ export class QuickRef {
             arrayMerge(targ, src) {
                 return src;
             },
-            // NOTE: the following function will cause deepmerge to combine arrays instead of overwriting them,
-            // but it's not clear at this time whether that should be the intended behavior.
             // arrayMerge(targ, src, opts) {
             //     const dest = [ ...targ ];
             //
@@ -93,7 +97,7 @@ export class QuickRef {
                 );
             } else if (!(segment in location)) {
                 throw new Error(
-                    `Invalid address: couldn't fine "${segment}" in ${usedSegments.join(".")}.`,
+                    `Invalid address: couldn't find "${segment}" in ${usedSegments.join(".")}.`,
                 );
             }
 
