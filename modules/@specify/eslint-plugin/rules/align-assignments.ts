@@ -1,11 +1,7 @@
 /* eslint-disable */
 
 import { Rule } from "eslint";
-import { log } from "console";
-
 import { TSESTree } from "@typescript-eslint/utils";
-
-log("testing eslint-plugin/rules/align-assignments.ts");
 
 type Assignment = TSESTree.AssignmentExpression | TSESTree.VariableDeclaration
 
