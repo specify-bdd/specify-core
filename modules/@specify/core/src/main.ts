@@ -18,6 +18,8 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as url from "node:url";
 
+import type { ParsedArgs } from "minimist";
+
 const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
 
 processCucumberArgs(config.cucumber, process.argv.slice(2), [
@@ -69,9 +71,9 @@ function getPluginPath(pluginName: string): string {
  * Parse the arguments and options passed to Specify from the CLI and set their
  * keys/values in the Cucumber configuration object.
  *
- * @param cucumberConfig the object to be used for Cucumber config. It will be mutated!
- * @param argv           the CLI arguments to parse, usually obtained via `process.argv.slice(2)`
- * @param gerkinPaths    the paths to use to find Cucumber scenarios
+ * @param cucumberConfig - the object to be used for Cucumber config. It will be mutated!
+ * @param argv           - the CLI arguments to parse, usually obtained via `process.argv.slice(2)`
+ * @param gerkinPaths    - the paths to use to find Cucumber scenarios
  */
 function processCucumberArgs(
     cucumberConfig: Partial<IConfiguration>,
@@ -88,10 +90,24 @@ function processCucumberArgs(
 
     cucumberConfig.paths.push(...paths);
 
-    delete minimistArgv._;
+    processTagsOption(minimistArgv, cucumberConfig);
+}
 
-    // add all options to cucumber config
-    Object.entries(minimistArgv).forEach(
-        (entry) => (cucumberConfig[entry[0]] = entry[1]),
-    );
+/**
+ * Process the CLI "--tags" option
+ *
+ * @param minimistArgv   - the parsed CLI arguments object
+ * @param cucumberConfig - the cucumber configuration object
+ */
+function processTagsOption(
+    minimistArgv: ParsedArgs,
+    cucumberConfig: Partial<IConfiguration>,
+): void {
+    if (!minimistArgv.tags) {
+        return;
+    }
+
+    cucumberConfig.tags = cucumberConfig.tags
+        ? `${cucumberConfig.tags} and ${minimistArgv.tags}`
+        : minimistArgv.tags;
 }
