@@ -62,8 +62,7 @@ Feature: Basic Test Execution
             Then the command should exit with a "error" status code
             And the console output should be a "no features error"
 
-        @dependency
-        @skip
+        @skip @dependency
         Scenario: Feature file is unreadable
             Given that an "unreadable passing feature" file exists at "./features"
             When a user runs the command "npx specify test"
