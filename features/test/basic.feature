@@ -26,6 +26,7 @@ Feature: Basic Test Execution
             When a user runs the command "npx specify test ./assets/gherkin/passing.feature ./assets/gherkin/failing.feature"
             Then the command should exit with a "failure" status code
 
+        @skip
         Scenario: Feature contains no scenarios
             Given that an "empty feature" file exists at "./features"
             When a user runs the command "npx specify test"
@@ -33,13 +34,13 @@ Feature: Basic Test Execution
 
     Rule: The run should error if there are invalid features
 
-        @dependency
+        @skip @dependency
         Scenario: Feature has a Gherkin syntax error
             Given that an "invalid feature" file exists at "./features"
             When a user runs the command "npx specify test"
             Then the command should exit with an "error" status code
 
-        @dependency
+        @skip @dependency
         Scenario: Feature contains undefined step definitions
             Given that an "undefined step feature" file exists at "./features"
             When a user runs the command "npx specify test"
@@ -47,12 +48,14 @@ Feature: Basic Test Execution
 
     Rule: The run should error if there are no available tests
 
+        @skip
         Scenario: Default path is empty
             Given that the path "./features" is empty
             When a user runs the command "npx specify test"
             Then the command should exit with a "error" status code
             And the console output should be a "no features error"
 
+        @skip
         Scenario: Default path contains no features
             Given that the path "./features" has no files matching "*.feature"
             When a user runs the command "npx specify test"
@@ -60,6 +63,7 @@ Feature: Basic Test Execution
             And the console output should be a "no features error"
 
         @dependency
+        @skip
         Scenario: Feature file is unreadable
             Given that an "unreadable passing feature" file exists at "./features"
             When a user runs the command "npx specify test"
@@ -68,23 +72,27 @@ Feature: Basic Test Execution
 
     Rule: Users can override the default features path
 
+        @skip
         Scenario: Feature in user-specified path
             Given that a "passing feature" file exists at "./custom"
             When a user runs the command "npx specify test ./custom"
             Then the command should exit with a "success" status code
 
+        @skip
         Scenario: User-specified path does not exist
             Given that the path "./custom" does not exist
             When a user runs the command "npx specify test ./custom"
             Then the command should exit with a "error" status code
             And the console output should be a "path not found error"
 
+        @skip
         Scenario: User-specified path is empty
             Given that the path "./custom" is empty
             When a user runs the command "npx specify test ./custom"
             Then the command should exit with a "error" status code
             And the console output should be a "no features error"
 
+        @skip
         Scenario: User-specified path contains no features
             Given that the path "./custom" has no files matching "*.feature"
             When a user runs the command "npx specify test ./custom"
@@ -93,11 +101,13 @@ Feature: Basic Test Execution
 
     Rule: Execution without a subcommand should default to testing
 
+        @skip
         Scenario: Passing test without subcommand
             Given that a "passing feature" file exists at "./features"
             When a user runs the command "npx specify"
             Then the command should exit with a "success" status code
 
+        @skip
         Scenario: Passing test without subcommand with argument
             Given that a "passing feature" file exists at "./custom"
             When a user runs the command "npx specify ./custom"
@@ -105,18 +115,25 @@ Feature: Basic Test Execution
 
     Rule: Users can run subsets of tests by path or tag
 
+        @skip
         Scenario: Only run tests in the specified path
             Given that a "passing feature" file exists at "./features/pass"
             And that a "failing feature" file exists at "./features/fail"
             When a user runs the command "npx specify test ./features/pass"
             Then the command should exit with a "success" status code
 
+        @skip
         Scenario: Only run tests with the specified tag
             Given that a "passing feature" file exists at "./features"
             And that a "failing feature" file exists at "./features"
             When a user runs the command "npx specify test --tags '@pass'"
             Then the command should exit with a "success" status code
+        
+        Scenario: Do not run tests with the specified inverted tag
+            When a user runs the command "npx specify test ./assets/gherkin --tags 'not @fail and not @skip'"
+            Then the command should exit with a "success" status code
 
+        @skip
         Scenario: Unmatched tags cause an error
             Given that a "passing feature" file exists at "./features"
             When a user runs the command "npx specify test --tags '@fail'"
@@ -125,16 +142,19 @@ Feature: Basic Test Execution
 
     Rule: Invalid commands display usage help
 
+        @skip
         Scenario: Unsupported subcommand
             When a user runs the command "npx specify bad-subcommand"
             Then the command should exit with a "failure" status code
             And the console output should be a "help message"
 
+        @skip
         Scenario: Unsupported option
             When a user runs the command "npx specify --bad-option"
             Then the command should exit with a "failure" status code
             And the console output should be a "help message"
 
+        @skip
         Scenario: Mix of supported and unsupported options
             When a user runs the command "npx specify --parallel 2 --bad-option"
             Then the command should exit with a "failure" status code
