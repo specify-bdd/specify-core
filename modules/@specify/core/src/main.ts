@@ -22,9 +22,11 @@ import type { ParsedArgs } from "minimist";
 
 const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
 
-processCucumberArgs(config.cucumber, process.argv.slice(2), [
-    path.resolve(config.paths.gherkin),
-]);
+processCucumberArgs(
+    process.argv.slice(2),
+    [path.resolve(config.paths.gherkin)],
+    config.cucumber,
+);
 
 // add plugins to Cucumber config
 config.cucumber.import.push(
@@ -76,21 +78,35 @@ function getPluginPath(pluginName: string): string {
  * @param gerkinPaths    - the paths to use to find Cucumber scenarios
  */
 function processCucumberArgs(
-    cucumberConfig: Partial<IConfiguration>,
     argv: string[],
     gerkinPaths: string[],
+    cucumberConfig: Partial<IConfiguration>,
 ): void {
     const minimistArgv = minimist(argv);
 
-    let paths = gerkinPaths;
+    processGherkinPaths(minimistArgv, gerkinPaths, cucumberConfig);
+    processTagsOption(minimistArgv, cucumberConfig);
+}
+
+/**
+ * Process the Gherkin filepaths
+ *
+ * @param minimistArgv   - the parsed CLI arguments object
+ * @param gherkinPaths   - the gherkin filepaths
+ * @param cucumberConfig - the cucumber configuration object
+ */
+function processGherkinPaths(
+    minimistArgv: ParsedArgs,
+    gherkinPaths: string[],
+    cucumberConfig: Partial<IConfiguration>,
+): void {
+    let paths = gherkinPaths;
 
     if (minimistArgv._.length) {
-        paths = minimistArgv._.map((gerkinPaths) => path.resolve(gerkinPaths));
+        paths = minimistArgv._.map((argPaths) => path.resolve(argPaths));
     }
 
     cucumberConfig.paths.push(...paths);
-
-    processTagsOption(minimistArgv, cucumberConfig);
 }
 
 /**
