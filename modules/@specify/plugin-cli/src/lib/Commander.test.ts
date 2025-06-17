@@ -15,7 +15,7 @@ describe("Commander", () => {
     });
 
     it("writes command to session and resolves after delimiter", async () => {
-        const output = "test";
+        const output  = "test";
         const command = `echo ${output}`;
         const promise = commander.run(command);
 
@@ -51,7 +51,7 @@ describe("Commander", () => {
     });
 
     it("captures command output", async () => {
-        const output = "test";
+        const output  = "test";
         const command = `echo ${output}`;
         const promise = commander.run(command);
 
@@ -64,7 +64,7 @@ describe("Commander", () => {
     });
 
     it("captures multiple lines of command output", async () => {
-        const output = ["test 1", "test 2"];
+        const output  = ["test 1", "test 2"];
         const promise = commander.run("some-command");
 
         session.emitOutput(output[0]);

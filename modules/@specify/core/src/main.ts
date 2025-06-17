@@ -42,7 +42,7 @@ config.cucumber.import.push(
 
 // execute cucumber tests
 const cucumberOpts = await loadConfiguration({ "provided": config.cucumber });
-const cucumberRes = await runCucumber(cucumberOpts.runConfiguration);
+const cucumberRes  = await runCucumber(cucumberOpts.runConfiguration);
 
 process.exit(cucumberRes.success ? 0 : 1);
 

@@ -11,7 +11,7 @@ import { globbySync } from "globby";
 
 import type { InterfaceExportOptions } from "./utils";
 
-const __dirname = import.meta.dirname;
+const __dirname  = import.meta.dirname;
 const outputFile = path.join(__dirname, "..", "types", "index.d.ts");
 
 const typeScripts = globbySync([path.join(__dirname, "types", `*.ts`)], {
