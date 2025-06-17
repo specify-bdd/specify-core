@@ -141,5 +141,10 @@ function watchModule(moduleSrcDir: string): void {
         "ignoreInitial": true, // don't trigger on watcher start
         "persistent": true, // keep the watcher running
         "followSymlinks": false, // don't follow symlinks (prevent recursion)
+        "ignored": [
+            /.test.ts$/,
+            /__mocks__/,
+            /__tests__/,
+        ],
     }).on("all", (event, path) => debouncedRebuild(event, path));
 }
