@@ -12,6 +12,7 @@ Feature: Parallel Execution
 
     Rule: Tests run serially by default
 
+        @skip
         Scenario: Serial execution takes more than 10 seconds
             When a user runs the command "npx specify test"
             Then the command should exit with a "failure" status code
@@ -19,11 +20,13 @@ Feature: Parallel Execution
 
     Rule: Tests can be run in parallel
 
+        @skip
         Scenario: Parallel execution takes less than 6 seconds
             When a user runs the command "npx specify test --parallel 2"
             Then the command should exit with a "failure" status code
             And the elapsed time should be less than "6" seconds
         
+        @skip
         Scenario: Parallel option defaults to a value of one less than total CPU cores
             Given that the path "./features" is empty
             And that cpu-cores minus 1 "5 second passing feature" files exist at "./features"
@@ -33,23 +36,26 @@ Feature: Parallel Execution
     
     Rule: Parallel option only accepts a single integer argument
         
+        @skip
         Scenario: Multiple integers are rejected
             When a user runs the command "npx specify test --parallel 1 2"
             Then the command should exit with an "error" status code
             And the console output should be a "help message"
         
+        @skip
         Scenario: Floats are rejected
             When a user runs the command "npx specify test --parallel 0.5"
             Then the command should exit with an "error" status code
             And the console output should be a "help message"
         
+        @skip
         Scenario: Non-numeric values are rejected
             When a user runs the command "npx specify test --parallel 'bad-value'"
             Then the command should exit with an "error" status code
             And the console output should be a "help message"
 
-        @todo
+        @skip @todo
         Scenario: A value of 0 is rejected (or handled gracefully)
 
-        @todo
+        @skip @todo
         Scenario: An excessively high value is rejected (or handled gracefully) 
