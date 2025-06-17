@@ -70,7 +70,6 @@ Feature: Basic Test Execution
 
     Rule: Users can run subsets of tests by path or tag
 
-        @skip
         Scenario: Only run tests with the specified tag
             When a user runs the command "npx specify test --tags '@pass' ./assets/gherkin/binary/"
             Then the command should exit with a "success" status code
