@@ -78,7 +78,6 @@ Feature: Basic Test Execution
             When a user runs the command "npx specify test --tags 'not @fail' ./assets/gherkin/binary/"
             Then the command should exit with a "success" status code
 
-        @skip
         Scenario: Unmatched tags cause an error
             When a user runs the command "npx specify test --tags '@nevermatch'"
             Then the command should exit with a "error" status code
