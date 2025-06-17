@@ -64,7 +64,6 @@ Feature: Basic Test Execution
 
     Rule: Execution without a subcommand should default to testing
 
-        @skip
         Scenario: Passing test without subcommand
             When a user runs the command "npx specify ./assets/gherkin/binary/passing.feature"
             Then the command should exit with a "success" status code
