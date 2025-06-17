@@ -3,11 +3,17 @@
  *
  * Cucumber step definitions that facilitate Specify testing itself.
  */
-import { Given } from "@cucumber/cucumber";
+import { Given, When, Then } from "@cucumber/cucumber";
 import assert from "node:assert/strict";
 
 Given("that this step definition fails", fail);
 Given("that this step definition passes", pass);
+
+When("this step definition fails", fail);
+When("this step definition passes", pass);
+
+Then("this step definition should fail", fail);
+Then("this step definition should pass", pass);
 
 /**
  * Always throws, causing a scenario failure.
