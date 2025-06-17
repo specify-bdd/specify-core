@@ -14,20 +14,16 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as url from "node:url";
 
+import type { IConfiguration } from "@cucumber/cucumber/api";
+import type { ParsedArgs } from "minimist";
+
 const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
 
-const argv = minimist(process.argv.slice(2));
-
-let gherkinPaths = [path.resolve(config.paths.gherkin)];
-
-// process arguments
-// TODO: this should handle options, subcommands, etc. in addition to path args
-if (argv._.length) {
-    gherkinPaths = argv._.map((gherkinPath) => path.resolve(gherkinPath));
-}
-
-// add Gherkin to Cucumber config
-config.cucumber.paths.push(...gherkinPaths);
+processCucumberArgs(
+    process.argv.slice(2),
+    [path.resolve(config.paths.gherkin)],
+    config.cucumber,
+);
 
 // add plugins to Cucumber config
 config.cucumber.import.push(
@@ -68,4 +64,63 @@ function getPluginPath(pluginName: string): string {
     pluginPath = url.fileURLToPath(import.meta.resolve(pluginName));
 
     return path.dirname(pluginPath);
+}
+
+/**
+ * Parse the arguments and options passed to Specify from the CLI and set their
+ * keys/values in the Cucumber configuration object.
+ *
+ * @param cucumberConfig - the object to be used for Cucumber config. It will be mutated!
+ * @param argv           - the CLI arguments to parse, usually obtained via `process.argv.slice(2)`
+ * @param gerkinPaths    - the paths to use to find Cucumber scenarios
+ */
+function processCucumberArgs(
+    argv: string[],
+    gerkinPaths: string[],
+    cucumberConfig: Partial<IConfiguration>,
+): void {
+    const minimistArgv = minimist(argv);
+
+    processGherkinPaths(minimistArgv, gerkinPaths, cucumberConfig);
+    processTagsOption(minimistArgv, cucumberConfig);
+}
+
+/**
+ * Process the Gherkin filepaths
+ *
+ * @param minimistArgv   - the parsed CLI arguments object
+ * @param gherkinPaths   - the gherkin filepaths
+ * @param cucumberConfig - the cucumber configuration object
+ */
+function processGherkinPaths(
+    minimistArgv: ParsedArgs,
+    gherkinPaths: string[],
+    cucumberConfig: Partial<IConfiguration>,
+): void {
+    let paths = gherkinPaths;
+
+    if (minimistArgv._.length) {
+        paths = minimistArgv._.map((argPaths) => path.resolve(argPaths));
+    }
+
+    cucumberConfig.paths.push(...paths);
+}
+
+/**
+ * Process the CLI "--tags" option
+ *
+ * @param minimistArgv   - the parsed CLI arguments object
+ * @param cucumberConfig - the cucumber configuration object
+ */
+function processTagsOption(
+    minimistArgv: ParsedArgs,
+    cucumberConfig: Partial<IConfiguration>,
+): void {
+    if (!minimistArgv.tags) {
+        return;
+    }
+
+    cucumberConfig.tags = cucumberConfig.tags
+        ? `${cucumberConfig.tags} and ${minimistArgv.tags}`
+        : minimistArgv.tags;
 }

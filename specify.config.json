@@ -1,0 +1,3 @@
+{
+    "plugins": [ "@specify/plugin-cli" ]
+}
