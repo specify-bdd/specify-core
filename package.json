@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "pnpm generate-types && pnpm -r --if-present run build",
-    "test": "pnpm run test:unit",
+    "test": "pnpm run test:unit && specify test",
     "test:unit": "jest",
     "test:unit:watch": "jest --watch",
     "test:unit:watchAll": "jest --watchAll",
