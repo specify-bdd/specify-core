@@ -25,7 +25,7 @@ export class TestSubCommand extends SubCommand {
 
     async execute(): Promise<boolean> {
         const cucumberOpts = await loadConfiguration({ "provided": this.config.cucumber });
-        const cucumberRes  = await runCucumber(cucumberOpts.runConfiguration);
+        const cucumberRes  = await runCucumber(cucumberOpts.runConfiguration, {}, (msg) => console.debug(msg));
 
         return cucumberRes.success;
     }
@@ -57,11 +57,12 @@ export class TestSubCommand extends SubCommand {
 
         // parse path arguments and ensure all of them exist
         for (const pathArg of this.args.paths) {
-            const absPath = path.resolve(pathArg);
+            const [ userPath, userLine ] = pathArg.split(":");
+            const absPath = path.resolve(userPath);
 
             assert.ok(fs.existsSync(absPath), `Invalid path: ${pathArg}`);
 
-            paths.push(absPath);
+            paths.push(`${absPath}:${userLine}`);
         }
 
         // if no path arguments were supplied, fall back to the default gherkin path
@@ -84,6 +85,8 @@ export class TestSubCommand extends SubCommand {
         if (this.config.cucumber.tags) {
             tags.push(this.config.cucumber.tags);
         }
+
+        tags = tags.filter((tag) => tag);
 
         this.tags = tags;
 
