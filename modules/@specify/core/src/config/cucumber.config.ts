@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import type { IConfiguration } from "@cucumber/cucumber/api";
 
 export type CucumberConfig = Partial<IConfiguration>;

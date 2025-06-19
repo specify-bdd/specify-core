@@ -117,7 +117,7 @@ export class TestSubCommand extends SubCommand {
         this.#parsePathArgs();
         this.#parseTagArgs();
 
-        let remainingArgs = Object.keys(this.args);
+        const remainingArgs = Object.keys(this.args);
 
         // remove loose args from remaining list
         remainingArgs.splice(remainingArgs.indexOf("_"), 1);
