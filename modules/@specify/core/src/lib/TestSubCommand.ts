@@ -97,8 +97,6 @@ export class TestSubCommand extends SubCommand {
                 : SubCommandResultStatus.failure;
         } catch (err) {
             testRes.error = serializeError(err);
-
-            return testRes;
         }
 
         return testRes;
