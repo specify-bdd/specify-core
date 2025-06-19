@@ -68,6 +68,6 @@ function verifyCLIStatusCode(statusCode: number) {
     assert.equal(
         this.cli.shell.statusCode,
         statusCode,
-        "The command's status code did not match the expectations.",
+        "The command's status code did not match expectations.",
     );
 }
