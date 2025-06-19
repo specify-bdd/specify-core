@@ -21,10 +21,25 @@ import type { SubCommandResult } from "./SubCommand";
 const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
 
 export class TestSubCommand extends SubCommand {
+    /**
+     * The path of the Cucumber result log file
+     */
     logPath: string;
-    paths:   string[];
+
+    /**
+     * The paths containing Gherkin specs to run as tests
+     */
+    paths: string[];
+
+    /**
+     * The paths for all plugins to import into Cucumber
+     */
     plugins: string[];
-    tags:    string[];
+
+    /**
+     * The tag expressions to use in filtering which tests to run
+     */
+    tags: string[];
 
     /**
      *  Parse arguments and config data to prepare operational parameters

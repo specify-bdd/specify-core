@@ -14,7 +14,7 @@ export class SubCommand {
     /**
      *  User-supplied command arguments, as parsed by Minimist
      */
-    args:   ParsedArgs;
+    args: ParsedArgs;
 
     /**
      *  Specify Core config data
