@@ -15,15 +15,14 @@ import minimist from "minimist";
 const args = minimist(process.argv.slice(2));
 let cmd: SubCommand;
 
-switch (args._[0]) {
+switch (args._[0]?.toLowerCase()) {
     case "test":
-    case "TEST":
         args._.shift();
+        // fall through to default
     default:
         cmd = new TestSubCommand(args, config);
 }
 
 const res = await cmd.execute();
-console.dir(res, {"depth": 10});
 
 process.exit(res.status);

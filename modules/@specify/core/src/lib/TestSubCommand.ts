@@ -1,3 +1,10 @@
+/**
+ *  TestSubCommand class module
+ *
+ *  Conduct tests by using Cucumber to translate Gherkin specifications into 
+ *  actionable, automated tests.
+ */
+
 import { IRunResult, loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
 import { serializeError } from "serialize-error";
 import { SubCommand, SubCommandResultStatus } from "./SubCommand";
@@ -8,7 +15,6 @@ import path from "node:path";
 import url from "node:url";
 
 import type { ParsedArgs } from "minimist";
-// import type { JsonArray } from "type-fest";
 import type { CoreConfig } from "~/types";
 import type { SubCommandResult } from "./SubCommand";
 
@@ -20,17 +26,26 @@ export class TestSubCommand extends SubCommand {
     plugins: string[];
     tags:    string[];
 
+    /**
+     *  Parse arguments and config data to prepare operational parameters
+     *
+     *  @param args   - User-supplied arguments
+     *  @param config - Specify config data
+     */
     constructor(args: ParsedArgs, config: CoreConfig) {
         super(args, config);
 
         this.#parseArgs();
         this.#resolvePlugins();
 
-        // add logging
         this.logPath = path.resolve(this.config.paths.logs, `specify-log-${Date.now()}.json`);
         this.config.cucumber.format.push([ "json", this.logPath ]);
     }
 
+    /**
+     *  Execute tests with Cucumber.  Consider a no-op result from Cucumber to 
+     *  be an error condition.
+     */
     async execute(): Promise<Partial<SubCommandResult>> {
         const testRes: Partial<SubCommandResult> = { "ok": false, "status": SubCommandResultStatus.error };
 
@@ -74,6 +89,11 @@ export class TestSubCommand extends SubCommand {
         return testRes;
     }
 
+    /**
+     *  Resolve a plugin package name (or path) into an absolute path.
+     *
+     *  @param pluginName - The name or path of a plugin package to resolve
+     */
     #getPluginPath(pluginName: string): string {
         let pluginPath = path.resolve(pluginName);
 
@@ -90,23 +110,38 @@ export class TestSubCommand extends SubCommand {
         return path.dirname(pluginPath);
     }
 
-
+    /**
+     *  Parse all recognized arguments, then throw if any unparsed args remain.
+     */
     #parseArgs(): void {
         this.#parsePathArgs();
         this.#parseTagArgs();
+
+        let remainingArgs = Object.keys(this.args);
+
+        // remove loose args from remaining list
+        remainingArgs.splice(remainingArgs.indexOf("_"), 1);
+
+        assert.equal(remainingArgs.length, 0, new Error(`Invalid options: ${remainingArgs.join(", ")}`));
     }
 
+    /**
+     *  Parse loose arguments as paths.  Any loose args that are not valid file 
+     *  system paths will cause an error to be thrown.
+     */
     #parsePathArgs(): void {
         const paths = [];
 
-        // parse path arguments and ensure all of them exist
-        for (const pathArg of this.args._) {
+        // parse path arguments and ensure all of them are valid
+        while (this.args._.length) {
+            const pathArg                = this.args._.shift();
             const [ userPath, userLine ] = pathArg.split(":");
-            const absPath = path.resolve(userPath);
+            const absPath                = path.resolve(userPath);
+            const absLine                = userLine ? `${absPath}:${userLine}` : absPath;
 
-            assert.ok(fs.existsSync(absPath), `Invalid path: ${pathArg}`);
+            assert.ok(fs.existsSync(absPath), new Error(`Invalid path: ${pathArg}`));
 
-            paths.push(`${absPath}:${userLine}`);
+            paths.push(absLine);
         }
 
         // if no path arguments were supplied, fall back to the default gherkin path
@@ -119,6 +154,11 @@ export class TestSubCommand extends SubCommand {
         this.config.cucumber.paths = paths;
     }
 
+    /**
+     *  Parse Cucumber tag args.  If the --tags option is used multiple times, 
+     *  all supplied tag expressions should be joined (along with any defined in
+     *  the Cucumber config) with "and" conjucntions to preserve them all.
+     */
     #parseTagArgs(): void {
         let tags = this.args.tags;
 
@@ -135,8 +175,15 @@ export class TestSubCommand extends SubCommand {
         this.tags = tags;
 
         this.config.cucumber.tags = tags.join(" and ");
+
+        delete this.args.tags; // remove arg now that it's been fully parsed
     }
 
+    /**
+     *  Resolve the paths of all Specify plugins, including those in Specify's 
+     *  and Cucumber's config files, for use in Cucumber's support file import 
+     *  array.
+     */
     #resolvePlugins(): void {
         const cucumberPath = path.resolve(import.meta.dirname, "..", "cucumber"); // Core's Cucumber support code
         const pluginPaths  = [ cucumberPath, ...this.config.cucumber.import ];
