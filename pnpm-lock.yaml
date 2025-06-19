@@ -117,6 +117,9 @@ importers:
       minimist:
         specifier: ^1.2.8
         version: 1.2.8
+      serialize-error:
+        specifier: ^12.0.0
+        version: 12.0.0
       type-fest:
         specifier: ^4.41.0
         version: 4.41.0
@@ -2172,6 +2175,10 @@ packages:
     resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
     engines: {node: '>=10'}
     hasBin: true
+
+  serialize-error@12.0.0:
+    resolution: {integrity: sha512-ZYkZLAvKTKQXWuh5XpBw7CdbSzagarX39WyZ2H07CDLC5/KfsRGlIXV8d4+tfqX1M7916mRqR1QfNHSij+c9Pw==}
+    engines: {node: '>=18'}
 
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
@@ -4788,6 +4795,10 @@ snapshots:
   semver@7.7.1: {}
 
   semver@7.7.2: {}
+
+  serialize-error@12.0.0:
+    dependencies:
+      type-fest: 4.41.0
 
   shebang-command@2.0.0:
     dependencies:

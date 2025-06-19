@@ -27,6 +27,7 @@
     "@specify/quick-ref": "workspace:*",
     "globby": "^14.1.0",
     "minimist": "^1.2.8",
+    "serialize-error": "^12.0.0",
     "type-fest": "^4.41.0"
   },
   "devDependencies": {

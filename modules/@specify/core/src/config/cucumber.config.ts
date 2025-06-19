@@ -1,11 +1,12 @@
+import path from "node:path";
+
 import type { IConfiguration } from "@cucumber/cucumber/api";
 
 export type CucumberConfig = Partial<IConfiguration>;
 
 export const cucumber: CucumberConfig = {
     "format": [
-        "progress-bar",
-        // [ "html", "./reports/cucumber.html" ] // do we want this?
+        "progress"
     ],
     "import": [
         // step definitions and support file paths go here

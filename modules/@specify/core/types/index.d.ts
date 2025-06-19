@@ -3,6 +3,7 @@
 
 export interface CoreConfig {
     cucumber: import("../src/config/cucumber.config").CucumberConfig;
+    debug: undefined;
     paths: import("../src/config/paths.config").PathsConfig;
     plugins: import("../src/config/plugins.config").PluginsConfig;
 }

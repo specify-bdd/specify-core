@@ -1,5 +1,6 @@
-import { loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
-import { SubCommand } from "./SubCommand";
+import { IRunResult, loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
+import { serializeError } from "serialize-error";
+import { SubCommand, SubCommandResultStatus } from "./SubCommand";
 
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -7,11 +8,14 @@ import path from "node:path";
 import url from "node:url";
 
 import type { ParsedArgs } from "minimist";
+// import type { JsonArray } from "type-fest";
 import type { CoreConfig } from "~/types";
+import type { SubCommandResult } from "./SubCommand";
 
 const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
 
 export class TestSubCommand extends SubCommand {
+    logPath: string;
     paths:   string[];
     plugins: string[];
     tags:    string[];
@@ -21,13 +25,53 @@ export class TestSubCommand extends SubCommand {
 
         this.#parseArgs();
         this.#resolvePlugins();
+
+        // add logging
+        this.logPath = path.resolve(this.config.paths.logs, `specify-log-${Date.now()}.json`);
+        this.config.cucumber.format.push([ "json", this.logPath ]);
     }
 
-    async execute(): Promise<boolean> {
-        const cucumberOpts = await loadConfiguration({ "provided": this.config.cucumber });
-        const cucumberRes  = await runCucumber(cucumberOpts.runConfiguration, {}, (msg) => console.debug(msg));
+    async execute(): Promise<Partial<SubCommandResult>> {
+        const testRes: Partial<SubCommandResult> = { "ok": false, "status": SubCommandResultStatus.error };
 
-        return cucumberRes.success;
+        let cucumberRes: IRunResult;
+
+        try {
+            const cucumberOpts = await loadConfiguration({ "provided": this.config.cucumber });
+            const cucumberEnv  = {
+                "cwd": process.cwd(),
+                "debug": this.config.debug,
+                "env": process.env,
+                "stderr": process.stderr,
+                "stdout": process.stdout,
+            };
+
+            cucumberRes = await runCucumber(
+                cucumberOpts.runConfiguration,
+                cucumberEnv,
+                // the third param handles message events, which we might need later to publish live results to outside
+                // consumers
+            );
+
+            testRes.result = JSON.parse(
+                fs.readFileSync(this.logPath, { "encoding": "utf8" })
+            );
+
+            if (!Array.isArray(testRes.result) || !testRes.result.length) {
+                throw new Error("No tests were executed.");
+            }
+
+            testRes.ok = cucumberRes.success;
+            testRes.status = (cucumberRes.success)
+                ? SubCommandResultStatus.success
+                : SubCommandResultStatus.failure;
+        } catch (err) {
+            testRes.error = serializeError(err);
+
+            return testRes;
+        }
+
+        return testRes;
     }
 
     #getPluginPath(pluginName: string): string {
@@ -48,15 +92,15 @@ export class TestSubCommand extends SubCommand {
 
 
     #parseArgs(): void {
+        this.#parsePathArgs();
         this.#parseTagArgs();
-        this.paths = this.args._;
     }
 
     #parsePathArgs(): void {
         const paths = [];
 
         // parse path arguments and ensure all of them exist
-        for (const pathArg of this.args.paths) {
+        for (const pathArg of this.args._) {
             const [ userPath, userLine ] = pathArg.split(":");
             const absPath = path.resolve(userPath);
 
