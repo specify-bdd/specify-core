@@ -7,6 +7,7 @@
  */
 
 import { config } from "@/config/all";
+import { deserializeError } from "serialize-error";
 import { SubCommand } from "./lib/SubCommand";
 import { TestSubCommand } from "./lib/TestSubCommand";
 
@@ -24,5 +25,9 @@ switch (args._[0]?.toLowerCase()) {
 }
 
 const res = await cmd.execute();
+
+if (res.error) {
+    throw deserializeError(res.error);
+}
 
 process.exit(res.status);
