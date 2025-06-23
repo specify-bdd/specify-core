@@ -6,54 +6,68 @@
 
 import { serializeError } from "serialize-error";
 
+import merge from "deepmerge";
+
 import type { ParsedArgs } from "minimist";
-import type { CoreConfig } from "~/types";
 import type { JsonObject, JsonValue } from "type-fest";
 
-export class SubCommand {
-    /**
-     *  User-supplied command arguments, as parsed by Minimist
-     */
-    args: ParsedArgs;
+export const DEFAULT_OPTS: SubCommandOptions = {
+    "debug": false,
+    "logPath": `./specify-log-${Date.now()}.json`,
+}
 
-    /**
-     *  Specify Core config data
-     */
-    config: CoreConfig;
-
-    /**
-     *  Store args and config data.
-     *
-     *  @param args   - User-supplied arguments
-     *  @param config - Specify config data
-     */
-    constructor(args: ParsedArgs, config: CoreConfig) {
-        this.args   = args;
-        this.config = config;
-    }
-
-    /**
-     *  Execute the subcommand.  This method should be overridden by child 
-     *  classes, or it will just return an error result.
-     */
-    async execute(): Promise<Partial<SubCommandResult>> {
-        return {
-            "ok": false,
-            "status": SubCommandResultStatus.error,
-            "error": serializeError(new Error("Base class SubCommand should not be executed.")),
-        };
-    }
+export interface SubCommandOptions {
+    debug: boolean,
+    logPath: string,
 }
 
 export interface SubCommandResult {
     ok: boolean,
     status: SubCommandResultStatus,
-    error: JsonObject,
-    result: JsonValue,
+    error?: JsonObject,
+    result?: JsonValue,
 }
 
 export enum SubCommandResultStatus {
     success,
     failure,
     error
+}
+
+export class SubCommand {
+
+    /**
+     *  User-supplied command arguments, as parsed by Minimist
+     */
+    args: ParsedArgs;
+
+    /**
+     *  User-supplied options, to be merged with the defaults above
+     */
+    opts: SubCommandOptions = DEFAULT_OPTS;
+
+    /**
+     *  Store user args and options data.
+     *
+     *  @param userArgs - User-supplied arguments
+     *  @param userOpts - User-supplied options
+     */
+    constructor(userArgs: ParsedArgs, userOpts: Partial<SubCommandOptions>) {
+        this.args = userArgs;
+        
+        this.opts = merge(this.opts, userOpts);
+    }
+
+    /**
+     *  Execute the subcommand.  This method should be overridden by child 
+     *  classes, or it will just return an error result.
+     */
+    async execute(): Promise<SubCommandResult> {
+        return {
+            "ok": false,
+            "status": SubCommandResultStatus.error,
+            "error": serializeError(new Error("Base class SubCommand should not be executed.")),
+        };
+    }
+
 }

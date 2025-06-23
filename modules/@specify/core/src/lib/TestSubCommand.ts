@@ -7,70 +7,77 @@
 
 import { IRunResult, loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
 import { serializeError } from "serialize-error";
-import { SubCommand, SubCommandResultStatus } from "./SubCommand";
+import { SubCommand, SubCommandOptions, SubCommandResultStatus } from "./SubCommand";
 
+import merge from "deepmerge";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import url from "node:url";
 
+import type { IConfiguration } from "@cucumber/cucumber/api";
 import type { ParsedArgs } from "minimist";
-import type { CoreConfig } from "~/types";
 import type { SubCommandResult } from "./SubCommand";
 
 const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
 
+export const TEST_DEFAULT_OPTS: TestSubCommandOptions = {
+    "cucumber": {
+        "format": [],
+        "import": [],
+        "paths": [],
+        "tags": "",
+    },
+    "debug": false,
+    "gherkinPaths": [],
+    "logPath": `./specify-test-log-${Date.now()}.json`,
+    "plugins": [],
+}
+
+export interface TestSubCommandOptions extends SubCommandOptions {
+    cucumber: Partial<IConfiguration>,
+    gherkinPaths: string[],
+    plugins: string[],
+}
+
 export class TestSubCommand extends SubCommand {
-    /**
-     * The path of the Cucumber result log file
-     */
-    logPath: string;
 
     /**
-     * The paths containing Gherkin specs to run as tests
+     *  User-supplied options, to be merged with the defaults above
      */
-    paths: string[];
+    opts: TestSubCommandOptions = TEST_DEFAULT_OPTS;
 
     /**
-     * The paths for all plugins to import into Cucumber
-     */
-    plugins: string[];
-
-    /**
-     * The tag expressions to use in filtering which tests to run
-     */
-    tags: string[];
-
-    /**
-     *  Parse arguments and config data to prepare operational parameters
+     *  Parse user arguments and options data to prepare operational parameters
      *
-     *  @param args   - User-supplied arguments
-     *  @param config - Specify config data
+     *  @param userArgs - User-supplied arguments
+     *  @param userOpts - User-supplied options
      */
-    constructor(args: ParsedArgs, config: CoreConfig) {
-        super(args, config);
+    constructor(userArgs: ParsedArgs, userOpts: Partial<TestSubCommandOptions>) {
+        super(userArgs, {});
+
+        this.opts = merge(this.opts, userOpts);
 
         this.#parseArgs();
         this.#resolvePlugins();
 
-        this.logPath = path.resolve(this.config.paths.logs, `specify-log-${Date.now()}.json`);
-        this.config.cucumber.format.push([ "json", this.logPath ]);
+        this.opts.cucumber.format.push([ "json", this.opts.logPath ]);
     }
 
     /**
      *  Execute tests with Cucumber.  Consider a no-op result from Cucumber to 
      *  be an error condition.
      */
-    async execute(): Promise<Partial<SubCommandResult>> {
-        const testRes: Partial<SubCommandResult> = { "ok": false, "status": SubCommandResultStatus.error };
+    async execute(): Promise<SubCommandResult> {
+        const testRes: SubCommandResult = { "ok": false, "status": SubCommandResultStatus.error };
 
         let cucumberRes: IRunResult;
 
         try {
-            const cucumberOpts = await loadConfiguration({ "provided": this.config.cucumber });
+            const cucumberOpts = await loadConfiguration({ "provided": this.opts.cucumber });
             const cucumberEnv  = {
                 "cwd": process.cwd(),
-                "debug": this.config.debug,
+                "debug": this.opts.debug,
                 "env": process.env,
                 "stderr": process.stderr,
                 "stdout": process.stdout,
@@ -84,7 +91,7 @@ export class TestSubCommand extends SubCommand {
             );
 
             testRes.result = JSON.parse(
-                fs.readFileSync(this.logPath, { "encoding": "utf8" })
+                fs.readFileSync(this.opts.logPath, { "encoding": "utf8" })
             );
 
             if (!Array.isArray(testRes.result) || !testRes.result.length) {
@@ -159,12 +166,10 @@ export class TestSubCommand extends SubCommand {
 
         // if no path arguments were supplied, fall back to the default gherkin path
         if (!paths.length) {
-            paths.push(path.resolve(this.config.paths.gherkin));
+            paths.push(...this.opts.gherkinPaths.map((gherkinPath) => path.resolve(gherkinPath)));
         }
 
-        this.paths = paths;
-
-        this.config.cucumber.paths = paths;
+        this.opts.cucumber.paths = paths;
     }
 
     /**
@@ -179,15 +184,13 @@ export class TestSubCommand extends SubCommand {
             tags = [ tags ];
         }
 
-        if (this.config.cucumber.tags) {
-            tags.push(this.config.cucumber.tags);
+        if (this.opts.cucumber.tags) {
+            tags.push(this.opts.cucumber.tags);
         }
 
         tags = tags.filter((tag) => tag);
 
-        this.tags = tags;
-
-        this.config.cucumber.tags = tags.join(" and ");
+        this.opts.cucumber.tags = tags.join(" and ");
 
         delete this.args.tags; // remove arg now that it's been fully parsed
     }
@@ -199,9 +202,9 @@ export class TestSubCommand extends SubCommand {
      */
     #resolvePlugins(): void {
         const cucumberPath = path.resolve(import.meta.dirname, "..", "cucumber"); // Core's Cucumber support code
-        const pluginPaths  = [ cucumberPath, ...this.config.cucumber.import ];
+        const pluginPaths  = [ cucumberPath, ...this.opts.cucumber.import ];
 
-        for (const plugin of this.config.plugins) {
+        for (const plugin of this.opts.plugins) {
             pluginPaths.push(
                 path.join(
                     this.#getPluginPath(plugin),
@@ -210,8 +213,7 @@ export class TestSubCommand extends SubCommand {
             );
         }
 
-        this.plugins = pluginPaths;
-
-        this.config.cucumber.import = pluginPaths;
+        this.opts.cucumber.import = pluginPaths;
     }
+
 }
