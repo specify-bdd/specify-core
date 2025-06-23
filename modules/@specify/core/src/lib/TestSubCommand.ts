@@ -201,8 +201,7 @@ export class TestSubCommand extends SubCommand {
      *  array.
      */
     #resolvePlugins(): void {
-        const cucumberPath = path.resolve(import.meta.dirname, "..", "cucumber"); // Core's Cucumber support code
-        const pluginPaths  = [ cucumberPath, ...this.opts.cucumber.import ];
+        const pluginPaths = [ ...this.opts.cucumber.import ];
 
         for (const plugin of this.opts.plugins) {
             pluginPaths.push(
