@@ -12,9 +12,7 @@
     },
     "exclude": [
         "dist",
-        "**/node_modules/**",
-        "**/*.test.*",
-        "**/__mocks__"
+        "**/node_modules/**"
     ],
     "include": [
         "./src/**/*.ts",

@@ -91,7 +91,6 @@ export default tseslint.config(
     {
         "files": [
             "eslint.config.ts",
-            "jest.config.ts",
             "eslint-plugin/**/*.ts",
         ],
         "rules": {
