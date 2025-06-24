@@ -7,6 +7,7 @@
 
 import { IRunResult, loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
 import { serializeError } from "serialize-error";
+import { createRequire } from "module"; 
 import { SubCommand, SubCommandOptions, SubCommandResultStatus } from "./SubCommand";
 
 import merge from "deepmerge";
@@ -20,6 +21,7 @@ import type { ParsedArgs } from "minimist";
 import type { SubCommandResult } from "./SubCommand";
 
 const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
+const require = createRequire(import.meta.url);
 
 export const TEST_DEFAULT_OPTS: TestSubCommandOptions = {
     "cucumber": {
@@ -123,9 +125,7 @@ export class TestSubCommand extends SubCommand {
         }
 
         // if not, resolve the package name into a path
-        // NOTE: Node.js import.meta.resolve is at stability index 1.2 ("Experimental release candidate") at time of
-        // writing and may change without notice.  We need to verify this still works when upgrading Node versions.
-        pluginPath = url.fileURLToPath(import.meta.resolve(pluginName));
+        pluginPath = require.resolve(pluginName);
 
         return path.dirname(pluginPath);
     }
@@ -204,12 +204,7 @@ export class TestSubCommand extends SubCommand {
         const pluginPaths = [ ...this.opts.cucumber.import ];
 
         for (const plugin of this.opts.plugins) {
-            pluginPaths.push(
-                path.join(
-                    this.#getPluginPath(plugin),
-                    `**/*.{${CUCUMBER_PLUGIN_EXTENSIONS.join(",")}}`,
-                )
-            );
+            pluginPaths.push(this.#getPluginPath(plugin));
         }
 
         this.opts.cucumber.import = pluginPaths;

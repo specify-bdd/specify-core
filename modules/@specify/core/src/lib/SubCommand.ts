@@ -53,9 +53,8 @@ export class SubCommand {
      *  @param userOpts - User-supplied options
      */
     constructor(userArgs: ParsedArgs, userOpts: Partial<SubCommandOptions>) {
-        this.args = userArgs;
-        
-        this.opts = merge(this.opts, userOpts);
+        this.args = merge({}, userArgs);
+        this.opts = merge.all([ {}, DEFAULT_OPTS, userOpts ]) as SubCommandOptions;
     }
 
     /**

@@ -28,7 +28,7 @@ switch (args._[0]?.toLowerCase()) {
             "debug": config.debug,
             "gherkinPaths": [ path.resolve(config.paths.gherkin) ],
             "logPath": path.resolve(config.paths.logs, TEST_DEFAULT_OPTS.logPath),
-            "plugins": config.plugins.concat(path.resolve(import.meta.dirname, "cucumber")),
+            "plugins": config.plugins.concat(path.resolve(import.meta.dirname, "../dist/cucumber")),
         });
 }
 
