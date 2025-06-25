@@ -138,18 +138,21 @@ export default {
                     return null;
                 }
 
+                const lastSpecifier =
+                    node.specifiers[node.specifiers.length - 1];
                 const closingBracePos = getClosingBracePosition(node);
 
-                if (closingBracePos) {
-                    const lastSpecifier =
-                        node.specifiers[node.specifiers.length - 1];
-                    if (!lastSpecifier.loc) {
-                        return;
-                    }
-                    const position = lastSpecifier.loc.end.column + 1;
-
-                    maxPosition = Math.max(maxPosition, position);
+                if (!lastSpecifier.loc) {
+                    return;
                 }
+
+                let position = lastSpecifier.loc.end.column + 1;
+
+                if (!closingBracePos) {
+                    position -= 2;
+                }
+
+                maxPosition = Math.max(maxPosition, position);
             });
 
             return maxPosition;
