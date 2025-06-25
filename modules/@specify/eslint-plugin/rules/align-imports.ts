@@ -74,10 +74,6 @@ export default {
         }
 
         function getClosingBracePosition(node: Rule.Node) {
-            if (!("specifiers" in node) || node.specifiers.length === 0) {
-                return null;
-            }
-
             const tokens       = sourceCode.getTokens(node);
             const closingBrace = tokens.find((token) => token.value === "}");
 
@@ -117,17 +113,21 @@ export default {
             }
 
             return groups.map((group) => {
+                const { targetClosingBracePosition, targetFromPosition } = getTargetPositions(group);
+
                 return {
                     "hasDestructuredImport": hasDestructuredImport(group),
                     "imports": group,
-                    "targetClosingBracePosition": getTargetBracePosition(group),
-                    "targetFromPosition": getTargetFromPosition(group),
+
+                    targetClosingBracePosition,
+                    targetFromPosition,
                 };
             });
         }
 
-        function getTargetBracePosition(group: Rule.Node[]) {
-            let maxPosition = 0;
+        function getTargetPositions(group: Rule.Node[]) {
+            let targetClosingBracePosition = 0;
+            let targetFromPosition         = 0;
 
             group.forEach((node) => {
                 if (
@@ -146,50 +146,20 @@ export default {
                     return;
                 }
 
-                let position = lastSpecifier.loc.end.column + 1;
+                const position = lastSpecifier.loc.end.column + 1;
 
-                if (!closingBracePos) {
-                    position -= 2;
-                }
+                targetClosingBracePosition = Math.max(
+                    targetClosingBracePosition,
+                    (closingBracePos) ? position : position - 2,
+                );
 
-                maxPosition = Math.max(maxPosition, position);
+                targetFromPosition = Math.max(
+                    targetFromPosition,
+                    (closingBracePos) ? position + 2 : position,
+                );
             });
 
-            return maxPosition;
-        }
-
-        function getTargetFromPosition(group: Rule.Node[]) {
-            let maxPosition = 0;
-
-            group.forEach((node) => {
-                if (
-                    !isSingleLineImport(node) ||
-                    !("specifiers" in node) ||
-                    node.specifiers.length === 0
-                ) {
-                    return;
-                }
-
-                const lastSpecifier =
-                    node.specifiers[node.specifiers.length - 1];
-                const closingBracePos = getClosingBracePosition(node);
-
-                if (!lastSpecifier.loc) {
-                    return;
-                }
-
-                // account for the space after the last specifier
-                let position = lastSpecifier.loc.end.column + 1;
-
-                // adjust for closing brace position if it exists
-                if (closingBracePos) {
-                    position += 2;
-                }
-
-                maxPosition = Math.max(maxPosition, position);
-            });
-
-            return maxPosition;
+            return { targetClosingBracePosition, targetFromPosition };
         }
 
         function hasDestructuredImport(group: Rule.Node[]) {
