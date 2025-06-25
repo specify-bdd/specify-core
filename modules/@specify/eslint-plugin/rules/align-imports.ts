@@ -175,10 +175,12 @@ export default {
                     return;
                 }
 
-                let position = lastSpecifier.loc.end.column;
+                // account for the space after the last specifier
+                let position = lastSpecifier.loc.end.column + 1;
 
+                // adjust for closing brace position if it exists
                 if (closingBracePos) {
-                    position += 3;
+                    position += 2;
                 }
 
                 maxPosition = Math.max(maxPosition, position);

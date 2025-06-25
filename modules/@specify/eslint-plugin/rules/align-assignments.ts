@@ -2,9 +2,9 @@ import { Rule     } from "eslint";
 import { TSESTree } from "@typescript-eslint/utils";
 
 type Assignment =
-    | TSESTree.AssignmentExpression
-    | TSESTree.ExpressionStatement
-    | TSESTree.VariableDeclaration;
+    TSESTree.AssignmentExpression |
+    TSESTree.ExpressionStatement |
+    TSESTree.VariableDeclaration;
 
 type AssignmentNodeType = "VariableDeclaration" | "AssignmentExpression";
 
