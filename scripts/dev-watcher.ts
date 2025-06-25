@@ -8,15 +8,15 @@
  * pnpm run dev:watch
  */
 
-import { watch } from "chokidar";
-import { globbySync } from "globby";
-import { spawn } from "node:child_process";
-import { clear, log } from "node:console";
-import { existsSync } from "node:fs";
+import { watch                       } from "chokidar";
+import { globbySync                  } from "globby";
+import { spawn                       } from "node:child_process";
+import { clear, log                  } from "node:console";
+import { existsSync                  } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
-import { pathToFileURL } from "node:url";
+import { pathToFileURL               } from "node:url";
 
-import _ from "lodash";
+import _     from "lodash";
 import chalk from "chalk";
 
 import type { PackageJson } from "type-fest";
@@ -141,10 +141,6 @@ function watchModule(moduleSrcDir: string): void {
         "ignoreInitial": true, // don't trigger on watcher start
         "persistent": true, // keep the watcher running
         "followSymlinks": false, // don't follow symlinks (prevent recursion)
-        "ignored": [
-            /.test.ts$/,
-            /__mocks__/,
-            /__tests__/,
-        ],
+        "ignored": [/.test.ts$/, /__mocks__/, /__tests__/],
     }).on("all", (event, path) => debouncedRebuild(event, path));
 }

@@ -4,7 +4,7 @@
  * Cucumber step definitions that facilitate Specify testing itself.
  */
 import { Given, When, Then } from "@cucumber/cucumber";
-import assert from "node:assert/strict";
+import assert                from "node:assert/strict";
 
 Given("that this step definition fails", fail);
 Given("that this step definition passes", pass);

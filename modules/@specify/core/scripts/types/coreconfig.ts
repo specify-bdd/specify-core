@@ -2,7 +2,7 @@
  * Generates the CoreConfig type definition file.
  */
 
-import path from "path";
+import path                                                    from "path";
 import { generateInterfaceTypeExport, getSourceFilesFromGlob } from "../utils";
 
 import type { InterfaceExportOptions } from "../utils";

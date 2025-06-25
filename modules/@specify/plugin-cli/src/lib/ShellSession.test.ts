@@ -1,5 +1,5 @@
-import { spawn } from "node:child_process";
-import { Writable } from "stream";
+import { spawn        } from "node:child_process";
+import { Writable     } from "stream";
 import { ShellSession } from "./ShellSession";
 
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
