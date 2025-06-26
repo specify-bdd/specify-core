@@ -110,14 +110,13 @@ export class TestSubCommand extends SubCommand {
                 // "stderr": this.stderr,
                 // "stdout": this.stdout,
             };
-
-            if (this.support) {
-                cucumberConfig.support = this.support.originalCoordinates;
-            }
-
-            const cucumberRes = await runCucumber(cucumberConfig, cucumberEnv);
             
-            this.support = cucumberRes.support;
+            this.support = this.support || (await loadSupport(cucumberConfig));
+
+            const cucumberRes = await runCucumber({
+                ...cucumberConfig,
+                "support": this.support,
+            }, cucumberEnv);
 
             testRes.result = JSON.parse(
                 fs.readFileSync(this.logPath, { "encoding": "utf8" })
@@ -152,7 +151,7 @@ export class TestSubCommand extends SubCommand {
     async #buildCucumberConfig(args: ParsedArgs): Promise<IRunConfiguration> {
         const config = merge({}, this.cucumber);
 
-        for (let optKey in args) {
+        for (const optKey in args) {
             let optVal = args[optKey];
 
             switch (optKey) {
