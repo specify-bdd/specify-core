@@ -8,7 +8,7 @@
 
 import { config } from "@/config/all";
 import { deserializeError } from "serialize-error";
-import { SubCommand, SubCommandResult } from "./lib/SubCommand";
+import { SubCommand } from "./lib/SubCommand";
 import { TestSubCommand, TEST_DEFAULT_OPTS } from "./lib/TestSubCommand";
 
 import minimist from "minimist";
@@ -17,9 +17,16 @@ import path from "node:path";
 const minOpts = {
     "alias": {
         "parallel": [ "p" ],
+        "rerun": [ "R" ],
+        "retry": [ "r" ],
         "tags": [ "t" ],
     },
-    "string": [ "parallel", "tags" ]
+    "string": [
+        "parallel",
+        "rerun",
+        "retry",
+        "tags",
+    ]
 };
 const args = minimist(process.argv.slice(2), minOpts);
 
@@ -40,7 +47,6 @@ switch (args._[0]?.toLowerCase()) {
 }
 
 const res = await cmd.execute(args);
-await cmd.execute(args);
 
 if (res.error) {
     throw deserializeError(res.error);

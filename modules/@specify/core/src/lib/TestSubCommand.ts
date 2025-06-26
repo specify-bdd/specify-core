@@ -7,7 +7,6 @@
 
 import { loadConfiguration, loadSupport, runCucumber } from "@cucumber/cucumber/api";
 import { createRequire } from "module";
-// import { Writable } from "node:stream";
 import { serializeError } from "serialize-error";
 import { SubCommand, SubCommandOptions, SubCommandResultStatus } from "./SubCommand";
 
@@ -18,7 +17,7 @@ import path from "node:path";
 
 import type { IConfiguration, IRunConfiguration, ISupportCodeLibrary } from "@cucumber/cucumber/api";
 import type { ParsedArgs } from "minimist";
-import type { JsonArray, JsonValue } from "type-fest";
+import type { JsonObject } from "type-fest";
 import type { SubCommandResult } from "./SubCommand";
 
 const require = createRequire(import.meta.url);
@@ -34,24 +33,15 @@ export const TEST_DEFAULT_OPTS: TestSubCommandOptions = {
     "gherkinPaths": [],
     "logPath": `./specify-test-log-${Date.now()}.json`,
     "plugins": [],
-    // "stderr": process.stderr,
-    // "stdout": process.stdout,
 }
 
 export interface TestSubCommandOptions extends SubCommandOptions {
     cucumber: Partial<IConfiguration>,
     gherkinPaths: string[],
     plugins: string[],
-    // stderr: Writable,
-    // stdout: Writable,
 }
 
 export class TestSubCommand extends SubCommand {
-
-    /**
-     * User-supplied options, to be merged with the defaults above
-     */
-    // opts: TestSubCommandOptions = TEST_DEFAULT_OPTS;
 
     /**
      * A raw Cucumber configuration.
@@ -95,6 +85,14 @@ export class TestSubCommand extends SubCommand {
     /**
      * Execute tests with Cucumber.  Consider a no-op result from Cucumber to 
      * be an error condition.
+     * 
+     * @remarks
+     * Cucumber's support code import logic doesn't work properly across 
+     * multiple executions due to Node.js's caching of module exports.  To work 
+     * around this, we need to pre-load support code and reuse it for all 
+     * executions or test runs after the first will fail with unsupported steps.
+     * 
+     * @see {@link https://github.com/cucumber/cucumber-js/blob/main/docs/javascript_api.md#preloading-and-reusing-support-code|Cucumber.js Javascript API documentation}
      *
      * @param userArgs - User-supplied arguments
      * 
@@ -103,20 +101,32 @@ export class TestSubCommand extends SubCommand {
     async execute(userArgs: ParsedArgs): Promise<SubCommandResult> {
         const testRes: SubCommandResult = { "ok": false, "status": SubCommandResultStatus.error };
 
+        if (this.debug) {
+            testRes.debug = { "args": userArgs };
+        }
+
         try {
             const cucumberConfig = await this.#buildCucumberConfig(userArgs);
-            const cucumberEnv    = {
-                "debug": this.debug,
-                // "stderr": this.stderr,
-                // "stdout": this.stdout,
-            };
-            
+            const cucumberEnv    = { "debug": this.debug };
+
+            if (this.debug) {
+                testRes.debug.cucumber = {
+                    "runConfiguration": cucumberConfig,
+                    "runEnvironment": cucumberEnv,
+                };
+            }
+
+            // it's important that we pre-load support code so it can be reused across multiple Cucumber runs
             this.support = this.support || (await loadSupport(cucumberConfig));
 
             const cucumberRes = await runCucumber({
                 ...cucumberConfig,
                 "support": this.support,
             }, cucumberEnv);
+
+            if (this.debug) {
+                testRes.debug.cucumber.runResult = cucumberRes;
+            }
 
             testRes.result = JSON.parse(
                 fs.readFileSync(this.logPath, { "encoding": "utf8" })
@@ -126,7 +136,7 @@ export class TestSubCommand extends SubCommand {
                 throw new Error("No tests were executed.");
             }
 
-            testRes.ok = cucumberRes.success;
+            testRes.ok     = cucumberRes.success;
             testRes.status = (cucumberRes.success)
                 ? SubCommandResultStatus.success
                 : SubCommandResultStatus.failure;

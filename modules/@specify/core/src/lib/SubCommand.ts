@@ -26,7 +26,7 @@ export interface SubCommandResult {
     status: SubCommandResultStatus,
     error?: JsonObject,
     result?: JsonValue,
-    debug?: JsonObject
+    debug?: JsonObject,
 }
 
 export enum SubCommandResultStatus {
@@ -68,7 +68,7 @@ export class SubCommand {
      * @returns The subcommand result
      */
     async execute(userArgs: ParsedArgs): Promise<SubCommandResult> {
-        let res: SubCommandResult = {
+        const res: SubCommandResult = {
             "ok": false,
             "status": SubCommandResultStatus.error,
             "error": serializeError(new Error("Base class SubCommand should not be executed.")),

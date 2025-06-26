@@ -1,5 +1,4 @@
 import { createRequire } from "module"; 
-// import { Writable } from "node:stream";
 
 import {
     TestSubCommand,
@@ -20,50 +19,21 @@ describe("TestSubCommand", () => {
         describe("iniitializes options...", () => {
             it("...with defaults when no user options are provided", () => {
                 const expOpts = merge({}, TEST_DEFAULT_OPTS);
-                const cmd     = new TestSubCommand(emptyArgs, emptyOpts);
+                const cmd     = new TestSubCommand(emptyOpts);
 
                 // default options get augmented with a cucumber formatter for the log path
-                expOpts.cucumber.format.push([ "json", cmd.opts.logPath ]);
+                expOpts.cucumber.format.push([ "json", cmd.logPath ]);
 
-                expect(cmd.opts).toEqual(expOpts);
+                expect(cmd.cucumber).toEqual(expOpts.cucumber);
+                expect(cmd.gherkinPaths).toEqual(expOpts.gherkinPaths);
+                expect(cmd.plugins).toEqual(expOpts.plugins);
             });
 
             it("...with merged values when user options are provided", () => {
-                const userOpts = { "debug": true };
-                const expOpts  = merge.all([ {}, TEST_DEFAULT_OPTS, userOpts ]);
-                const cmd      = new TestSubCommand(emptyArgs, userOpts);
+                const userOpts = { "gherkinPaths": [ "./fake/path" ] };
+                const cmd      = new TestSubCommand(userOpts);
 
-                // default options get augmented with a cucumber formatter for the log path
-                expOpts.cucumber.format.push([ "json", cmd.opts.logPath ]);
-
-                expect(cmd.opts).toEqual(expOpts);
-            });
-        });
-
-        describe("parses command arguments", () => {
-            describe("paths", () => {
-                it("valid", () => {
-                    const featPath = "./assets/gherkin/binary/passing.feature";
-                    const userArgs = { "_": [ featPath ] };
-                    const cmd      = new TestSubCommand(userArgs, emptyOpts);
-
-                    expect(cmd.opts?.cucumber?.paths).toEqual([ path.resolve(featPath) ]);
-                    expect(cmd.args).toEqual(emptyArgs);
-                });
-
-                it("invalid", () => {
-                    const userArgs = { "_": [ "./path/that/doesnt/exist/" ] };
-
-                    expect(() => new TestSubCommand(userArgs, emptyOpts)).toThrow(/Invalid path:/);
-                });
-            });
-
-            it("tags", () => {
-                const userArgs = { "tags": [ "@foo", "not @bar" ], ...emptyArgs };
-                const cmd      = new TestSubCommand(userArgs, emptyOpts);
-
-                expect(cmd.opts?.cucumber?.tags).toBe("@foo and not @bar");
-                expect(cmd.args).toEqual(emptyArgs);
+                expect(cmd.gherkinPaths).toEqual(userOpts.gherkinPaths);
             });
         });
 
@@ -72,55 +42,74 @@ describe("TestSubCommand", () => {
                 const vitestPath = path.dirname(require.resolve("vitest"));
                 const corePath   = path.dirname(require.resolve("@specify/core"));
                 const userOpts   = { "plugins": [ "vitest", corePath ] };
-                const cmd        = new TestSubCommand(emptyArgs, userOpts);
+                const cmd        = new TestSubCommand(userOpts);
 
-                expect(cmd.opts?.cucumber?.import).toEqual([ vitestPath, corePath ]);
+                expect(cmd.cucumber?.import).toEqual([ vitestPath, corePath ]);
             });
 
             it("invalid", () => {
                 const userOpts = { "plugins": [ "name-that-is-neither-valid-package-nor-path" ] };
 
-                expect(() => new TestSubCommand(emptyArgs, userOpts)).toThrow();
+                expect(() => new TestSubCommand(userOpts)).toThrow();
             });
-        });
-
-        it("sets a log path", () => {
-            const cmd = new TestSubCommand(emptyArgs, emptyOpts);
-
-            expect(cmd.opts?.cucumber?.format).toEqual([ [ "json", cmd.opts?.logPath ] ]);
         });
     });
 
     describe("execute()", () => {
+        describe("parses command arguments", () => {
+            describe("paths", () => {
+                it("valid", async () => {
+                    const featPath = "./assets/gherkin/binary/passing.feature:3";
+                    const userArgs = { "_": [ featPath ] };
+                    const userOpts = { "debug": true };
+                    const cmd      = new TestSubCommand(userOpts);
+                    const res      = await cmd.execute(userArgs);
+
+                    expect(res.status).toBe(1); // no support code imported, so steps are undefined
+                    expect(res.debug?.args).toBe(userArgs);
+                    expect(res.debug?.cucumber?.runConfiguration?.sources?.paths).toEqual([ featPath ]);
+                });
+
+                it("invalid", () => {
+                    const userArgs = { "_": [ "./path/that/doesnt/exist/" ] };
+                    const cmd      = new TestSubCommand(emptyOpts);
+
+                    expect(cmd.execute(userArgs)).rejects.toThrow(/Invalid path:/);
+                });
+            });
+
+            it("tags", () => {
+                const userArgs = { "tags": [ "@foo", "not @bar" ], ...emptyArgs };
+                const userOpts = { "debug": true };
+                const cmd      = new TestSubCommand(userOpts);
+                const res      = await cmd.execute(userArgs);
+
+                expect(res.status).toBe(1); // no support code imported, so steps are undefined
+                expect(res.debug?.args).toBe(userArgs);
+                expect(res.debug?.cucumber?.runConfiguration?.sources?.tagExpression).toBe("@foo and not @bar");
+            });
+        });
+
         describe("runs tests", () => {
-            // let userOpts: Partial<TestSubCommandOptions> = {};
-            const cmd: TestSubCommand;
+            let userOpts: Partial<TestSubCommandOptions> = {};
 
             beforeAll(() => {
                 userOpts = {
-                    // "debug": true,
                     "logPath": path.resolve(`./logs/specify-test-vitest-log-${Date.now()}.json`),
                     "plugins": [
                         path.resolve(import.meta.dirname, "../../dist/cucumber"),
                     ],
-                    // "stderr": new Writable(),
-                    // "stdout": new Writable(),
                 };
-
-                // return () => {
-                //     userOpts.stderr.destroy();
-                //     userOpts.stdout.destroy();
-                // };
             });
 
             it("pass", async () => {
                 const userArgs = { "_": [ "./assets/gherkin/binary/passing.feature" ] };
-                const cmd      = new TestSubCommand(userArgs, userOpts);
-                const res      = await cmd.execute();
+                const cmd      = new TestSubCommand(userOpts);
+                const res      = await cmd.execute(userArgs);
 
-                expect(fs.existsSync(cmd.opts.logPath)).toBe(true);
+                expect(fs.existsSync(cmd.logPath)).toBe(true);
 
-                const logFileText = fs.readFileSync(cmd.opts.logPath, { "encoding": "utf8" });
+                const logFileText = fs.readFileSync(cmd.logPath, { "encoding": "utf8" });
                 const logFileJSON = JSON.parse(logFileText);
 
                 expect(res.ok).toBe(true);
@@ -130,12 +119,12 @@ describe("TestSubCommand", () => {
 
             it("fail", async () => {
                 const userArgs = { "_": [ "./assets/gherkin/binary/failing.feature" ] };
-                const cmd      = new TestSubCommand(userArgs, userOpts);
-                const res      = await cmd.execute();
+                const cmd      = new TestSubCommand(userOpts);
+                const res      = await cmd.execute(userArgs);
 
-                expect(fs.existsSync(cmd.opts.logPath)).toBe(true);
+                expect(fs.existsSync(cmd.logPath)).toBe(true);
 
-                const logFileText = fs.readFileSync(cmd.opts.logPath, { "encoding": "utf8" });
+                const logFileText = fs.readFileSync(cmd.logPath, { "encoding": "utf8" });
                 const logFileJSON = JSON.parse(logFileText);
 
                 expect(res.ok).toBe(false);
@@ -145,12 +134,12 @@ describe("TestSubCommand", () => {
 
             it("error", async () => {
                 const userArgs = { "_": [ "./assets/gherkin/empty" ] };
-                const cmd      = new TestSubCommand(userArgs, userOpts);
-                const res      = await cmd.execute();
+                const cmd      = new TestSubCommand(userOpts);
+                const res      = await cmd.execute(userArgs);
 
-                expect(fs.existsSync(cmd.opts.logPath)).toBe(true);
+                expect(fs.existsSync(cmd.logPath)).toBe(true);
 
-                const logFileText = fs.readFileSync(cmd.opts.logPath, { "encoding": "utf8" });
+                const logFileText = fs.readFileSync(cmd.logPath, { "encoding": "utf8" });
                 const logFileJSON = JSON.parse(logFileText);
 
                 expect(res.ok).toBe(false);
