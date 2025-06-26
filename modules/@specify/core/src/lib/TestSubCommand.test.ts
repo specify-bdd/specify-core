@@ -67,26 +67,27 @@ describe("TestSubCommand", () => {
 
                     expect(res.status).toBe(1); // no support code imported, so steps are undefined
                     expect(res.debug?.args).toBe(userArgs);
-                    expect(res.debug?.cucumber?.runConfiguration?.sources?.paths).toEqual([ featPath ]);
+                    expect(res.debug?.cucumber?.runConfiguration?.sources?.paths).toEqual([ path.resolve(featPath) ]);
                 });
 
-                it("invalid", () => {
+                it("invalid", async () => {
                     const userArgs = { "_": [ "./path/that/doesnt/exist/" ] };
                     const cmd      = new TestSubCommand(emptyOpts);
+                    const res      = await cmd.execute(userArgs);
 
-                    expect(cmd.execute(userArgs)).rejects.toThrow(/Invalid path:/);
+                    expect(res.error.message).toMatch(/Invalid path:/);
                 });
             });
 
-            it("tags", () => {
+            it("tags", async () => {
                 const userArgs = { "tags": [ "@foo", "not @bar" ], ...emptyArgs };
                 const userOpts = { "debug": true };
                 const cmd      = new TestSubCommand(userOpts);
                 const res      = await cmd.execute(userArgs);
 
-                expect(res.status).toBe(1); // no support code imported, so steps are undefined
+                expect(res.status).toBe(2); // no scenarios should match these tags
                 expect(res.debug?.args).toBe(userArgs);
-                expect(res.debug?.cucumber?.runConfiguration?.sources?.tagExpression).toBe("@foo and not @bar");
+                expect(res.debug?.cucumber?.runConfiguration?.sources?.tagExpression).toBe("(@foo) and (not @bar)");
             });
         });
 

@@ -11,22 +11,26 @@ import merge from "deepmerge";
 import type { ParsedArgs } from "minimist";
 import type { JsonObject, JsonValue } from "type-fest";
 
-export const DEFAULT_OPTS: SubCommandOptions = {
+export const DEFAULT_OPTS: ISubCommandOptions = {
     "debug": false,
     "logPath": `./specify-log-${Date.now()}.json`,
 }
 
-export interface SubCommandOptions {
+export interface ISubCommandOptions {
     debug: boolean,
     logPath: string,
 }
 
-export interface SubCommandResult {
+export interface ISubCommandResult {
     ok: boolean,
     status: SubCommandResultStatus,
     error?: JsonObject,
     result?: JsonValue,
-    debug?: JsonObject,
+    debug?: ISubCommandResultDebugInfo,
+}
+
+export interface ISubCommandResultDebugInfo {
+    args: ParsedArgs,
 }
 
 export enum SubCommandResultStatus {
@@ -52,8 +56,8 @@ export class SubCommand {
      *
      * @param userOpts - User-supplied options
      */
-    constructor(userOpts: Partial<SubCommandOptions>) {
-        const mergedOpts = merge.all([ {}, DEFAULT_OPTS, userOpts ]) as SubCommandOptions;
+    constructor(userOpts: Partial<ISubCommandOptions>) {
+        const mergedOpts = merge.all([ {}, DEFAULT_OPTS, userOpts ]) as ISubCommandOptions;
 
         this.debug   = mergedOpts.debug;
         this.logPath = mergedOpts.logPath;
@@ -67,8 +71,8 @@ export class SubCommand {
      * 
      * @returns The subcommand result
      */
-    async execute(userArgs: ParsedArgs): Promise<SubCommandResult> {
-        const res: SubCommandResult = {
+    async execute(userArgs: ParsedArgs): Promise<ISubCommandResult> {
+        const res: ISubCommandResult = {
             "ok": false,
             "status": SubCommandResultStatus.error,
             "error": serializeError(new Error("Base class SubCommand should not be executed.")),

@@ -8,21 +8,32 @@
 import { loadConfiguration, loadSupport, runCucumber } from "@cucumber/cucumber/api";
 import { createRequire } from "module";
 import { serializeError } from "serialize-error";
-import { SubCommand, SubCommandOptions, SubCommandResultStatus } from "./SubCommand";
+import { SubCommand, SubCommandResultStatus } from "./SubCommand";
 
 import merge from "deepmerge";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
-import type { IConfiguration, IRunConfiguration, ISupportCodeLibrary } from "@cucumber/cucumber/api";
 import type { ParsedArgs } from "minimist";
-import type { JsonObject } from "type-fest";
-import type { SubCommandResult } from "./SubCommand";
+
+import type {
+    ISubCommandOptions,
+    ISubCommandResult,
+    ISubCommandResultDebugInfo
+} from "./SubCommand";
+
+import type {
+    IConfiguration,
+    IRunConfiguration,
+    IRunEnvironment,
+    IRunResult,
+    ISupportCodeLibrary
+} from "@cucumber/cucumber/api";
 
 const require = createRequire(import.meta.url);
 
-export const TEST_DEFAULT_OPTS: TestSubCommandOptions = {
+export const TEST_DEFAULT_OPTS: ITestSubCommandOptions = {
     "cucumber": {
         "format": [],
         "import": [],
@@ -35,10 +46,22 @@ export const TEST_DEFAULT_OPTS: TestSubCommandOptions = {
     "plugins": [],
 }
 
-export interface TestSubCommandOptions extends SubCommandOptions {
+export interface ITestSubCommandOptions extends ISubCommandOptions {
     cucumber: Partial<IConfiguration>,
     gherkinPaths: string[],
     plugins: string[],
+}
+
+export interface ITestSubCommandResult extends ISubCommandResult {
+    debug?: ITestSubCommandResultDebugInfo,
+}
+
+export interface ITestSubCommandResultDebugInfo extends ISubCommandResultDebugInfo {
+    cucumber?: {
+        runConfiguration?: IRunConfiguration,
+        runEnvironment?: IRunEnvironment,
+        runResult?: IRunResult,
+    }
 }
 
 export class TestSubCommand extends SubCommand {
@@ -68,8 +91,8 @@ export class TestSubCommand extends SubCommand {
      *
      * @param userOpts - User-supplied options
      */
-    constructor(userOpts: Partial<TestSubCommandOptions>) {
-        const mergedOpts = merge.all([ {}, TEST_DEFAULT_OPTS, userOpts ]) as TestSubCommandOptions;
+    constructor(userOpts: Partial<ITestSubCommandOptions>) {
+        const mergedOpts = merge.all([ {}, TEST_DEFAULT_OPTS, userOpts ]) as ITestSubCommandOptions;
 
         super({ "debug": mergedOpts.debug, "logPath": mergedOpts.logPath});
 
@@ -98,8 +121,8 @@ export class TestSubCommand extends SubCommand {
      * 
      * @returns The subcommand result
      */
-    async execute(userArgs: ParsedArgs): Promise<SubCommandResult> {
-        const testRes: SubCommandResult = { "ok": false, "status": SubCommandResultStatus.error };
+    async execute(userArgs: ParsedArgs): Promise<ITestSubCommandResult> {
+        const testRes: ITestSubCommandResult = { "ok": false, "status": SubCommandResultStatus.error };
 
         if (this.debug) {
             testRes.debug = { "args": userArgs };
