@@ -1,5 +1,11 @@
-import { TestSubCommand, TEST_DEFAULT_OPTS } from "./TestSubCommand";
 import { createRequire } from "module"; 
+// import { Writable } from "node:stream";
+
+import {
+    TestSubCommand,
+    TestSubCommandOptions,
+    TEST_DEFAULT_OPTS
+} from "./TestSubCommand";
 
 import merge from "deepmerge";
 import fs from "node:fs";
@@ -9,13 +15,12 @@ const require   = createRequire(import.meta.url);
 const emptyArgs = { "_": [] };
 const emptyOpts = {};
 
-
 describe("TestSubCommand", () => {
     describe("constructor()", () => {
         describe("iniitializes options...", () => {
             it("...with defaults when no user options are provided", () => {
                 const expOpts = merge({}, TEST_DEFAULT_OPTS);
-                const cmd        = new TestSubCommand(emptyArgs, emptyOpts);
+                const cmd     = new TestSubCommand(emptyArgs, emptyOpts);
 
                 // default options get augmented with a cucumber formatter for the log path
                 expOpts.cucumber.format.push([ "json", cmd.opts.logPath ]);
@@ -88,17 +93,25 @@ describe("TestSubCommand", () => {
 
     describe("execute()", () => {
         describe("runs tests", () => {
-            const userOpts = {
-                // "cucumber": {
-                //     "format": [
-                //         [ "progress", "/dev/null" ]
-                //     ]
-                // },
-                "plugins": [
-                    path.resolve(import.meta.dirname, "../../dist/cucumber"),
-                    "@specify/plugin-cli"
-                ]
-            };
+            // let userOpts: Partial<TestSubCommandOptions> = {};
+            const cmd: TestSubCommand;
+
+            beforeAll(() => {
+                userOpts = {
+                    // "debug": true,
+                    "logPath": path.resolve(`./logs/specify-test-vitest-log-${Date.now()}.json`),
+                    "plugins": [
+                        path.resolve(import.meta.dirname, "../../dist/cucumber"),
+                    ],
+                    // "stderr": new Writable(),
+                    // "stdout": new Writable(),
+                };
+
+                // return () => {
+                //     userOpts.stderr.destroy();
+                //     userOpts.stdout.destroy();
+                // };
+            });
 
             it("pass", async () => {
                 const userArgs = { "_": [ "./assets/gherkin/binary/passing.feature" ] };

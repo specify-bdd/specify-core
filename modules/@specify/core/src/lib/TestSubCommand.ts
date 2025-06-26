@@ -1,26 +1,26 @@
 /**
- *  TestSubCommand class module
+ * TestSubCommand class module
  *
- *  Conduct tests by using Cucumber to translate Gherkin specifications into 
- *  actionable, automated tests.
+ * Conduct tests by using Cucumber to translate Gherkin specifications into 
+ * actionable, automated tests.
  */
 
-import { IRunResult, loadConfiguration, runCucumber } from "@cucumber/cucumber/api";
+import { loadConfiguration, loadSupport, runCucumber } from "@cucumber/cucumber/api";
+import { createRequire } from "module";
+// import { Writable } from "node:stream";
 import { serializeError } from "serialize-error";
-import { createRequire } from "module"; 
 import { SubCommand, SubCommandOptions, SubCommandResultStatus } from "./SubCommand";
 
 import merge from "deepmerge";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import url from "node:url";
 
-import type { IConfiguration } from "@cucumber/cucumber/api";
+import type { IConfiguration, IRunConfiguration, ISupportCodeLibrary } from "@cucumber/cucumber/api";
 import type { ParsedArgs } from "minimist";
+import type { JsonArray, JsonValue } from "type-fest";
 import type { SubCommandResult } from "./SubCommand";
 
-const CUCUMBER_PLUGIN_EXTENSIONS = ["js", "cjs", "mjs"];
 const require = createRequire(import.meta.url);
 
 export const TEST_DEFAULT_OPTS: TestSubCommandOptions = {
@@ -34,66 +34,93 @@ export const TEST_DEFAULT_OPTS: TestSubCommandOptions = {
     "gherkinPaths": [],
     "logPath": `./specify-test-log-${Date.now()}.json`,
     "plugins": [],
+    // "stderr": process.stderr,
+    // "stdout": process.stdout,
 }
 
 export interface TestSubCommandOptions extends SubCommandOptions {
     cucumber: Partial<IConfiguration>,
     gherkinPaths: string[],
     plugins: string[],
+    // stderr: Writable,
+    // stdout: Writable,
 }
 
 export class TestSubCommand extends SubCommand {
 
     /**
-     *  User-supplied options, to be merged with the defaults above
+     * User-supplied options, to be merged with the defaults above
      */
-    opts: TestSubCommandOptions = TEST_DEFAULT_OPTS;
+    // opts: TestSubCommandOptions = TEST_DEFAULT_OPTS;
 
     /**
-     *  Parse user arguments and options data to prepare operational parameters
-     *
-     *  @param userArgs - User-supplied arguments
-     *  @param userOpts - User-supplied options
+     * A raw Cucumber configuration.
      */
-    constructor(userArgs: ParsedArgs, userOpts: Partial<TestSubCommandOptions>) {
-        super(userArgs, {});
+    cucumber: Partial<IConfiguration>;
 
-        this.opts = merge(this.opts, userOpts);
+    /**
+     * A list of paths to Gherkin feature files this subcommand should execute.
+     */
+    gherkinPaths: string[];
 
-        this.#parseArgs();
+    /**
+     * A list of Specify plugins this subcommand should import.
+     */
+    plugins: string[];
+
+    /**
+     * Cucumber support code, which must be reused across executions
+     */
+    support: ISupportCodeLibrary;
+
+    /**
+     * Parse user arguments and options data to prepare operational parameters
+     *
+     * @param userOpts - User-supplied options
+     */
+    constructor(userOpts: Partial<TestSubCommandOptions>) {
+        const mergedOpts = merge.all([ {}, TEST_DEFAULT_OPTS, userOpts ]) as TestSubCommandOptions;
+
+        super({ "debug": mergedOpts.debug, "logPath": mergedOpts.logPath});
+
+        this.cucumber     = mergedOpts.cucumber;
+        this.gherkinPaths = mergedOpts.gherkinPaths;
+        this.plugins      = mergedOpts.plugins;
+
         this.#resolvePlugins();
 
-        this.opts.cucumber.format.push([ "json", this.opts.logPath ]);
+        this.cucumber.format.push([ "json", this.logPath ]);
     }
 
     /**
-     *  Execute tests with Cucumber.  Consider a no-op result from Cucumber to 
-     *  be an error condition.
+     * Execute tests with Cucumber.  Consider a no-op result from Cucumber to 
+     * be an error condition.
+     *
+     * @param userArgs - User-supplied arguments
+     * 
+     * @returns The subcommand result
      */
-    async execute(): Promise<SubCommandResult> {
+    async execute(userArgs: ParsedArgs): Promise<SubCommandResult> {
         const testRes: SubCommandResult = { "ok": false, "status": SubCommandResultStatus.error };
 
-        let cucumberRes: IRunResult;
-
         try {
-            const cucumberOpts = await loadConfiguration({ "provided": this.opts.cucumber });
-            const cucumberEnv  = {
-                "cwd": process.cwd(),
-                "debug": this.opts.debug,
-                "env": process.env,
-                "stderr": process.stderr,
-                "stdout": process.stdout,
+            const cucumberConfig = await this.#buildCucumberConfig(userArgs);
+            const cucumberEnv    = {
+                "debug": this.debug,
+                // "stderr": this.stderr,
+                // "stdout": this.stdout,
             };
 
-            cucumberRes = await runCucumber(
-                cucumberOpts.runConfiguration,
-                cucumberEnv,
-                // the third param handles message events, which we might need later to publish live results to outside
-                // consumers
-            );
+            if (this.support) {
+                cucumberConfig.support = this.support.originalCoordinates;
+            }
+
+            const cucumberRes = await runCucumber(cucumberConfig, cucumberEnv);
+            
+            this.support = cucumberRes.support;
 
             testRes.result = JSON.parse(
-                fs.readFileSync(this.opts.logPath, { "encoding": "utf8" })
+                fs.readFileSync(this.logPath, { "encoding": "utf8" })
             );
 
             if (!Array.isArray(testRes.result) || !testRes.result.length) {
@@ -112,9 +139,46 @@ export class TestSubCommand extends SubCommand {
     }
 
     /**
-     *  Resolve a plugin package name (or path) into an absolute path.
+     * Build a ready-to-use Cucumber configuration based on command line args 
+     * and initialized subcommand options.
      *
-     *  @param pluginName - The name or path of a plugin package to resolve
+     * @param args - Command line arguments, as parsed by Minimist
+     * 
+     * @returns The Cucumber configuration
+     * 
+     * @throws {@link Error}
+     * If any command line args are invalid for this subcommand.
+     */
+    async #buildCucumberConfig(args: ParsedArgs): Promise<IRunConfiguration> {
+        const config = merge({}, this.cucumber);
+
+        for (let optKey in args) {
+            let optVal = args[optKey];
+
+            switch (optKey) {
+                case "tags":
+                    optVal = Array.isArray(optVal) ? optVal : [ optVal ];
+                    optVal.push(config.tags);
+                    config.tags = this.#parseTagArgs(optVal);
+                    break;
+                case "_": // gherkin paths
+                    config.paths = this.#parsePathArgs(optVal);
+                    break;
+                default:
+                    throw new Error(`Invalid option: --${optKey}`);
+            }
+        }
+
+        return loadConfiguration({ "provided": config })
+            .then((loaded) => loaded.runConfiguration);
+    }
+
+    /**
+     * Resolve a plugin package name (or path) into an absolute path.
+     *
+     * @param pluginName - The name or path of a plugin package to resolve
+     * 
+     * @returns The absolute path of the package
      */
     #getPluginPath(pluginName: string): string {
         let pluginPath = path.resolve(pluginName);
@@ -131,83 +195,62 @@ export class TestSubCommand extends SubCommand {
     }
 
     /**
-     *  Parse all recognized arguments, then throw if any unparsed args remain.
+     * Parse loose arguments as paths.  Any loose args that are not valid file 
+     * system paths will throw an error.
+     * 
+     * @param pathArgs - The path arguments to parse
+     * 
+     * @returns The list of parsed paths
+     * 
+     * @throws {@link Error}
+     * If any path argument does cannot be confirmed by node:fs to exist on the 
+     * file system.
      */
-    #parseArgs(): void {
-        this.#parsePathArgs();
-        this.#parseTagArgs();
-
-        const remainingArgs = Object.keys(this.args);
-
-        // remove loose args from remaining list
-        remainingArgs.splice(remainingArgs.indexOf("_"), 1);
-
-        assert.equal(remainingArgs.length, 0, new Error(`Invalid options: ${remainingArgs.join(", ")}`));
-    }
-
-    /**
-     *  Parse loose arguments as paths.  Any loose args that are not valid file 
-     *  system paths will cause an error to be thrown.
-     */
-    #parsePathArgs(): void {
-        const paths = [];
+    #parsePathArgs(pathArgs: string[]): string[] {
+        let paths = [];
 
         // parse path arguments and ensure all of them are valid
-        while (this.args._.length) {
-            const pathArg                = this.args._.shift();
-            const [ userPath, userLine ] = pathArg.split(":");
-            const absPath                = path.resolve(userPath);
-            const absLine                = userLine ? `${absPath}:${userLine}` : absPath;
+        for (const pathArg of pathArgs) {
+            const [ filePath, fileLine ] = pathArg.split(":");
+            const absFilePath            = path.resolve(filePath);
+            const absFilePathLine        = fileLine ? `${absFilePath}:${fileLine}` : absFilePath;
 
-            assert.ok(fs.existsSync(absPath), new Error(`Invalid path: ${pathArg}`));
+            assert.ok(fs.existsSync(absFilePath), new Error(`Invalid path: ${pathArg}`));
 
-            paths.push(absLine);
+            paths.push(absFilePathLine);
         }
 
         // if no path arguments were supplied, fall back to the default gherkin path
         if (!paths.length) {
-            paths.push(...this.opts.gherkinPaths.map((gherkinPath) => path.resolve(gherkinPath)));
+            paths = this.gherkinPaths.map((gherkinPath) => path.resolve(gherkinPath));
         }
 
-        this.opts.cucumber.paths = paths;
+        return paths;
     }
 
     /**
-     *  Parse Cucumber tag args.  If the --tags option is used multiple times, 
-     *  all supplied tag expressions should be joined (along with any defined in
-     *  the Cucumber config) with "and" conjucntions to preserve them all.
+     * Filter and join Cucumber tag expressions into a single conjunction.
+     * 
+     * @param tags - The list of tags to parse
+     * 
+     * @returns The unified tag expression
      */
-    #parseTagArgs(): void {
-        let tags = this.args.tags;
-
-        if (!Array.isArray(tags)) {
-            tags = [ tags ];
-        }
-
-        if (this.opts.cucumber.tags) {
-            tags.push(this.opts.cucumber.tags);
-        }
-
-        tags = tags.filter((tag) => tag);
-
-        this.opts.cucumber.tags = tags.join(" and ");
-
-        delete this.args.tags; // remove arg now that it's been fully parsed
+    #parseTagArgs(tags: string[]): string {
+        return tags
+            .filter((tag) => tag.trim().length)
+            .map((tag) => `(${tag})`)
+            .join(" and ");
     }
 
     /**
-     *  Resolve the paths of all Specify plugins, including those in Specify's 
-     *  and Cucumber's config files, for use in Cucumber's support file import 
-     *  array.
+     * Resolve the paths of all Specify plugins, including those in Specify's 
+     * and Cucumber's config files, for use in Cucumber's support file import 
+     * array.
      */
     #resolvePlugins(): void {
-        const pluginPaths = [ ...this.opts.cucumber.import ];
-
-        for (const plugin of this.opts.plugins) {
-            pluginPaths.push(this.#getPluginPath(plugin));
+        for (const plugin of this.plugins) {
+            this.cucumber.import.push(this.#getPluginPath(plugin));
         }
-
-        this.opts.cucumber.import = pluginPaths;
     }
 
 }

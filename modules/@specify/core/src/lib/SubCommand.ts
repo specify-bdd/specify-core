@@ -1,7 +1,7 @@
 /**
- *  SubCommand class module
+ * SubCommand class module
  *
- *  The abstract base class for all Specify subcommands.
+ * The abstract base class for all Specify subcommands.
  */
 
 import { serializeError } from "serialize-error";
@@ -26,6 +26,7 @@ export interface SubCommandResult {
     status: SubCommandResultStatus,
     error?: JsonObject,
     result?: JsonValue,
+    debug?: JsonObject
 }
 
 export enum SubCommandResultStatus {
@@ -37,36 +38,47 @@ export enum SubCommandResultStatus {
 export class SubCommand {
 
     /**
-     *  User-supplied command arguments, as parsed by Minimist
+     * Output debug info for this command.
      */
-    args: ParsedArgs;
+    debug: boolean;
 
     /**
-     *  User-supplied options, to be merged with the defaults above
+     * The file system path to write log output to.
      */
-    opts: SubCommandOptions = DEFAULT_OPTS;
+    logPath: string;
 
     /**
-     *  Store user args and options data.
+     * Store user args and options data.
      *
-     *  @param userArgs - User-supplied arguments
-     *  @param userOpts - User-supplied options
+     * @param userOpts - User-supplied options
      */
-    constructor(userArgs: ParsedArgs, userOpts: Partial<SubCommandOptions>) {
-        this.args = merge({}, userArgs);
-        this.opts = merge.all([ {}, DEFAULT_OPTS, userOpts ]) as SubCommandOptions;
+    constructor(userOpts: Partial<SubCommandOptions>) {
+        const mergedOpts = merge.all([ {}, DEFAULT_OPTS, userOpts ]) as SubCommandOptions;
+
+        this.debug   = mergedOpts.debug;
+        this.logPath = mergedOpts.logPath;
     }
 
     /**
-     *  Execute the subcommand.  This method should be overridden by child 
-     *  classes, or it will just return an error result.
+     * Execute the subcommand.  This method should be overridden by child 
+     * classes, or it will just return an error result.
+     *
+     * @param userArgs - User-supplied arguments
+     * 
+     * @returns The subcommand result
      */
-    async execute(): Promise<SubCommandResult> {
-        return {
+    async execute(userArgs: ParsedArgs): Promise<SubCommandResult> {
+        let res: SubCommandResult = {
             "ok": false,
             "status": SubCommandResultStatus.error,
             "error": serializeError(new Error("Base class SubCommand should not be executed.")),
         };
+
+        if (this.debug) {
+            res.debug = { "args": userArgs };
+        }
+
+        return res;
     }
 
 }
