@@ -14,21 +14,8 @@ import { TestSubCommand, TEST_DEFAULT_OPTS } from "./lib/TestSubCommand";
 import minimist from "minimist";
 import path from "node:path";
 
-const minOpts = {
-    "alias": {
-        "parallel": [ "p" ],
-        "rerun": [ "R" ],
-        "retry": [ "r" ],
-        "tags": [ "t" ],
-    },
-    "string": [
-        "parallel",
-        "rerun",
-        "retry",
-        "tags",
-    ]
-};
-const args = minimist(process.argv.slice(2), minOpts);
+const minOpts = {};
+const args    = minimist(process.argv.slice(2), minOpts);
 
 let cmd: SubCommand;
 
