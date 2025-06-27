@@ -33,7 +33,7 @@ import type {
 
 const require = createRequire(import.meta.url);
 
-export const TEST_DEFAULT_OPTS: ITestSubCommandOptions = {
+export const TEST_SUBCOMMAND_DEFAULT_OPTS: ITestSubCommandOptions = {
     "cucumber": {
         "format": [],
         "import": [],
@@ -92,7 +92,7 @@ export class TestSubCommand extends SubCommand {
      * @param userOpts - User-supplied options
      */
     constructor(userOpts: Partial<ITestSubCommandOptions>) {
-        const mergedOpts = merge.all([ {}, TEST_DEFAULT_OPTS, userOpts ]) as ITestSubCommandOptions;
+        const mergedOpts = merge.all([ {}, TEST_SUBCOMMAND_DEFAULT_OPTS, userOpts ]) as ITestSubCommandOptions;
 
         super({ "debug": mergedOpts.debug, "logPath": mergedOpts.logPath});
 

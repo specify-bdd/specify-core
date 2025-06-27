@@ -3,7 +3,7 @@ import { createRequire } from "module";
 import {
     TestSubCommand,
     TestSubCommandOptions,
-    TEST_DEFAULT_OPTS
+    TEST_SUBCOMMAND_DEFAULT_OPTS
 } from "./TestSubCommand";
 
 import merge from "deepmerge";
@@ -18,7 +18,7 @@ describe("TestSubCommand", () => {
     describe("constructor()", () => {
         describe("iniitializes options...", () => {
             it("...with defaults when no user options are provided", () => {
-                const expOpts = merge({}, TEST_DEFAULT_OPTS);
+                const expOpts = merge({}, TEST_SUBCOMMAND_DEFAULT_OPTS);
                 const cmd     = new TestSubCommand(emptyOpts);
 
                 // default options get augmented with a cucumber formatter for the log path

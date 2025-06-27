@@ -9,7 +9,7 @@
 import { config } from "@/config/all";
 import { deserializeError } from "serialize-error";
 import { SubCommand } from "./lib/SubCommand";
-import { TestSubCommand, TEST_DEFAULT_OPTS } from "./lib/TestSubCommand";
+import { TestSubCommand, TEST_SUBCOMMAND_DEFAULT_OPTS } from "./lib/TestSubCommand";
 
 import minimist from "minimist";
 import path from "node:path";
@@ -28,7 +28,7 @@ switch (args._[0]?.toLowerCase()) {
             "cucumber": config.cucumber,
             "debug": config.debug,
             "gherkinPaths": [ path.resolve(config.paths.gherkin) ],
-            "logPath": path.resolve(config.paths.logs, TEST_DEFAULT_OPTS.logPath),
+            "logPath": path.resolve(config.paths.logs, TEST_SUBCOMMAND_DEFAULT_OPTS.logPath),
             "plugins": [ ...config.plugins, path.resolve(import.meta.dirname, "../dist/cucumber") ],
         });
 }

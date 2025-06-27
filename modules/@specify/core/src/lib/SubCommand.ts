@@ -11,10 +11,10 @@ import merge from "deepmerge";
 import type { ParsedArgs } from "minimist";
 import type { JsonObject, JsonValue } from "type-fest";
 
-export const DEFAULT_OPTS: ISubCommandOptions = {
+export const SUBCOMMAND_DEFAULT_OPTS: ISubCommandOptions = {
     "debug": false,
     "logPath": `./specify-log-${Date.now()}.json`,
-}
+};
 
 export interface ISubCommandOptions {
     debug: boolean,
@@ -57,7 +57,7 @@ export class SubCommand {
      * @param userOpts - User-supplied options
      */
     constructor(userOpts: Partial<ISubCommandOptions>) {
-        const mergedOpts = merge.all([ {}, DEFAULT_OPTS, userOpts ]) as ISubCommandOptions;
+        const mergedOpts = merge.all([ {}, SUBCOMMAND_DEFAULT_OPTS, userOpts ]) as ISubCommandOptions;
 
         this.debug   = mergedOpts.debug;
         this.logPath = mergedOpts.logPath;

@@ -1,4 +1,4 @@
-import { SubCommand, DEFAULT_OPTS } from "./SubCommand";
+import { SubCommand, SUBCOMMAND_DEFAULT_OPTS } from "./SubCommand";
 
 const emptyArgs = { "_": [] };
 const emptyOpts = {};
@@ -9,8 +9,8 @@ describe("SubCommand", () => {
             it("...with defaults when no user options are provided", () => {
                 const cmd = new SubCommand(emptyArgs, emptyOpts);
 
-                expect(cmd.debug).toBe(DEFAULT_OPTS.debug);
-                expect(cmd.logPath).toBe(DEFAULT_OPTS.logPath);
+                expect(cmd.debug).toBe(SUBCOMMAND_DEFAULT_OPTS.debug);
+                expect(cmd.logPath).toBe(SUBCOMMAND_DEFAULT_OPTS.logPath);
             });
 
             it("...with merged values when user options are provided", () => {
