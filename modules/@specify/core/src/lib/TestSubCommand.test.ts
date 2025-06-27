@@ -55,6 +55,8 @@ describe("TestSubCommand", () => {
         });
     });
 
+    // these tests run Cucumber and are best understood as integration tests until the underlying code has been
+    // refactored
     describe("execute()", () => {
         describe("parses command arguments", () => {
             describe("paths", () => {

@@ -5,10 +5,15 @@
  * actionable, automated tests.
  */
 
-import { loadConfiguration, loadSupport, runCucumber } from "@cucumber/cucumber/api";
 import { createRequire } from "module";
 import { serializeError } from "serialize-error";
 import { SubCommand, SubCommandResultStatus } from "./SubCommand";
+
+import {
+    loadConfiguration,
+    loadSupport,
+    runCucumber
+} from "@cucumber/cucumber/api";
 
 import merge from "deepmerge";
 import assert from "node:assert/strict";
