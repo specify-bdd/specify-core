@@ -1,3 +1,3 @@
 export type DebugConfig = boolean;
 
-export const debug = true;
+export const debug: DebugConfig = true;
