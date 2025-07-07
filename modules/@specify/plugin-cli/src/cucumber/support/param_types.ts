@@ -6,7 +6,7 @@
  */
 
 import { defineParameterType } from "@cucumber/cucumber";
-import * as path from "node:path";
+import * as path               from "node:path";
 
 import type { FileParam } from "~/types/params";
 

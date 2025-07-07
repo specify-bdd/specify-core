@@ -1,4 +1,4 @@
-import { Commander } from "./Commander";
+import { Commander    } from "./Commander";
 import { ShellSession } from "./ShellSession";
 
 import type { ShellSession as MockShellSession } from "./__mocks__/ShellSession";
