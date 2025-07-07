@@ -57,6 +57,7 @@ export default tseslint.config(
         "rules": {
             "@specify-eslint/align-assignments": "error",
             "@specify-eslint/align-imports": "error",
+            "@specify-eslint/align-properties": "error",
             "@stylistic/js/quote-props": ["error", "always"],
             "@typescript-eslint/explicit-module-boundary-types": "warn",
             "@typescript-eslint/naming-convention": [
