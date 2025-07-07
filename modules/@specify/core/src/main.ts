@@ -6,13 +6,13 @@
  * A Cucumber-based testing tool built to support behavior-driven development.
  */
 
-import { config } from "@/config/all";
-import { deserializeError } from "serialize-error";
-import { SubCommand } from "./lib/SubCommand";
+import { config                                       } from "@/config/all";
+import { deserializeError                             } from "serialize-error";
+import { SubCommand                                   } from "./lib/SubCommand";
 import { TestSubCommand, TEST_SUBCOMMAND_DEFAULT_OPTS } from "./lib/TestSubCommand";
 
 import minimist from "minimist";
-import path from "node:path";
+import path     from "node:path";
 
 const minOpts = {};
 const args    = minimist(process.argv.slice(2), minOpts);

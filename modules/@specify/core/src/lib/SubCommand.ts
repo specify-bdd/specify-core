@@ -8,7 +8,7 @@ import { serializeError } from "serialize-error";
 
 import merge from "deepmerge";
 
-import type { ParsedArgs } from "minimist";
+import type { ParsedArgs            } from "minimist";
 import type { JsonObject, JsonValue } from "type-fest";
 
 export const SUBCOMMAND_DEFAULT_OPTS: ISubCommandOptions = {

@@ -7,8 +7,8 @@ import {
 } from "./TestSubCommand";
 
 import merge from "deepmerge";
-import fs from "node:fs";
-import path from "node:path";
+import fs    from "node:fs";
+import path  from "node:path";
 
 const require   = createRequire(import.meta.url);
 const emptyArgs = { "_": [] };

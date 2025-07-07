@@ -5,8 +5,8 @@
  * actionable, automated tests.
  */
 
-import { createRequire } from "module";
-import { serializeError } from "serialize-error";
+import { createRequire                      } from "module";
+import { serializeError                     } from "serialize-error";
 import { SubCommand, SubCommandResultStatus } from "./SubCommand";
 
 import {
@@ -15,11 +15,11 @@ import {
     runCucumber
 } from "@cucumber/cucumber/api";
 
-import merge from "deepmerge";
+import merge  from "deepmerge";
 import assert from "node:assert/strict";
-import fs from "node:fs";
-import path from "node:path";
-import os from "node:os";
+import fs     from "node:fs";
+import path   from "node:path";
+import os     from "node:os";
 
 import type { ParsedArgs } from "minimist";
 
