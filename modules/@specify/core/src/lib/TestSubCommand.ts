@@ -19,6 +19,7 @@ import merge from "deepmerge";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
 
 import type { ParsedArgs } from "minimist";
 
@@ -92,6 +93,11 @@ export class TestSubCommand extends SubCommand {
     support: ISupportCodeLibrary;
 
     /**
+     * The file system temporary path to write result output to.
+     */
+    tmpPath: string;
+
+    /**
      * Parse user arguments and options data to prepare operational parameters
      *
      * @param userOpts - User-supplied options
@@ -104,10 +110,12 @@ export class TestSubCommand extends SubCommand {
         this.cucumber     = mergedOpts.cucumber;
         this.gherkinPaths = mergedOpts.gherkinPaths;
         this.plugins      = mergedOpts.plugins;
+        this.tmpPath      = path.join(os.tmpdir(), fs.mkdtempSync("specify-test-"), `${Date.now()}.json`);
 
         this.#resolvePlugins();
 
         this.cucumber.format.push([ "json", this.logPath ]);
+        this.cucumber.format.push([ "json", this.tmpPath ]);
     }
 
     /**
@@ -157,7 +165,7 @@ export class TestSubCommand extends SubCommand {
             }
 
             testRes.result = JSON.parse(
-                fs.readFileSync(this.logPath, { "encoding": "utf8" })
+                fs.readFileSync(this.tmpPath, { "encoding": "utf8" })
             );
 
             if (!Array.isArray(testRes.result) || !testRes.result.length) {

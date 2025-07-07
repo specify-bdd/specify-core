@@ -21,8 +21,8 @@ describe("TestSubCommand", () => {
                 const expOpts = merge({}, TEST_SUBCOMMAND_DEFAULT_OPTS);
                 const cmd     = new TestSubCommand(emptyOpts);
 
-                // default options get augmented with a cucumber formatter for the log path
-                expOpts.cucumber.format.push([ "json", cmd.logPath ]);
+                // default options get augmented with cucumber formatters for the log and tmp paths
+                expOpts.cucumber.format.push([ "json", cmd.logPath ], [ "json", cmd.tmpPath ]);
 
                 expect(cmd.cucumber).toEqual(expOpts.cucumber);
                 expect(cmd.gherkinPaths).toEqual(expOpts.gherkinPaths);
