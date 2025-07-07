@@ -39,7 +39,7 @@ export enum SubCommandResultStatus {
     error
 }
 
-export class SubCommand {
+export abstract class SubCommand {
 
     /**
      * Output debug info for this command.
