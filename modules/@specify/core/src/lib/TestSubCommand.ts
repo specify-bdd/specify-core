@@ -145,7 +145,7 @@ export class TestSubCommand extends SubCommand {
             }
 
             // it's important that we pre-load support code so it can be reused across multiple Cucumber runs
-            this.support = this.support || (await loadSupport(cucumberConfig));
+            this.support ??= await loadSupport(cucumberConfig);
 
             const cucumberRes = await runCucumber({
                 ...cucumberConfig,
