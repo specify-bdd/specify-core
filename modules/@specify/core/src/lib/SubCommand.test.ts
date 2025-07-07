@@ -7,7 +7,7 @@ describe("SubCommand", () => {
     describe("constructor()", () => {
         describe("iniitializes options...", () => {
             it("...with defaults when no user options are provided", () => {
-                const cmd = new SubCommand(emptyArgs, emptyOpts);
+                const cmd = new SubCommand(emptyOpts);
 
                 expect(cmd.debug).toBe(SUBCOMMAND_DEFAULT_OPTS.debug);
                 expect(cmd.logPath).toBe(SUBCOMMAND_DEFAULT_OPTS.logPath);
