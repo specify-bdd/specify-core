@@ -2,7 +2,7 @@ import { createRequire } from "module";
 
 import {
     TestSubCommand,
-    TestSubCommandOptions,
+    ITestSubCommandOptions,
     TEST_SUBCOMMAND_DEFAULT_OPTS
 } from "./TestSubCommand";
 
@@ -94,7 +94,7 @@ describe("TestSubCommand", () => {
         });
 
         describe("runs tests", () => {
-            let userOpts: Partial<TestSubCommandOptions> = {};
+            let userOpts: Partial<ITestSubCommandOptions> = {};
 
             beforeAll(() => {
                 userOpts = {
