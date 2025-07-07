@@ -3,8 +3,8 @@
  */
 
 import { Project } from "ts-morph";
-import path from "node:path";
-import ts from "typescript";
+import path        from "node:path";
+import ts          from "typescript";
 
 import type { SourceFile } from "ts-morph";
 

@@ -6,7 +6,7 @@
  * output and status code results.
  */
 
-import assert from "node:assert/strict";
+import assert         from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 
 import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";

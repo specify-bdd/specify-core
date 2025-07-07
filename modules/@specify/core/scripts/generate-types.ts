@@ -6,8 +6,8 @@
  */
 
 import { writeFileSync } from "node:fs";
-import path from "node:path";
-import { globbySync } from "globby";
+import path              from "node:path";
+import { globbySync    } from "globby";
 
 import type { InterfaceExportOptions } from "./utils";
 

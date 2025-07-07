@@ -1,6 +1,6 @@
-import { Commander } from "./Commander";
+import { Commander    } from "./Commander";
 import { ShellSession } from "./ShellSession";
-import { vi } from "vitest";
+import { vi           } from "vitest";
 
 import type { ShellSession as MockShellSession } from "./__mocks__/ShellSession";
 
