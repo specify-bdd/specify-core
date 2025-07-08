@@ -114,6 +114,8 @@ export class TestSubCommand extends SubCommand {
 
         this.#resolvePlugins();
 
+        // these Cucumber formatters ensure that test result details are logged in some permanent form; the former is 
+        // for users' purposes, while the latter is for internal use
         this.cucumber.format.push([ "json", this.logPath ]);
         this.cucumber.format.push([ "json", this.tmpPath ]);
     }
@@ -176,6 +178,8 @@ export class TestSubCommand extends SubCommand {
             testRes.status = (cucumberRes.success)
                 ? SubCommandResultStatus.success
                 : SubCommandResultStatus.failure;
+
+            fs.unlinkSync(this.tmpPath);
         } catch (err) {
             testRes.error = serializeError(err);
         }
