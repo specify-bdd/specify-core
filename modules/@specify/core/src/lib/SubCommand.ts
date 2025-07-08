@@ -4,9 +4,8 @@
  * The abstract base class for all Specify subcommands.
  */
 
+import merge              from "deepmerge";
 import { serializeError } from "serialize-error";
-
-import merge from "deepmerge";
 
 import type { ParsedArgs            } from "minimist";
 import type { JsonObject, JsonValue } from "type-fest";

@@ -1,4 +1,7 @@
-import { SubCommand, SUBCOMMAND_DEFAULT_OPTS } from "./SubCommand";
+import {
+    SubCommand,
+    SUBCOMMAND_DEFAULT_OPTS
+} from "./SubCommand";
 
 describe("SubCommand", () => {
     const emptyArgs = { "_": [] };

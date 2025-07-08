@@ -5,9 +5,13 @@
  * actionable, automated tests.
  */
 
-import { createRequire                      } from "module";
-import { serializeError                     } from "serialize-error";
-import { SubCommand, SubCommandResultStatus } from "./SubCommand";
+import merge              from "deepmerge";
+import { createRequire  } from "module";
+import assert             from "node:assert/strict";
+import fs                 from "node:fs";
+import path               from "node:path";
+import os                 from "node:os";
+import { serializeError } from "serialize-error";
 
 import {
     loadConfiguration,
@@ -15,27 +19,26 @@ import {
     runCucumber
 } from "@cucumber/cucumber/api";
 
-import merge  from "deepmerge";
-import assert from "node:assert/strict";
-import fs     from "node:fs";
-import path   from "node:path";
-import os     from "node:os";
+import {
+    SubCommand,
+    SubCommandResultStatus,
+} from "./SubCommand";
 
 import type { ParsedArgs } from "minimist";
-
-import type {
-    ISubCommandOptions,
-    ISubCommandResult,
-    ISubCommandResultDebugInfo
-} from "./SubCommand";
 
 import type {
     IConfiguration,
     IRunConfiguration,
     IRunEnvironment,
     IRunResult,
-    ISupportCodeLibrary
+    ISupportCodeLibrary,
 } from "@cucumber/cucumber/api";
+
+import type {
+    ISubCommandOptions,
+    ISubCommandResult,
+    ISubCommandResultDebugInfo
+} from "./SubCommand";
 
 const require = createRequire(import.meta.url);
 

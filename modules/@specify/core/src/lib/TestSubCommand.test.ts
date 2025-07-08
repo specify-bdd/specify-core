@@ -1,14 +1,13 @@
+import merge             from "deepmerge";
 import { createRequire } from "module"; 
+import fs                from "node:fs";
+import path              from "node:path";
 
 import {
     TestSubCommand,
     ITestSubCommandOptions,
     TEST_SUBCOMMAND_DEFAULT_OPTS
 } from "./TestSubCommand";
-
-import merge from "deepmerge";
-import fs    from "node:fs";
-import path  from "node:path";
 
 describe("TestSubCommand", () => {
     const require   = createRequire(import.meta.url);
