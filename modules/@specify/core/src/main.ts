@@ -10,29 +10,29 @@ import minimist             from "minimist";
 import path                 from "node:path";
 import { deserializeError } from "serialize-error";
 
-import { config     } from "@/config/all";
-import { SubCommand } from "./lib/SubCommand";
+import { config  } from "@/config/all";
+import { Command } from "./lib/Command";
 
 import {
-    TestSubCommand,
-    TEST_SUBCOMMAND_DEFAULT_OPTS
-} from "./lib/TestSubCommand";
+    TestCommand,
+    TEST_COMMAND_DEFAULT_OPTS
+} from "./lib/TestCommand";
 
 const minOpts = {};
 const args    = minimist(process.argv.slice(2), minOpts);
 
-let cmd: SubCommand;
+let cmd: Command;
 
 switch (args._[0]?.toLowerCase()) {
     case "test":
         args._.shift();
         // fall through to default
     default:
-        cmd = new TestSubCommand({
+        cmd = new TestCommand({
             "cucumber": config.cucumber,
             "debug": config.debug,
             "gherkinPaths": [ path.resolve(config.paths.gherkin) ],
-            "logPath": path.resolve(config.paths.logs, TEST_SUBCOMMAND_DEFAULT_OPTS.logPath),
+            "logPath": path.resolve(config.paths.logs, TEST_COMMAND_DEFAULT_OPTS.logPath),
             "plugins": [ ...config.plugins, path.resolve(import.meta.dirname, "../dist/cucumber") ],
         });
 }

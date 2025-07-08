@@ -1,5 +1,5 @@
 /**
- * TestSubCommand class module
+ * TestCommand class module
  *
  * Conduct tests by using Cucumber to translate Gherkin specifications into 
  * actionable, automated tests.
@@ -20,9 +20,9 @@ import {
 } from "@cucumber/cucumber/api";
 
 import {
-    SubCommand,
-    SubCommandResultStatus,
-} from "./SubCommand";
+    Command,
+    CommandResultStatus,
+} from "./Command";
 
 import type { ParsedArgs } from "minimist";
 
@@ -35,14 +35,14 @@ import type {
 } from "@cucumber/cucumber/api";
 
 import type {
-    ISubCommandOptions,
-    ISubCommandResult,
-    ISubCommandResultDebugInfo
-} from "./SubCommand";
+    ICommandOptions,
+    ICommandResult,
+    ICommandResultDebugInfo
+} from "./Command";
 
 const require = createRequire(import.meta.url);
 
-export const TEST_SUBCOMMAND_DEFAULT_OPTS: ITestSubCommandOptions = {
+export const TEST_COMMAND_DEFAULT_OPTS: ITestCommandOptions = {
     "cucumber": {
         "format": [],
         "import": [],
@@ -55,17 +55,17 @@ export const TEST_SUBCOMMAND_DEFAULT_OPTS: ITestSubCommandOptions = {
     "plugins": [],
 }
 
-export interface ITestSubCommandOptions extends ISubCommandOptions {
+export interface ITestCommandOptions extends ICommandOptions {
     cucumber: Partial<IConfiguration>,
     gherkinPaths: string[],
     plugins: string[],
 }
 
-export interface ITestSubCommandResult extends ISubCommandResult {
-    debug?: ITestSubCommandResultDebugInfo,
+export interface ITestCommandResult extends ICommandResult {
+    debug?: ITestCommandResultDebugInfo,
 }
 
-export interface ITestSubCommandResultDebugInfo extends ISubCommandResultDebugInfo {
+export interface ITestCommandResultDebugInfo extends ICommandResultDebugInfo {
     cucumber?: {
         runConfiguration?: IRunConfiguration,
         runEnvironment?: IRunEnvironment,
@@ -73,7 +73,7 @@ export interface ITestSubCommandResultDebugInfo extends ISubCommandResultDebugIn
     }
 }
 
-export class TestSubCommand extends SubCommand {
+export class TestCommand extends Command {
 
     /**
      * A raw Cucumber configuration.
@@ -81,12 +81,12 @@ export class TestSubCommand extends SubCommand {
     cucumber: Partial<IConfiguration>;
 
     /**
-     * A list of paths to Gherkin feature files this subcommand should execute.
+     * A list of paths to Gherkin feature files this Command should execute.
      */
     gherkinPaths: string[];
 
     /**
-     * A list of Specify plugins this subcommand should import.
+     * A list of Specify plugins this Command should import.
      */
     plugins: string[];
 
@@ -105,8 +105,8 @@ export class TestSubCommand extends SubCommand {
      *
      * @param userOpts - User-supplied options
      */
-    constructor(userOpts: Partial<ITestSubCommandOptions>) {
-        const mergedOpts = merge.all([ {}, TEST_SUBCOMMAND_DEFAULT_OPTS, userOpts ]) as ITestSubCommandOptions;
+    constructor(userOpts: Partial<ITestCommandOptions>) {
+        const mergedOpts = merge.all([ {}, TEST_COMMAND_DEFAULT_OPTS, userOpts ]) as ITestCommandOptions;
 
         super({ "debug": mergedOpts.debug, "logPath": mergedOpts.logPath});
 
@@ -137,10 +137,10 @@ export class TestSubCommand extends SubCommand {
      *
      * @param userArgs - User-supplied arguments
      * 
-     * @returns The subcommand result
+     * @returns The Command result
      */
-    async execute(userArgs: ParsedArgs): Promise<ITestSubCommandResult> {
-        const testRes: ITestSubCommandResult = { "ok": false, "status": SubCommandResultStatus.error };
+    async execute(userArgs: ParsedArgs): Promise<ITestCommandResult> {
+        const testRes: ITestCommandResult = { "ok": false, "status": CommandResultStatus.error };
 
         if (this.debug) {
             testRes.debug = { "args": userArgs };
@@ -179,8 +179,8 @@ export class TestSubCommand extends SubCommand {
 
             testRes.ok     = cucumberRes.success;
             testRes.status = (cucumberRes.success)
-                ? SubCommandResultStatus.success
-                : SubCommandResultStatus.failure;
+                ? CommandResultStatus.success
+                : CommandResultStatus.failure;
 
             fs.unlinkSync(this.tmpPath);
         } catch (err) {
@@ -192,14 +192,14 @@ export class TestSubCommand extends SubCommand {
 
     /**
      * Build a ready-to-use Cucumber configuration based on command line args 
-     * and initialized subcommand options.
+     * and initialized Command options.
      *
      * @param args - Command line arguments, as parsed by Minimist
      * 
      * @returns The Cucumber configuration
      * 
      * @throws {@link Error}
-     * If any command line args are invalid for this subcommand.
+     * If any command line args are invalid for this Command.
      */
     async #buildCucumberConfig(args: ParsedArgs): Promise<IRunConfiguration> {
         const config = merge({}, this.cucumber);

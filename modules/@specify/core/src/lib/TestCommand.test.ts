@@ -4,12 +4,12 @@ import fs                from "node:fs";
 import path              from "node:path";
 
 import {
-    TestSubCommand,
-    ITestSubCommandOptions,
-    TEST_SUBCOMMAND_DEFAULT_OPTS
-} from "./TestSubCommand";
+    TestCommand,
+    ITestCommandOptions,
+    TEST_COMMAND_DEFAULT_OPTS
+} from "./TestCommand";
 
-describe("TestSubCommand", () => {
+describe("TestCommand", () => {
     const require   = createRequire(import.meta.url);
     const emptyArgs = { "_": [] };
     const emptyOpts = {};
@@ -17,8 +17,8 @@ describe("TestSubCommand", () => {
     describe("constructor()", () => {
         describe("iniitializes options...", () => {
             it("...with defaults when no user options are provided", () => {
-                const expOpts = merge({}, TEST_SUBCOMMAND_DEFAULT_OPTS);
-                const cmd     = new TestSubCommand(emptyOpts);
+                const expOpts = merge({}, TEST_COMMAND_DEFAULT_OPTS);
+                const cmd     = new TestCommand(emptyOpts);
 
                 // default options get augmented with cucumber formatters for the log and tmp paths
                 expOpts.cucumber.format.push([ "json", cmd.logPath ], [ "json", cmd.tmpPath ]);
@@ -30,7 +30,7 @@ describe("TestSubCommand", () => {
 
             it("...with merged values when user options are provided", () => {
                 const userOpts = { "gherkinPaths": [ "./fake/path" ] };
-                const cmd      = new TestSubCommand(userOpts);
+                const cmd      = new TestCommand(userOpts);
 
                 expect(cmd.gherkinPaths).toEqual(userOpts.gherkinPaths);
             });
@@ -41,7 +41,7 @@ describe("TestSubCommand", () => {
                 const vitestPath = path.dirname(require.resolve("vitest"));
                 const corePath   = path.dirname(require.resolve("@specify/core"));
                 const userOpts   = { "plugins": [ "vitest", corePath ] };
-                const cmd        = new TestSubCommand(userOpts);
+                const cmd        = new TestCommand(userOpts);
 
                 expect(cmd.cucumber?.import).toEqual([ vitestPath, corePath ]);
             });
@@ -49,7 +49,7 @@ describe("TestSubCommand", () => {
             it("invalid", () => {
                 const userOpts = { "plugins": [ "name-that-is-neither-valid-package-nor-path" ] };
 
-                expect(() => new TestSubCommand(userOpts)).toThrow();
+                expect(() => new TestCommand(userOpts)).toThrow();
             });
         });
     });
@@ -63,7 +63,7 @@ describe("TestSubCommand", () => {
                     const featPath = "./assets/gherkin/binary/passing.feature:3";
                     const userArgs = { "_": [ featPath ] };
                     const userOpts = { "debug": true };
-                    const cmd      = new TestSubCommand(userOpts);
+                    const cmd      = new TestCommand(userOpts);
                     const res      = await cmd.execute(userArgs);
 
                     expect(res.status).toBe(1); // no support code imported, so steps are undefined
@@ -73,7 +73,7 @@ describe("TestSubCommand", () => {
 
                 it("invalid", async () => {
                     const userArgs = { "_": [ "./path/that/doesnt/exist/" ] };
-                    const cmd      = new TestSubCommand(emptyOpts);
+                    const cmd      = new TestCommand(emptyOpts);
                     const res      = await cmd.execute(userArgs);
 
                     expect(res.error.message).toMatch(/Invalid path:/);
@@ -83,7 +83,7 @@ describe("TestSubCommand", () => {
             it("tags", async () => {
                 const userArgs = { "tags": [ "@foo", "not @bar" ], ...emptyArgs };
                 const userOpts = { "debug": true };
-                const cmd      = new TestSubCommand(userOpts);
+                const cmd      = new TestCommand(userOpts);
                 const res      = await cmd.execute(userArgs);
 
                 expect(res.status).toBe(2); // no scenarios should match these tags
@@ -93,7 +93,7 @@ describe("TestSubCommand", () => {
         });
 
         describe("runs tests", () => {
-            let userOpts: Partial<ITestSubCommandOptions> = {};
+            let userOpts: Partial<ITestCommandOptions> = {};
 
             beforeAll(() => {
                 userOpts = {
@@ -106,7 +106,7 @@ describe("TestSubCommand", () => {
 
             it("pass", async () => {
                 const userArgs = { "_": [ "./assets/gherkin/binary/passing.feature" ] };
-                const cmd      = new TestSubCommand(userOpts);
+                const cmd      = new TestCommand(userOpts);
                 const res      = await cmd.execute(userArgs);
 
                 expect(fs.existsSync(cmd.logPath)).toBe(true);
@@ -121,7 +121,7 @@ describe("TestSubCommand", () => {
 
             it("fail", async () => {
                 const userArgs = { "_": [ "./assets/gherkin/binary/failing.feature" ] };
-                const cmd      = new TestSubCommand(userOpts);
+                const cmd      = new TestCommand(userOpts);
                 const res      = await cmd.execute(userArgs);
 
                 expect(fs.existsSync(cmd.logPath)).toBe(true);
@@ -136,7 +136,7 @@ describe("TestSubCommand", () => {
 
             it("error", async () => {
                 const userArgs = { "_": [ "./assets/gherkin/empty" ] };
-                const cmd      = new TestSubCommand(userOpts);
+                const cmd      = new TestCommand(userOpts);
                 const res      = await cmd.execute(userArgs);
 
                 expect(fs.existsSync(cmd.logPath)).toBe(true);
