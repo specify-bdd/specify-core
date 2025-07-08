@@ -10,11 +10,11 @@ import merge from "deepmerge";
 import fs    from "node:fs";
 import path  from "node:path";
 
-const require   = createRequire(import.meta.url);
-const emptyArgs = { "_": [] };
-const emptyOpts = {};
-
 describe("TestSubCommand", () => {
+    const require   = createRequire(import.meta.url);
+    const emptyArgs = { "_": [] };
+    const emptyOpts = {};
+
     describe("constructor()", () => {
         describe("iniitializes options...", () => {
             it("...with defaults when no user options are provided", () => {

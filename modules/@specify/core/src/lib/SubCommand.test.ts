@@ -1,9 +1,9 @@
 import { SubCommand, SUBCOMMAND_DEFAULT_OPTS } from "./SubCommand";
 
-const emptyArgs = { "_": [] };
-const emptyOpts = {};
-
 describe("SubCommand", () => {
+    const emptyArgs = { "_": [] };
+    const emptyOpts = {};
+
     describe("constructor()", () => {
         describe("iniitializes options...", () => {
             it("...with defaults when no user options are provided", () => {
