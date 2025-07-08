@@ -1,11 +1,11 @@
-import { Rule } from "eslint";
+import { Rule     } from "eslint";
+import { TSESTree } from "@typescript-eslint/utils";
 
 import {
     isMultiLineNode,
+    isSingleLineNode,
     hasEmptyLineBetween,
 } from "../lib/utils";
-
-import { log } from "console";
 
 type NodeGroup = {
     values: Rule.Node[];
@@ -37,8 +37,17 @@ export default {
                 const current  = values[i];
                 const previous = values[i - 1];
 
-                // start new group if there's a gap or it's the first property
-                if (!previous || hasEmptyLineBetween(previous, current) || isMultiLineNode(previous)) {
+                // skip nodes that have values on separate lines from the key (prettier does this)
+                if (hasValueOnSeparateLine(current)) {
+                    continue;
+                }
+
+                if (
+                    !previous ||
+                    hasEmptyLineBetween(previous, current) ||
+                    isMultiLineNode(previous) ||
+                    hasValueOnSeparateLine(previous)
+                ) {
                     if (currentGroup.length > 0) {
                         groups.push(currentGroup);
                     }
@@ -61,19 +70,43 @@ export default {
             });
         }
 
+        function hasValueOnSeparateLine(node: Rule.Node): boolean {
+            const propertyNode = node.parent as TSESTree.Property;
+
+            // if the property key does not have a location, we can't determine alignment
+            // this can happen if the property is a shorthand property without a value
+            if (!propertyNode?.key?.loc?.end) {
+                return true;
+            }
+
+            // check if the value starts on a different line than the key
+            if (!node?.loc?.start) {
+                return false;
+            }
+
+            return (
+                node.loc.start.line !== propertyNode.key.loc.end.line ||
+                node.loc.start.column < propertyNode.key.loc.end.column
+            );
+        }
+
+
         function targetValueStartingPosition(group: Rule.Node[]) {
             let targetValueStartingPosition = 0;
 
             group.forEach((node) => {
-                if (!node.loc || !node.loc.start) {
+                const propertyNode = node.parent as TSESTree.Property;
+
+                if (!propertyNode?.key?.loc?.end) {
                     return null;
                 }
 
-                const startPosition = node.loc.start.column;
+                // +2 for the colon and space after the key
+                const propertyEndPosition = propertyNode.key.loc.end.column + 2;
 
                 targetValueStartingPosition = Math.max(
                     targetValueStartingPosition,
-                    startPosition
+                    propertyEndPosition,
                 );
             });
 
@@ -81,30 +114,24 @@ export default {
         }
 
         return {
-            "ObjectPattern": (node) => {
-                log(node);
-            },
-
             "ObjectExpression": (node) => {
                 if (!node.properties || node.properties.length === 0) {
+                    return;
+                } else if (isSingleLineNode(node)) {
                     return;
                 }
 
                 const values = node.properties.filter(
-                    (prop) => prop.type === "Property"
-                ).map((property) => property.value) as Rule.Node[];
+                    (prop) => (prop.type === "Property" && !prop.method && !prop.shorthand)
+                ).map((property) => (property as TSESTree.Property).value) as Rule.Node[];
 
                 const valueGroups = getValueGroups(values);
 
                 if (valueGroups.length === 0) {
                     return;
                 }
-                
-                valueGroups.forEach((group) => {
-                    if (group.values.length < 2) {
-                        return;
-                    }
 
+                valueGroups.forEach((group) => {
                     const targetPosition = group.targetValueStartingPosition;
 
                     group.values.forEach((valueNode) => {
@@ -119,11 +146,29 @@ export default {
                                 "node":      valueNode,
                                 "messageId": "misalignedProperty",
                                 "fix":       (fixer) => {
-                                    const padding = " ".repeat(
-                                        targetPosition - startPosition
+                                    const propertyNode   = valueNode.parent as TSESTree.Property;
+                                    const { sourceCode } = context;
+
+                                    const tokensBetween = sourceCode.getTokensBetween(
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                        propertyNode.key as any,
+
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                        valueNode as any
                                     );
-                                    return fixer.insertTextBefore(
-                                        valueNode,
+
+                                    const colonToken = tokensBetween.find((token) => token.value === ":");
+
+                                    if (!colonToken || !valueNode?.range) {
+                                        return null;
+                                    }
+
+                                    const colonEndColumn = colonToken.loc.end.column;
+                                    const requiredSpaces = targetPosition - colonEndColumn;
+                                    const padding        = " ".repeat(Math.max(0, requiredSpaces));
+
+                                    return fixer.replaceTextRange(
+                                        [colonToken.range[1], valueNode.range[0]],
                                         padding
                                     );
                                 },
