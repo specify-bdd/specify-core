@@ -12,10 +12,10 @@ describe("ShellSession", () => {
 
     beforeEach(() => {
         mockChildProcess = {
-            "kill": vi.fn(),
-            "on": vi.fn(),
+            "kill":   vi.fn(),
+            "on":     vi.fn(),
             "stderr": new Writable(),
-            "stdin": { "write": vi.fn() } as unknown as NodeJS.WritableStream,
+            "stdin":  { "write": vi.fn() } as unknown as NodeJS.WritableStream,
             "stdout": new Writable(),
         } as unknown as ChildProcessWithoutNullStreams;
 
@@ -41,7 +41,7 @@ describe("ShellSession", () => {
             "sh",
             expect.objectContaining({
                 "shell": true,
-                "env": expect.objectContaining({ "PATH": customPath }),
+                "env":   expect.objectContaining({ "PATH": customPath }),
             }),
         );
     });

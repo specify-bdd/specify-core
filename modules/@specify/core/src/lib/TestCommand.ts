@@ -46,13 +46,13 @@ export const TEST_COMMAND_DEFAULT_OPTS: ITestCommandOptions = {
     "cucumber": {
         "format": [],
         "import": [],
-        "paths": [],
-        "tags": "",
+        "paths":  [],
+        "tags":   "",
     },
-    "debug": false,
+    "debug":        false,
     "gherkinPaths": [],
-    "logPath": `./specify-test-log-${Date.now()}.json`,
-    "plugins": [],
+    "logPath":      `./specify-test-log-${Date.now()}.json`,
+    "plugins":      [],
 }
 
 export interface ITestCommandOptions extends ICommandOptions {
@@ -153,7 +153,7 @@ export class TestCommand extends Command {
             if (this.debug) {
                 testRes.debug.cucumber = {
                     "runConfiguration": cucumberConfig,
-                    "runEnvironment": cucumberEnv,
+                    "runEnvironment":   cucumberEnv,
                 };
             }
 

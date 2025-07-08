@@ -29,11 +29,11 @@ switch (args._[0]?.toLowerCase()) {
         // fall through to default
     default:
         cmd = new TestCommand({
-            "cucumber": config.cucumber,
-            "debug": config.debug,
+            "cucumber":     config.cucumber,
+            "debug":        config.debug,
             "gherkinPaths": [ path.resolve(config.paths.gherkin) ],
-            "logPath": path.resolve(config.paths.logs, TEST_COMMAND_DEFAULT_OPTS.logPath),
-            "plugins": [ ...config.plugins, path.resolve(import.meta.dirname, "../dist/cucumber") ],
+            "logPath":      path.resolve(config.paths.logs, TEST_COMMAND_DEFAULT_OPTS.logPath),
+            "plugins":      [ ...config.plugins, path.resolve(import.meta.dirname, "../dist/cucumber") ],
         });
 }
 

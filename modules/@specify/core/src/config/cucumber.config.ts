@@ -11,21 +11,21 @@ export const cucumber: CucumberConfig = {
         // but everything we add here will be a default inclusion for everyone
     ],
     "language": "en",
-    "loader": [
+    "loader":   [
         // "ts-node/esm"
         // "tsx"
     ],
-    "name": [],
+    "name":  [],
     "order": "defined",
     "paths": [
         // gherkin feature file paths go here
         // so we should leave this blank so there are no features forcibly included
     ],
-    "parallel": 1,
-    "retry": 1,
-    "retryTagFilter": "@retry",
-    "strict": true,
-    "tags": "not @skip",
+    "parallel":        1,
+    "retry":           1,
+    "retryTagFilter":  "@retry",
+    "strict":          true,
+    "tags":            "not @skip",
     "worldParameters": {
         // similar value as to what you'd see if you ran $PATH in your terminal,
         // but there is also some node-specific path info added to it.

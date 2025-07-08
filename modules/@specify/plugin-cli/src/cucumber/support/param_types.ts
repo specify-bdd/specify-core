@@ -11,7 +11,7 @@ import * as path               from "node:path";
 import type { FileParam } from "~/types/params";
 
 defineParameterType({
-    "name": "path",
+    "name":   "path",
     "regexp": /[^"]*/,
     transformer(input: string): string {
         return path.resolve(input);
@@ -20,7 +20,7 @@ defineParameterType({
 });
 
 defineParameterType({
-    "name": "ref:consoleOutput",
+    "name":   "ref:consoleOutput",
     "regexp": /[^"\\]+/,
     transformer(input: string): RegExp {
         return new RegExp(this.quickRef.lookup("consoleOutput", input));
@@ -29,7 +29,7 @@ defineParameterType({
 });
 
 defineParameterType({
-    "name": "ref:file",
+    "name":   "ref:file",
     "regexp": /[^"]*/,
     transformer(input: string): FileParam {
         return this.quickRef.lookup("file", input) as FileParam;
@@ -38,7 +38,7 @@ defineParameterType({
 });
 
 defineParameterType({
-    "name": "ref:statusCode",
+    "name":   "ref:statusCode",
     "regexp": /[^"\\]+/,
     transformer(input: string): number {
         return parseInt(this.quickRef.lookup("statusCode", input), 10);

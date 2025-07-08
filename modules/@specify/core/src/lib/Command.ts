@@ -15,7 +15,7 @@ import type {
 } from "type-fest";
 
 export const COMMAND_DEFAULT_OPTS: ICommandOptions = {
-    "debug": false,
+    "debug":   false,
     "logPath": `./specify-log-${Date.now()}.json`,
 };
 
@@ -76,9 +76,9 @@ export abstract class Command {
      */
     async execute(userArgs: ParsedArgs): Promise<ICommandResult> {
         const res: ICommandResult = {
-            "ok": false,
+            "ok":     false,
             "status": CommandResultStatus.error,
-            "error": serializeError(new Error("Base class Command should not be executed.")),
+            "error":  serializeError(new Error("Base class Command should not be executed.")),
         };
 
         if (this.debug) {
