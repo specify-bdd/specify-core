@@ -11,10 +11,10 @@ describe("ShellSession", () => {
 
     beforeEach(() => {
         mockChildProcess = {
-            "kill": jest.fn(),
-            "on": jest.fn(),
+            "kill":   jest.fn(),
+            "on":     jest.fn(),
             "stderr": new Writable(),
-            "stdin": { "write": jest.fn() } as unknown as NodeJS.WritableStream,
+            "stdin":  { "write": jest.fn() } as unknown as NodeJS.WritableStream,
             "stdout": new Writable(),
         } as unknown as ChildProcessWithoutNullStreams;
 
@@ -40,7 +40,7 @@ describe("ShellSession", () => {
             "sh",
             expect.objectContaining({
                 "shell": true,
-                "env": expect.objectContaining({ "PATH": customPath }),
+                "env":   expect.objectContaining({ "PATH": customPath }),
             }),
         );
     });

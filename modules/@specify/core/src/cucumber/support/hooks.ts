@@ -17,7 +17,7 @@ let refsMods = [];
 
 BeforeAll(async function () {
     const modPaths = await globby(path.join(cwd, "*.refs.json"), {
-        "absolute": true,
+        "absolute":  true,
         "onlyFiles": true,
     });
 

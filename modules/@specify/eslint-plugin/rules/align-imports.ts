@@ -18,10 +18,10 @@ export default {
         "type": "layout",
         "docs": {
             "description": "Enforce consistent alignment of import statements",
-            "category": "Stylistic Issues",
+            "category":    "Stylistic Issues",
         },
-        "fixable": "whitespace",
-        "schema": [],
+        "fixable":  "whitespace",
+        "schema":   [],
         "messages": {
             "misalignedImport":
                 "Import statement should be aligned with adjacent imports",
@@ -68,7 +68,7 @@ export default {
                 // check spacing after multi-line import
                 if (nextNode && !hasEmptyLineBetween(node, nextNode)) {
                     context.report({
-                        "node": nextNode,
+                        "node":      nextNode,
                         "messageId": "missingSpacing",
 
                         fix(fixer) {
@@ -123,7 +123,7 @@ export default {
 
                 return {
                     "hasDestructuredImport": hasDestructuredImport(group),
-                    "imports": group,
+                    "imports":               group,
 
                     targetClosingBracePosition,
                     targetFromPosition,
@@ -217,7 +217,7 @@ export default {
 
                         if (spacesNeeded !== 0) {
                             context.report({
-                                "node": importNode,
+                                "node":      importNode,
                                 "messageId": "misalignedImport",
 
                                 fix(fixer) {
