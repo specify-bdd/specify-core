@@ -10,10 +10,10 @@ type AssignmentNodeType = "VariableDeclaration" | "AssignmentExpression";
 
 export default {
     "meta": {
-        "name": "align-assignments",
-        "type": "problem",
+        "name":    "align-assignments",
+        "type":    "problem",
         "fixable": "whitespace",
-        "docs": {
+        "docs":    {
             "description":
                 "Assignment operators should be aligned in adjacent declarations",
             "category": "Stylistic Issues",

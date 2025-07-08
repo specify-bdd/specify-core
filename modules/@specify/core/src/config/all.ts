@@ -21,8 +21,8 @@ if (fs.existsSync(configPath)) {
 
 export const entries = await Promise.all(
     globbySync(path.join(import.meta.dirname, "*.config.*"), {
-        "absolute": true,
-        "ignore": ["**/*.d.ts"],
+        "absolute":  true,
+        "ignore":    ["**/*.d.ts"],
         "onlyFiles": true,
     }).map(async (modulePath) => {
         const module = await import(pathToFileURL(modulePath).href);

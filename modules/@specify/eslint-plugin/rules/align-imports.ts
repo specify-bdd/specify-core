@@ -1,5 +1,11 @@
 import { Rule } from "eslint";
 
+import {
+    isMultiLineNode,
+    isSingleLineNode,
+    hasEmptyLineBetween,
+} from "../lib/utils";
+
 type NodeGroup = {
     hasDestructuredImport: boolean;
     imports: Rule.Node[];
@@ -12,10 +18,10 @@ export default {
         "type": "layout",
         "docs": {
             "description": "Enforce consistent alignment of import statements",
-            "category": "Stylistic Issues",
+            "category":    "Stylistic Issues",
         },
-        "fixable": "whitespace",
-        "schema": [],
+        "fixable":  "whitespace",
+        "schema":   [],
         "messages": {
             "misalignedImport":
                 "Import statement should be aligned with adjacent imports",
@@ -28,7 +34,7 @@ export default {
 
         function checkSpacingAroundMultiLine(imports: Rule.Node[]) {
             imports.forEach((node, index) => {
-                if (!isMultiLineImport(node)) {
+                if (!isMultiLineNode(node)) {
                     return;
                 }
 
@@ -62,7 +68,7 @@ export default {
                 // check spacing after multi-line import
                 if (nextNode && !hasEmptyLineBetween(node, nextNode)) {
                     context.report({
-                        "node": nextNode,
+                        "node":      nextNode,
                         "messageId": "missingSpacing",
 
                         fix(fixer) {
@@ -117,7 +123,7 @@ export default {
 
                 return {
                     "hasDestructuredImport": hasDestructuredImport(group),
-                    "imports": group,
+                    "imports":               group,
 
                     targetClosingBracePosition,
                     targetFromPosition,
@@ -131,7 +137,7 @@ export default {
 
             group.forEach((node) => {
                 if (
-                    !isSingleLineImport(node) ||
+                    !isSingleLineNode(node) ||
                     !("specifiers" in node) ||
                     node.specifiers.length === 0
                 ) {
@@ -178,26 +184,6 @@ export default {
             });
         }
 
-        function hasEmptyLineBetween(node1: Rule.Node, node2: Rule.Node) {
-            if (!node1.loc || !node2.loc) {
-                return false;
-            }
-
-            return node2.loc.start.line - node1.loc.end.line > 1;
-        }
-
-        function isMultiLineImport(node: Rule.Node) {
-            return !isSingleLineImport(node);
-        }
-
-        function isSingleLineImport(node: Rule.Node) {
-            if (!node.loc) {
-                return false;
-            }
-
-            return node.loc.start.line === node.loc.end.line;
-        }
-
         return {
             Program(node) {
                 const imports = node.body.filter(
@@ -214,7 +200,7 @@ export default {
                     checkSpacingAroundMultiLine(group.imports);
 
                     for (const importNode of group.imports) {
-                        if (!isSingleLineImport(importNode)) {
+                        if (!isSingleLineNode(importNode)) {
                             continue;
                         }
 
@@ -231,7 +217,7 @@ export default {
 
                         if (spacesNeeded !== 0) {
                             context.report({
-                                "node": importNode,
+                                "node":      importNode,
                                 "messageId": "misalignedImport",
 
                                 fix(fixer) {
