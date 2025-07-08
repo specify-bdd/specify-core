@@ -15,7 +15,7 @@ const __dirname  = import.meta.dirname;
 const outputFile = path.join(__dirname, "..", "types", "index.d.ts");
 
 const typeScripts = globbySync([path.join(__dirname, "types", `*.ts`)], {
-    "absolute": true,
+    "absolute":  true,
     "onlyFiles": true,
 });
 

@@ -4,10 +4,10 @@ import alignProperties from "./rules/align-properties";
 
 export default {
     "extends": ["plugin:eslint/recommended"],
-    "rules": {
+    "rules":   {
         /* eslint-disable @typescript-eslint/naming-convention */
         "align-assignments": alignAssigments,
-        "align-imports": alignImports,
-        "align-properties": alignProperties,
+        "align-imports":     alignImports,
+        "align-properties":  alignProperties,
     },
 };
