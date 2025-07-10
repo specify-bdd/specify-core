@@ -64,10 +64,10 @@ function verifyCLIOutput(consoleOutput: RegExp) {
  *
  * @throws if the actual status code is different
  */
-function verifyCLIStatusCode(statusCode: string) {
+function verifyCLIStatusCode(statusCode: number) {
     assert.equal(
         this.cli.shell.statusCode,
         statusCode,
-        "The command's status code did not match the expected status code.",
+        "The command's status code did not match expectations.",
     );
 }

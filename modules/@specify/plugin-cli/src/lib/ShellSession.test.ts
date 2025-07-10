@@ -1,28 +1,29 @@
 import { spawn        } from "node:child_process";
 import { Writable     } from "stream";
 import { ShellSession } from "./ShellSession";
+import { vi           } from "vitest";
 
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
 
-jest.mock("node:child_process");
+vi.mock("node:child_process");
 
 describe("ShellSession", () => {
     let mockChildProcess: ChildProcessWithoutNullStreams;
 
     beforeEach(() => {
         mockChildProcess = {
-            "kill":   jest.fn(),
-            "on":     jest.fn(),
+            "kill":   vi.fn(),
+            "on":     vi.fn(),
             "stderr": new Writable(),
-            "stdin":  { "write": jest.fn() } as unknown as NodeJS.WritableStream,
+            "stdin":  { "write": vi.fn() } as unknown as NodeJS.WritableStream,
             "stdout": new Writable(),
         } as unknown as ChildProcessWithoutNullStreams;
 
-        jest.mocked(spawn).mockReturnValue(mockChildProcess);
+        vi.mocked(spawn).mockReturnValue(mockChildProcess);
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it("spawns a shell process on creation", () => {
@@ -62,7 +63,7 @@ describe("ShellSession", () => {
     });
 
     it("registers onClose listener", () => {
-        const callback = jest.fn();
+        const callback = vi.fn();
 
         new ShellSession().onClose(callback);
 
@@ -70,7 +71,7 @@ describe("ShellSession", () => {
     });
 
     it("registers onOutput listener to stdout", () => {
-        const callback = jest.fn();
+        const callback = vi.fn();
         const mockData = Buffer.from("test output");
 
         new ShellSession().onOutput(callback);
@@ -80,7 +81,7 @@ describe("ShellSession", () => {
     });
 
     it("registers onError listener to stderr", () => {
-        const callback = jest.fn();
+        const callback = vi.fn();
         const mockData = Buffer.from("error occurred");
 
         new ShellSession().onError(callback);
