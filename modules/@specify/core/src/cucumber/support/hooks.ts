@@ -5,9 +5,9 @@
  */
 
 import { Before, BeforeAll } from "@cucumber/cucumber";
-import { globby } from "globby";
-import path from "node:path";
-import { pathToFileURL } from "node:url";
+import { globby            } from "globby";
+import path                  from "node:path";
+import { pathToFileURL     } from "node:url";
 
 import type { JsonObject } from "type-fest";
 
@@ -17,7 +17,7 @@ let refsMods = [];
 
 BeforeAll(async function () {
     const modPaths = await globby(path.join(cwd, "*.refs.json"), {
-        "absolute": true,
+        "absolute":  true,
         "onlyFiles": true,
     });
 

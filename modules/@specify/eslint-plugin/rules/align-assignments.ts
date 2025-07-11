@@ -1,6 +1,4 @@
-/* eslint-disable */
-
-import { Rule } from "eslint";
+import { Rule     } from "eslint";
 import { TSESTree } from "@typescript-eslint/utils";
 
 type Assignment =
@@ -12,10 +10,10 @@ type AssignmentNodeType = "VariableDeclaration" | "AssignmentExpression";
 
 export default {
     "meta": {
-        "name": "align-assignments",
-        "type": "problem",
+        "name":    "align-assignments",
+        "type":    "problem",
         "fixable": "whitespace",
-        "docs": {
+        "docs":    {
             "description":
                 "Assignment operators should be aligned in adjacent declarations",
             "category": "Stylistic Issues",
@@ -30,34 +28,53 @@ export default {
             nodeType: AssignmentNodeType,
         ): Assignment[] {
             const group = [startNode] as Assignment[];
-            const parentBody = (nodeType === "VariableDeclaration") ? 
-                (startNode.parent as any).body :
-                (startNode.parent?.parent as any).body; // assignment expressions have expression statements as parents
 
-            if (startNode.loc.start.line !== startNode.loc.end.line || !parentBody?.indexOf) {
+            // known structure of the AST parent nodes
+            type ParentWithBody = { body: TSESTree.Node[] };
+
+            const parentBody =
+                nodeType === "VariableDeclaration"
+                    ? (startNode.parent as ParentWithBody)?.body
+                    : (startNode.parent?.parent as ParentWithBody)?.body; // assignment expressions have expression statements as parents
+
+            if (
+                startNode.loc.start.line !== startNode.loc.end.line ||
+                !parentBody?.indexOf
+            ) {
                 return group;
             }
 
-            const getAdjacentNodes = (direction: "next" | "previous"): Assignment[] => {
-                const offset = direction === "next" ? 1 : -1;
+            const getAdjacentNodes = (
+                direction: "next" | "previous",
+            ): Assignment[] => {
+                const offset              = direction === "next" ? 1 : -1;
                 const nodes: Assignment[] = [];
 
-                let adjacentNode = parentBody[parentBody.indexOf(startNode) + offset];
+                let adjacentNode =
+                    parentBody[parentBody.indexOf(startNode) + offset];
                 let adjacentNodeStartLine = startNode.loc.start.line;
 
-                while (adjacentNode && isAdjacentNodeValidGroupMember(adjacentNode, adjacentNodeStartLine, offset)) {
+                while (
+                    adjacentNode &&
+                    isAdjacentNodeValidGroupMember(
+                        adjacentNode as Assignment,
+                        adjacentNodeStartLine,
+                        offset,
+                    )
+                ) {
                     if (adjacentNode.type !== nodeType) {
                         break; // stop if the next node is not of the expected type
                     }
 
                     if (direction === "next") {
-                        nodes.push(adjacentNode);
+                        nodes.push(adjacentNode as Assignment);
                     } else {
-                        nodes.unshift(adjacentNode);
+                        nodes.unshift(adjacentNode as Assignment);
                     }
 
                     adjacentNodeStartLine = adjacentNode.loc.start.line;
-                    adjacentNode = parentBody[parentBody.indexOf(adjacentNode) + offset];
+                    adjacentNode =
+                        parentBody[parentBody.indexOf(adjacentNode) + offset];
                 }
 
                 return nodes;
@@ -79,7 +96,7 @@ export default {
             return 0;
         }
 
-        function getAssignmentOperatorToken(node: Assignment): any {
+        function getAssignmentOperatorToken(node: Assignment) {
             if (node.type === "VariableDeclaration") {
                 const declarator = node.declarations[0];
 
@@ -88,7 +105,7 @@ export default {
                 }
 
                 return context.sourceCode.getTokenAfter(declarator.id, {
-                    filter: (token) => token.value === "=",
+                    "filter": (token) => token.value === "=",
                 });
             } else if (node.type === "AssignmentExpression") {
                 if (node.left.type !== "Identifier") {
@@ -96,7 +113,7 @@ export default {
                 }
 
                 return context.sourceCode.getTokenAfter(node.left, {
-                    filter: (token) => token.value === "=",
+                    "filter": (token) => token.value === "=",
                 });
             }
 
@@ -113,8 +130,11 @@ export default {
                     node.declarations.length === 1 &&
                     node.declarations[0].init &&
                     node.loc.start.line === adjacentNodeStartLine + offset
-                );
-            } else if (node.type === "ExpressionStatement" && node.expression.type === "AssignmentExpression") {
+                ) ?? false;
+            } else if (
+                node.type === "ExpressionStatement" &&
+                node.expression.type === "AssignmentExpression"
+            ) {
                 return (
                     node.expression.left.type === "Identifier" &&
                     node.loc.start.line === adjacentNodeStartLine + offset
@@ -126,8 +146,11 @@ export default {
 
         return {
             VariableDeclaration(currentNode) {
-                const node = currentNode as TSESTree.VariableDeclaration; // re-cast for clarity
-                const variableGroup = getAssignmentGroup(node, "VariableDeclaration") as TSESTree.VariableDeclaration[];
+                const node          = currentNode as TSESTree.VariableDeclaration; // re-cast for clarity
+                const variableGroup = getAssignmentGroup(
+                    node,
+                    "VariableDeclaration",
+                ) as TSESTree.VariableDeclaration[];
 
                 const isAdjustable = (node: Assignment): boolean => {
                     return (
@@ -136,16 +159,20 @@ export default {
                         node.declarations[0].init &&
                         node.declarations[0].id.type === "Identifier" &&
                         !processedNodes.has(node)
-                    );
+                    ) ?? false;
                 };
 
                 if (!isAdjustable(node)) {
                     return;
                 }
 
-                variableGroup.forEach((groupNode) => processedNodes.add(groupNode));
+                variableGroup.forEach((groupNode) =>
+                    processedNodes.add(groupNode),
+                );
 
-                const maxDeclaratorColumn = Math.max(...variableGroup.map(getIdentifierEndColumn));
+                const maxDeclaratorColumn = Math.max(
+                    ...variableGroup.map(getIdentifierEndColumn),
+                );
 
                 for (const groupNode of variableGroup) {
                     const declarator = groupNode.declarations[0];
@@ -161,16 +188,26 @@ export default {
                     }
 
                     const declaratorEndColumn = declarator.id.loc.end.column;
-                    const expectedSpaces = maxDeclaratorColumn - declaratorEndColumn + 1;
-                    const actualSpaces = equalToken.loc.start.column - declaratorEndColumn;
+                    const expectedSpaces      =
+                        maxDeclaratorColumn - declaratorEndColumn + 1;
+                    const actualSpaces =
+                        equalToken.loc.start.column - declaratorEndColumn;
 
                     if (actualSpaces !== expectedSpaces) {
                         context.report({
-                            "node": groupNode as any,
-                            "message": "Assignment operators should be aligned in adjacent declarations",
+                            "node": groupNode as Rule.Node,
+                            "message":
+                                "Assignment operators should be aligned in adjacent declarations",
 
                             fix(fixer) {
-                                const spaceBefore = context.sourceCode.getTokenBefore(equalToken);
+                                const spaceBefore =
+                                    context.sourceCode.getTokenBefore(
+                                        equalToken,
+                                    );
+
+                                if (!spaceBefore) {
+                                    return null;
+                                }
 
                                 return fixer.replaceTextRange(
                                     [spaceBefore.range[1], equalToken.range[0]],

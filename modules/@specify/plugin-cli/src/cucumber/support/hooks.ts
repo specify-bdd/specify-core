@@ -5,7 +5,7 @@
  */
 
 import { After, AfterAll, Before, BeforeAll } from "@cucumber/cucumber";
-import * as fs from "node:fs/promises";
+import * as fs                                from "node:fs/promises";
 
 const cliFiles: Array<string> = [];
 

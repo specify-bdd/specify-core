@@ -6,9 +6,9 @@
  */
 
 import assert, { AssertionError } from "node:assert/strict";
-import { Given, Then, When } from "@cucumber/cucumber";
-import { Commander } from "@/lib/Commander";
-import { ShellSession } from "@/lib/ShellSession";
+import { Given, Then, When      } from "@cucumber/cucumber";
+import { Commander              } from "@/lib/Commander";
+import { ShellSession           } from "@/lib/ShellSession";
 
 Given("that a command line prompt is available", setupCLI);
 
@@ -64,10 +64,10 @@ function verifyCLIOutput(consoleOutput: RegExp) {
  *
  * @throws if the actual status code is different
  */
-function verifyCLIStatusCode(statusCode: string) {
+function verifyCLIStatusCode(statusCode: number) {
     assert.equal(
         this.cli.shell.statusCode,
         statusCode,
-        "The command's status code did not match the expected status code.",
+        "The command's status code did not match expectations.",
     );
 }

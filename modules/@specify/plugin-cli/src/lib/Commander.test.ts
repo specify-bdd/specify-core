@@ -1,9 +1,10 @@
-import { Commander } from "./Commander";
+import { Commander    } from "./Commander";
 import { ShellSession } from "./ShellSession";
+import { vi           } from "vitest";
 
 import type { ShellSession as MockShellSession } from "./__mocks__/ShellSession";
 
-jest.mock("./ShellSession");
+vi.mock("./ShellSession");
 
 describe("Commander", () => {
     let session: MockShellSession;

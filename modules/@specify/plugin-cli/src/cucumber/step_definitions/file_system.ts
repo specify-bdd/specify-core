@@ -5,8 +5,8 @@
  */
 
 import { Given, When } from "@cucumber/cucumber";
-import fs from "node:fs/promises";
-import path from "node:path";
+import fs              from "node:fs/promises";
+import path            from "node:path";
 
 import type { FileParam } from "~/types/params";
 // import type { ObjectEncodingOptions } from "node:fs";

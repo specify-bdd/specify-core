@@ -1,7 +1,7 @@
-import deepmerge from "deepmerge";
-import fs from "node:fs";
-import path from "node:path";
-import { globbySync } from "globby";
+import deepmerge         from "deepmerge";
+import fs                from "node:fs";
+import path              from "node:path";
+import { globbySync    } from "globby";
 import { pathToFileURL } from "node:url";
 
 import type { CoreConfig } from "~/types";
@@ -21,8 +21,8 @@ if (fs.existsSync(configPath)) {
 
 export const entries = await Promise.all(
     globbySync(path.join(import.meta.dirname, "*.config.*"), {
-        "absolute": true,
-        "ignore": ["**/*.d.ts"],
+        "absolute":  true,
+        "ignore":    ["**/*.d.ts"],
         "onlyFiles": true,
     }).map(async (modulePath) => {
         const module = await import(pathToFileURL(modulePath).href);

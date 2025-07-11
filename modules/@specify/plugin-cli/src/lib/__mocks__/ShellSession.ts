@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import assert from "node:assert/strict";
 
 export class ShellSession {
@@ -6,11 +7,11 @@ export class ShellSession {
     #errorCallbacks: ((data: string) => void)[] = [];
     #outputCallbacks: ((data: string) => void)[] = [];
 
-    emitClose = jest.fn(() => {
+    emitClose = vi.fn(() => {
         this.#closeCallbacks.forEach((cb) => cb());
     });
 
-    emitDelimiter = jest.fn((statusCode: number, malformed?: boolean) => {
+    emitDelimiter = vi.fn((statusCode: number, malformed?: boolean) => {
         const match = this.#curCommand.match(/;echo\s"(.+)"$/);
 
         assert.ok(match, "Delimiter not found in command!");
@@ -23,25 +24,25 @@ export class ShellSession {
         this.emitOutput(delimiter);
     });
 
-    emitOutput = jest.fn((output: string) => {
+    emitOutput = vi.fn((output: string) => {
         this.#outputCallbacks.forEach((cb) => cb(output + "\n"));
     });
 
-    kill = jest.fn();
+    kill = vi.fn();
 
-    onClose = jest.fn((callback: () => void) =>
+    onClose = vi.fn((callback: () => void) =>
         this.#closeCallbacks.push(callback),
     );
 
-    onError = jest.fn((callback: () => void) =>
+    onError = vi.fn((callback: () => void) =>
         this.#errorCallbacks.push(callback),
     );
 
-    onOutput = jest.fn((callback: () => void) =>
+    onOutput = vi.fn((callback: () => void) =>
         this.#outputCallbacks.push(callback),
     );
 
-    write = jest.fn((command: string) => {
+    write = vi.fn((command: string) => {
         this.#curCommand = command;
     });
 }
