@@ -113,7 +113,7 @@ export class TestCommand extends Command {
         this.cucumber     = mergedOpts.cucumber;
         this.gherkinPaths = mergedOpts.gherkinPaths;
         this.plugins      = mergedOpts.plugins;
-        this.tmpPath      = path.join(os.tmpdir(), fs.mkdtempSync("specify-test-"), `${Date.now()}.json`);
+        this.tmpPath      = path.join(fs.mkdtempSync(`${os.tmpdir()}specify-test-`), `${Date.now()}.json`);
 
         this.#resolvePlugins();
 
