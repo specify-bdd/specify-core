@@ -108,6 +108,7 @@ export default tseslint.config(
             "**/dist/**",
             "**/package.json",
             "**/package-lock.json",
+            "logs/",
         ],
     },
 );
