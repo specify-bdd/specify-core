@@ -1,7 +1,7 @@
 {
     "consoleOutput": {
         "failing test result": "\\(\\d+ failed.*\\n.*\\(\\d+ failed",
-        "no test cases error": "No scenarios found",
+        "no test cases error": "No tests were executed.",
         "passing test result": "\\(\\d+ passed\\)\\n.*\\(\\d+ passed\\)"
     },
     "file": {

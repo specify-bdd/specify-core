@@ -40,7 +40,10 @@ switch (args._[0]?.toLowerCase()) {
 const res = await cmd.execute(args);
 
 if (res.error) {
-    throw deserializeError(res.error);
+    console.log((res.debug)
+        ? deserializeError(res.error)
+        : deserializeError(res.error).message
+    )
 }
 
 process.exit(res.status);
