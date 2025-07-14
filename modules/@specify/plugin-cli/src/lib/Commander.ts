@@ -154,11 +154,11 @@ export class Commander {
         this.#output += output.replace(this.#delimiter.regexp, "");
         
         if (output.includes(this.#delimiter.uuid)) {
-                this.#statusCode = this.#extractKeyedValue(
-                    output,
-                    this.#statusCodeKey,
-                    true,
-                ) as number;
+            this.#statusCode = this.#extractKeyedValue(
+                output,
+                this.#statusCodeKey,
+                true,
+            ) as number;
 
             this.#resolveRun();
         }
@@ -173,5 +173,4 @@ export class Commander {
 
         resolve();
     }
-
 }
