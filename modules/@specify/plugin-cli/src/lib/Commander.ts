@@ -159,6 +159,7 @@ export class Commander {
                 this.#statusCodeKey,
                 true,
             ) as number;
+
             this.#resolveRun();
         }
     }

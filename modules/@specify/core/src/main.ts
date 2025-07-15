@@ -7,6 +7,7 @@
  */
 
 import minimist             from "minimist";
+import { log              } from "node:console";
 import path                 from "node:path";
 import { deserializeError } from "serialize-error";
 
@@ -40,7 +41,10 @@ switch (args._[0]?.toLowerCase()) {
 const res = await cmd.execute(args);
 
 if (res.error) {
-    throw deserializeError(res.error);
+    log((res.debug)
+        ? deserializeError(res.error)
+        : deserializeError(res.error).message
+    )
 }
 
 process.exit(res.status);

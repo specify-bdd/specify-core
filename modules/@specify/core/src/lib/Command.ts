@@ -87,5 +87,4 @@ export abstract class Command {
 
         return res;
     }
-
 }
