@@ -12,9 +12,13 @@ import path               from "node:path";
 import os                 from "node:os";
 import { serializeError } from "serialize-error";
 
-import { loadConfiguration, loadSupport, runCucumber } from "@cucumber/cucumber/api";
+import {
+    loadConfiguration,
+    loadSupport,
+    runCucumber,
+} from "@cucumber/cucumber/api";
 
-import { Command, CommandResultStatus } from "./Command";
+import { Command, CommandResultStatus, SPECIFY_ARGS } from "./Command";
 
 import type { ParsedArgs } from "minimist";
 
@@ -26,7 +30,13 @@ import type {
     ISupportCodeLibrary,
 } from "@cucumber/cucumber/api";
 
-import type { ICommandOptions, ICommandResult, ICommandResultDebugInfo } from "./Command";
+import type {
+    ICommandOptions,
+    ICommandResult,
+    ICommandResultDebugInfo,
+} from "./Command";
+
+const require = createRequire(import.meta.url);
 
 export const TEST_COMMAND_DEFAULT_OPTS: ITestCommandOptions = {
     "cucumber": {
@@ -38,11 +48,13 @@ export const TEST_COMMAND_DEFAULT_OPTS: ITestCommandOptions = {
     "debug":        false,
     "gherkinPaths": [],
     "logPath":      `./specify-test-log-${Date.now()}.json`,
+    "plugins":      [],
 };
 
 export interface ITestCommandOptions extends ICommandOptions {
-    cucumber: Partial<IConfiguration>;
-    gherkinPaths: string[];
+    cucumber?: Partial<IConfiguration>;
+    gherkinPaths?: string[];
+    plugins?: string[];
 }
 
 export interface ITestCommandResult extends ICommandResult {
@@ -83,21 +95,27 @@ export class TestCommand extends Command {
      *
      * @param userOpts - User-supplied options
      */
-    constructor(userOpts: Partial<ITestCommandOptions>) {
+    constructor(userOpts: ITestCommandOptions) {
         const mergedOpts = merge.all([
             {},
             TEST_COMMAND_DEFAULT_OPTS,
             userOpts,
         ]) as ITestCommandOptions;
 
-        super({ "debug": mergedOpts.debug, "logPath": mergedOpts.logPath });
+        super({
+            "debug":   mergedOpts.debug,
+            "logPath": mergedOpts.logPath,
+        });
 
         this.cucumber = mergedOpts.cucumber;
         this.gherkinPaths = mergedOpts.gherkinPaths;
+        this.plugins = mergedOpts.plugins;
         this.tmpPath = path.join(
             fs.mkdtempSync(path.join(os.tmpdir(), "specify-test-")),
             `${Date.now()}.json`,
         );
+
+        this.#resolvePlugins();
 
         // these Cucumber formatters ensure that test result details are logged in some permanent form; the former is
         // for users' purposes, while the latter is for internal use
@@ -122,7 +140,10 @@ export class TestCommand extends Command {
      * @returns The Command result
      */
     async execute(userArgs: ParsedArgs): Promise<ITestCommandResult> {
-        const testRes: ITestCommandResult = { "ok": false, "status": CommandResultStatus.error };
+        const testRes: ITestCommandResult = {
+            "ok":     false,
+            "status": CommandResultStatus.error,
+        };
 
         if (this.debug) {
             testRes.debug = { "args": userArgs };
@@ -154,7 +175,9 @@ export class TestCommand extends Command {
                 testRes.debug.cucumber.runResult = cucumberRes;
             }
 
-            testRes.result = JSON.parse(fs.readFileSync(this.tmpPath, { "encoding": "utf8" }));
+            testRes.result = JSON.parse(
+                fs.readFileSync(this.tmpPath, { "encoding": "utf8" }),
+            );
 
             if (!Array.isArray(testRes.result) || !testRes.result.length) {
                 throw new Error("No tests were executed.");
@@ -200,11 +223,37 @@ export class TestCommand extends Command {
                     config.paths = this.#parsePathArgs(optVal);
                     break;
                 default:
-                    throw new Error(`Invalid option: --${optKey}`);
+                    // only throw for non-Cucumber args that are not our own custom execution args
+                    if (!SPECIFY_ARGS.includes(optKey)) {
+                        throw new Error(`Invalid option: --${optKey}`);
+                    }
             }
         }
 
-        return loadConfiguration({ "provided": config }).then((loaded) => loaded.runConfiguration);
+        return loadConfiguration({ "provided": config }).then(
+            (loaded) => loaded.runConfiguration,
+        );
+    }
+
+    /**
+     * Resolve a plugin package name (or path) into an absolute path.
+     *
+     * @param pluginName - The name or path of a plugin package to resolve
+     *
+     * @returns The absolute path of the package
+     */
+    #getPluginPath(pluginName: string): string {
+        let pluginPath = path.resolve(pluginName);
+
+        // first see if the plugin name works as a file system path
+        if (fs.existsSync(pluginPath)) {
+            return pluginPath;
+        }
+
+        // if not, resolve the package name into a path
+        pluginPath = require.resolve(pluginName);
+
+        return path.dirname(pluginPath);
     }
 
     /**
@@ -226,16 +275,23 @@ export class TestCommand extends Command {
         for (const pathArg of pathArgs) {
             const [filePath, fileLine] = pathArg.split(":");
             const absFilePath          = path.resolve(filePath);
-            const absFilePathLine      = fileLine ? `${absFilePath}:${fileLine}` : absFilePath;
+            const absFilePathLine      = fileLine
+                ? `${absFilePath}:${fileLine}`
+                : absFilePath;
 
-            assert.ok(fs.existsSync(absFilePath), new Error(`Invalid path: ${pathArg}`));
+            assert.ok(
+                fs.existsSync(absFilePath),
+                new Error(`Invalid path: ${pathArg}`),
+            );
 
             paths.push(absFilePathLine);
         }
 
         // if no path arguments were supplied, fall back to the default gherkin path
         if (!paths.length) {
-            paths = this.gherkinPaths.map((gherkinPath) => path.resolve(gherkinPath));
+            paths = this.gherkinPaths.map((gherkinPath) =>
+                path.resolve(gherkinPath),
+            );
         }
 
         return paths;
@@ -253,5 +309,16 @@ export class TestCommand extends Command {
             .filter((tag) => tag.trim().length)
             .map((tag) => `(${tag})`)
             .join(" and ");
+    }
+
+    /**
+     * Resolve the paths of all Specify plugins, including those in Specify's
+     * and Cucumber's config files, for use in Cucumber's support file import
+     * array.
+     */
+    #resolvePlugins(): void {
+        for (const plugin of this.plugins) {
+            this.cucumber.import.push(this.#getPluginPath(plugin));
+        }
     }
 }

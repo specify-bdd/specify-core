@@ -16,9 +16,11 @@ export const COMMAND_DEFAULT_OPTS: ICommandOptions = {
     "logPath": `./specify-log-${Date.now()}.json`,
 };
 
+export const SPECIFY_ARGS = ["help", "watch"];
+
 export interface ICommandOptions {
-    debug: boolean;
-    logPath: string;
+    debug?: boolean;
+    logPath?: string;
 }
 
 export interface ICommandResult {
@@ -31,6 +33,10 @@ export interface ICommandResult {
 
 export interface ICommandResultDebugInfo {
     args: ParsedArgs;
+}
+
+export interface ISpecifyArgs {
+    watch?: boolean;
 }
 
 export enum CommandResultStatus {
@@ -55,8 +61,12 @@ export abstract class Command {
      *
      * @param userOpts - User-supplied options
      */
-    constructor(userOpts: Partial<ICommandOptions>) {
-        const mergedOpts = merge.all([{}, COMMAND_DEFAULT_OPTS, userOpts]) as ICommandOptions;
+    constructor(userOpts: ICommandOptions) {
+        const mergedOpts = merge.all([
+            {},
+            COMMAND_DEFAULT_OPTS,
+            userOpts,
+        ]) as ICommandOptions;
 
         this.debug = mergedOpts.debug;
         this.logPath = mergedOpts.logPath;
@@ -74,7 +84,9 @@ export abstract class Command {
         const res: ICommandResult = {
             "ok":     false,
             "status": CommandResultStatus.error,
-            "error":  serializeError(new Error("Base class Command should not be executed.")),
+            "error":  serializeError(
+                new Error("Base class Command should not be executed."),
+            ),
         };
 
         if (this.debug) {
