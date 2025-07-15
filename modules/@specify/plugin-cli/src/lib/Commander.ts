@@ -152,7 +152,7 @@ export class Commander {
      */
     #processOutput(output: string): void {
         this.#output += output.replace(this.#delimiter.regexp, "");
-        
+
         if (output.includes(this.#delimiter.uuid)) {
             this.#statusCode = this.#extractKeyedValue(
                 output,
