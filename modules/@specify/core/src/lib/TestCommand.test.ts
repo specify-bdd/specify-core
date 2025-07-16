@@ -1,7 +1,6 @@
-import merge             from "deepmerge";
-import { createRequire } from "module"; 
-import fs                from "node:fs";
-import path              from "node:path";
+import merge from "deepmerge";
+import fs    from "node:fs";
+import path  from "node:path";
 
 import {
     TestCommand,
@@ -10,7 +9,6 @@ import {
 } from "./TestCommand";
 
 describe("TestCommand", () => {
-    const require   = createRequire(import.meta.url);
     const emptyArgs = { "_": [] };
     const emptyOpts = {};
 
@@ -25,7 +23,6 @@ describe("TestCommand", () => {
 
                 expect(cmd.cucumber).toEqual(expOpts.cucumber);
                 expect(cmd.gherkinPaths).toEqual(expOpts.gherkinPaths);
-                expect(cmd.plugins).toEqual(expOpts.plugins);
             });
 
             it("...with merged values when user options are provided", () => {
@@ -33,23 +30,6 @@ describe("TestCommand", () => {
                 const cmd      = new TestCommand(userOpts);
 
                 expect(cmd.gherkinPaths).toEqual(userOpts.gherkinPaths);
-            });
-        });
-
-        describe("resolves plugins", () => {
-            it("valid", async () => {
-                const vitestPath = path.dirname(require.resolve("vitest"));
-                const corePath   = path.dirname(require.resolve("@specify/core"));
-                const userOpts   = { "plugins": [ "vitest", corePath ] };
-                const cmd        = new TestCommand(userOpts);
-
-                expect(cmd.cucumber?.import).toEqual([ vitestPath, corePath ]);
-            });
-
-            it("invalid", () => {
-                const userOpts = { "plugins": [ "name-that-is-neither-valid-package-nor-path" ] };
-
-                expect(() => new TestCommand(userOpts)).toThrow();
             });
         });
     });
@@ -97,10 +77,12 @@ describe("TestCommand", () => {
 
             beforeAll(() => {
                 userOpts = {
+                    "cucumber": {
+                        "import": [
+                            path.resolve(import.meta.dirname, "../../dist/cucumber"),
+                        ],
+                    },
                     "logPath": path.resolve(`./logs/specify-test-vitest-log-${Date.now()}.json`),
-                    "plugins": [
-                        path.resolve(import.meta.dirname, "../../dist/cucumber"),
-                    ],
                 };
             });
 
