@@ -95,6 +95,7 @@ export default tseslint.config(
     },
     {
         "ignores": [
+            "./logs/**",
             "**/*.d.ts",
             "**/.DS_Store/**",
             "**/.vscode/**",
