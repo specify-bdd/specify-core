@@ -9,7 +9,7 @@
 import merge                from "deepmerge";
 import minimist             from "minimist";
 import { log              } from "node:console";
-import path                 from "path";
+import path                 from "node:path";
 import { deserializeError } from "serialize-error";
 
 import { config                } from "@/config/all";
@@ -55,7 +55,7 @@ cucumberCfg.import.push(path.resolve(import.meta.dirname, "cucumber"));
 switch (args._[0]?.toLowerCase()) {
     case "test":
         args._.shift();
-    // fall through to default
+        // fall through to default
     default:
         cmd = new TestCommand({
             "cucumber":     cucumberCfg,
