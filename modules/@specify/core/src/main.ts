@@ -6,6 +6,7 @@
  * A Cucumber-based testing tool built to support behavior-driven development.
  */
 
+import merge                from "deepmerge";
 import minimist             from "minimist";
 import { log              } from "node:console";
 import path                 from "node:path";
@@ -22,7 +23,24 @@ import {
 const minOpts = {};
 const args    = minimist(process.argv.slice(2), minOpts);
 
+let cucumberCfg = config.cucumber;
 let cmd: Command;
+
+// resolve plugins
+for (const plugin of config.plugins) {
+    const mod = await import(plugin);
+
+    for (const prop in mod.default) {
+        switch (prop) {
+            case "cucumber":
+                cucumberCfg = merge(cucumberCfg, mod.default.cucumber);
+                break;
+        }
+    }
+}
+
+// add core cucumber support code path
+cucumberCfg.import.push(path.resolve(import.meta.dirname, "cucumber"));
 
 switch (args._[0]?.toLowerCase()) {
     case "test":
@@ -30,11 +48,10 @@ switch (args._[0]?.toLowerCase()) {
         // fall through to default
     default:
         cmd = new TestCommand({
-            "cucumber":     config.cucumber,
+            "cucumber":     cucumberCfg,
             "debug":        config.debug,
             "gherkinPaths": [ path.resolve(config.paths.gherkin) ],
             "logPath":      path.resolve(config.paths.logs, TEST_COMMAND_DEFAULT_OPTS.logPath),
-            "plugins":      [ ...config.plugins, path.resolve(import.meta.dirname, "../dist/cucumber") ],
         });
 }
 
