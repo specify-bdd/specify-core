@@ -6,7 +6,6 @@
  */
 
 import merge              from "deepmerge";
-import { createRequire  } from "module";
 import assert             from "node:assert/strict";
 import fs                 from "node:fs";
 import path               from "node:path";
@@ -40,8 +39,6 @@ import type {
     ICommandResultDebugInfo
 } from "./Command";
 
-const require = createRequire(import.meta.url);
-
 export const TEST_COMMAND_DEFAULT_OPTS: ITestCommandOptions = {
     "cucumber": {
         "format": [],
@@ -52,13 +49,11 @@ export const TEST_COMMAND_DEFAULT_OPTS: ITestCommandOptions = {
     "debug":        false,
     "gherkinPaths": [],
     "logPath":      `./specify-test-log-${Date.now()}.json`,
-    "plugins":      [],
 }
 
 export interface ITestCommandOptions extends ICommandOptions {
     cucumber: Partial<IConfiguration>,
     gherkinPaths: string[],
-    plugins: string[],
 }
 
 export interface ITestCommandResult extends ICommandResult {
@@ -86,11 +81,6 @@ export class TestCommand extends Command {
     gherkinPaths: string[];
 
     /**
-     * A list of Specify plugins this Command should import.
-     */
-    plugins: string[];
-
-    /**
      * Cucumber support code, which must be reused across executions
      */
     support: ISupportCodeLibrary;
@@ -112,10 +102,7 @@ export class TestCommand extends Command {
 
         this.cucumber     = mergedOpts.cucumber;
         this.gherkinPaths = mergedOpts.gherkinPaths;
-        this.plugins      = mergedOpts.plugins;
         this.tmpPath      = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "specify-test-")), `${Date.now()}.json`);
-
-        this.#resolvePlugins();
 
         // these Cucumber formatters ensure that test result details are logged in some permanent form; the former is 
         // for users' purposes, while the latter is for internal use
@@ -226,27 +213,6 @@ export class TestCommand extends Command {
     }
 
     /**
-     * Resolve a plugin package name (or path) into an absolute path.
-     *
-     * @param pluginName - The name or path of a plugin package to resolve
-     * 
-     * @returns The absolute path of the package
-     */
-    #getPluginPath(pluginName: string): string {
-        let pluginPath = path.resolve(pluginName);
-
-        // first see if the plugin name works as a file system path
-        if (fs.existsSync(pluginPath)) {
-            return pluginPath;
-        }
-
-        // if not, resolve the package name into a path
-        pluginPath = require.resolve(pluginName);
-
-        return path.dirname(pluginPath);
-    }
-
-    /**
      * Parse loose arguments as paths.  Any loose args that are not valid file 
      * system paths will throw an error.
      * 
@@ -292,17 +258,6 @@ export class TestCommand extends Command {
             .filter((tag) => tag.trim().length)
             .map((tag) => `(${tag})`)
             .join(" and ");
-    }
-
-    /**
-     * Resolve the paths of all Specify plugins, including those in Specify's 
-     * and Cucumber's config files, for use in Cucumber's support file import 
-     * array.
-     */
-    #resolvePlugins(): void {
-        for (const plugin of this.plugins) {
-            this.cucumber.import.push(this.#getPluginPath(plugin));
-        }
     }
 
 }

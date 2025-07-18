@@ -5,3 +5,13 @@
  * support code facilitating tests which need to interact with a command-line
  * interface.
  */
+
+import path from "node:path";
+
+export default {
+    "cucumber": {
+        "import": [
+            path.resolve(import.meta.dirname, "cucumber"),
+        ]
+    }
+};
