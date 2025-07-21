@@ -39,11 +39,10 @@ interface SessionMeta {
 /**
  * Session Manager
  *
- * Manages the lifecycle of a system process session. Ensures only one command 
+ * Manages the lifecycle of a system process session. Ensures only one command
  * runs at a time, and tracks command output and exit status.
  */
 export class SessionManager {
-
     /**
      * The currently active session
      */
@@ -65,12 +64,12 @@ export class SessionManager {
     static #exitCodeKey = "EXIT_CODE";
 
     /**
-     * Creates a new SessionManager instance and stores it as a static property 
+     * Creates a new SessionManager instance and stores it as a static property
      * of the class for later use.  Requires the use of a secret token to ensure
      * that only the getInstance method can call this successfully.
-     * 
+     *
      * @param token - A secret token proving that constructor use is authorized
-     * 
+     *
      * @throws {@link Error}
      * If the provided token is invalid
      */
@@ -122,7 +121,7 @@ export class SessionManager {
     }
 
     /**
-     * Gracefully terminates the active session. Resolves once the session is 
+     * Gracefully terminates the active session. Resolves once the session is
      * fully closed.
      */
     async kill(sessionMeta: SessionMeta): Promise<void> {
@@ -153,7 +152,7 @@ export class SessionManager {
         this.#sessions.splice(index, 1);
 
         if (this.#activeSession === sessionMeta) {
-            const prevIndex = (index === 0) ? this.#sessions.length - 1 : index - 1
+            const prevIndex = index === 0 ? this.#sessions.length - 1 : index - 1;
 
             this.#activeSession = this.#sessions[prevIndex];
         }
@@ -183,8 +182,8 @@ export class SessionManager {
         );
 
         sessionMeta.curCommand = command;
-        sessionMeta.delimiter  = this.#createDelimiter();
-        sessionMeta.output     = "";
+        sessionMeta.delimiter = this.#createDelimiter();
+        sessionMeta.output = "";
 
         return new Promise((resolve) => {
             sessionMeta.commandResolve = resolve;
@@ -217,11 +216,7 @@ export class SessionManager {
      *
      * @throws If the key/value pair is not found
      */
-    #extractKeyedValue(
-        output: string,
-        key: string,
-        parseAsInt?: boolean,
-    ): string | number {
+    #extractKeyedValue(output: string, key: string, parseAsInt?: boolean): string | number {
         const match = output.match(new RegExp(`${key}=${parseAsInt ? "(\\d+)" : "(\\w+)"}`));
 
         assert.ok(match, `Output does not contain a value for "${key}"`);
@@ -258,7 +253,7 @@ export class SessionManager {
 
     /**
      * Resolves the running command's promise.
-     * 
+     *
      * @param sessionMeta - The session for the running command (optional)
      */
     #resolveRun(sessionMeta: SessionMeta): void {

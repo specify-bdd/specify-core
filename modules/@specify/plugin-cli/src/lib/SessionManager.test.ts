@@ -7,11 +7,11 @@ import type { ShellSession as MockShellSession } from "./__mocks__/ShellSession"
 vi.mock("./ShellSession");
 
 describe("SessionManager", () => {
-    let session:        MockShellSession;
+    let session: MockShellSession;
     let sessionManager: SessionManager;
 
     beforeEach(() => {
-        session        = new ShellSession() as unknown as MockShellSession;
+        session = new ShellSession() as unknown as MockShellSession;
         sessionManager = SessionManager.getInstance();
 
         sessionManager.addSession(session);
@@ -29,17 +29,13 @@ describe("SessionManager", () => {
 
         await promise;
 
-        expect(session.write).toHaveBeenCalledWith(
-            expect.stringContaining(command),
-        );
+        expect(session.write).toHaveBeenCalledWith(expect.stringContaining(command));
     });
 
     it("resolves run() when delimiter output is received", async () => {
         let resolved = false;
 
-        const promise = sessionManager
-            .run("echo test")
-            .then(() => (resolved = true));
+        const promise = sessionManager.run("echo test").then(() => (resolved = true));
 
         session.emitOutput("test");
 
@@ -134,8 +130,8 @@ describe("SessionManager", () => {
         // this promise will never resolve due to the throw
         void sessionManager.run(command);
 
-        await expect(
-            sessionManager.run('echo "overlapping command"'),
-        ).rejects.toThrow(`A command is already running: ${command}`);
+        await expect(sessionManager.run('echo "overlapping command"')).rejects.toThrow(
+            `A command is already running: ${command}`,
+        );
     });
 });
