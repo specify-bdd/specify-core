@@ -23,7 +23,8 @@ export interface ITestCommandWatcherOptions {
     packageName?: string;
 }
 
-const DEBOUNCE_MS  = 500;
+export const DEBOUNCE_MS = 500;
+
 const PACKAGE_NAME = "@specify/core";
 
 export class TestCommandWatcher {
