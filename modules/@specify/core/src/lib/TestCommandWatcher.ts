@@ -58,9 +58,7 @@ export class TestCommandWatcher {
     /**
      * Patterns to ignore when watching files.
      */
-    #ignoredPatterns = this.#config.watch.ignore.map(
-        (ignorePattern) => new RegExp(ignorePattern),
-    );
+    #ignoredPatterns = this.#config.watch.ignore.map((ignorePattern) => new RegExp(ignorePattern));
 
     /**
      * Flag to track if this is the initial execution.
@@ -85,11 +83,7 @@ export class TestCommandWatcher {
     /**
      * Events to watch for file system changes.
      */
-    #watchEvents: string[] = this.#config.watch.events ?? [
-        "add",
-        "change",
-        "unlink",
-    ];
+    #watchEvents: string[] = this.#config.watch.events ?? ["add", "change", "unlink"];
 
     /**
      * Initialize the TestCommandWatcher.
@@ -99,13 +93,9 @@ export class TestCommandWatcher {
     constructor(command: TestCommand) {
         this.#command = command;
         this.#lockFilePath = path.join(os.tmpdir(), "specify-core-watch.lock");
-        this.#promptPrefix =
-            chalk.cyan("[") + chalk.greenBright(PACKAGE_NAME) + chalk.cyan("]");
+        this.#promptPrefix = chalk.cyan("[") + chalk.greenBright(PACKAGE_NAME) + chalk.cyan("]");
 
-        this.#debouncedExecution = _.debounce(
-            this.#executeCommand.bind(this),
-            DEBOUNCE_MS,
-        );
+        this.#debouncedExecution = _.debounce(this.#executeCommand.bind(this), DEBOUNCE_MS);
     }
 
     /**
@@ -136,9 +126,7 @@ export class TestCommandWatcher {
      */
     async #executeCommand(args: ParsedArgs): Promise<void> {
         try {
-            this.#debugLog(
-                `Creating lock file (${chalk.gray(this.#lockFilePath)})...`,
-            );
+            this.#debugLog(`Creating lock file (${chalk.gray(this.#lockFilePath)})...`);
 
             fs.writeFileSync(this.#lockFilePath, "");
 
@@ -151,15 +139,9 @@ export class TestCommandWatcher {
             if (res.error) {
                 const resError     = deserializeError(res.error);
                 const errorMessage =
-                    resError instanceof Error
-                        ? resError.message
-                        : String(resError);
+                    resError instanceof Error ? resError.message : String(resError);
 
-                this.#debugLog(
-                    `Command execution failed: ${errorMessage}`,
-                    resError,
-                    true,
-                );
+                this.#debugLog(`Command execution failed: ${errorMessage}`, resError, true);
             }
         } catch (error) {
             this.#debugLog(
@@ -227,9 +209,7 @@ export class TestCommandWatcher {
     async start(args: ParsedArgs): Promise<void> {
         clear();
 
-        const watchPaths = config.watch.paths.map((watchPath) =>
-            path.resolve(watchPath),
-        );
+        const watchPaths = config.watch.paths.map((watchPath) => path.resolve(watchPath));
 
         if (watchPaths.length === 0) {
             log(
@@ -266,10 +246,7 @@ export class TestCommandWatcher {
             }
 
             if (this.#watchEvents.includes(event)) {
-                if (
-                    fs.existsSync(this.#lockFilePath) &&
-                    !this.#executionQueued
-                ) {
+                if (fs.existsSync(this.#lockFilePath) && !this.#executionQueued) {
                     this.#queueExecution();
 
                     this.#debugLog(
@@ -279,9 +256,7 @@ export class TestCommandWatcher {
                     await this.#waitForLockFileRemoval();
                 }
 
-                this.#debugLog(
-                    `Triggering debounced execution (debounced ${DEBOUNCE_MS}ms)...`,
-                );
+                this.#debugLog(`Triggering debounced execution (debounced ${DEBOUNCE_MS}ms)...`);
 
                 void this.#debouncedExecution(args);
             }
@@ -293,20 +268,16 @@ export class TestCommandWatcher {
      */
     async #waitForLockFileRemoval(): Promise<void> {
         return new Promise<void>((resolve) => {
-            const watcher = fs.watch(
-                this.#lockFilePath,
-                { "persistent": true },
-                (eventType) => {
-                    // there are only 2 event types here: rename and change
-                    // rename indicates the file was deleted, moved, or otherwise isn't there anymore
-                    if (eventType === "rename") {
-                        this.#debugLog("Lock file removed.");
+            const watcher = fs.watch(this.#lockFilePath, { "persistent": true }, (eventType) => {
+                // there are only 2 event types here: rename and change
+                // rename indicates the file was deleted, moved, or otherwise isn't there anymore
+                if (eventType === "rename") {
+                    this.#debugLog("Lock file removed.");
 
-                        watcher.close();
-                        resolve();
-                    }
-                },
-            );
+                    watcher.close();
+                    resolve();
+                }
+            });
         });
     }
 }

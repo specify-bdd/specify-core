@@ -55,20 +55,13 @@ cucumberCfg.import.push(path.resolve(import.meta.dirname, "cucumber"));
 switch (args._[0]?.toLowerCase()) {
     case "test":
         args._.shift();
-        // fall through to default
+    // fall through to default
     default:
         cmd = new TestCommand({
             "cucumber":     cucumberCfg,
             "debug":        config.debug,
             "gherkinPaths": [path.resolve(config.paths.gherkin)],
-            "logPath":      path.resolve(
-                config.paths.logs,
-                TEST_COMMAND_DEFAULT_OPTS.logPath,
-            ),
-            "plugins": [
-                ...config.plugins,
-                path.resolve(import.meta.dirname, "../dist/cucumber"),
-            ],
+            "logPath":      path.resolve(config.paths.logs, TEST_COMMAND_DEFAULT_OPTS.logPath),
         });
 }
 
@@ -80,11 +73,7 @@ if (specifyArgs.watch) {
     const res = await cmd.execute(args);
 
     if (res.error) {
-        log(
-            res.debug
-                ? deserializeError(res.error)
-                : deserializeError(res.error).message,
-        );
+        log(res.debug ? deserializeError(res.error) : deserializeError(res.error).message);
     }
 
     process.exit(res.status);

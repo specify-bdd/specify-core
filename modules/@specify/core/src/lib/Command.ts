@@ -63,11 +63,7 @@ export abstract class Command {
      * @param userOpts - User-supplied options
      */
     constructor(userOpts: ICommandOptions) {
-        const mergedOpts = merge.all([
-            {},
-            COMMAND_DEFAULT_OPTS,
-            userOpts,
-        ]) as ICommandOptions;
+        const mergedOpts = merge.all([{}, COMMAND_DEFAULT_OPTS, userOpts]) as ICommandOptions;
 
         this.debug = mergedOpts.debug;
         this.logPath = mergedOpts.logPath;
@@ -85,9 +81,7 @@ export abstract class Command {
         const res: ICommandResult = {
             "ok":     false,
             "status": CommandResultStatus.error,
-            "error":  serializeError(
-                new Error("Base class Command should not be executed."),
-            ),
+            "error":  serializeError(new Error("Base class Command should not be executed.")),
         };
 
         if (this.debug) {
