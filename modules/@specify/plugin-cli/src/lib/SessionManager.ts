@@ -44,7 +44,7 @@ export class SessionManager {
     /**
      * The currently active session
      */
-    #activeSession: SessionMeta;
+    #activeSession: SessionMeta | null = null;
 
     /**
      * The sessions this class is managing
@@ -138,10 +138,11 @@ export class SessionManager {
      * manipulation logic of removeSession, which each kill invokes.
      */
     async killAll(): Promise<void> {
-        // return Promise.all(this.#sessions.map((sessionMeta) => this.kill(sessionMeta)));
-        for (const sessionMeta of this.#sessions) {
-            await this.kill(sessionMeta);
-        }
+        await Promise.all(this.#sessions.map((sessionMeta) => this.kill(sessionMeta)));
+
+        // ensure race conditions don't leave session records in a weird state
+        this.#activeSession = null;
+        this.#sessions      = [];
     }
 
     /**
@@ -157,9 +158,12 @@ export class SessionManager {
         this.#sessions.splice(index, 1);
 
         if (this.#activeSession === sessionMeta) {
-            const prevIndex = index === 0 ? this.#sessions.length - 1 : index - 1;
+            const prevIndex = (index === 0) ? this.#sessions.length - 1 : index - 1;
 
-            this.#activeSession = this.#sessions[prevIndex];
+            // is the sessions list empty now?
+            // if so, unset active session
+            // if not, set active session to the previous index
+            this.#activeSession = (prevIndex < 0) ? null : this.#sessions[prevIndex];
         }
     }
 

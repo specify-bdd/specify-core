@@ -11,17 +11,15 @@ describe("SessionManager", () => {
     let sessionManager: SessionManager;
 
     beforeEach(() => {
-        session = new ShellSession() as unknown as MockShellSession;
+        session        = new ShellSession() as unknown as MockShellSession;
         sessionManager = new SessionManager();
 
         sessionManager.addSession(session);
     });
 
-    describe("activeSession", () => {
-        it("reports the current active session", async () => {
-            expect(sessionManager.activeSession.session).toBe(session);
-        });
-    });
+    // describe("activeSession", () => {
+    //     // TODO: are there any tests we can put here that are distinct from addSession's?
+    // });
 
     describe("exitCode", () => {
         it("reports the last command's exit code", async () => {
@@ -73,13 +71,17 @@ describe("SessionManager", () => {
         });
     });
 
-    describe("sessions", () => {
-        it("lists a single managed session", async () => {
+    // describe("sessions", () => {
+    //     // TODO: are there any tests we can put here that are distinct from addSession's?
+    // });
+
+    describe("addSession()", () => {
+        it("registers a single managed session", async () => {
             expect(sessionManager.sessions.length).toBe(1);
             expect(sessionManager.sessions[0].session).toBe(session);
         });
 
-        it("lists multuple managed sessions", async () => {
+        it("registers multiple managed sessions", async () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
             sessionManager.addSession(altSession);
@@ -87,23 +89,26 @@ describe("SessionManager", () => {
             expect(sessionManager.sessions.length).toBe(2);
             expect(sessionManager.sessions[1].session).toBe(altSession);
         });
-    });
-
-    describe("addSession()", () => {
-        it("registers a single managed session", async () => {
-            throw "TODO";
-        });
-
-        it("registers multiple managed sessions", async () => {
-            throw "TODO";
-        });
 
         it("registers named managed sessions", async () => {
-            throw "TODO";
+            const altSession     = new ShellSession() as unknown as MockShellSession;
+            const altSessionName = "test session";
+
+            sessionManager.addSession(altSession, altSessionName);
+
+            expect(sessionManager.sessions[1].name).toBe(altSessionName);
         });
 
-        it("activates new managed sessions", async () => {
-            throw "TODO";
+        it("activates new managed sessions by default", async () => {
+            expect(sessionManager.activeSession.session).toBe(session);
+        });
+
+        it("doesn't activate new managed sessions if instructed not to", async () => {
+            const altSession = new ShellSession() as unknown as MockShellSession;
+
+            sessionManager.addSession(altSession, "whatever", false);
+
+            expect(sessionManager.activeSession.session).toBe(session);
         });
     });
 
@@ -129,17 +134,67 @@ describe("SessionManager", () => {
 
     describe("killAll()", () => {
         it("kills all managed sessions", async () => {
-            throw "TODO";
+            const altSession = new ShellSession() as unknown as MockShellSession;
+
+            let resolved = false;
+
+            sessionManager.addSession(altSession);
+
+            expect(sessionManager.sessions.length).toBe(2);
+
+            const promise = sessionManager.killAll().then(() => (resolved = true));
+
+            // wait arbitrary time to ensure promise hasn't resolved
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            expect(resolved).toBeFalsy();
+
+            session.emitClose();
+            altSession.emitClose();
+
+            await promise;
+            console.dir(sessionManager.sessions);
+
+            expect(sessionManager.sessions.length).toBe(0);
         });
     });
 
     describe("removeSession()", () => {
         it("removes the sole managed session", async () => {
-            throw "TODO";
+            expect(sessionManager.sessions.length).toBe(1);
+
+            sessionManager.removeSession();
+
+            expect(sessionManager.sessions.length).toBe(0);
+            expect(sessionManager.activeSession).toBeNull();
         });
 
         it("removes one managed session among several", async () => {
-            throw "TODO";
+            const altSession = new ShellSession() as unknown as MockShellSession;
+
+            sessionManager.addSession(altSession, "whatever", false);
+
+            expect(sessionManager.sessions.length).toBe(2);
+            expect(sessionManager.activeSession.session).toBe(session);
+
+            sessionManager.removeSession(altSession);
+
+            expect(sessionManager.sessions.length).toBe(1);
+            expect(sessionManager.activeSession.session).toBe(session);
+        });
+
+        it("removes the active session among several", async () => {
+            const altSession = new ShellSession() as unknown as MockShellSession;
+
+            sessionManager.addSession(altSession);
+
+            expect(sessionManager.sessions.length).toBe(2);
+            expect(sessionManager.activeSession.session).toBe(altSession);
+
+            sessionManager.removeSession();
+
+            expect(sessionManager.sessions.length).toBe(1);
+            expect(sessionManager.activeSession.session).toBe(session);
         });
     });
 
