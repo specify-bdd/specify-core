@@ -131,10 +131,10 @@ export class SessionManager {
     /**
      * Gracefully terminate all managed sessions.  Resolves once all sessions
      * are fully closed.
-     * 
+     *
      * @remarks
-     * It wouldn't be too hard to refactor this to make it kill all sessions in 
-     * parallel, but doing so could produce unpredictable results in the array 
+     * It wouldn't be too hard to refactor this to make it kill all sessions in
+     * parallel, but doing so could produce unpredictable results in the array
      * manipulation logic of removeSession, which each kill invokes.
      */
     async killAll(): Promise<void> {
@@ -142,7 +142,7 @@ export class SessionManager {
 
         // ensure race conditions don't leave session records in a weird state
         this.#activeSession = null;
-        this.#sessions      = [];
+        this.#sessions = [];
     }
 
     /**
@@ -158,19 +158,19 @@ export class SessionManager {
         this.#sessions.splice(index, 1);
 
         if (this.#activeSession === sessionMeta) {
-            const prevIndex = (index === 0) ? this.#sessions.length - 1 : index - 1;
+            const prevIndex = index === 0 ? this.#sessions.length - 1 : index - 1;
 
             // is the sessions list empty now?
             // if so, unset active session
             // if not, set active session to the previous index
-            this.#activeSession = (prevIndex < 0) ? null : this.#sessions[prevIndex];
+            this.#activeSession = prevIndex < 0 ? null : this.#sessions[prevIndex];
         }
     }
 
     /**
      * Executes a single command within a managed session.
      *
-     * Only one command may be activeat a time in any given session. Output and 
+     * Only one command may be activeat a time in any given session. Output and
      * status code are available via `output` and `exitCode` once resolved.
      *
      * @remarks

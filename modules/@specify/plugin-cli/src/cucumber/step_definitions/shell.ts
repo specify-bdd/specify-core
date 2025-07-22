@@ -5,20 +5,21 @@
  * testing purposes.
  */
 
-import assert, { AssertionError } from "node:assert/strict";
 import { Given, Then, When      } from "@cucumber/cucumber";
-import { SessionManager         } from "@/lib/SessionManager";
-import { ShellSession           } from "@/lib/ShellSession";
+import assert, { AssertionError } from "node:assert/strict";
 
-Given(" a shell", startDefaultShell);
+import { SessionManager } from "@/lib/SessionManager";
+import { ShellSession   } from "@/lib/ShellSession";
 
-When("a user starts a shell", startDefaultShell);
+Given("a/another CLI shell", startDefaultShell);
+
+When("a/the user starts a/another CLI shell", startDefaultShell);
 
 When("a/the user runs the command {string}", { "timeout": 60000 }, runCommand);
 
-Then('the command should exit with a(n)/the "{ref:statusCode}" status code', verifyCLIStatusCode);
+Then("the command should return a/an/the {ref:exitCode} exit code", verifyExitCode);
 
-Then('the console output should be a(n)/the "{ref:consoleOutput}"', verifyCLIOutput);
+Then("the console output should be a/an/the {ref:consoleOutput}", verifyOutput);
 
 /**
  * Run the given command via the CLI
@@ -34,11 +35,18 @@ async function runCommand(command: string) {
  *
  * @param name - The name of the shell (optional)
  */
-async function startDefaultShell(name: string) {
+async function startNamedDefaultShell(name: string) {
     const shell = new ShellSession(this.parameters.userPath);
 
     this.cli.manager ??= new SessionManager();
     this.cli.manager.addSession(shell, name, true);
+}
+
+/**
+ * Start a default shell without a name
+ */
+async function startDefaultShell() {
+    return startNamedDefaultShell.call(this);
 }
 
 /**
@@ -49,7 +57,7 @@ async function startDefaultShell(name: string) {
  *
  * @throws if the matcher regexp wasnt found
  */
-function verifyCLIOutput(consoleOutput: RegExp) {
+function verifyOutput(consoleOutput: RegExp) {
     assert.ok(
         consoleOutput.test(this.cli.manager.output),
         new AssertionError({
@@ -59,16 +67,16 @@ function verifyCLIOutput(consoleOutput: RegExp) {
 }
 
 /**
- * Verify that the CLI status code for the last completed command is as expected
+ * Verify that the CLI exit code for the last completed command is as expected
  *
- * @param statusCode - the status code expected from the last command
+ * @param exitCode - the status code expected from the last command
  *
  * @throws if the actual status code is different
  */
-function verifyCLIStatusCode(statusCode: number) {
+function verifyExitCode(exitCode: number) {
     assert.equal(
-        this.cli.manager.statusCode,
-        statusCode,
+        this.cli.manager.exitCode,
+        exitCode,
         "The command's status code did not match expectations.",
     );
 }

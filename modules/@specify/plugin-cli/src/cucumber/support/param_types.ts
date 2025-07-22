@@ -6,42 +6,51 @@
  */
 
 import { defineParameterType } from "@cucumber/cucumber";
-import * as path               from "node:path";
+import path                    from "node:path";
 
 import type { FileParam } from "~/types/params";
 
 defineParameterType({
     "name":   "path",
-    "regexp": /[^"]*/,
+    "regexp": /"[^"]+"/,
     transformer(input: string): string {
-        return path.resolve(input);
+        return path.resolve(stripQuotes(input));
     },
     "useForSnippets": false,
 });
 
 defineParameterType({
     "name":   "ref:consoleOutput",
-    "regexp": /[^"\\]+/,
+    "regexp": /"[^"\\]+"/,
     transformer(input: string): RegExp {
-        return new RegExp(this.quickRef.lookup("consoleOutput", input));
+        return new RegExp(this.quickRef.lookup("consoleOutput", stripQuotes(input)));
     },
     "useForSnippets": false,
 });
 
 defineParameterType({
     "name":   "ref:file",
-    "regexp": /[^"]*/,
+    "regexp": /"[^"]+"/,
     transformer(input: string): FileParam {
-        return this.quickRef.lookup("file", input) as FileParam;
+        return this.quickRef.lookup("file", stripQuotes(input)) as FileParam;
     },
     "useForSnippets": false,
 });
 
 defineParameterType({
-    "name":   "ref:statusCode",
-    "regexp": /[^"\\]+/,
+    "name":   "ref:exitCode",
+    "regexp": /"[^"\\]+"/,
     transformer(input: string): number {
-        return parseInt(this.quickRef.lookup("statusCode", input), 10);
+        return parseInt(this.quickRef.lookup("exitCode", stripQuotes(input)), 10);
     },
     "useForSnippets": false,
 });
+
+/**
+ * Strip the first and last characters (assumed to be quotes) from a string.
+ *
+ * @param input - The input string to strip
+ */
+function stripQuotes(input) {
+    return input.substring(1, input.length - 1);
+}

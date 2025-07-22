@@ -11,7 +11,7 @@ describe("SessionManager", () => {
     let sessionManager: SessionManager;
 
     beforeEach(() => {
-        session        = new ShellSession() as unknown as MockShellSession;
+        session = new ShellSession() as unknown as MockShellSession;
         sessionManager = new SessionManager();
 
         sessionManager.addSession(session);
@@ -153,7 +153,6 @@ describe("SessionManager", () => {
             altSession.emitClose();
 
             await promise;
-            console.dir(sessionManager.sessions);
 
             expect(sessionManager.sessions.length).toBe(0);
         });
@@ -251,5 +250,4 @@ describe("SessionManager", () => {
             );
         });
     });
-
 });
