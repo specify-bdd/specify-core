@@ -11,8 +11,6 @@ import { randomUUID } from "node:crypto";
 
 import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
 
-const secret = Symbol("Construction authorized.");
-
 /**
  * Internal structure used to identify and match command boundaries in the
  * session output.
@@ -54,31 +52,22 @@ export class SessionManager {
     #sessions: SessionMeta[] = [];
 
     /**
-     * The Singleton instance of this class
-     */
-    static #instance: SessionManager;
-
-    /**
      * The exit code marker used in delimiter strings
      */
     static #exitCodeKey = "EXIT_CODE";
 
     /**
-     * Creates a new SessionManager instance and stores it as a static property
-     * of the class for later use.  Requires the use of a secret token to ensure
-     * that only the getInstance method can call this successfully.
-     *
-     * @param token - A secret token proving that constructor use is authorized
-     *
-     * @throws {@link Error}
-     * If the provided token is invalid
+     * The managed session which is currently active
      */
-    constructor(token: symbol = Symbol("default")) {
-        if (token !== secret) {
-            throw new Error("Illegal constructor call.  Use SessionManager.getInstance() instead.");
-        }
+    get activeSession(): SessionMeta {
+        return this.#activeSession;
+    }
 
-        SessionManager.#instance = this;
+    /**
+     * The numeric exit code of the active session's last completed command.
+     */
+    get exitCode(): number {
+        return this.#activeSession.exitCode;
     }
 
     /**
@@ -90,10 +79,10 @@ export class SessionManager {
     }
 
     /**
-     * The numeric exit code of the active session's last completed command.
+     * The list of managed sessions
      */
-    get exitCode(): number {
-        return this.#activeSession.exitCode;
+    get sessions(): SessionMeta[] {
+        return this.#sessions;
     }
 
     /**
@@ -113,7 +102,8 @@ export class SessionManager {
             this.#processOutput(output, sessionMeta);
         });
 
-        if (activate) {
+        // activate this session if instructed or if there is no current active session
+        if (activate || !this.#activeSession) {
             this.#activeSession = sessionMeta;
         }
 
@@ -121,14 +111,15 @@ export class SessionManager {
     }
 
     /**
-     * Gracefully terminates the active session. Resolves once the session is
+     * Gracefully terminates a managed session. Resolves once the session is
      * fully closed.
+     *
+     * @param sessionMeta - The session to kill (optional); defaults to the
+     *                      active session if omitted
      */
     async kill(sessionMeta: SessionMeta): Promise<void> {
         return new Promise((resolve) => {
-            if (!sessionMeta) {
-                sessionMeta = this.#activeSession;
-            }
+            sessionMeta ??= this.#activeSession;
 
             this.removeSession(sessionMeta);
 
@@ -138,14 +129,28 @@ export class SessionManager {
     }
 
     /**
+     * Gracefully terminate all managed sessions.  Resolves once all sessions
+     * are fully closed.
+     * 
+     * @remarks
+     * It wouldn't be too hard to refactor this to make it kill all sessions in 
+     * parallel, but doing so could produce unpredictable results in the array 
+     * manipulation logic of removeSession, which each kill invokes.
+     */
+    async killAll(): Promise<void> {
+        // return Promise.all(this.#sessions.map((sessionMeta) => this.kill(sessionMeta)));
+        for (const sessionMeta of this.#sessions) {
+            await this.kill(sessionMeta);
+        }
+    }
+
+    /**
      * Remove a managed session.
      *
      * @param sessionMeta - The session to remove (optional)
      */
     removeSession(sessionMeta: SessionMeta): void {
-        if (!sessionMeta) {
-            sessionMeta = this.#activeSession;
-        }
+        sessionMeta ??= this.#activeSession;
 
         const index = this.#sessions.indexOf(sessionMeta);
 
@@ -159,22 +164,23 @@ export class SessionManager {
     }
 
     /**
-     * Executes a single command within the active session.
+     * Executes a single command within a managed session.
      *
-     * Only one command may be active at a time. Output and status code are
-     * available via `output` and `exitCode` once resolved.
+     * Only one command may be activeat a time in any given session. Output and 
+     * status code are available via `output` and `exitCode` once resolved.
      *
      * @remarks
-     *
      * Multiple commands can be chained in a single command string
      * with "&" or ";". Ex: `echo first;echo second`
      *
-     * @param command - The command to execute
+     * @param command     - The command to execute
+     * @param sessionMeta - The session in which to execute the command
      *
-     * @throws If another command is already in progress
+     * @throws {@link AssertionError}
+     * If another command is already in progress
      */
-    async run(command: string): Promise<void> {
-        const sessionMeta = this.#activeSession;
+    async run(command: string, sessionMeta: SessionMeta): Promise<void> {
+        sessionMeta ??= this.#activeSession;
 
         assert.ok(
             !sessionMeta.commandResolve,
@@ -234,9 +240,7 @@ export class SessionManager {
      * @param sessionMeta - The session to process output for (optional)
      */
     #processOutput(output: string, sessionMeta: SessionMeta): void {
-        if (!sessionMeta) {
-            sessionMeta = this.#activeSession;
-        }
+        sessionMeta ??= this.#activeSession;
 
         sessionMeta.output += output.replace(sessionMeta.delimiter.regexp, "");
 
@@ -257,21 +261,12 @@ export class SessionManager {
      * @param sessionMeta - The session for the running command (optional)
      */
     #resolveRun(sessionMeta: SessionMeta): void {
-        if (!sessionMeta) {
-            sessionMeta = this.#activeSession;
-        }
+        sessionMeta ??= this.#activeSession;
 
         const resolve = sessionMeta.commandResolve;
 
         sessionMeta.commandResolve = null;
 
         resolve();
-    }
-
-    /**
-     * Get the Singleton instance for this class.
-     */
-    static getInstance(): SessionManager {
-        return this.#instance || new SessionManager(secret);
     }
 }

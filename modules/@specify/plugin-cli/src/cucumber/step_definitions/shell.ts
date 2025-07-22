@@ -37,7 +37,7 @@ async function runCommand(command: string) {
 async function startDefaultShell(name: string) {
     const shell = new ShellSession(this.parameters.userPath);
 
-    this.cli.manager = SessionManager.getInstance();
+    this.cli.manager ??= new SessionManager();
     this.cli.manager.addSession(shell, name, true);
 }
 
