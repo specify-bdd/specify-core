@@ -11,6 +11,16 @@ import { randomUUID } from "node:crypto";
 
 import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
 
+interface CommandMeta {
+    command: string;
+    delimiter?: Delimiter;
+    exitCode?: number;
+    output: string;
+    reject?: ((err: Error) => void) | null;
+    resolve?: ((cmdMeta: CommandMeta) => void) | null;
+    promise?: Promise<CommandMeta>;
+}
+
 /**
  * Internal structure used to identify and match command boundaries in the
  * session output.
@@ -25,12 +35,12 @@ interface Delimiter {
  * The metadata for a managed session
  */
 interface SessionMeta {
-    commandResolve?: () => void;
-    curCommand?: string;
-    delimiter?: Delimiter;
-    exitCode?: number;
+    // commandResolve?: () => void;
+    commands: CommandMeta[];
+    // curCommand?: string;
+    // exitCode?: number;
     name?: string;
-    output?: string;
+    // output?: string;
     session: ISystemIOSession;
 }
 
@@ -67,7 +77,7 @@ export class SessionManager {
      * The numeric exit code of the active session's last completed command.
      */
     get exitCode(): number {
-        return this.#activeSession.exitCode;
+        return this.#getLastCommand(this.#activeSession).exitCode;
     }
 
     /**
@@ -75,7 +85,7 @@ export class SessionManager {
      * trimmed from both ends.
      */
     get output(): string {
-        return this.#activeSession.output?.trim();
+        return this.#getLastCommand(this.#activeSession).output?.trim();
     }
 
     /**
@@ -93,11 +103,10 @@ export class SessionManager {
      * @param activate - Activate the new session
      */
     addSession(session: ISystemIOSession, name: string, activate: boolean = true): SessionMeta {
-        const sessionMeta: SessionMeta = { name, session };
+        const sessionMeta: SessionMeta = { "commands": [], name, session };
 
         this.#sessions.push(sessionMeta);
 
-        // session.onOutput(this.#processOutput.bind(this));
         session.onOutput((output) => {
             this.#processOutput(output, sessionMeta);
         });
@@ -183,22 +192,44 @@ export class SessionManager {
      * @throws {@link AssertionError}
      * If another command is already in progress
      */
-    async run(command: string, sessionMeta: SessionMeta): Promise<void> {
+    run(command: string, sessionMeta: SessionMeta): CommandMeta {
         sessionMeta ??= this.#activeSession;
 
-        assert.ok(
-            !sessionMeta.commandResolve,
-            `A command is already running: ${sessionMeta.curCommand}`,
-        );
+        const lastCmdMeta = this.#getLastCommand(sessionMeta);
 
-        sessionMeta.curCommand = command;
-        sessionMeta.delimiter = this.#createDelimiter();
-        sessionMeta.output = "";
+        if (lastCmdMeta) {
+            assert.ok(
+                Object.hasOwn(lastCmdMeta, "exitCode"),
+                `A command is already running: ${lastCmdMeta.command}`,
+            );
+        }
 
-        return new Promise((resolve) => {
-            sessionMeta.commandResolve = resolve;
-            sessionMeta.session.write(command + sessionMeta.delimiter.command);
+        const newCmdMeta = {
+            command,
+            "delimiter": this.#createDelimiter(),
+            "output":    "",
+        } as CommandMeta;
+
+        newCmdMeta.promise = new Promise((resolve, reject) => {
+            newCmdMeta.resolve = resolve;
+            newCmdMeta.reject  = reject;
+            sessionMeta.session.write(`${command}${newCmdMeta.delimiter.command}`);
         });
+
+        sessionMeta.commands.push(newCmdMeta);
+
+        return newCmdMeta;
+    }
+
+    /**
+     * Wait for the last command in a managed session to return.
+     *
+     * @param sessionMeta - The session to wait on
+     */
+    async waitForReturn(sessionMeta: SessionMeta): Promise<CommandMeta> {
+        sessionMeta ??= this.#activeSession;
+
+        return this.#getLastCommand(sessionMeta).promise;
     }
 
     /**
@@ -220,9 +251,9 @@ export class SessionManager {
     /**
      * Extracts the value of the key from the output.
      *
-     * @param output     - the session output to search
-     * @param key        - the key to find the value of
-     * @param parseAsInt - whether the found value should be parsed as an int
+     * @param output     - The session output to search
+     * @param key        - The key to find the value of
+     * @param parseAsInt - Whether the found value should be parsed as an int
      *
      * @throws If the key/value pair is not found
      */
@@ -232,6 +263,17 @@ export class SessionManager {
         assert.ok(match, `Output does not contain a value for "${key}"`);
 
         return parseAsInt ? parseInt(match[1], 10) : match[1];
+    }
+
+    /**
+     * Get the last command executed for a given managed session
+     *
+     * @param sessionMeta - The managed session to get the last command from
+     */
+    #getLastCommand(sessionMeta: SessionMeta): CommandMeta {
+        sessionMeta ??= this.#activeSession;
+
+        return sessionMeta.commands.findLast(() => true);
     }
 
     /**
@@ -246,31 +288,51 @@ export class SessionManager {
     #processOutput(output: string, sessionMeta: SessionMeta): void {
         sessionMeta ??= this.#activeSession;
 
-        sessionMeta.output += output.replace(sessionMeta.delimiter.regexp, "");
+        const lastCmdMeta = this.#getLastCommand(sessionMeta);
 
-        if (output.includes(sessionMeta.delimiter.uuid)) {
-            sessionMeta.exitCode = this.#extractKeyedValue(
-                output,
-                SessionManager.#exitCodeKey,
-                true,
-            ) as number;
+        lastCmdMeta.output += output.replace(lastCmdMeta.delimiter.regexp, "");
 
-            this.#resolveRun(sessionMeta);
+        if (output.includes(lastCmdMeta.delimiter.uuid)) {
+            try {
+                lastCmdMeta.exitCode = this.#extractKeyedValue(
+                    output,
+                    SessionManager.#exitCodeKey,
+                    true,
+                ) as number;
+
+                this.#resolveRun(lastCmdMeta);
+            } catch (err: Error) {
+                this.#rejectRun(lastCmdMeta, err);
+            }
         }
     }
 
     /**
-     * Resolves the running command's promise.
+     * Rejects a running command's promise.
      *
-     * @param sessionMeta - The session for the running command (optional)
+     * @param cmdMeta - The running command
+     * @param err     - The reason for the rejection
      */
-    #resolveRun(sessionMeta: SessionMeta): void {
-        sessionMeta ??= this.#activeSession;
+    #rejectRun(cmdMeta: CommandMeta, err: Error): void {
+        const reject = cmdMeta.reject;
 
-        const resolve = sessionMeta.commandResolve;
+        cmdMeta.resolve = null;
+        cmdMeta.reject  = null;
 
-        sessionMeta.commandResolve = null;
+        reject(err);
+    }
 
-        resolve();
+    /**
+     * Resolves a running command's promise.
+     *
+     * @param commandMeta - The running command
+     */
+    #resolveRun(cmdMeta: CommandMeta): void {
+        const resolve = cmdMeta.resolve;
+
+        cmdMeta.resolve = null;
+        cmdMeta.reject  = null;
+
+        resolve(cmdMeta);
     }
 }

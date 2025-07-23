@@ -23,11 +23,11 @@ describe("SessionManager", () => {
 
     describe("exitCode", () => {
         it("reports the last command's exit code", async () => {
-            const promise = sessionManager.run("echo test");
+            sessionManager.run("echo test");
 
             session.emitDelimiter(0);
 
-            await promise;
+            await sessionManager.waitForReturn();
 
             expect(sessionManager.exitCode).toBe(0);
         });
@@ -37,35 +37,37 @@ describe("SessionManager", () => {
         it("reports the last command's output", async () => {
             const output  = "test";
             const command = `echo ${output}`;
-            const promise = sessionManager.run(command);
+            
+            sessionManager.run(command);
 
             session.emitOutput(output);
             session.emitDelimiter(0);
 
-            await promise;
+            await sessionManager.waitForReturn();
 
             expect(sessionManager.output).toBe(output);
         });
 
         it("reports multiple lines of command output", async () => {
-            const output  = ["test 1", "test 2"];
-            const promise = sessionManager.run("some-command");
+            const output = ["test 1", "test 2"];
+            
+            sessionManager.run("some-command");
 
             session.emitOutput(output[0]);
             session.emitOutput(output[1]);
             session.emitDelimiter(0);
 
-            await promise;
+            await sessionManager.waitForReturn();
 
             expect(sessionManager.output).toBe(output.join("\n"));
         });
 
         it("ignores delimiter-only output", async () => {
-            const promise = sessionManager.run("cd .");
+            sessionManager.run("cd .");
 
             session.emitDelimiter(0);
 
-            await promise;
+            await sessionManager.waitForReturn();
 
             expect(sessionManager.output).toBe("");
         });
@@ -201,53 +203,54 @@ describe("SessionManager", () => {
         it("writes command to session and resolves after delimiter", async () => {
             const output  = "test";
             const command = `echo ${output}`;
-            const promise = sessionManager.run(command);
+            
+            sessionManager.run(command);
 
             session.emitOutput(output);
             session.emitDelimiter(0);
 
-            await promise;
+            await sessionManager.waitForReturn();
 
             expect(session.write).toHaveBeenCalledWith(expect.stringContaining(command));
-        });
-
-        it("resolves when delimiter output is received", async () => {
-            let resolved = false;
-
-            const promise = sessionManager.run("echo test").then(() => (resolved = true));
-
-            session.emitOutput("test");
-
-            // wait arbitrary time to ensure promise hasn't resolved
-            await new Promise((resolve) => setTimeout(resolve, 100));
-
-            expect(resolved).toBeFalsy();
-
-            session.emitDelimiter(0);
-
-            await promise;
-
-            expect(resolved).toBeTruthy();
-        });
-
-        it("throws if output contains malformed delimiter", async () => {
-            // this promise will never resolve because malformed delimiter doesn't trigger resolution
-            void sessionManager.run("echo bad");
-
-            expect(() => {
-                session.emitDelimiter(0, true);
-            }).toThrow(/^Output does not contain a value for ".+"$/);
         });
 
         it("throws if called while another command is in progress", async () => {
             const command = 'echo "long-running command"';
 
             // this promise will never resolve due to the throw
-            void sessionManager.run(command);
+            sessionManager.run(command);
 
-            await expect(sessionManager.run('echo "overlapping command"')).rejects.toThrow(
+            await expect(() => sessionManager.run('echo "overlapping command"')).toThrow(
                 `A command is already running: ${command}`,
             );
+        });
+    });
+
+    describe("waitForReturn()", () => {
+        it("resolves when delimiter output is received", async () => {
+            sessionManager.run("echo test");
+
+            session.emitOutput("test");
+
+            // wait arbitrary time to ensure promise hasn't resolved
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            expect(sessionManager.exitCode).toBeUndefined();
+
+            session.emitDelimiter(0);
+
+            await sessionManager.waitForReturn();
+
+            expect(sessionManager.exitCode).toBeDefined();
+        });
+
+        it("throws if output contains malformed delimiter", async () => {
+            // this promise will never resolve because malformed delimiter doesn't trigger resolution
+            sessionManager.run("echo bad");
+
+            session.emitDelimiter(0, true);
+
+            expect(async () => sessionManager.waitForReturn()).rejects.toThrow(/^Output does not contain a value for ".+"$/);
         });
     });
 });
