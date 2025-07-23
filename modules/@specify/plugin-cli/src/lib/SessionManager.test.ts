@@ -216,7 +216,7 @@ describe("SessionManager", () => {
             // this promise will never resolve due to the throw
             sessionManager.run(command);
 
-            await expect(() => sessionManager.run('echo "overlapping command"')).toThrow(
+            expect(() => sessionManager.run('echo "overlapping command"')).toThrow(
                 `A command is already running: ${command}`,
             );
         });
