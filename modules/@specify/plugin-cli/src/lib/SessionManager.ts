@@ -35,12 +35,8 @@ interface Delimiter {
  * The metadata for a managed session
  */
 interface SessionMeta {
-    // commandResolve?: () => void;
     commands: CommandMeta[];
-    // curCommand?: string;
-    // exitCode?: number;
     name?: string;
-    // output?: string;
     session: ISystemIOSession;
 }
 
