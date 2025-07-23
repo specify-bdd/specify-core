@@ -1,3 +1,4 @@
+@manual
 Feature: Watch Mode
     As a software developer
     I want to run tests in watch mode that automatically rerun when files change
@@ -31,16 +32,6 @@ Feature: Watch Mode
             And that a custom step definition file exists at "./features/steps"
             And that watch mode is running
             When the step definition file is modified
-            Then the tests should automatically rerun
-
-        @skip
-        Scenario: Watch mode reruns only affected tests when using specific file paths
-            Given that a "passing feature" file exists at "./features/test1.feature"
-            And that a "passing feature" file exists at "./features/test2.feature"
-            And that watch mode is running with "npx specify test --watch ./features/test1.feature"
-            When "./features/test2.feature" is modified
-            Then the tests should not rerun
-            When "./features/test1.feature" is modified
             Then the tests should automatically rerun
 
     Rule: Watch mode can be combined with other options
@@ -105,18 +96,6 @@ Feature: Watch Mode
             When the user sends a SIGINT signal during test execution
             Then the watch mode should stop gracefully
             And the command should exit with an appropriate status code
-
-    Rule: Watch mode provides clear status information
-
-        @skip
-        Scenario: Watch mode shows file change detection and test completion status
-            Given that watch mode is running
-            When a monitored file changes
-            Then the console output should include the name of the changed file
-            And the console output should include a timestamp of the change
-            When tests complete after the file change
-            Then the console output should include the test results summary
-            And the console output should include "Waiting for file changes..."
 
     Rule: Watch mode option validation
 

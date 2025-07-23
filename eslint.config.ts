@@ -95,15 +95,14 @@ export default tseslint.config(
     },
     {
         "ignores": [
-            "./logs/**",
             "**/*.d.ts",
             "**/.DS_Store/**",
             "**/.vscode/**",
+            "**/logs/**",
             "**/node_modules/**",
             "**/dist/**",
             "**/package.json",
             "**/package-lock.json",
-            "logs/",
         ],
     },
 );

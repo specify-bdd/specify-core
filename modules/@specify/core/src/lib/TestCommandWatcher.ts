@@ -213,12 +213,9 @@ export class TestCommandWatcher {
         const watchPaths = config.watch.paths.map((watchPath) => path.resolve(watchPath));
 
         if (watchPaths.length === 0) {
-            log(
-                `${this.#promptPrefix} No watch paths configured. Please set "watch.paths" in specify.config.json.`,
-            );
-            log(`${this.#promptPrefix} Exiting...`);
+            this.#debugLog("No watch paths specified, defaulting to current working directory.");
 
-            process.exit(1);
+            watchPaths.push(process.cwd());
         }
 
         // remove the lock file if it exists (to ensure a clean start)

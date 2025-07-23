@@ -1,10 +1,10 @@
 import fs        from "node:fs";
 import path      from "node:path";
+import os        from "node:os";
 import { watch } from "chokidar";
 
 import { DEBOUNCE_MS, TestCommandWatcher } from "./TestCommandWatcher";
-
-import type { TestCommand } from "./TestCommand";
+import { TestCommand                     } from "./TestCommand";
 
 // test constants
 const MOCK_ARGS        = { "_": [] };
@@ -18,8 +18,16 @@ const mockDebouncedExecution = () =>
 
 const createMockConfig = (paths: string[] = ["./src", "./features"]) => ({
     "config": {
-        "debug": false,
-        "watch": {
+        "cucumber": {
+            "format": [],
+            "import": [],
+            "paths":  [],
+            "tags":   "",
+        },
+        "debug":        false,
+        "gherkinPaths": [],
+        "logPath":      path.join(os.tmpdir(), `specify-test-log-${Date.now()}.json`),
+        "watch":        {
             "debug":  false,
             "events": ["add", "change", "unlink"],
             "ignore": ["node_modules", ".git"],
@@ -36,11 +44,13 @@ const mockExistsSync    = vi.fn();
 const mockWriteFileSync = vi.fn();
 const mockUnlinkSync    = vi.fn();
 const mockWatchFs       = vi.fn();
+const mockMkdtempSync   = vi.fn();
 
 mockFs.existsSync = mockExistsSync;
 mockFs.writeFileSync = mockWriteFileSync;
 mockFs.unlinkSync = mockUnlinkSync;
 mockFs.watch = mockWatchFs;
+mockFs.mkdtempSync = mockMkdtempSync;
 
 vi.mock("chokidar");
 vi.mock("node:fs");
@@ -50,8 +60,16 @@ vi.mock("node:console", () => ({
 }));
 vi.mock("@/config/all", () => ({
     "config": {
-        "debug": false,
-        "watch": {
+        "cucumber": {
+            "format": [],
+            "import": [],
+            "paths":  [],
+            "tags":   "",
+        },
+        "debug":        false,
+        "gherkinPaths": [],
+        "logPath":      path.join(os.tmpdir(), `specify-test-log-${Date.now()}.json`),
+        "watch":        {
             "debug":  false,
             "events": ["add", "change", "unlink"],
             "ignore": ["node_modules", ".git"],
@@ -76,11 +94,15 @@ describe("TestCommandWatcher", () => {
     const setupMockExistsSync = (value: boolean) => mockExistsSync.mockReturnValue(value);
 
     beforeEach(() => {
+        const { config } = createMockConfig();
+
         vi.clearAllMocks();
 
-        mockCommand = {
-            "execute": vi.fn().mockResolvedValue({ "ok": true, "status": 0 }),
-        } as unknown as TestCommand;
+        mockMkdtempSync.mockReturnValue(path.join(os.tmpdir(), "specify-test-mocked"));
+
+        mockCommand = new TestCommand(config);
+
+        vi.spyOn(mockCommand, "execute").mockResolvedValue({ "ok": true, "status": 0 });
 
         mockWatcherInstance = {
             "on": vi.fn().mockReturnThis(),
@@ -98,14 +120,16 @@ describe("TestCommandWatcher", () => {
     });
 
     describe("start()", () => {
+        let processExitSpy: ReturnType<typeof vi.spyOn>;
+
         beforeEach(() => {
             setupMockExistsSync(false);
 
-            vi.spyOn(process, "exit").mockImplementation(() => undefined as never);
+            processExitSpy = vi.spyOn(process, "exit").mockImplementation(() => undefined as never);
         });
 
         afterEach(() => {
-            vi.mocked(process.exit).mockRestore();
+            processExitSpy.mockRestore();
         });
 
         it("clears console and starts watching configured paths", async () => {
@@ -123,8 +147,7 @@ describe("TestCommandWatcher", () => {
             );
         });
 
-        it("exits with error when no watch paths configured", async () => {
-            // modify the existing mock; clear the watch paths
+        it("defaults to current working directory if no watch paths are specified", async () => {
             vi.doMock("@/config/all", () => createMockConfig([]));
 
             // clear modules to force reimport with new mock
@@ -136,7 +159,13 @@ describe("TestCommandWatcher", () => {
 
             await emptyWatcher.start(MOCK_ARGS);
 
-            expect(process.exit).toHaveBeenCalledWith(1);
+            expect(mockWatch).toHaveBeenCalledWith(
+                [process.cwd()],
+                expect.objectContaining({
+                    "ignored":    expect.any(Array),
+                    "persistent": true,
+                }),
+            );
         });
 
         it("removes existing lock file on start", async () => {
@@ -223,7 +252,6 @@ describe("TestCommandWatcher", () => {
     });
 
     describe("command execution", () => {
-
         beforeEach(async () => {
             mockExistsSync.mockReturnValue(false);
 
