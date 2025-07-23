@@ -17,9 +17,7 @@ describe("SessionManager", () => {
         sessionManager.addSession(session);
     });
 
-    // describe("activeSession", () => {
-    //     // TODO: are there any tests we can put here that are distinct from addSession's?
-    // });
+    // describe("activeSession", () => {});
 
     describe("exitCode", () => {
         it("reports the last command's exit code", async () => {
@@ -37,7 +35,7 @@ describe("SessionManager", () => {
         it("reports the last command's output", async () => {
             const output  = "test";
             const command = `echo ${output}`;
-            
+
             sessionManager.run(command);
 
             session.emitOutput(output);
@@ -50,7 +48,7 @@ describe("SessionManager", () => {
 
         it("reports multiple lines of command output", async () => {
             const output = ["test 1", "test 2"];
-            
+
             sessionManager.run("some-command");
 
             session.emitOutput(output[0]);
@@ -73,17 +71,15 @@ describe("SessionManager", () => {
         });
     });
 
-    // describe("sessions", () => {
-    //     // TODO: are there any tests we can put here that are distinct from addSession's?
-    // });
+    // describe("sessions", () => {});
 
     describe("addSession()", () => {
-        it("registers a single managed session", async () => {
+        it("registers a single managed session", () => {
             expect(sessionManager.sessions.length).toBe(1);
             expect(sessionManager.sessions[0].session).toBe(session);
         });
 
-        it("registers multiple managed sessions", async () => {
+        it("registers multiple managed sessions", () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
             sessionManager.addSession(altSession);
@@ -92,7 +88,7 @@ describe("SessionManager", () => {
             expect(sessionManager.sessions[1].session).toBe(altSession);
         });
 
-        it("registers named managed sessions", async () => {
+        it("registers named managed sessions", () => {
             const altSession     = new ShellSession() as unknown as MockShellSession;
             const altSessionName = "test session";
 
@@ -101,11 +97,11 @@ describe("SessionManager", () => {
             expect(sessionManager.sessions[1].name).toBe(altSessionName);
         });
 
-        it("activates new managed sessions by default", async () => {
+        it("activates new managed sessions by default", () => {
             expect(sessionManager.activeSession.session).toBe(session);
         });
 
-        it("doesn't activate new managed sessions if instructed not to", async () => {
+        it("doesn't activate new managed sessions if instructed not to", () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
             sessionManager.addSession(altSession, "whatever", false);
@@ -161,7 +157,7 @@ describe("SessionManager", () => {
     });
 
     describe("removeSession()", () => {
-        it("removes the sole managed session", async () => {
+        it("removes the sole managed session", () => {
             expect(sessionManager.sessions.length).toBe(1);
 
             sessionManager.removeSession();
@@ -170,7 +166,7 @@ describe("SessionManager", () => {
             expect(sessionManager.activeSession).toBeNull();
         });
 
-        it("removes one managed session among several", async () => {
+        it("removes one managed session among several", () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
             sessionManager.addSession(altSession, "whatever", false);
@@ -184,7 +180,7 @@ describe("SessionManager", () => {
             expect(sessionManager.activeSession.session).toBe(session);
         });
 
-        it("removes the active session among several", async () => {
+        it("removes the active session among several", () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
             sessionManager.addSession(altSession);
@@ -203,7 +199,7 @@ describe("SessionManager", () => {
         it("writes command to session and resolves after delimiter", async () => {
             const output  = "test";
             const command = `echo ${output}`;
-            
+
             sessionManager.run(command);
 
             session.emitOutput(output);
@@ -250,7 +246,9 @@ describe("SessionManager", () => {
 
             session.emitDelimiter(0, true);
 
-            expect(async () => sessionManager.waitForReturn()).rejects.toThrow(/^Output does not contain a value for ".+"$/);
+            await expect(async () => sessionManager.waitForReturn()).rejects.toThrow(
+                /^Output does not contain a value for ".+"$/,
+            );
         });
     });
 });

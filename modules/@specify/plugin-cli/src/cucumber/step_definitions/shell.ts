@@ -34,7 +34,7 @@ Then("the console output should be a/an/the {ref:consoleOutput}", verifyOutput);
  *
  * @param command - The command to run
  */
-function runCommand(command: string): Promise<void> {
+function runCommand(command: string): void {
     this.cli.manager.run(command);
 }
 

@@ -212,7 +212,7 @@ export class SessionManager {
 
         newCmdMeta.promise = new Promise((resolve, reject) => {
             newCmdMeta.resolve = resolve;
-            newCmdMeta.reject  = reject;
+            newCmdMeta.reject = reject;
             sessionMeta.session.write(`${command}${newCmdMeta.delimiter.command}`);
         });
 
@@ -301,7 +301,7 @@ export class SessionManager {
                 ) as number;
 
                 this.#resolveRun(lastCmdMeta);
-            } catch (err: Error) {
+            } catch (err) {
                 this.#rejectRun(lastCmdMeta, err);
             }
         }
@@ -317,7 +317,7 @@ export class SessionManager {
         const reject = cmdMeta.reject;
 
         cmdMeta.resolve = null;
-        cmdMeta.reject  = null;
+        cmdMeta.reject = null;
 
         reject(err);
     }
@@ -331,7 +331,7 @@ export class SessionManager {
         const resolve = cmdMeta.resolve;
 
         cmdMeta.resolve = null;
-        cmdMeta.reject  = null;
+        cmdMeta.reject = null;
 
         resolve(cmdMeta);
     }
