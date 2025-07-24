@@ -269,7 +269,7 @@ export class SessionManager {
     #getLastCommand(sessionMeta: SessionMeta): ICommandMeta {
         sessionMeta ??= this.#activeSession;
 
-        return sessionMeta.commands.findLast(() => true);
+        return sessionMeta.commands.at(-1);
     }
 
     /**
