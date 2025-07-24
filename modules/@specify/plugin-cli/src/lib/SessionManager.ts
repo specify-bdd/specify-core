@@ -24,7 +24,7 @@ interface IDelimiter {
 /**
  * The metadata for a managed session
  */
-interface ISessionMeta {
+export interface ISessionMeta {
     commandResolve?: () => void;
     curCommand?: string;
     delimiter?: IDelimiter;
