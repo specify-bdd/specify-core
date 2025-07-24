@@ -10,7 +10,8 @@ import path                    from "node:path";
 
 import type { FileParam } from "~/types/params";
 
-const quotedString = /"(?:\\.|[^\\"])"|'(?:\\.|[^\\'])'/;
+// const quotedString = /"(?:\\.|[^\\"])"|'(?:\\.|[^\\'])'/;
+const quotedString = /"(?:\\.|[^\\"])*"/;
 
 defineParameterType({
     "name":   "path",
