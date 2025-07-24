@@ -192,7 +192,7 @@ export class SessionManager {
         );
 
         sessionMeta.curCommand = command;
-        sessionMeta.delimiter = this.#createIDelimiter();
+        sessionMeta.delimiter = this.#createDelimiter();
         sessionMeta.output = "";
 
         return new Promise((resolve) => {
@@ -206,7 +206,7 @@ export class SessionManager {
      *
      * @returns the new delimiter
      */
-    #createIDelimiter(): IDelimiter {
+    #createDelimiter(): IDelimiter {
         const uuid   = randomUUID(); // used to prevent false delimits
         const prefix = "SPECIFY";
 
