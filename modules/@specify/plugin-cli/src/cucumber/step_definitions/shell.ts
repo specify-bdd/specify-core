@@ -102,7 +102,7 @@ function verifyExitCode(exitCode: number): void {
 }
 
 /**
- * Wait for the last commang to finish
+ * Wait for the last command to finish
  */
 async function waitForLastCommand(): Promise<void> {
     await this.cli.manager.waitForReturn();
