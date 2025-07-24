@@ -55,7 +55,7 @@ Feature: Basic Test Execution
             When a user runs the command "npx specify test ./assets/gherkin/no-features/test.md"
             Then the command should return an "error" exit code
             And the console output should be a "no test cases error"
-        
+
         @skip
         Scenario: User-specified path contains no scenarios
             When a user runs the command "npx specify test ./assets/gherkin/empty.feature"
