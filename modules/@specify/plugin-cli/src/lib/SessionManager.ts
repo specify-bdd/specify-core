@@ -15,7 +15,7 @@ import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
  * Internal structure used to identify and match command boundaries in the
  * session output.
  */
-interface Delimiter {
+interface IDelimiter {
     command: string;
     regexp: RegExp;
     uuid: string;
@@ -24,10 +24,10 @@ interface Delimiter {
 /**
  * The metadata for a managed session
  */
-interface SessionMeta {
+interface ISessionMeta {
     commandResolve?: () => void;
     curCommand?: string;
-    delimiter?: Delimiter;
+    delimiter?: IDelimiter;
     exitCode?: number;
     name?: string;
     output?: string;
@@ -44,12 +44,12 @@ export class SessionManager {
     /**
      * The currently active session
      */
-    #activeSession: SessionMeta | null = null;
+    #activeSession: ISessionMeta | null = null;
 
     /**
      * The sessions this class is managing
      */
-    #sessions: SessionMeta[] = [];
+    #sessions: ISessionMeta[] = [];
 
     /**
      * The exit code marker used in delimiter strings
@@ -59,7 +59,7 @@ export class SessionManager {
     /**
      * The managed session which is currently active
      */
-    get activeSession(): SessionMeta {
+    get activeSession(): ISessionMeta {
         return this.#activeSession;
     }
 
@@ -81,7 +81,7 @@ export class SessionManager {
     /**
      * The list of managed sessions
      */
-    get sessions(): SessionMeta[] {
+    get sessions(): ISessionMeta[] {
         return this.#sessions;
     }
 
@@ -92,8 +92,8 @@ export class SessionManager {
      * @param name     - The name of the session, for easy reference (optional)
      * @param activate - Activate the new session
      */
-    addSession(session: ISystemIOSession, name: string, activate: boolean = true): SessionMeta {
-        const sessionMeta: SessionMeta = { name, session };
+    addSession(session: ISystemIOSession, name: string, activate: boolean = true): ISessionMeta {
+        const sessionMeta: ISessionMeta = { name, session };
 
         this.#sessions.push(sessionMeta);
 
@@ -117,7 +117,7 @@ export class SessionManager {
      * @param sessionMeta - The session to kill (optional); defaults to the
      *                      active session if omitted
      */
-    async kill(sessionMeta: SessionMeta): Promise<void> {
+    async kill(sessionMeta: ISessionMeta): Promise<void> {
         return new Promise((resolve) => {
             sessionMeta ??= this.#activeSession;
 
@@ -150,7 +150,7 @@ export class SessionManager {
      *
      * @param sessionMeta - The session to remove (optional)
      */
-    removeSession(sessionMeta: SessionMeta): void {
+    removeSession(sessionMeta: ISessionMeta): void {
         sessionMeta ??= this.#activeSession;
 
         const index = this.#sessions.indexOf(sessionMeta);
@@ -183,7 +183,7 @@ export class SessionManager {
      * @throws {@link AssertionError}
      * If another command is already in progress
      */
-    async run(command: string, sessionMeta: SessionMeta): Promise<void> {
+    async run(command: string, sessionMeta: ISessionMeta): Promise<void> {
         sessionMeta ??= this.#activeSession;
 
         assert.ok(
@@ -192,7 +192,7 @@ export class SessionManager {
         );
 
         sessionMeta.curCommand = command;
-        sessionMeta.delimiter = this.#createDelimiter();
+        sessionMeta.delimiter = this.#createIDelimiter();
         sessionMeta.output = "";
 
         return new Promise((resolve) => {
@@ -206,7 +206,7 @@ export class SessionManager {
      *
      * @returns the new delimiter
      */
-    #createDelimiter(): Delimiter {
+    #createIDelimiter(): IDelimiter {
         const uuid   = randomUUID(); // used to prevent false delimits
         const prefix = "SPECIFY";
 
@@ -243,7 +243,7 @@ export class SessionManager {
      * @param output      - The unmodified session output
      * @param sessionMeta - The session to process output for (optional)
      */
-    #processOutput(output: string, sessionMeta: SessionMeta): void {
+    #processOutput(output: string, sessionMeta: ISessionMeta): void {
         sessionMeta ??= this.#activeSession;
 
         sessionMeta.output += output.replace(sessionMeta.delimiter.regexp, "");
@@ -264,7 +264,7 @@ export class SessionManager {
      *
      * @param sessionMeta - The session for the running command (optional)
      */
-    #resolveRun(sessionMeta: SessionMeta): void {
+    #resolveRun(sessionMeta: ISessionMeta): void {
         sessionMeta ??= this.#activeSession;
 
         const resolve = sessionMeta.commandResolve;
