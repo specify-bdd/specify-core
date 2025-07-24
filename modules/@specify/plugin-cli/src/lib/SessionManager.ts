@@ -16,9 +16,9 @@ export interface ICommandMeta {
     delimiter?: Delimiter;
     exitCode?: number;
     output: string;
+    promise?: Promise<ICommandMeta>;
     reject?: ((err: Error) => void) | null;
     resolve?: ((cmdMeta: ICommandMeta) => void) | null;
-    promise?: Promise<ICommandMeta>;
 }
 
 /**
