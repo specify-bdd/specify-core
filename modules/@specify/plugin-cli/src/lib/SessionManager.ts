@@ -11,14 +11,14 @@ import { randomUUID } from "node:crypto";
 
 import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
 
-interface CommandMeta {
+export interface ICommandMeta {
     command: string;
     delimiter?: Delimiter;
     exitCode?: number;
     output: string;
     reject?: ((err: Error) => void) | null;
-    resolve?: ((cmdMeta: CommandMeta) => void) | null;
-    promise?: Promise<CommandMeta>;
+    resolve?: ((cmdMeta: ICommandMeta) => void) | null;
+    promise?: Promise<ICommandMeta>;
 }
 
 /**
@@ -35,7 +35,7 @@ interface IDelimiter {
  * The metadata for a managed session
  */
 interface ISessionMeta {
-    commands: CommandMeta[];
+    commands: ICommandMeta[];
     name?: string;
     session: ISystemIOSession;
 }
@@ -188,7 +188,7 @@ export class SessionManager {
      * @throws {@link AssertionError}
      * If another command is already in progress
      */
-    run(command: string, sessionMeta: ISessionMeta): CommandMeta {
+    run(command: string, sessionMeta: ISessionMeta): ICommandMeta {
         sessionMeta ??= this.#activeSession;
 
         const lastCmdMeta = this.#getLastCommand(sessionMeta);
@@ -204,7 +204,7 @@ export class SessionManager {
             command,
             "delimiter": this.#createDelimiter(),
             "output":    "",
-        } as CommandMeta;
+        } as ICommandMeta;
 
         newCmdMeta.promise = new Promise((resolve, reject) => {
             newCmdMeta.resolve = resolve;
@@ -222,7 +222,7 @@ export class SessionManager {
      *
      * @param sessionMeta - The session to wait on
      */
-    async waitForReturn(sessionMeta: SessionMeta): Promise<CommandMeta> {
+    async waitForReturn(sessionMeta: SessionMeta): Promise<ICommandMeta> {
         sessionMeta ??= this.#activeSession;
 
         return this.#getLastCommand(sessionMeta).promise;
@@ -266,7 +266,7 @@ export class SessionManager {
      *
      * @param sessionMeta - The managed session to get the last command from
      */
-    #getLastCommand(sessionMeta: SessionMeta): CommandMeta {
+    #getLastCommand(sessionMeta: SessionMeta): ICommandMeta {
         sessionMeta ??= this.#activeSession;
 
         return sessionMeta.commands.findLast(() => true);
@@ -309,7 +309,7 @@ export class SessionManager {
      * @param cmdMeta - The running command
      * @param err     - The reason for the rejection
      */
-    #rejectRun(cmdMeta: CommandMeta, err: Error): void {
+    #rejectRun(cmdMeta: ICommandMeta, err: Error): void {
         const reject = cmdMeta.reject;
 
         cmdMeta.resolve = null;
@@ -323,7 +323,7 @@ export class SessionManager {
      *
      * @param commandMeta - The running command
      */
-    #resolveRun(cmdMeta: CommandMeta): void {
+    #resolveRun(cmdMeta: ICommandMeta): void {
         const resolve = cmdMeta.resolve;
 
         cmdMeta.resolve = null;
