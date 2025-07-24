@@ -13,7 +13,7 @@ import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
 
 export interface ICommandMeta {
     command: string;
-    delimiter?: Delimiter;
+    delimiter?: IDelimiter;
     exitCode?: number;
     output: string;
     promise?: Promise<ICommandMeta>;
@@ -99,7 +99,7 @@ export class SessionManager {
      * @param activate - Activate the new session
      */
     addSession(session: ISystemIOSession, name: string, activate: boolean = true): ISessionMeta {
-        const sessionMeta: SessionMeta = { "commands": [], name, session };
+        const sessionMeta: ISessionMeta = { "commands": [], name, session };
 
         this.#sessions.push(sessionMeta);
 
@@ -222,7 +222,7 @@ export class SessionManager {
      *
      * @param sessionMeta - The session to wait on
      */
-    async waitForReturn(sessionMeta: SessionMeta): Promise<ICommandMeta> {
+    async waitForReturn(sessionMeta: ISessionMeta): Promise<ICommandMeta> {
         sessionMeta ??= this.#activeSession;
 
         return this.#getLastCommand(sessionMeta).promise;
@@ -266,7 +266,7 @@ export class SessionManager {
      *
      * @param sessionMeta - The managed session to get the last command from
      */
-    #getLastCommand(sessionMeta: SessionMeta): ICommandMeta {
+    #getLastCommand(sessionMeta: ISessionMeta): ICommandMeta {
         sessionMeta ??= this.#activeSession;
 
         return sessionMeta.commands.at(-1);
