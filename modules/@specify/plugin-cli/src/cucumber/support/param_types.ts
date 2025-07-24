@@ -10,47 +10,40 @@ import path                    from "node:path";
 
 import type { FileParam } from "~/types/params";
 
+const quotedString = /"(?:\\.|[^\\"])"|'(?:\\.|[^\\'])'/;
+
 defineParameterType({
     "name":   "path",
-    "regexp": /"[^"]+"/,
+    "regexp": quotedString,
     transformer(input: string): string {
-        return path.resolve(stripQuotes(input));
+        return path.resolve(input.slice(1, -1));
     },
     "useForSnippets": false,
 });
 
 defineParameterType({
     "name":   "ref:consoleOutput",
-    "regexp": /"[^"\\]+"/,
+    "regexp": quotedString,
     transformer(input: string): RegExp {
-        return new RegExp(this.quickRef.lookup("consoleOutput", stripQuotes(input)));
+        return new RegExp(this.quickRef.lookup("consoleOutput", input.slice(1, -1)));
     },
     "useForSnippets": false,
 });
 
 defineParameterType({
     "name":   "ref:file",
-    "regexp": /"[^"]+"/,
+    "regexp": quotedString,
     transformer(input: string): FileParam {
-        return this.quickRef.lookup("file", stripQuotes(input)) as FileParam;
+        return this.quickRef.lookup("file", input.slice(1, -1)) as FileParam;
     },
     "useForSnippets": false,
 });
 
 defineParameterType({
     "name":   "ref:exitCode",
-    "regexp": /"[^"\\]+"/,
+    "regexp": quotedString,
     transformer(input: string): number {
-        return parseInt(this.quickRef.lookup("exitCode", stripQuotes(input)), 10);
+        return parseInt(this.quickRef.lookup("exitCode", input.slice(1, -1)), 10);
     },
     "useForSnippets": false,
 });
-
-/**
- * Strip the first and last characters (assumed to be quotes) from a string.
- *
- * @param input - The input string to strip
- */
-function stripQuotes(input) {
-    return input.substring(1, input.length - 1);
-}

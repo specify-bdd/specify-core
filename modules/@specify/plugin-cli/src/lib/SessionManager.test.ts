@@ -1,4 +1,5 @@
-import { vi             } from "vitest";
+import { vi } from "vitest";
+
 import { SessionManager } from "./SessionManager";
 import { ShellSession   } from "./ShellSession";
 
