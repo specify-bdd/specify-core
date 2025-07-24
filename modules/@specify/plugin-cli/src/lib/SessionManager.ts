@@ -233,7 +233,7 @@ export class SessionManager {
      *
      * @returns the new delimiter
      */
-    #createIDelimiter(): IDelimiter {
+    #createDelimiter(): IDelimiter {
         const uuid   = randomUUID(); // used to prevent false delimits
         const prefix = "SPECIFY";
 
