@@ -3,7 +3,7 @@
  *
  * Provides an interface for executing interactive shell commands via
  * ISystemIOSession. Commands are tracked with delimiters and expose
- * output and status code results.
+ * output and exit code results.
  */
 
 import assert         from "node:assert/strict";
@@ -38,7 +38,7 @@ export interface ISessionMeta {
  * Session Manager
  *
  * Manages the lifecycle of a system process session. Ensures only one command
- * runs at a time, and tracks command output and exit status.
+ * runs at a time, and tracks command output and exit code.
  */
 export class SessionManager {
     /**
@@ -171,7 +171,7 @@ export class SessionManager {
      * Executes a single command within a managed session.
      *
      * Only one command may be activeat a time in any given session. Output and
-     * status code are available via `output` and `exitCode` once resolved.
+     * exit code are available via `output` and `exitCode` once resolved.
      *
      * @remarks
      * Multiple commands can be chained in a single command string
@@ -238,7 +238,7 @@ export class SessionManager {
      * Handles raw output received from the session.
      *
      * If the delimiter is found in the output, the command is considered
-     * complete and its status code is recorded.
+     * complete and its exit code is recorded.
      *
      * @param output      - The unmodified session output
      * @param sessionMeta - The session to process output for (optional)
