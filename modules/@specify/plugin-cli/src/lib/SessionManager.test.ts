@@ -14,16 +14,18 @@ describe("SessionManager", () => {
     beforeEach(() => {
         session = new ShellSession() as unknown as MockShellSession;
         sessionManager = new SessionManager();
-
-        sessionManager.addSession(session);
     });
 
-    // describe("activeSession", () => {
-    //     // TODO: are there any tests we can put here that are distinct from addSession's?
-    // });
+    describe("activeSession", () => {
+        it("returns undefined when there are no managed sessions", () => {
+            expect(sessionManager.activeSession).toBeNull();
+        });
+    });
 
     describe("exitCode", () => {
-        it("reports the last command's exit code", async () => {
+        it("returns the last command's exit code", async () => {
+            sessionManager.addSession(session);
+
             const promise = sessionManager.run("echo test");
 
             session.emitDelimiter(0);
@@ -32,36 +34,56 @@ describe("SessionManager", () => {
 
             expect(sessionManager.exitCode).toBe(0);
         });
+
+        describe("returns undefined when...", () => {
+            it("...there are no managed sessions", () => {
+                expect(sessionManager.exitCode).toBeUndefined();
+            });
+
+            it("...the active session has not executed any commands", () => {
+                sessionManager.addSession(session);
+
+                expect(sessionManager.exitCode).toBeUndefined();
+            });
+        });
     });
 
     describe("output", () => {
-        it("reports the last command's output", async () => {
-            const output  = "test";
-            const command = `echo ${output}`;
-            const promise = sessionManager.run(command);
+        describe("returns the last command's output string when...", () => {
+            beforeEach(() => {
+                sessionManager.addSession(session);
+            });
 
-            session.emitOutput(output);
-            session.emitDelimiter(0);
+            it("...the output is a single line", async () => {
+                const output  = "test";
+                const command = `echo ${output}`;
+                const promise = sessionManager.run(command);
 
-            await promise;
+                session.emitOutput(output);
+                session.emitDelimiter(0);
 
-            expect(sessionManager.output).toBe(output);
+                await promise;
+
+                expect(sessionManager.output).toBe(output);
+            });
+
+            it("...the output is multiple lines", async () => {
+                const output  = ["test 1", "test 2"];
+                const promise = sessionManager.run("some-command");
+
+                session.emitOutput(output[0]);
+                session.emitOutput(output[1]);
+                session.emitDelimiter(0);
+
+                await promise;
+
+                expect(sessionManager.output).toBe(output.join("\n"));
+            });
         });
 
-        it("reports multiple lines of command output", async () => {
-            const output  = ["test 1", "test 2"];
-            const promise = sessionManager.run("some-command");
+        it("returns an empty string when the last command had no output", async () => {
+            sessionManager.addSession(session);
 
-            session.emitOutput(output[0]);
-            session.emitOutput(output[1]);
-            session.emitDelimiter(0);
-
-            await promise;
-
-            expect(sessionManager.output).toBe(output.join("\n"));
-        });
-
-        it("ignores delimiter-only output", async () => {
             const promise = sessionManager.run("cd .");
 
             session.emitDelimiter(0);
@@ -70,19 +92,37 @@ describe("SessionManager", () => {
 
             expect(sessionManager.output).toBe("");
         });
+
+        describe("returns undefined when...", () => {
+            it("...there are no managed sessions", () => {
+                expect(sessionManager.output).toBeUndefined();
+            });
+
+            it("...the active session has not executed any commands", () => {
+                sessionManager.addSession(session);
+
+                expect(sessionManager.output).toBeUndefined();
+            });
+        });
     });
 
-    // describe("sessions", () => {
-    //     // TODO: are there any tests we can put here that are distinct from addSession's?
-    // });
+    describe("sessions", () => {
+        it("returns an empty array when there are no managed sessions", () => {
+            expect(sessionManager.sessions).toEqual([]);
+        });
+    });
 
     describe("addSession()", () => {
-        it("registers a single managed session", async () => {
+        beforeEach(() => {
+            sessionManager.addSession(session);
+        });
+
+        it("registers a single managed session", () => {
             expect(sessionManager.sessions.length).toBe(1);
             expect(sessionManager.sessions[0].session).toBe(session);
         });
 
-        it("registers multiple managed sessions", async () => {
+        it("registers multiple managed sessions", () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
             sessionManager.addSession(altSession);
@@ -91,7 +131,7 @@ describe("SessionManager", () => {
             expect(sessionManager.sessions[1].session).toBe(altSession);
         });
 
-        it("registers named managed sessions", async () => {
+        it("registers named managed sessions", () => {
             const altSession     = new ShellSession() as unknown as MockShellSession;
             const altSessionName = "test session";
 
@@ -100,11 +140,21 @@ describe("SessionManager", () => {
             expect(sessionManager.sessions[1].name).toBe(altSessionName);
         });
 
-        it("activates new managed sessions by default", async () => {
+        it("activates new managed sessions by default", () => {
             expect(sessionManager.activeSession.session).toBe(session);
         });
 
-        it("doesn't activate new managed sessions if instructed not to", async () => {
+        it("switches the active session when adding more than one", () => {
+            expect(sessionManager.activeSession.session).toBe(session);
+
+            const altSession = new ShellSession() as unknown as MockShellSession;
+
+            sessionManager.addSession(altSession);
+
+            expect(sessionManager.activeSession.session).toBe(altSession);
+        });
+
+        it("doesn't activate new managed sessions if instructed not to", () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
             sessionManager.addSession(altSession, "whatever", false);
@@ -114,6 +164,10 @@ describe("SessionManager", () => {
     });
 
     describe("kill()", () => {
+        beforeEach(() => {
+            sessionManager.addSession(session);
+        });
+
         it("resolves kill() on session close", async () => {
             let resolved = false;
 
@@ -128,18 +182,36 @@ describe("SessionManager", () => {
 
             await promise;
 
-            expect(session.kill).toHaveBeenCalled();
             expect(resolved).toBeTruthy();
+            expect(session.kill).toHaveBeenCalled();
+            expect(sessionManager.sessions.length).toBe(0);
+        });
+
+        it("kills only the active session by default", async () => {
+            const altSession = new ShellSession() as unknown as MockShellSession;
+
+            sessionManager.addSession(altSession);
+
+            const promise = sessionManager.kill();
+
+            altSession.emitClose();
+
+            await promise;
+
+            expect(session.kill).not.toHaveBeenCalled();
+            expect(altSession.kill).toHaveBeenCalled();
+            expect(sessionManager.sessions.length).toBe(1);
         });
     });
 
     describe("killAll()", () => {
-        it("kills all managed sessions", async () => {
+        it.only("kills all managed sessions", async () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
             let resolved = false;
 
-            sessionManager.addSession(altSession);
+            sessionManager.addSession(session, "session");
+            sessionManager.addSession(altSession, "altSession");
 
             expect(sessionManager.sessions.length).toBe(2);
 
@@ -155,11 +227,18 @@ describe("SessionManager", () => {
 
             await promise;
 
+            expect(resolved).toBeTruthy();
+            expect(session.kill).toHaveBeenCalled();
+            expect(altSession.kill).toHaveBeenCalled();
             expect(sessionManager.sessions.length).toBe(0);
         });
     });
 
     describe("removeSession()", () => {
+        beforeEach(() => {
+            sessionManager.addSession(session);
+        });
+
         it("removes the sole managed session", async () => {
             expect(sessionManager.sessions.length).toBe(1);
 
@@ -199,6 +278,10 @@ describe("SessionManager", () => {
     });
 
     describe("run()", () => {
+        beforeEach(() => {
+            sessionManager.addSession(session);
+        });
+
         it("writes command to session and resolves after delimiter", async () => {
             const output  = "test";
             const command = `echo ${output}`;

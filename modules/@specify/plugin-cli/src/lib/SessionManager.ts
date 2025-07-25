@@ -67,7 +67,7 @@ export class SessionManager {
      * The numeric exit code of the active session's last completed command.
      */
     get exitCode(): number {
-        return this.#activeSession.exitCode;
+        return this.#activeSession?.exitCode;
     }
 
     /**
@@ -75,14 +75,14 @@ export class SessionManager {
      * trimmed from both ends.
      */
     get output(): string {
-        return this.#activeSession.output?.trim();
+        return this.#activeSession?.output?.trim();
     }
 
     /**
      * The list of managed sessions
      */
     get sessions(): ISessionMeta[] {
-        return this.#sessions;
+        return this.#sessions.slice();
     }
 
     /**
@@ -118,9 +118,9 @@ export class SessionManager {
      *                      active session if omitted
      */
     async kill(sessionMeta: ISessionMeta): Promise<void> {
-        return new Promise((resolve) => {
-            sessionMeta ??= this.#activeSession;
+        sessionMeta ??= this.#activeSession;
 
+        return new Promise((resolve) => {
             this.removeSession(sessionMeta);
 
             sessionMeta.session.onClose(resolve);
@@ -131,14 +131,9 @@ export class SessionManager {
     /**
      * Gracefully terminate all managed sessions.  Resolves once all sessions
      * are fully closed.
-     *
-     * @remarks
-     * It wouldn't be too hard to refactor this to make it kill all sessions in
-     * parallel, but doing so could produce unpredictable results in the array
-     * manipulation logic of removeSession, which each kill invokes.
      */
     async killAll(): Promise<void> {
-        await Promise.all(this.#sessions.map((sessionMeta) => this.kill(sessionMeta)));
+        await Promise.all(this.#sessions.slice().map((sessionMeta) => this.kill(sessionMeta)));
 
         // ensure race conditions don't leave session records in a weird state
         this.#activeSession = null;
