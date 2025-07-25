@@ -205,7 +205,7 @@ describe("SessionManager", () => {
     });
 
     describe("killAll()", () => {
-        it.only("kills all managed sessions", async () => {
+        it("kills all managed sessions", async () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
             let resolved = false;
