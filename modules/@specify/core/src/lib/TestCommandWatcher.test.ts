@@ -90,8 +90,7 @@ describe("TestCommandWatcher", () => {
         return allCall?.[1] as (event: string, filePath: string) => Promise<void>;
     };
 
-    const expectLockFile      = () => expect.stringContaining(LOCK_FILE_NAME);
-    const setupMockExistsSync = (value: boolean) => mockExistsSync.mockReturnValue(value);
+    const expectLockFile = () => expect.stringContaining(LOCK_FILE_NAME);
 
     beforeEach(() => {
         const { config } = createMockConfig();
@@ -113,25 +112,7 @@ describe("TestCommandWatcher", () => {
         watcher = new TestCommandWatcher(mockCommand);
     });
 
-    describe("constructor()", () => {
-        it("initializes with TestCommand instance", () => {
-            expect(watcher).toBeInstanceOf(TestCommandWatcher);
-        });
-    });
-
     describe("start()", () => {
-        let processExitSpy: ReturnType<typeof vi.spyOn>;
-
-        beforeEach(() => {
-            setupMockExistsSync(false);
-
-            processExitSpy = vi.spyOn(process, "exit").mockImplementation(() => undefined as never);
-        });
-
-        afterEach(() => {
-            processExitSpy.mockRestore();
-        });
-
         it("clears console and starts watching configured paths", async () => {
             const { clear } = await import("node:console");
 
@@ -169,7 +150,7 @@ describe("TestCommandWatcher", () => {
         });
 
         it("removes existing lock file on start", async () => {
-            mockExistsSync.mockReturnValue(true);
+            mockExistsSync.mockReturnValueOnce(true);
 
             await watcher.start(MOCK_ARGS);
 
@@ -187,16 +168,12 @@ describe("TestCommandWatcher", () => {
         let changeHandler: (event: string, filePath: string) => Promise<void>;
 
         beforeEach(async () => {
-            mockExistsSync.mockReturnValue(false);
-
             await watcher.start(MOCK_ARGS);
 
             changeHandler = getFileChangeHandler();
         });
 
         it("executes command on valid file change event", async () => {
-            mockExistsSync.mockReturnValue(false);
-
             await changeHandler("change", TEST_FILE_PATH);
             await mockDebouncedExecution();
 
@@ -224,7 +201,7 @@ describe("TestCommandWatcher", () => {
         });
 
         it("queues execution when lock file exists", async () => {
-            mockExistsSync.mockReturnValue(true);
+            mockExistsSync.mockReturnValueOnce(true);
 
             const mockWatcherClose = vi.fn();
 
@@ -253,8 +230,6 @@ describe("TestCommandWatcher", () => {
 
     describe("command execution", () => {
         beforeEach(async () => {
-            mockExistsSync.mockReturnValue(false);
-
             await watcher.start(MOCK_ARGS);
         });
 
@@ -313,12 +288,10 @@ describe("TestCommandWatcher", () => {
             });
 
             // start the watcher
-            setupMockExistsSync(false);
-
             await watcher.start(MOCK_ARGS);
 
             // simulate file change with lock file present
-            setupMockExistsSync(true);
+            mockExistsSync.mockReturnValueOnce(true);
 
             const onChangeHandler = getFileChangeHandler();
 
