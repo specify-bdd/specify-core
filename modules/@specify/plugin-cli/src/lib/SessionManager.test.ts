@@ -14,14 +14,17 @@ describe("SessionManager", () => {
     beforeEach(() => {
         session = new ShellSession() as unknown as MockShellSession;
         sessionManager = new SessionManager();
-
-        sessionManager.addSession(session);
     });
 
-    // describe("activeSession", () => {});
+    describe("activeSession", () => {
+        it("returns undefined when there are no managed sessions", () => {
+            expect(sessionManager.activeSession).toBeNull();
+        });
+    });
 
     describe("exitCode", () => {
-        it("reports the last command's exit code", async () => {
+        it("returns the last command's exit code", async () => {
+            sessionManager.addSession(session);
             sessionManager.run("echo test");
 
             session.emitDelimiter(0);
@@ -30,51 +33,89 @@ describe("SessionManager", () => {
 
             expect(sessionManager.exitCode).toBe(0);
         });
+
+        describe("returns undefined when...", () => {
+            it("...there are no managed sessions", () => {
+                expect(sessionManager.exitCode).toBeUndefined();
+            });
+
+            it("...the active session has not executed any commands", () => {
+                sessionManager.addSession(session);
+
+                expect(sessionManager.exitCode).toBeUndefined();
+            });
+        });
     });
 
     describe("output", () => {
-        it("reports the last command's output", async () => {
-            const output  = "test";
-            const command = `echo ${output}`;
+        describe("returns the last command's output string when...", () => {
+            beforeEach(() => {
+                sessionManager.addSession(session);
+            });
 
-            sessionManager.run(command);
+            it("...the output is a single line", async () => {
+                const output  = "test";
+                const command = `echo ${output}`;
 
-            session.emitOutput(output);
-            session.emitDelimiter(0);
+                sessionManager.run(command);
 
-            await sessionManager.waitForReturn();
+                session.emitOutput(output);
+                session.emitDelimiter(0);
 
-            expect(sessionManager.output).toBe(output);
+                await sessionManager.waitForReturn();
+
+                expect(sessionManager.output).toBe(output);
+            });
+
+            it("...the output is multiple lines", async () => {
+                const output = ["test 1", "test 2"];
+
+                sessionManager.run("some-command");
+
+                session.emitOutput(output[0]);
+                session.emitOutput(output[1]);
+                session.emitDelimiter(0);
+
+                await sessionManager.waitForReturn();
+
+                expect(sessionManager.output).toBe(output.join("\n"));
+            });
+
+            it("...there is no output", async () => {
+                sessionManager.run("cd .");
+
+                session.emitDelimiter(0);
+
+                await sessionManager.waitForReturn();
+
+                expect(sessionManager.output).toBe("");
+            });
         });
 
-        it("reports multiple lines of command output", async () => {
-            const output = ["test 1", "test 2"];
+        describe("returns undefined when...", () => {
+            it("...there are no managed sessions", () => {
+                expect(sessionManager.output).toBeUndefined();
+            });
 
-            sessionManager.run("some-command");
+            it("...the active session has not executed any commands", () => {
+                sessionManager.addSession(session);
 
-            session.emitOutput(output[0]);
-            session.emitOutput(output[1]);
-            session.emitDelimiter(0);
-
-            await sessionManager.waitForReturn();
-
-            expect(sessionManager.output).toBe(output.join("\n"));
-        });
-
-        it("ignores delimiter-only output", async () => {
-            sessionManager.run("cd .");
-
-            session.emitDelimiter(0);
-
-            await sessionManager.waitForReturn();
-
-            expect(sessionManager.output).toBe("");
+                expect(sessionManager.output).toBeUndefined();
+            });
         });
     });
 
-    // describe("sessions", () => {});
+    describe("sessions", () => {
+        it("returns an empty array when there are no managed sessions", () => {
+            expect(sessionManager.sessions).toEqual([]);
+        });
+    });
 
     describe("addSession()", () => {
+        beforeEach(() => {
+            sessionManager.addSession(session);
+        });
+
         it("registers a single managed session", () => {
             expect(sessionManager.sessions.length).toBe(1);
             expect(sessionManager.sessions[0].session).toBe(session);
@@ -102,6 +143,16 @@ describe("SessionManager", () => {
             expect(sessionManager.activeSession.session).toBe(session);
         });
 
+        it("switches the active session when adding more than one", () => {
+            expect(sessionManager.activeSession.session).toBe(session);
+
+            const altSession = new ShellSession() as unknown as MockShellSession;
+
+            sessionManager.addSession(altSession);
+
+            expect(sessionManager.activeSession.session).toBe(altSession);
+        });
+
         it("doesn't activate new managed sessions if instructed not to", () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
@@ -112,6 +163,10 @@ describe("SessionManager", () => {
     });
 
     describe("kill()", () => {
+        beforeEach(() => {
+            sessionManager.addSession(session);
+        });
+
         it("resolves kill() on session close", async () => {
             let resolved = false;
 
@@ -126,8 +181,25 @@ describe("SessionManager", () => {
 
             await promise;
 
-            expect(session.kill).toHaveBeenCalled();
             expect(resolved).toBeTruthy();
+            expect(session.kill).toHaveBeenCalled();
+            expect(sessionManager.sessions.length).toBe(0);
+        });
+
+        it("kills only the active session by default", async () => {
+            const altSession = new ShellSession() as unknown as MockShellSession;
+
+            sessionManager.addSession(altSession);
+
+            const promise = sessionManager.kill();
+
+            altSession.emitClose();
+
+            await promise;
+
+            expect(session.kill).not.toHaveBeenCalled();
+            expect(altSession.kill).toHaveBeenCalled();
+            expect(sessionManager.sessions.length).toBe(1);
         });
     });
 
@@ -137,7 +209,8 @@ describe("SessionManager", () => {
 
             let resolved = false;
 
-            sessionManager.addSession(altSession);
+            sessionManager.addSession(session, "session");
+            sessionManager.addSession(altSession, "altSession");
 
             expect(sessionManager.sessions.length).toBe(2);
 
@@ -153,11 +226,18 @@ describe("SessionManager", () => {
 
             await promise;
 
+            expect(resolved).toBeTruthy();
+            expect(session.kill).toHaveBeenCalled();
+            expect(altSession.kill).toHaveBeenCalled();
             expect(sessionManager.sessions.length).toBe(0);
         });
     });
 
     describe("removeSession()", () => {
+        beforeEach(() => {
+            sessionManager.addSession(session);
+        });
+
         it("removes the sole managed session", () => {
             expect(sessionManager.sessions.length).toBe(1);
 
@@ -197,6 +277,10 @@ describe("SessionManager", () => {
     });
 
     describe("run()", () => {
+        beforeEach(() => {
+            sessionManager.addSession(session);
+        });
+
         it("writes command to session and resolves after delimiter", async () => {
             const output  = "test";
             const command = `echo ${output}`;
@@ -211,7 +295,7 @@ describe("SessionManager", () => {
             expect(session.write).toHaveBeenCalledWith(expect.stringContaining(command));
         });
 
-        it("throws if called while another command is in progress", async () => {
+        it("throws if called while another command is in progress", () => {
             const command = 'echo "long-running command"';
 
             // this promise will never resolve due to the throw
@@ -224,6 +308,10 @@ describe("SessionManager", () => {
     });
 
     describe("waitForReturn()", () => {
+        beforeEach(() => {
+            sessionManager.addSession(session);
+        });
+
         it("resolves when delimiter output is received", async () => {
             sessionManager.run("echo test");
 

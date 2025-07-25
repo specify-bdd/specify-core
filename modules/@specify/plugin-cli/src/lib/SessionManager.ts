@@ -3,7 +3,7 @@
  *
  * Provides an interface for executing interactive shell commands via
  * ISystemIOSession. Commands are tracked with delimiters and expose
- * output and status code results.
+ * output and exit code results.
  */
 
 import assert         from "node:assert/strict";
@@ -44,7 +44,7 @@ interface ISessionMeta {
  * Session Manager
  *
  * Manages the lifecycle of a system process session. Ensures only one command
- * runs at a time, and tracks command output and exit status.
+ * runs at a time, and tracks command output and exit code.
  */
 export class SessionManager {
     /**
@@ -73,7 +73,7 @@ export class SessionManager {
      * The numeric exit code of the active session's last completed command.
      */
     get exitCode(): number {
-        return this.#getLastCommand(this.#activeSession).exitCode;
+        return this.#getLastCommand(this.#activeSession)?.exitCode;
     }
 
     /**
@@ -81,14 +81,14 @@ export class SessionManager {
      * trimmed from both ends.
      */
     get output(): string {
-        return this.#getLastCommand(this.#activeSession).output?.trim();
+        return this.#getLastCommand(this.#activeSession)?.output?.trim();
     }
 
     /**
      * The list of managed sessions
      */
     get sessions(): ISessionMeta[] {
-        return this.#sessions;
+        return this.#sessions.slice();
     }
 
     /**
@@ -123,9 +123,9 @@ export class SessionManager {
      *                      active session if omitted
      */
     async kill(sessionMeta: ISessionMeta): Promise<void> {
-        return new Promise((resolve) => {
-            sessionMeta ??= this.#activeSession;
+        sessionMeta ??= this.#activeSession;
 
+        return new Promise((resolve) => {
             this.removeSession(sessionMeta);
 
             sessionMeta.session.onClose(resolve);
@@ -136,14 +136,9 @@ export class SessionManager {
     /**
      * Gracefully terminate all managed sessions.  Resolves once all sessions
      * are fully closed.
-     *
-     * @remarks
-     * It wouldn't be too hard to refactor this to make it kill all sessions in
-     * parallel, but doing so could produce unpredictable results in the array
-     * manipulation logic of removeSession, which each kill invokes.
      */
     async killAll(): Promise<void> {
-        await Promise.all(this.#sessions.map((sessionMeta) => this.kill(sessionMeta)));
+        await Promise.all(this.#sessions.slice().map((sessionMeta) => this.kill(sessionMeta)));
 
         // ensure race conditions don't leave session records in a weird state
         this.#activeSession = null;
@@ -175,8 +170,8 @@ export class SessionManager {
     /**
      * Executes a single command within a managed session.
      *
-     * Only one command may be activeat a time in any given session. Output and
-     * status code are available via `output` and `exitCode` once resolved.
+     * Only one command may be active at a time in any given session. Output and
+     * exit code are available via `output` and `exitCode` once resolved.
      *
      * @remarks
      * Multiple commands can be chained in a single command string
@@ -266,17 +261,17 @@ export class SessionManager {
      *
      * @param sessionMeta - The managed session to get the last command from
      */
-    #getLastCommand(sessionMeta: ISessionMeta): ICommandMeta {
+    #getLastCommand(sessionMeta: ISessionMeta | null): ICommandMeta {
         sessionMeta ??= this.#activeSession;
 
-        return sessionMeta.commands.at(-1);
+        return sessionMeta?.commands.at(-1);
     }
 
     /**
      * Handles raw output received from the session.
      *
      * If the delimiter is found in the output, the command is considered
-     * complete and its status code is recorded.
+     * complete and its exit code is recorded.
      *
      * @param output      - The unmodified session output
      * @param sessionMeta - The session to process output for (optional)
