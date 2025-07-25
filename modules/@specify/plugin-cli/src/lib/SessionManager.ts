@@ -170,7 +170,7 @@ export class SessionManager {
     /**
      * Executes a single command within a managed session.
      *
-     * Only one command may be activeat a time in any given session. Output and
+     * Only one command may be active at a time in any given session. Output and
      * exit code are available via `output` and `exitCode` once resolved.
      *
      * @remarks
