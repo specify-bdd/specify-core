@@ -92,7 +92,7 @@ export class SessionManager {
      * @param name     - The name of the session, for easy reference
      * @param activate - Activate the new session
      */
-    addSession(session: ISystemIOSession, name?: string, activate?: boolean = true): ISessionMeta {
+    addSession(session: ISystemIOSession, name?: string, activate: boolean = true): ISessionMeta {
         const sessionMeta: ISessionMeta = { name, session };
 
         this.#sessions.push(sessionMeta);
@@ -114,7 +114,7 @@ export class SessionManager {
      * Gracefully terminates a managed session. Resolves once the session is
      * fully closed.
      *
-     * @param sessionMeta - The session to kill; defaults to the active session 
+     * @param sessionMeta - The session to kill; defaults to the active session
      *                      if omitted
      */
     async kill(sessionMeta?: ISessionMeta): Promise<void> {
@@ -143,7 +143,7 @@ export class SessionManager {
     /**
      * Remove a managed session.
      *
-     * @param sessionMeta - The session to remove; defaults to the active 
+     * @param sessionMeta - The session to remove; defaults to the active
      *                      session if omitted
      */
     removeSession(sessionMeta?: ISessionMeta): void {
@@ -174,7 +174,7 @@ export class SessionManager {
      * with "&" or ";". Ex: `echo first;echo second`
      *
      * @param command     - The command to execute
-     * @param sessionMeta - The session in which to execute the command; 
+     * @param sessionMeta - The session in which to execute the command;
      *                      defaults to the active session if omitted
      *
      * @throws {@link AssertionError}
@@ -238,7 +238,7 @@ export class SessionManager {
      * complete and its exit code is recorded.
      *
      * @param output      - The unmodified session output
-     * @param sessionMeta - The session to process output for; defaults to the 
+     * @param sessionMeta - The session to process output for; defaults to the
      *                      active session if omitted
      */
     #processOutput(output: string, sessionMeta?: ISessionMeta): void {
