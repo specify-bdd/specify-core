@@ -95,10 +95,10 @@ export class SessionManager {
      * Adds a new managed session.
      *
      * @param session  - The session to manage
-     * @param name     - The name of the session, for easy reference (optional)
+     * @param name     - The name of the session, for easy reference
      * @param activate - Activate the new session
      */
-    addSession(session: ISystemIOSession, name: string, activate: boolean = true): ISessionMeta {
+    addSession(session: ISystemIOSession, name?: string, activate?: boolean = true): ISessionMeta {
         const sessionMeta: ISessionMeta = { "commands": [], name, session };
 
         this.#sessions.push(sessionMeta);
@@ -119,10 +119,10 @@ export class SessionManager {
      * Gracefully terminates a managed session. Resolves once the session is
      * fully closed.
      *
-     * @param sessionMeta - The session to kill (optional); defaults to the
-     *                      active session if omitted
+     * @param sessionMeta - The session to kill; defaults to the active session 
+     *                      if omitted
      */
-    async kill(sessionMeta: ISessionMeta): Promise<void> {
+    async kill(sessionMeta?: ISessionMeta): Promise<void> {
         sessionMeta ??= this.#activeSession;
 
         return new Promise((resolve) => {
@@ -148,9 +148,10 @@ export class SessionManager {
     /**
      * Remove a managed session.
      *
-     * @param sessionMeta - The session to remove (optional)
+     * @param sessionMeta - The session to remove; defaults to the active 
+     *                      session if omitted
      */
-    removeSession(sessionMeta: ISessionMeta): void {
+    removeSession(sessionMeta?: ISessionMeta): void {
         sessionMeta ??= this.#activeSession;
 
         const index = this.#sessions.indexOf(sessionMeta);
@@ -178,12 +179,13 @@ export class SessionManager {
      * with "&" or ";". Ex: `echo first;echo second`
      *
      * @param command     - The command to execute
-     * @param sessionMeta - The session in which to execute the command
+     * @param sessionMeta - The session in which to execute the command; 
+     *                      defaults to the active session if omitted
      *
      * @throws {@link AssertionError}
      * If another command is already in progress
      */
-    run(command: string, sessionMeta: ISessionMeta): ICommandMeta {
+    run(command: string, sessionMeta?: ISessionMeta): ICommandMeta {
         sessionMeta ??= this.#activeSession;
 
         const lastCmdMeta = this.#getLastCommand(sessionMeta);
@@ -274,9 +276,10 @@ export class SessionManager {
      * complete and its exit code is recorded.
      *
      * @param output      - The unmodified session output
-     * @param sessionMeta - The session to process output for (optional)
+     * @param sessionMeta - The session to process output for; defaults to the 
+     *                      active session if omitted
      */
-    #processOutput(output: string, sessionMeta: ISessionMeta): void {
+    #processOutput(output: string, sessionMeta?: ISessionMeta): void {
         sessionMeta ??= this.#activeSession;
 
         const lastCmdMeta = this.#getLastCommand(sessionMeta);
