@@ -217,9 +217,10 @@ export class SessionManager {
     /**
      * Wait for the last command in a managed session to return.
      *
-     * @param sessionMeta - The session to wait on
+     * @param sessionMeta - The session to wait on; defaults to the active 
+     *                      session if omitted
      */
-    async waitForReturn(sessionMeta: ISessionMeta): Promise<ICommandMeta> {
+    async waitForReturn(sessionMeta?: ISessionMeta): Promise<ICommandMeta> {
         sessionMeta ??= this.#activeSession;
 
         return this.#getLastCommand(sessionMeta).promise;
@@ -261,9 +262,10 @@ export class SessionManager {
     /**
      * Get the last command executed for a given managed session
      *
-     * @param sessionMeta - The managed session to get the last command from
+     * @param sessionMeta - The managed session to get the last command from; 
+     *                      defaults to the active session if omitted or null
      */
-    #getLastCommand(sessionMeta: ISessionMeta | null): ICommandMeta {
+    #getLastCommand(sessionMeta?: ISessionMeta | null): ICommandMeta {
         sessionMeta ??= this.#activeSession;
 
         return sessionMeta?.commands.at(-1);
