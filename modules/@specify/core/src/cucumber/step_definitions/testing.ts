@@ -6,8 +6,8 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import assert                from "node:assert/strict";
 
-Given("(that )this step definition fails", fail);
-Given("(that )this step definition passes", pass);
+Given("that this step definition fails", fail);
+Given("that this step definition passes", pass);
 
 When("this step definition fails", fail);
 When("this step definition passes", pass);
