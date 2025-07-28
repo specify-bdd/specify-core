@@ -6,6 +6,13 @@ import { watch } from "chokidar";
 import { DEBOUNCE_MS, TestCommandWatcher } from "./TestCommandWatcher";
 import { TestCommand                     } from "./TestCommand";
 
+// mock TestCommand class completely
+vi.mock("./TestCommand", () => ({
+    "TestCommand": vi.fn().mockImplementation(() => ({
+        "execute": vi.fn().mockResolvedValue({ "ok": true, "status": 0 }),
+    })),
+}));
+
 // test constants
 const MOCK_ARGS        = { "_": [] };
 const LOCK_FILE_NAME   = "specify-core-watch.lock";
@@ -99,9 +106,8 @@ describe("TestCommandWatcher", () => {
 
         mockMkdtempSync.mockReturnValue(path.join(os.tmpdir(), "specify-test-mocked"));
 
+        // create mock command instance using the mocked constructor
         mockCommand = new TestCommand(config);
-
-        vi.spyOn(mockCommand, "execute").mockResolvedValue({ "ok": true, "status": 0 });
 
         mockWatcherInstance = {
             "on": vi.fn().mockReturnThis(),
