@@ -10,7 +10,7 @@ import path            from "node:path";
 
 import type { FileParam } from "~/types/params";
 
-Given("that a(n) {ref:file} file exists at {path}", copyFile);
+Given("(that )a(n) {ref:file} file exists at {path}", copyFile);
 
 When("a/the user puts a(n) {ref:file} file in {path}", copyFile);
 
