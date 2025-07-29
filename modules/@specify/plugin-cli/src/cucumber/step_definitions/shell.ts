@@ -19,14 +19,18 @@ When("a/the user runs the command/process {string}", { "timeout": 60000 }, execC
 
 When("a/the user starts the (async )command/process {string}", execCommand);
 
-When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForLastCommandReturn);
+When(
+    "a/the user waits for the last command to return",
+    { "timeout": 60000 },
+    waitForLastCommandReturn,
+);
 
 Then("the command should return a/an/the {ref:exitCode} exit code", verifyExitCode);
 
 Then("the console output should be a/an/the {ref:consoleOutput}", verifyOutput);
 
 /**
- * Execute the given command via the CLI asynchronously and move on without 
+ * Execute the given command via the CLI asynchronously and move on without
  * waiting for it to return.
  *
  * @param command - The command to run
