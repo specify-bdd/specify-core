@@ -15,61 +15,61 @@ Given("a/another CLI shell", startDefaultShell);
 
 When("a/the user starts a/another CLI shell", startDefaultShell);
 
-When("a/the user runs the command {string}", runCommand);
+When("a/the user runs the command/process {string}", { "timeout": 60000 }, execCommandSync);
 
-When(
-    "a/the user runs the command {string} and waits for it to complete",
-    { "timeout": 60000 },
-    runCommandAndWait,
-);
+When("a/the user starts the (async )command/process {string}", execCommand);
 
-When("a/the user waits for the last command to complete", { "timeout": 60000 }, waitForLastCommand);
+When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForLastCommandReturn);
 
 Then("the command should return a/an/the {ref:exitCode} exit code", verifyExitCode);
 
 Then("the console output should be a/an/the {ref:consoleOutput}", verifyOutput);
 
 /**
- * Run the given command via the CLI
+ * Execute the given command via the CLI asynchronously and move on without 
+ * waiting for it to return.
  *
  * @param command - The command to run
+ *
+ * @throws {@link AssertionError}
+ * If there is no SessionManager initialized.
  */
-function runCommand(command: string): void {
+function execCommand(command: string): void {
+    assert.ok(this.cli.manager);
     this.cli.manager.run(command);
 }
 
 /**
- * Run the given command and wait for it to complete
+ * Execute the given command and wait for it to return.
  *
  * @param command - The command to run
  */
-async function runCommandAndWait(command: string): Promise<void> {
-    runCommand.call(this, command);
-    await waitForLastCommand.call(this);
+async function execCommandSync(command: string): Promise<void> {
+    execCommand.call(this, command);
+    await waitForLastCommandReturn.call(this);
 }
 
 /**
- * Start a default shell
+ * Start a default shell.
  *
- * @param name - The name of the shell (optional)
+ * @param name - The name of the shell
  */
-function startNamedDefaultShell(name: string): void {
+function startNamedDefaultShell(name?: string): void {
     const shell = new ShellSession(this.parameters.userPath);
 
     this.cli.manager ??= new SessionManager();
-    this.cli.manager.addSession(shell, name, true);
+    this.cli.manager.addSession(shell, name);
 }
 
 /**
- * Start a default shell without a name
+ * Start a default shell without a name.
  */
 function startDefaultShell(): void {
     startNamedDefaultShell.call(this);
 }
 
 /**
- * Verify that the CLI output for the last completed command matches the given
- * regexp
+ * Verify that the CLI output for the last command matches the given regexp.
  *
  * @param consoleOutput - The matcher to use for the output
  *
@@ -86,7 +86,7 @@ function verifyOutput(consoleOutput: RegExp): void {
 }
 
 /**
- * Verify that the CLI exit code for the last completed command is as expected
+ * Verify that the CLI exit code for the last command is as expected.
  *
  * @param exitCode - The exit code expected from the last command
  *
@@ -102,8 +102,12 @@ function verifyExitCode(exitCode: number): void {
 }
 
 /**
- * Wait for the last command to finish
+ * Wait for the last command to return.
+ *
+ * @throws {@link AssertionError}
+ * If there is no SessionManager initialized.
  */
-async function waitForLastCommand(): Promise<void> {
+async function waitForLastCommandReturn(): Promise<void> {
+    assert.ok(this.cli.manager);
     await this.cli.manager.waitForReturn();
 }
