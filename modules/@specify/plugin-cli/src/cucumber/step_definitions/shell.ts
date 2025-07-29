@@ -19,11 +19,7 @@ When("a/the user runs the command/process {string}", { "timeout": 60000 }, execC
 
 When("a/the user starts the (async )command/process {string}", execCommand);
 
-When(
-    "a/the user waits for the last command to return",
-    { "timeout": 60000 },
-    waitForLastCommandReturn,
-);
+When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
 
 Then("the command should return a/an/the {ref:exitCode} exit code", verifyExitCode);
 
@@ -50,7 +46,7 @@ function execCommand(command: string): void {
  */
 async function execCommandSync(command: string): Promise<void> {
     execCommand.call(this, command);
-    await waitForLastCommandReturn.call(this);
+    await waitForCommandReturn.call(this);
 }
 
 /**
@@ -111,7 +107,7 @@ function verifyExitCode(exitCode: number): void {
  * @throws {@link AssertionError}
  * If there is no SessionManager initialized.
  */
-async function waitForLastCommandReturn(): Promise<void> {
+async function waitForCommandReturn(): Promise<void> {
     assert.ok(this.cli.manager);
     await this.cli.manager.waitForReturn();
 }
