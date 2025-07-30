@@ -23,9 +23,12 @@ When("a/the user waits for the last command to return", { "timeout": 60000 }, wa
 
 Then("the command should return a/an/the {ref:exitCode} exit code", verifyExitCode);
 
-Then("the last command's terminal output should be {string}", verifyOutput);
+Then("the last command's terminal output should be/include {string}", verifyOutput);
 
-Then("the last command's terminal output should be a/an/the {ref:consoleOutput}", verifyOutput);
+Then(
+    "the last command's terminal output should be/include a/an/the {ref:consoleOutput}",
+    verifyOutput,
+);
 
 /**
  * Execute the given command via the CLI asynchronously and move on without
