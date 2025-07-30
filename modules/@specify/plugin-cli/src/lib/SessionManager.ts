@@ -11,11 +11,14 @@ import { randomUUID } from "node:crypto";
 
 import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
 
+/**
+ * A metadata object representing one executed command.
+ */
 export interface ICommandMeta {
     command: string;
     delimiter?: IDelimiter;
     exitCode?: number;
-    output: string;
+    output: IOutputMeta[];
     promise?: Promise<ICommandMeta>;
     reject?: ((err: Error) => void) | null;
     resolve?: ((cmdMeta: ICommandMeta) => void) | null;
@@ -32,12 +35,30 @@ interface IDelimiter {
 }
 
 /**
- * The metadata for a managed session
+ * A metadata object representing a single chunk of output from a command.
+ */
+interface IOutputMeta {
+    output: string;
+    stream: IOStream;
+    timestamp: number;
+}
+
+/**
+ * A metadata object representing a managed session.
  */
 interface ISessionMeta {
     commands: ICommandMeta[];
     name?: string;
     session: ISystemIOSession;
+}
+
+/**
+ * A standard IO stream.
+ */
+export enum IOStream {
+    STDIN,
+    STDOUT,
+    STDERR,
 }
 
 /**
@@ -81,7 +102,13 @@ export class SessionManager {
      * trimmed from both ends.
      */
     get output(): string {
-        return this.#getLastCommand(this.#activeSession)?.output?.trim();
+        const cmd = this.#getLastCommand(this.#activeSession);
+
+        if (!cmd) {
+            return;
+        }
+
+        return cmd.output.map((outMeta => outMeta.output)).join("").trim();
     }
 
     /**
@@ -103,9 +130,8 @@ export class SessionManager {
 
         this.#sessions.push(sessionMeta);
 
-        session.onOutput((output) => {
-            this.#processOutput(output, sessionMeta);
-        });
+        session.onOutput((output) => this.#processOutput(output, IOStream.STDOUT, sessionMeta));
+        session.onError((err) => this.#processOutput(err, IOStream.STDERR, sessionMeta));
 
         // activate this session if instructed or if there is no current active session
         if (activate || !this.#activeSession) {
@@ -200,7 +226,7 @@ export class SessionManager {
         const newCmdMeta = {
             command,
             "delimiter": this.#createDelimiter(),
-            "output":    "",
+            "output":    [],
         } as ICommandMeta;
 
         newCmdMeta.promise = new Promise((resolve, reject) => {
@@ -278,15 +304,18 @@ export class SessionManager {
      * complete and its exit code is recorded.
      *
      * @param output      - The unmodified session output
+     * @param stream      - The stream this output arrived on
      * @param sessionMeta - The session to process output for; defaults to the
      *                      active session if omitted
      */
-    #processOutput(output: string, sessionMeta?: ISessionMeta): void {
+    #processOutput(output: string, stream: IOStream, sessionMeta?: ISessionMeta): void {
         sessionMeta ??= this.#activeSession;
 
         const lastCmdMeta = this.#getLastCommand(sessionMeta);
+        const cleanOutput = output.replace(lastCmdMeta.delimiter.regexp, "");
+        const timestamp   = Date.now();
 
-        lastCmdMeta.output += output.replace(lastCmdMeta.delimiter.regexp, "");
+        lastCmdMeta.output.push({ "output": cleanOutput, stream, timestamp } as IOutputMeta);
 
         if (output.includes(lastCmdMeta.delimiter.uuid)) {
             try {
