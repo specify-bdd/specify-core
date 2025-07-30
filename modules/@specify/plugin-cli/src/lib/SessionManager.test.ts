@@ -248,14 +248,13 @@ describe("SessionManager", () => {
         });
 
         it("removes one managed session among several", () => {
-            const altSession = new ShellSession() as unknown as MockShellSession;
-
-            sessionManager.addSession(altSession, "whatever", false);
+            const altSession     = new ShellSession() as unknown as MockShellSession;
+            const altSessionMeta = sessionManager.addSession(altSession, "whatever", false);
 
             expect(sessionManager.sessions.length).toBe(2);
             expect(sessionManager.activeSession.session).toBe(session);
 
-            sessionManager.removeSession(altSession);
+            sessionManager.removeSession(altSessionMeta);
 
             expect(sessionManager.sessions.length).toBe(1);
             expect(sessionManager.activeSession.session).toBe(session);

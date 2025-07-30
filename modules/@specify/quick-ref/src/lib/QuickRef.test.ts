@@ -40,6 +40,7 @@ describe("QuickRef", () => {
     it("allows read-only access to refs", () => {
         const quickRef = new QuickRef();
 
+        // @ts-expect-error - Testing read-only access
         expect(() => (quickRef.refs = {})).toThrow();
     });
 
