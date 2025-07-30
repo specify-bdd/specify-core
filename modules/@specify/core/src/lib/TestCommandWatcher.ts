@@ -18,7 +18,7 @@ import { config           } from "@/config/all";
 import type { ParsedArgs  } from "minimist";
 import type { TestCommand } from "./TestCommand";
 
-export interface ITestCommandWatcherOptions {
+export interface TestCommandWatcherOptions {
     debounceMs?: number;
     packageName?: string;
 }

@@ -2,7 +2,7 @@ import merge from "deepmerge";
 import fs    from "node:fs";
 import path  from "node:path";
 
-import { TestCommand, ITestCommandOptions, TEST_COMMAND_DEFAULT_OPTS } from "./TestCommand";
+import { TestCommand, TestCommandOptions, TEST_COMMAND_DEFAULT_OPTS } from "./TestCommand";
 
 describe("TestCommand", () => {
     const emptyArgs = { "_": [] };
@@ -73,7 +73,7 @@ describe("TestCommand", () => {
         });
 
         describe("runs tests", () => {
-            let userOpts: Partial<ITestCommandOptions> = {};
+            let userOpts: Partial<TestCommandOptions> = {};
 
             beforeAll(() => {
                 userOpts = {
