@@ -22,7 +22,7 @@ export interface ICommandMeta {
     promise?: Promise<ICommandMeta>;
     reject?: ((err: Error) => void) | null;
     resolve?: ((cmdMeta: ICommandMeta) => void) | null;
-    // timestamp: number;
+    timestamp: number;
 }
 
 /**
@@ -41,7 +41,7 @@ interface IDelimiter {
 export interface IOutputMeta {
     output: string;
     stream: IOStream;
-    // timestamp: number;
+    timestamp: number;
 }
 
 /**
@@ -243,6 +243,7 @@ export class SessionManager {
             command,
             "delimiter": this.#createDelimiter(),
             "output":    [],
+            "timestamp": Date.now(),
         } as ICommandMeta;
 
         newCmdMeta.promise = new Promise((resolve, reject) => {
@@ -379,9 +380,9 @@ export class SessionManager {
         const sessionMeta = opts.sessionMeta || this.#activeSession;
         const lastCmdMeta = this.#getLastCommand({ sessionMeta });
         const cleanOutput = output.replace(lastCmdMeta.delimiter.regexp, "");
-        // const timestamp   = Date.now();
+        const timestamp   = Date.now();
 
-        lastCmdMeta.output.push({ "output": cleanOutput, stream /*timestamp*/ } as IOutputMeta);
+        lastCmdMeta.output.push({ "output": cleanOutput, stream, timestamp } as IOutputMeta);
 
         if (output.includes(lastCmdMeta.delimiter.uuid)) {
             try {
