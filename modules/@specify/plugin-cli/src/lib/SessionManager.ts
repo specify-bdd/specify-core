@@ -22,6 +22,7 @@ export interface ICommandMeta {
     promise?: Promise<ICommandMeta>;
     reject?: ((err: Error) => void) | null;
     resolve?: ((cmdMeta: ICommandMeta) => void) | null;
+    // timestamp: number;
 }
 
 /**
@@ -37,28 +38,44 @@ interface IDelimiter {
 /**
  * A metadata object representing a single chunk of output from a command.
  */
-interface IOutputMeta {
+export interface IOutputMeta {
     output: string;
     stream: IOStream;
-    timestamp: number;
+    // timestamp: number;
 }
 
 /**
  * A metadata object representing a managed session.
  */
-interface ISessionMeta {
+export interface ISessionMeta {
     commands: ICommandMeta[];
     name?: string;
     session: ISystemIOSession;
 }
 
 /**
+ * The basic option set common to all options-accepting SessionMqnager methods.
+ */
+export interface ISessionManagerOptions {
+    sessionMeta?: ISessionMeta;
+}
+
+/**
+ * The option set for SessionManager.waitForOutputOptions().
+ */
+export interface IWaitForOutputOptions extends ISessionManagerOptions {
+    pattern?: string;
+    stream?: IOStream;
+}
+
+/**
  * A standard IO stream.
  */
 export enum IOStream {
-    STDIN,
+    STDIN, // we aren't likely to use this, but keeping it at index 0 helps us stay consistent with Node.js conventions
     STDOUT,
     STDERR,
+    ANY, // in practice, this represents STDOUT+STDERR
 }
 
 /**
@@ -94,7 +111,7 @@ export class SessionManager {
      * The numeric exit code of the active session's last completed command.
      */
     get exitCode(): number {
-        return this.#getLastCommand(this.#activeSession)?.exitCode;
+        return this.#getLastCommand()?.exitCode;
     }
 
     /**
@@ -102,13 +119,16 @@ export class SessionManager {
      * trimmed from both ends.
      */
     get output(): string {
-        const cmd = this.#getLastCommand(this.#activeSession);
+        const cmd = this.#getLastCommand();
 
         if (!cmd) {
             return;
         }
 
-        return cmd.output.map((outMeta => outMeta.output)).join("").trim();
+        return cmd.output
+            .map((outMeta) => outMeta.output)
+            .join("")
+            .trim();
     }
 
     /**
@@ -130,8 +150,8 @@ export class SessionManager {
 
         this.#sessions.push(sessionMeta);
 
-        session.onOutput((output) => this.#processOutput(output, IOStream.STDOUT, sessionMeta));
-        session.onError((err) => this.#processOutput(err, IOStream.STDERR, sessionMeta));
+        session.onOutput((output) => this.#processOutput(output, IOStream.STDOUT, { sessionMeta }));
+        session.onError((err) => this.#processOutput(err, IOStream.STDERR, { sessionMeta }));
 
         // activate this session if instructed or if there is no current active session
         if (activate || !this.#activeSession) {
@@ -145,14 +165,13 @@ export class SessionManager {
      * Gracefully terminates a managed session. Resolves once the session is
      * fully closed.
      *
-     * @param sessionMeta - The session to kill; defaults to the active session
-     *                      if omitted
+     * @param opts - Options to modify the behavior of kill()
      */
-    async kill(sessionMeta?: ISessionMeta): Promise<void> {
-        sessionMeta ??= this.#activeSession;
+    async kill(opts: ISessionManagerOptions = {}): Promise<void> {
+        const sessionMeta = opts.sessionMeta || this.#activeSession;
 
         return new Promise((resolve) => {
-            this.removeSession(sessionMeta);
+            this.removeSession({ sessionMeta });
 
             sessionMeta.session.onClose(resolve);
             sessionMeta.session.kill();
@@ -164,7 +183,7 @@ export class SessionManager {
      * are fully closed.
      */
     async killAll(): Promise<void> {
-        await Promise.all(this.#sessions.slice().map((sessionMeta) => this.kill(sessionMeta)));
+        await Promise.all(this.#sessions.slice().map((sessionMeta) => this.kill({ sessionMeta })));
 
         // ensure race conditions don't leave session records in a weird state
         this.#activeSession = null;
@@ -174,11 +193,10 @@ export class SessionManager {
     /**
      * Remove a managed session.
      *
-     * @param sessionMeta - The session to remove; defaults to the active
-     *                      session if omitted
+     * @param opts - Options to modify the behavior of removeSession()
      */
-    removeSession(sessionMeta?: ISessionMeta): void {
-        sessionMeta ??= this.#activeSession;
+    removeSession(opts: ISessionManagerOptions = {}): void {
+        const sessionMeta = opts.sessionMeta || this.#activeSession;
 
         const index = this.#sessions.indexOf(sessionMeta);
 
@@ -204,17 +222,15 @@ export class SessionManager {
      * Multiple commands can be chained in a single command string
      * with "&" or ";". Ex: `echo first;echo second`
      *
-     * @param command     - The command to execute
-     * @param sessionMeta - The session in which to execute the command;
-     *                      defaults to the active session if omitted
+     * @param command - The command to execute
+     * @param opts    - Options to modify the behavior of run()
      *
      * @throws {@link AssertionError}
      * If another command is already in progress
      */
-    run(command: string, sessionMeta?: ISessionMeta): ICommandMeta {
-        sessionMeta ??= this.#activeSession;
-
-        const lastCmdMeta = this.#getLastCommand(sessionMeta);
+    run(command: string, opts: ISessionManagerOptions = {}): ICommandMeta {
+        const sessionMeta = opts.sessionMeta || this.#activeSession;
+        const lastCmdMeta = this.#getLastCommand({ sessionMeta });
 
         if (lastCmdMeta) {
             assert.ok(
@@ -241,15 +257,47 @@ export class SessionManager {
     }
 
     /**
+     * Wait for the last command in a managed session to produce output.
+     *
+     * @param opts - Options to modify the behavior of waitForOutput()
+     */
+    async waitForOutput(opts: IWaitForOutputOptions = {}): Promise<IOutputMeta> {
+        const sessionMeta = opts.sessionMeta || this.#activeSession;
+        const lastCmdMeta = this.#getLastCommand({ sessionMeta });
+        const stream      = opts.stream || IOStream.ANY;
+
+        return new Promise((resolve) => {
+            if (this.#hasMatchingOutput(lastCmdMeta, opts)) {
+                resolve(lastCmdMeta.output.at(-1));
+            }
+
+            if ([IOStream.STDOUT, IOStream.ANY].includes(stream)) {
+                sessionMeta.session.onOutput(() => {
+                    if (this.#hasMatchingOutput(lastCmdMeta, opts)) {
+                        resolve(lastCmdMeta.output.at(-1));
+                    }
+                });
+            }
+
+            if ([IOStream.STDERR, IOStream.ANY].includes(stream)) {
+                sessionMeta.session.onError(() => {
+                    if (this.#hasMatchingOutput(lastCmdMeta, opts)) {
+                        resolve(lastCmdMeta.output.at(-1));
+                    }
+                });
+            }
+        });
+    }
+
+    /**
      * Wait for the last command in a managed session to return.
      *
-     * @param sessionMeta - The session to wait on; defaults to the active
-     *                      session if omitted
+     * @param opts - Options to modify the behavior of waitForOutput()
      */
-    async waitForReturn(sessionMeta?: ISessionMeta): Promise<ICommandMeta> {
-        sessionMeta ??= this.#activeSession;
+    async waitForReturn(opts: ISessionManagerOptions = {}): Promise<ICommandMeta> {
+        const sessionMeta = opts.sessionMeta || this.#activeSession;
 
-        return this.#getLastCommand(sessionMeta).promise;
+        return this.#getLastCommand({ sessionMeta }).promise;
     }
 
     /**
@@ -288,13 +336,33 @@ export class SessionManager {
     /**
      * Get the last command executed for a given managed session
      *
-     * @param sessionMeta - The managed session to get the last command from;
-     *                      defaults to the active session if omitted or null
+     * @param opts - Options to modify the behavior of #getLastCommand()
      */
-    #getLastCommand(sessionMeta?: ISessionMeta | null): ICommandMeta {
-        sessionMeta ??= this.#activeSession;
+    #getLastCommand(opts: ISessionManagerOptions = {}): ICommandMeta {
+        const sessionMeta = opts.sessionMeta || this.#activeSession;
 
-        return sessionMeta?.commands.at(-1);
+        return sessionMeta?.commands?.at(-1);
+    }
+
+    /**
+     * Test whether any command output satisfies the matching requirements in
+     * the opts object.
+     *
+     * @param cmdMeta - The command to test
+     * @param opts    - The options specifying matching requirements
+     */
+    #hasMatchingOutput(cmdMeta: ICommandMeta, opts: IWaitForOutputOptions = {}) {
+        const pattern = opts.pattern || ".*";
+        const stream  = opts.stream || IOStream.ANY;
+        const regex   = new RegExp(pattern);
+
+        return cmdMeta.output.some((outMeta: IOutputMeta) => {
+            if ([outMeta.stream, IOStream.ANY].includes(stream)) {
+                return regex.test(outMeta.output);
+            }
+
+            return false;
+        });
     }
 
     /**
@@ -303,19 +371,17 @@ export class SessionManager {
      * If the delimiter is found in the output, the command is considered
      * complete and its exit code is recorded.
      *
-     * @param output      - The unmodified session output
-     * @param stream      - The stream this output arrived on
-     * @param sessionMeta - The session to process output for; defaults to the
-     *                      active session if omitted
+     * @param output - The unmodified session output
+     * @param stream - The stream this output arrived on
+     * @param opts   - Options to modify the behavior of #processOutput()
      */
-    #processOutput(output: string, stream: IOStream, sessionMeta?: ISessionMeta): void {
-        sessionMeta ??= this.#activeSession;
-
-        const lastCmdMeta = this.#getLastCommand(sessionMeta);
+    #processOutput(output: string, stream: IOStream, opts: ISessionManagerOptions = {}): void {
+        const sessionMeta = opts.sessionMeta || this.#activeSession;
+        const lastCmdMeta = this.#getLastCommand({ sessionMeta });
         const cleanOutput = output.replace(lastCmdMeta.delimiter.regexp, "");
-        const timestamp   = Date.now();
+        // const timestamp   = Date.now();
 
-        lastCmdMeta.output.push({ "output": cleanOutput, stream, timestamp } as IOutputMeta);
+        lastCmdMeta.output.push({ "output": cleanOutput, stream /*timestamp*/ } as IOutputMeta);
 
         if (output.includes(lastCmdMeta.delimiter.uuid)) {
             try {
