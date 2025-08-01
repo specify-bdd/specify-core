@@ -4,7 +4,7 @@ import { SessionManager, IOStream } from "./SessionManager";
 import { ShellSession             } from "./ShellSession";
 
 import type { ShellSession as MockShellSession } from "./__mocks__/ShellSession";
-import type { ICommandMeta                     } from "./SessionManager";
+import type { CommandMeta                     } from "./SessionManager";
 
 vi.mock("./ShellSession");
 
@@ -249,14 +249,13 @@ describe("SessionManager", () => {
         });
 
         it("removes one managed session among several", () => {
-            const altSession = new ShellSession() as unknown as MockShellSession;
-
-            sessionManager.addSession(altSession, "whatever", false);
+            const altSession     = new ShellSession() as unknown as MockShellSession;
+            const altSessionMeta = sessionManager.addSession(altSession, "whatever", false);
 
             expect(sessionManager.sessions.length).toBe(2);
             expect(sessionManager.activeSession.session).toBe(session);
 
-            sessionManager.removeSession({ "sessionMeta": altSession });
+            sessionManager.removeSession({ "sessionMeta": altSessionMeta });
 
             expect(sessionManager.sessions.length).toBe(1);
             expect(sessionManager.activeSession.session).toBe(session);
@@ -305,7 +304,7 @@ describe("SessionManager", () => {
             });
 
             describe("with an output array...", () => {
-                let cmdMeta: ICommandMeta;
+                let cmdMeta: CommandMeta;
 
                 beforeEach(() => {
                     cmdMeta = sessionManager.run("echo test");
@@ -393,7 +392,7 @@ describe("SessionManager", () => {
     });
 
     describe("waitForOutput()", () => {
-        let cmdMeta: ICommandMeta;
+        let cmdMeta: CommandMeta;
 
         beforeEach(() => {
             sessionManager.addSession(session);

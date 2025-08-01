@@ -16,11 +16,11 @@ import { config                } from "@/config/all";
 import { Command, SPECIFY_ARGS } from "./lib/Command";
 import { TestCommandWatcher    } from "./lib/TestCommandWatcher";
 
-import type { ISpecifyArgs } from "./lib/Command";
+import type { SpecifyArgs } from "./lib/Command";
 
 import { TestCommand, TEST_COMMAND_DEFAULT_OPTS } from "./lib/TestCommand";
 
-const getSpecifyArgs = (args: minimist.ParsedArgs): ISpecifyArgs => {
+const getSpecifyArgs = (args: minimist.ParsedArgs): SpecifyArgs => {
     return Object.entries(args)
         .filter(([key]) => SPECIFY_ARGS.includes(key))
         .reduce((acc, [key, value]) => {

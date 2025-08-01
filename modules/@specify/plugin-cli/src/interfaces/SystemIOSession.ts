@@ -1,4 +1,4 @@
-export interface ISystemIOSession {
+export interface SystemIOSession {
     kill(): void;
     onClose(callback: () => void): void;
     onError(callback: (data: string) => void): void;

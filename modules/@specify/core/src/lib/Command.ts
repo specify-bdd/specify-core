@@ -11,31 +11,31 @@ import type { ParsedArgs } from "minimist";
 
 import type { JsonObject, JsonValue } from "type-fest";
 
-export const COMMAND_DEFAULT_OPTS: ICommandOptions = {
+export const COMMAND_DEFAULT_OPTS: CommandOptions = {
     "debug":   false,
     "logPath": `./specify-log-${Date.now()}.json`,
 };
 
 export const SPECIFY_ARGS = ["help", "watch"];
 
-export interface ICommandOptions {
+export interface CommandOptions {
     debug?: boolean;
     logPath?: string;
 }
 
-export interface ICommandResult {
+export interface CommandResult {
     ok: boolean;
     status: CommandResultStatus;
     error?: JsonObject;
     result?: JsonValue;
-    debug?: ICommandResultDebugInfo;
+    debug?: CommandResultDebugInfo;
 }
 
-export interface ICommandResultDebugInfo {
+export interface CommandResultDebugInfo {
     args: ParsedArgs;
 }
 
-export interface ISpecifyArgs {
+export interface SpecifyArgs {
     help?: boolean;
     watch?: boolean;
 }
@@ -62,8 +62,8 @@ export abstract class Command {
      *
      * @param userOpts - User-supplied options
      */
-    constructor(userOpts: ICommandOptions) {
-        const mergedOpts = merge.all([{}, COMMAND_DEFAULT_OPTS, userOpts]) as ICommandOptions;
+    constructor(userOpts: CommandOptions) {
+        const mergedOpts = merge.all([{}, COMMAND_DEFAULT_OPTS, userOpts]) as CommandOptions;
 
         this.debug = mergedOpts.debug;
         this.logPath = mergedOpts.logPath;
@@ -77,8 +77,8 @@ export abstract class Command {
      *
      * @returns The Command result
      */
-    async execute(userArgs: ParsedArgs): Promise<ICommandResult> {
-        const res: ICommandResult = {
+    async execute(userArgs: ParsedArgs): Promise<CommandResult> {
+        const res: CommandResult = {
             "ok":     false,
             "status": CommandResultStatus.error,
             "error":  serializeError(new Error("Base class Command should not be executed.")),

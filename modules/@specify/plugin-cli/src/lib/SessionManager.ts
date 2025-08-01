@@ -2,26 +2,26 @@
  * SessionManager Module
  *
  * Provides an interface for executing interactive shell commands via
- * ISystemIOSession. Commands are tracked with delimiters and expose
+ * SystemIOSession. Commands are tracked with delimiters and expose
  * output and exit code results.
  */
 
 import assert         from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 
-import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
+import type { SystemIOSession } from "@/interfaces/SystemIOSession";
 
 /**
  * A metadata object representing one executed command.
  */
-export interface ICommandMeta {
+export interface CommandMeta {
     command: string;
-    delimiter?: IDelimiter;
+    delimiter?: Delimiter;
     exitCode?: number;
-    output: IOutputMeta[];
-    promise?: Promise<ICommandMeta>;
+    output: OutputMeta[];
+    promise?: Promise<CommandMeta>;
     reject?: ((err: Error) => void) | null;
-    resolve?: ((cmdMeta: ICommandMeta) => void) | null;
+    resolve?: ((cmdMeta: CommandMeta) => void) | null;
     timestamp: number;
 }
 
@@ -29,7 +29,7 @@ export interface ICommandMeta {
  * Internal structure used to identify and match command boundaries in the
  * session output.
  */
-interface IDelimiter {
+interface Delimiter {
     command: string;
     regexp: RegExp;
     uuid: string;
@@ -38,7 +38,7 @@ interface IDelimiter {
 /**
  * A metadata object representing a single chunk of output from a command.
  */
-export interface IOutputMeta {
+export interface OutputMeta {
     output: string;
     stream: IOStream;
     timestamp: number;
@@ -47,23 +47,23 @@ export interface IOutputMeta {
 /**
  * A metadata object representing a managed session.
  */
-export interface ISessionMeta {
-    commands: ICommandMeta[];
+export interface SessionMeta {
+    commands: CommandMeta[];
     name?: string;
-    session: ISystemIOSession;
+    session: SystemIOSession;
 }
 
 /**
  * The basic option set common to all options-accepting SessionMqnager methods.
  */
-export interface ISessionManagerOptions {
-    sessionMeta?: ISessionMeta;
+export interface SessionManagerOptions {
+    sessionMeta?: SessionMeta;
 }
 
 /**
  * The option set for SessionManager.waitForOutputOptions().
  */
-export interface IWaitForOutputOptions extends ISessionManagerOptions {
+export interface WaitForOutputOptions extends SessionManagerOptions {
     pattern?: string;
     stream?: IOStream;
 }
@@ -88,12 +88,12 @@ export class SessionManager {
     /**
      * The currently active session
      */
-    #activeSession: ISessionMeta | null = null;
+    #activeSession: SessionMeta | null = null;
 
     /**
      * The sessions this class is managing
      */
-    #sessions: ISessionMeta[] = [];
+    #sessions: SessionMeta[] = [];
 
     /**
      * The exit code marker used in delimiter strings
@@ -103,7 +103,7 @@ export class SessionManager {
     /**
      * The managed session which is currently active
      */
-    get activeSession(): ISessionMeta {
+    get activeSession(): SessionMeta {
         return this.#activeSession;
     }
 
@@ -134,7 +134,7 @@ export class SessionManager {
     /**
      * The list of managed sessions
      */
-    get sessions(): ISessionMeta[] {
+    get sessions(): SessionMeta[] {
         return this.#sessions.slice();
     }
 
@@ -145,8 +145,8 @@ export class SessionManager {
      * @param name     - The name of the session, for easy reference
      * @param activate - Activate the new session
      */
-    addSession(session: ISystemIOSession, name?: string, activate: boolean = true): ISessionMeta {
-        const sessionMeta: ISessionMeta = { "commands": [], name, session };
+    addSession(session: SystemIOSession, name?: string, activate: boolean = true): SessionMeta {
+        const sessionMeta: SessionMeta = { "commands": [], name, session };
 
         this.#sessions.push(sessionMeta);
 
@@ -167,7 +167,7 @@ export class SessionManager {
      *
      * @param opts - Options to modify the behavior of kill()
      */
-    async kill(opts: ISessionManagerOptions = {}): Promise<void> {
+    async kill(opts: SessionManagerOptions = {}): Promise<void> {
         const sessionMeta = opts.sessionMeta || this.#activeSession;
 
         return new Promise((resolve) => {
@@ -195,7 +195,7 @@ export class SessionManager {
      *
      * @param opts - Options to modify the behavior of removeSession()
      */
-    removeSession(opts: ISessionManagerOptions = {}): void {
+    removeSession(opts: SessionManagerOptions = {}): void {
         const sessionMeta = opts.sessionMeta || this.#activeSession;
 
         const index = this.#sessions.indexOf(sessionMeta);
@@ -228,7 +228,7 @@ export class SessionManager {
      * @throws {@link AssertionError}
      * If another command is already in progress
      */
-    run(command: string, opts: ISessionManagerOptions = {}): ICommandMeta {
+    run(command: string, opts: SessionManagerOptions = {}): CommandMeta {
         const sessionMeta = opts.sessionMeta || this.#activeSession;
         const lastCmdMeta = this.#getLastCommand({ sessionMeta });
 
@@ -244,7 +244,7 @@ export class SessionManager {
             "delimiter": this.#createDelimiter(),
             "output":    [],
             "timestamp": Date.now(),
-        } as ICommandMeta;
+        } as CommandMeta;
 
         newCmdMeta.promise = new Promise((resolve, reject) => {
             newCmdMeta.resolve = resolve;
@@ -262,7 +262,7 @@ export class SessionManager {
      *
      * @param opts - Options to modify the behavior of waitForOutput()
      */
-    async waitForOutput(opts: IWaitForOutputOptions = {}): Promise<IOutputMeta> {
+    async waitForOutput(opts: WaitForOutputOptions = {}): Promise<OutputMeta> {
         const sessionMeta = opts.sessionMeta || this.#activeSession;
         const lastCmdMeta = this.#getLastCommand({ sessionMeta });
         const stream      = opts.stream || IOStream.ANY;
@@ -295,7 +295,7 @@ export class SessionManager {
      *
      * @param opts - Options to modify the behavior of waitForOutput()
      */
-    async waitForReturn(opts: ISessionManagerOptions = {}): Promise<ICommandMeta> {
+    async waitForReturn(opts: SessionManagerOptions = {}): Promise<CommandMeta> {
         const sessionMeta = opts.sessionMeta || this.#activeSession;
 
         return this.#getLastCommand({ sessionMeta }).promise;
@@ -306,7 +306,7 @@ export class SessionManager {
      *
      * @returns the new delimiter
      */
-    #createDelimiter(): IDelimiter {
+    #createDelimiter(): Delimiter {
         const uuid   = randomUUID(); // used to prevent false delimits
         const prefix = "SPECIFY";
 
@@ -339,7 +339,7 @@ export class SessionManager {
      *
      * @param opts - Options to modify the behavior of #getLastCommand()
      */
-    #getLastCommand(opts: ISessionManagerOptions = {}): ICommandMeta {
+    #getLastCommand(opts: SessionManagerOptions = {}): CommandMeta {
         const sessionMeta = opts.sessionMeta || this.#activeSession;
 
         return sessionMeta?.commands?.at(-1);
@@ -352,12 +352,12 @@ export class SessionManager {
      * @param cmdMeta - The command to test
      * @param opts    - The options specifying matching requirements
      */
-    #hasMatchingOutput(cmdMeta: ICommandMeta, opts: IWaitForOutputOptions = {}) {
+    #hasMatchingOutput(cmdMeta: CommandMeta, opts: WaitForOutputOptions = {}) {
         const pattern = opts.pattern || ".*";
         const stream  = opts.stream || IOStream.ANY;
         const regex   = new RegExp(pattern);
 
-        return cmdMeta.output.some((outMeta: IOutputMeta) => {
+        return cmdMeta.output.some((outMeta: OutputMeta) => {
             if ([outMeta.stream, IOStream.ANY].includes(stream)) {
                 return regex.test(outMeta.output);
             }
@@ -376,13 +376,13 @@ export class SessionManager {
      * @param stream - The stream this output arrived on
      * @param opts   - Options to modify the behavior of #processOutput()
      */
-    #processOutput(output: string, stream: IOStream, opts: ISessionManagerOptions = {}): void {
+    #processOutput(output: string, stream: IOStream, opts: SessionManagerOptions = {}): void {
         const sessionMeta = opts.sessionMeta || this.#activeSession;
         const lastCmdMeta = this.#getLastCommand({ sessionMeta });
         const cleanOutput = output.replace(lastCmdMeta.delimiter.regexp, "");
         const timestamp   = Date.now();
 
-        lastCmdMeta.output.push({ "output": cleanOutput, stream, timestamp } as IOutputMeta);
+        lastCmdMeta.output.push({ "output": cleanOutput, stream, timestamp } as OutputMeta);
 
         if (output.includes(lastCmdMeta.delimiter.uuid)) {
             try {
@@ -405,7 +405,7 @@ export class SessionManager {
      * @param cmdMeta - The running command
      * @param err     - The reason for the rejection
      */
-    #rejectRun(cmdMeta: ICommandMeta, err: Error): void {
+    #rejectRun(cmdMeta: CommandMeta, err: Error): void {
         const reject = cmdMeta.reject;
 
         cmdMeta.resolve = null;
@@ -419,7 +419,7 @@ export class SessionManager {
      *
      * @param commandMeta - The running command
      */
-    #resolveRun(cmdMeta: ICommandMeta): void {
+    #resolveRun(cmdMeta: CommandMeta): void {
         const resolve = cmdMeta.resolve;
 
         cmdMeta.resolve = null;
