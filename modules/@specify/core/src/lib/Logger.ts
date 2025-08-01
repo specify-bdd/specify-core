@@ -17,7 +17,7 @@ interface LoggerOptions {
  * Utility for working with temporary Cucumber JSON log files on disk.
  *
  * Provides functions for generating temp file paths, reading JSON logs,
- * and consuming (i.e., reading then deleting) logs. Internal file system 
+ * and consuming (i.e., reading then deleting) logs. Internal file system
  * behavior can be customized for testing purposes via injected dependencies.
  */
 export class Logger {
@@ -82,9 +82,9 @@ export class Logger {
     /**
      * Generate a unique file path in the system's temp directory
      * for writing a JSON log file. Ensures the parent directory exists.
-     * 
+     *
      * @remarks
-     * This only creates a path to the file, its does not create the file itself 
+     * This only creates a path to the file, its does not create the file itself
      *
      * @param prefix - File name prefix
      *
