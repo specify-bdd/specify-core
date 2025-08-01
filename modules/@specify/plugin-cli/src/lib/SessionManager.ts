@@ -168,7 +168,7 @@ export class SessionManager {
      * @param opts - Options to modify the behavior of kill()
      */
     async kill(opts: SessionManagerOptions = {}): Promise<void> {
-        const sessionMeta = opts.sessionMeta || this.#activeSession;
+        const sessionMeta = opts.sessionMeta ?? this.#activeSession;
 
         return new Promise((resolve) => {
             this.removeSession({ sessionMeta });
@@ -196,7 +196,7 @@ export class SessionManager {
      * @param opts - Options to modify the behavior of removeSession()
      */
     removeSession(opts: SessionManagerOptions = {}): void {
-        const sessionMeta = opts.sessionMeta || this.#activeSession;
+        const sessionMeta = opts.sessionMeta ?? this.#activeSession;
 
         const index = this.#sessions.indexOf(sessionMeta);
 
@@ -229,7 +229,7 @@ export class SessionManager {
      * If another command is already in progress
      */
     run(command: string, opts: SessionManagerOptions = {}): CommandMeta {
-        const sessionMeta = opts.sessionMeta || this.#activeSession;
+        const sessionMeta = opts.sessionMeta ?? this.#activeSession;
         const lastCmdMeta = this.#getLastCommand({ sessionMeta });
 
         if (lastCmdMeta) {
@@ -263,9 +263,9 @@ export class SessionManager {
      * @param opts - Options to modify the behavior of waitForOutput()
      */
     async waitForOutput(opts: WaitForOutputOptions = {}): Promise<OutputMeta> {
-        const sessionMeta = opts.sessionMeta || this.#activeSession;
+        const sessionMeta = opts.sessionMeta ?? this.#activeSession;
         const lastCmdMeta = this.#getLastCommand({ sessionMeta });
-        const stream      = opts.stream || IOStream.ANY;
+        const stream      = opts.stream ?? IOStream.ANY;
 
         return new Promise((resolve) => {
             if (this.#hasMatchingOutput(lastCmdMeta, opts)) {
@@ -296,7 +296,7 @@ export class SessionManager {
      * @param opts - Options to modify the behavior of waitForOutput()
      */
     async waitForReturn(opts: SessionManagerOptions = {}): Promise<CommandMeta> {
-        const sessionMeta = opts.sessionMeta || this.#activeSession;
+        const sessionMeta = opts.sessionMeta ?? this.#activeSession;
 
         return this.#getLastCommand({ sessionMeta }).promise;
     }
@@ -340,7 +340,7 @@ export class SessionManager {
      * @param opts - Options to modify the behavior of #getLastCommand()
      */
     #getLastCommand(opts: SessionManagerOptions = {}): CommandMeta {
-        const sessionMeta = opts.sessionMeta || this.#activeSession;
+        const sessionMeta = opts.sessionMeta ?? this.#activeSession;
 
         return sessionMeta?.commands?.at(-1);
     }
@@ -353,8 +353,8 @@ export class SessionManager {
      * @param opts    - The options specifying matching requirements
      */
     #hasMatchingOutput(cmdMeta: CommandMeta, opts: WaitForOutputOptions = {}) {
-        const pattern = opts.pattern || ".*";
-        const stream  = opts.stream || IOStream.ANY;
+        const pattern = opts.pattern ?? ".*";
+        const stream  = opts.stream ?? IOStream.ANY;
         const regex   = new RegExp(pattern);
 
         return cmdMeta.output.some((outMeta: OutputMeta) => {
@@ -377,7 +377,7 @@ export class SessionManager {
      * @param opts   - Options to modify the behavior of #processOutput()
      */
     #processOutput(output: string, stream: IOStream, opts: SessionManagerOptions = {}): void {
-        const sessionMeta = opts.sessionMeta || this.#activeSession;
+        const sessionMeta = opts.sessionMeta ?? this.#activeSession;
         const lastCmdMeta = this.#getLastCommand({ sessionMeta });
         const cleanOutput = output.replace(lastCmdMeta.delimiter.regexp, "");
         const timestamp   = Date.now();

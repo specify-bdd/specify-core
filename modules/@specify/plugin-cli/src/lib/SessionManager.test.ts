@@ -4,7 +4,7 @@ import { SessionManager, IOStream } from "./SessionManager";
 import { ShellSession             } from "./ShellSession";
 
 import type { ShellSession as MockShellSession } from "./__mocks__/ShellSession";
-import type { CommandMeta                     } from "./SessionManager";
+import type { CommandMeta                      } from "./SessionManager";
 
 vi.mock("./ShellSession");
 
