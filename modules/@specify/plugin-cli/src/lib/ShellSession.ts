@@ -9,9 +9,9 @@ import { spawn } from "node:child_process";
 
 import type { ChildProcessWithoutNullStreams, SpawnOptions } from "node:child_process";
 
-import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
+import type { SystemIOSession } from "@/interfaces/SystemIOSession";
 
-export class ShellSession implements ISystemIOSession {
+export class ShellSession implements SystemIOSession {
     private childProcess: ChildProcessWithoutNullStreams;
 
     /**
