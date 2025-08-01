@@ -23,7 +23,12 @@ When("a/the user waits for the last command to return", { "timeout": 60000 }, wa
 
 Then("the command should return a/an/the {ref:exitCode} exit code", verifyExitCode);
 
-Then("the console output should be a/an/the {ref:consoleOutput}", verifyOutput);
+Then("the last command's terminal output should be/include {string}", verifyOutput);
+
+Then(
+    "the last command's terminal output should be/include a/an/the {ref:consoleOutput}",
+    verifyOutput,
+);
 
 /**
  * Execute the given command via the CLI asynchronously and move on without
@@ -76,7 +81,11 @@ function startDefaultShell(): void {
  * @throws {@link AssertionError}
  * If the matcher regexp wasnt found
  */
-function verifyOutput(consoleOutput: RegExp): void {
+function verifyOutput(consoleOutput: RegExp | string): void {
+    if (typeof consoleOutput === "string") {
+        consoleOutput = new RegExp(consoleOutput, "u");
+    }
+
     assert.ok(
         consoleOutput.test(this.cli.manager.output),
         new AssertionError({
