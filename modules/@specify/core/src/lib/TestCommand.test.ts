@@ -2,7 +2,7 @@ import path                 from "node:path";
 import { deserializeError } from "serialize-error";
 
 import { TestCommand, TestCommandOptions } from "./TestCommand";
-import { CucumberTool                     } from "./CucumberTool";
+import { CucumberTool                    } from "./CucumberTool";
 
 const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted(() => {
     return {
