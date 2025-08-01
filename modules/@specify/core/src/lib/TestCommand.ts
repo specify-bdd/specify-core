@@ -23,9 +23,9 @@ import type {
     IRunResult,
 } from "@cucumber/cucumber/api";
 
-import type { ICommandOptions, ICommandResult, ICommandResultDebugInfo } from "./Command";
+import type { CommandOptions, CommandResult, CommandResultDebugInfo } from "./Command";
 
-export const TEST_COMMAND_DEFAULT_OPTS: ITestCommandOptions = {
+export const TEST_COMMAND_DEFAULT_OPTS: TestCommandOptions = {
     "cucumber": {
         "format": [],
         "import": [],
@@ -37,17 +37,17 @@ export const TEST_COMMAND_DEFAULT_OPTS: ITestCommandOptions = {
     "logPath":      `./specify-test-log-${Date.now()}.json`,
 };
 
-export interface ITestCommandOptions extends ICommandOptions {
+export interface TestCommandOptions extends CommandOptions {
     cucumber?: Partial<IConfiguration>;
     gherkinPaths?: string[];
     plugins?: string[];
 }
 
-export interface ITestCommandResult extends ICommandResult {
-    debug?: ITestCommandResultDebugInfo;
+export interface TestCommandResult extends CommandResult {
+    debug?: TestCommandResultDebugInfo;
 }
 
-export interface ITestCommandResultDebugInfo extends ICommandResultDebugInfo {
+export interface TestCommandResultDebugInfo extends CommandResultDebugInfo {
     cucumber?: {
         runConfiguration?: IRunConfiguration;
         runEnvironment?: IRunEnvironment;
@@ -71,12 +71,12 @@ export class TestCommand extends Command {
      *
      * @param userOpts - User-supplied options
      */
-    constructor(userOpts: ITestCommandOptions = {}) {
+    constructor(userOpts: TestCommandOptions = {}) {
         const mergedOpts = merge.all([
             {},
             TEST_COMMAND_DEFAULT_OPTS,
             userOpts,
-        ]) as ITestCommandOptions;
+        ]) as TestCommandOptions;
 
         super({
             "debug":   mergedOpts.debug,
@@ -99,8 +99,8 @@ export class TestCommand extends Command {
      *
      * @returns The Command result
      */
-    async execute(userArgs: ParsedArgs): Promise<ITestCommandResult> {
-        const testRes: ITestCommandResult = {
+    async execute(userArgs: ParsedArgs): Promise<TestCommandResult> {
+        const testRes: TestCommandResult = {
             "ok":     false,
             "status": CommandResultStatus.error,
         };

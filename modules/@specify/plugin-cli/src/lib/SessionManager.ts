@@ -2,30 +2,30 @@
  * SessionManager Module
  *
  * Provides an interface for executing interactive shell commands via
- * ISystemIOSession. Commands are tracked with delimiters and expose
+ * SystemIOSession. Commands are tracked with delimiters and expose
  * output and exit code results.
  */
 
 import assert         from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 
-import type { ISystemIOSession } from "@/interfaces/ISystemIOSession";
+import type { SystemIOSession } from "@/interfaces/SystemIOSession";
 
-export interface ICommandMeta {
+export interface CommandMeta {
     command: string;
-    delimiter?: IDelimiter;
+    delimiter?: Delimiter;
     exitCode?: number;
     output: string;
-    promise?: Promise<ICommandMeta>;
+    promise?: Promise<CommandMeta>;
     reject?: ((err: Error) => void) | null;
-    resolve?: ((cmdMeta: ICommandMeta) => void) | null;
+    resolve?: ((cmdMeta: CommandMeta) => void) | null;
 }
 
 /**
  * Internal structure used to identify and match command boundaries in the
  * session output.
  */
-interface IDelimiter {
+interface Delimiter {
     command: string;
     regexp: RegExp;
     uuid: string;
@@ -34,10 +34,10 @@ interface IDelimiter {
 /**
  * The metadata for a managed session
  */
-interface ISessionMeta {
-    commands: ICommandMeta[];
+interface SessionMeta {
+    commands: CommandMeta[];
     name?: string;
-    session: ISystemIOSession;
+    session: SystemIOSession;
 }
 
 /**
@@ -50,12 +50,12 @@ export class SessionManager {
     /**
      * The currently active session
      */
-    #activeSession: ISessionMeta | null = null;
+    #activeSession: SessionMeta | null = null;
 
     /**
      * The sessions this class is managing
      */
-    #sessions: ISessionMeta[] = [];
+    #sessions: SessionMeta[] = [];
 
     /**
      * The exit code marker used in delimiter strings
@@ -65,7 +65,7 @@ export class SessionManager {
     /**
      * The managed session which is currently active
      */
-    get activeSession(): ISessionMeta {
+    get activeSession(): SessionMeta {
         return this.#activeSession;
     }
 
@@ -87,7 +87,7 @@ export class SessionManager {
     /**
      * The list of managed sessions
      */
-    get sessions(): ISessionMeta[] {
+    get sessions(): SessionMeta[] {
         return this.#sessions.slice();
     }
 
@@ -98,8 +98,8 @@ export class SessionManager {
      * @param name     - The name of the session, for easy reference
      * @param activate - Activate the new session
      */
-    addSession(session: ISystemIOSession, name?: string, activate: boolean = true): ISessionMeta {
-        const sessionMeta: ISessionMeta = { "commands": [], name, session };
+    addSession(session: SystemIOSession, name?: string, activate: boolean = true): SessionMeta {
+        const sessionMeta: SessionMeta = { "commands": [], name, session };
 
         this.#sessions.push(sessionMeta);
 
@@ -122,7 +122,7 @@ export class SessionManager {
      * @param sessionMeta - The session to kill; defaults to the active session
      *                      if omitted
      */
-    async kill(sessionMeta?: ISessionMeta): Promise<void> {
+    async kill(sessionMeta?: SessionMeta): Promise<void> {
         sessionMeta ??= this.#activeSession;
 
         return new Promise((resolve) => {
@@ -151,7 +151,7 @@ export class SessionManager {
      * @param sessionMeta - The session to remove; defaults to the active
      *                      session if omitted
      */
-    removeSession(sessionMeta?: ISessionMeta): void {
+    removeSession(sessionMeta?: SessionMeta): void {
         sessionMeta ??= this.#activeSession;
 
         const index = this.#sessions.indexOf(sessionMeta);
@@ -185,7 +185,7 @@ export class SessionManager {
      * @throws {@link AssertionError}
      * If another command is already in progress
      */
-    run(command: string, sessionMeta?: ISessionMeta): ICommandMeta {
+    run(command: string, sessionMeta?: SessionMeta): CommandMeta {
         sessionMeta ??= this.#activeSession;
 
         const lastCmdMeta = this.#getLastCommand(sessionMeta);
@@ -201,7 +201,7 @@ export class SessionManager {
             command,
             "delimiter": this.#createDelimiter(),
             "output":    "",
-        } as ICommandMeta;
+        } as CommandMeta;
 
         newCmdMeta.promise = new Promise((resolve, reject) => {
             newCmdMeta.resolve = resolve;
@@ -220,7 +220,7 @@ export class SessionManager {
      * @param sessionMeta - The session to wait on; defaults to the active
      *                      session if omitted
      */
-    async waitForReturn(sessionMeta?: ISessionMeta): Promise<ICommandMeta> {
+    async waitForReturn(sessionMeta?: SessionMeta): Promise<CommandMeta> {
         sessionMeta ??= this.#activeSession;
 
         return this.#getLastCommand(sessionMeta).promise;
@@ -231,7 +231,7 @@ export class SessionManager {
      *
      * @returns the new delimiter
      */
-    #createDelimiter(): IDelimiter {
+    #createDelimiter(): Delimiter {
         const uuid   = randomUUID(); // used to prevent false delimits
         const prefix = "SPECIFY";
 
@@ -265,7 +265,7 @@ export class SessionManager {
      * @param sessionMeta - The managed session to get the last command from;
      *                      defaults to the active session if omitted or null
      */
-    #getLastCommand(sessionMeta?: ISessionMeta | null): ICommandMeta {
+    #getLastCommand(sessionMeta?: SessionMeta | null): CommandMeta {
         sessionMeta ??= this.#activeSession;
 
         return sessionMeta?.commands.at(-1);
@@ -281,7 +281,7 @@ export class SessionManager {
      * @param sessionMeta - The session to process output for; defaults to the
      *                      active session if omitted
      */
-    #processOutput(output: string, sessionMeta?: ISessionMeta): void {
+    #processOutput(output: string, sessionMeta?: SessionMeta): void {
         sessionMeta ??= this.#activeSession;
 
         const lastCmdMeta = this.#getLastCommand(sessionMeta);
@@ -309,7 +309,7 @@ export class SessionManager {
      * @param cmdMeta - The running command
      * @param err     - The reason for the rejection
      */
-    #rejectRun(cmdMeta: ICommandMeta, err: Error): void {
+    #rejectRun(cmdMeta: CommandMeta, err: Error): void {
         const reject = cmdMeta.reject;
 
         cmdMeta.resolve = null;
@@ -323,7 +323,7 @@ export class SessionManager {
      *
      * @param commandMeta - The running command
      */
-    #resolveRun(cmdMeta: ICommandMeta): void {
+    #resolveRun(cmdMeta: CommandMeta): void {
         const resolve = cmdMeta.resolve;
 
         cmdMeta.resolve = null;

@@ -1,7 +1,7 @@
 import path                 from "node:path";
 import { deserializeError } from "serialize-error";
 
-import { TestCommand, ITestCommandOptions } from "./TestCommand";
+import { TestCommand, TestCommandOptions } from "./TestCommand";
 import { CucumberTool                     } from "./CucumberTool";
 
 const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted(() => {
@@ -61,7 +61,7 @@ describe("TestCommand", () => {
         });
 
         describe("returns", () => {
-            const userOpts: Partial<ITestCommandOptions> = {
+            const userOpts: Partial<TestCommandOptions> = {
                 "cucumber": {
                     "import": [path.resolve(import.meta.dirname, "../../dist/cucumber")],
                 },
