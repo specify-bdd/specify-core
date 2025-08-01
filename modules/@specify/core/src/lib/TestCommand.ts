@@ -71,7 +71,7 @@ export class TestCommand extends Command {
      *
      * @param userOpts - User-supplied options
      */
-    constructor(userOpts: ITestCommandOptions) {
+    constructor(userOpts: ITestCommandOptions = {}) {
         const mergedOpts = merge.all([
             {},
             TEST_COMMAND_DEFAULT_OPTS,

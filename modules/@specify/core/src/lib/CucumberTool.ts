@@ -1,9 +1,5 @@
 import { loadConfiguration, loadSupport, runCucumber } from "@cucumber/cucumber/api";
 
-import fs   from "node:fs";
-import os   from "node:os";
-import path from "node:path";
-
 import type {
     IConfiguration,
     IRunConfiguration,
@@ -13,7 +9,7 @@ import type {
     ISupportCodeLibrary,
 } from "@cucumber/cucumber/api";
 
-import type { JsonObject } from "type-fest";
+import { Logger } from "./Logger";
 
 export class CucumberTool {
     /**
@@ -34,20 +30,29 @@ export class CucumberTool {
      */
     static #supportCode: ISupportCodeLibrary;
 
-    static async loadConfiguration(config: Partial<IConfiguration>): Promise<IRunConfiguration> {
-        CucumberTool.#logPath = CucumberTool.#generateLogPath();
+    static #logger: Logger = new Logger();
 
-        config.format.push(["json", CucumberTool.#logPath]);
+    /**
+     * Inject custom Logger instance (for alternative behavior or testing).
+     */
+    static set logger(logger: Logger) {
+        this.#logger = logger;
+    }
+
+    static async loadConfiguration(config: Partial<IConfiguration>): Promise<IRunConfiguration> {
+        CucumberTool.#logPath = await this.#logger.generateTmpLogPath("specify-test");
+
+        config.format.push(["json", this.#logPath]);
 
         const runConfig = (await loadConfiguration({ "provided": config })).runConfiguration;
 
-        await CucumberTool.loadSupport(runConfig);
+        await this.#loadSupport(runConfig);
 
         return runConfig;
     }
 
-    static async loadSupport(runConfig: IRunConfiguration): Promise<void> {
-        CucumberTool.#supportCode ??= await loadSupport(runConfig);
+    static async #loadSupport(runConfig: IRunConfiguration): Promise<void> {
+        this.#supportCode ??= await loadSupport(runConfig);
     }
 
     /**
@@ -64,31 +69,21 @@ export class CucumberTool {
     ): Promise<IRunResult> {
         const finalConfig = {
             ...options,
-            "support": CucumberTool.#supportCode,
+            "support": this.#supportCode,
         };
 
-        const runResult       = await runCucumber(finalConfig, environment);
-        const scenarioResults = CucumberTool.#consumeLogFile();
+        const runResult = await runCucumber(finalConfig, environment);
 
-        if (!Array.isArray(scenarioResults) || !scenarioResults.length) {
-            throw new Error("No tests were executed.");
-        }
+        await this.#checkForRunErrors();
 
         return runResult;
     }
 
-    static #generateLogPath(): string {
-        return path.join(
-            fs.mkdtempSync(path.join(os.tmpdir(), "specify-test-")),
-            `${Date.now()}.json`,
-        );
-    }
+    static async #checkForRunErrors(): Promise<void> {
+        const scenarioResults = await this.#logger.consumeTmpLog(this.#logPath);
 
-    static #consumeLogFile(): JsonObject {
-        try {
-            return JSON.parse(fs.readFileSync(CucumberTool.#logPath, { "encoding": "utf8" }));
-        } finally {
-            fs.unlinkSync(CucumberTool.#logPath);
+        if (!Array.isArray(scenarioResults) || scenarioResults.length === 0) {
+            throw new Error("No tests were executed.");
         }
     }
 }

@@ -1,8 +1,8 @@
-import path from "node:path";
+import path                 from "node:path";
+import { deserializeError } from "serialize-error";
 
 import { TestCommand, ITestCommandOptions } from "./TestCommand";
 import { CucumberTool                     } from "./CucumberTool";
-import { deserializeError                 } from "serialize-error";
 
 const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted(() => {
     return {
@@ -14,7 +14,6 @@ const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted((
     };
 });
 
-// Mocking CucumberTool methods
 vi.mock("./CucumberTool", () => ({
     "CucumberTool": {
         "loadConfiguration": mockLoadConfiguration,
@@ -107,32 +106,32 @@ describe("TestCommand", () => {
 
                     expect(res.ok).toBe(false);
                     expect(res.status).toBe(2);
-                })
+                });
 
                 it("no executed tests", async () => {
-                    const error    = Error("No tests were executed.")
+                    const error    = Error("No tests were executed.");
                     const userArgs = { "_": ["./assets/gherkin/empty"] };
-                    
+
                     mockRunCucumber.mockRejectedValueOnce(error);
-    
+
                     const res = await new TestCommand().execute(userArgs);
-    
+
                     expect(deserializeError(res.error)).toEqual(error);
                 });
 
                 it("unsupported command option", async () => {
-                    const error    = Error("Invalid option: --bad")
+                    const error    = Error("Invalid option: --bad");
                     const userArgs = { ...emptyArgs, "bad": "test" };
-                    
+
                     const res = await new TestCommand().execute(userArgs);
-    
+
                     expect(deserializeError(res.error)).toEqual(error);
                 });
 
                 it("invalid test file path", async () => {
-                    const error    = Error("Invalid path: ./path/that/doesnt/exist/")
+                    const error    = Error("Invalid path: ./path/that/doesnt/exist/");
                     const userArgs = { "_": ["./path/that/doesnt/exist/"] };
-                    
+
                     const res = await new TestCommand().execute(userArgs);
 
                     expect(deserializeError(res.error)).toEqual(error);
