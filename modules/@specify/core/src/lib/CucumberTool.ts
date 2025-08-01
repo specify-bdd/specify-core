@@ -11,14 +11,21 @@ import type {
 
 import { Logger } from "./Logger";
 
+/**
+ * Encapsulates the lifecycle of configuring, loading support, and running
+ * Cucumber test executions, with result logging handled by Logger.
+ *
+ * Handles caching of support code to work around Node.js module caching,
+ * and manages temporary log files to record and validate test execution output.
+ */
 export class CucumberTool {
     /**
-     * The file system temporary path to write result output to.
+     * Path to the temporary JSON log file that stores Cucumber test run results.
      */
     static #logPath: string;
 
     /**
-     * Cucumber support code, which must be reused across executions
+     * Cached Cucumber support code to be reused across multiple executions.
      *
      * @remarks
      * Cucumber's support code import logic doesn't work properly across
@@ -30,6 +37,10 @@ export class CucumberTool {
      */
     static #supportCode: ISupportCodeLibrary;
 
+    /**
+     * Logger instance used for managing temporary log file path generation,
+     * reading, and deletion.
+     */
     static #logger: Logger = new Logger();
 
     /**
@@ -39,9 +50,18 @@ export class CucumberTool {
         this.#logger = logger;
     }
 
+    /**
+     * Load and prepare Cucumber run configuration, including setting up
+     * the JSON log output path and preloading support code.
+     *
+     * @param config - Partial Cucumber configuration provided by the user
+     *
+     * @returns A fully resolved and prepared Cucumber run configuration object
+     */
     static async loadConfiguration(config: Partial<IConfiguration>): Promise<IRunConfiguration> {
         CucumberTool.#logPath = await this.#logger.generateTmpLogPath("specify-test");
 
+        // Append JSON output formatter for Cucumber run results
         config.format.push(["json", this.#logPath]);
 
         const runConfig = (await loadConfiguration({ "provided": config })).runConfiguration;
@@ -51,17 +71,25 @@ export class CucumberTool {
         return runConfig;
     }
 
+    /**
+     * Preload and cache Cucumber support code library.
+     *
+     * @param runConfig - The Cucumber run configuration for which support
+     *                    code should be loaded.
+     */
     static async #loadSupport(runConfig: IRunConfiguration): Promise<void> {
         this.#supportCode ??= await loadSupport(runConfig);
     }
 
     /**
-     * Run the tests. Consider a no-op result to be an error condition.
+     * Execute the Cucumber test run. No tests run is considered an error.
      *
-     * @param options - User-supplied options
-     * @param environment - User-supplied environment
+     * @param options     - The run options for the test execution
+     * @param environment - Environment configuration
      *
-     * @returns The run result
+     * @returns The result of the Cucumber test run.
+     *
+     * @throws Will throw if no tests were executed or other internal errors occur.
      */
     static async runCucumber(
         options: IRunOptions,
@@ -79,6 +107,12 @@ export class CucumberTool {
         return runResult;
     }
 
+    /**
+     * Checks the temporary log file for valid test run results.
+     *
+     * @throws Throws if no tests were executed or results
+     *         cannot be parsed properly.
+     */
     static async #checkForRunErrors(): Promise<void> {
         const scenarioResults = await this.#logger.consumeTmpLog(this.#logPath);
 
