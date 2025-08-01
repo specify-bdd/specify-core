@@ -47,3 +47,12 @@ defineParameterType({
     },
     "useForSnippets": false,
 });
+
+defineParameterType({
+    "name":   "regexp",
+    "regexp": quotedString,
+    transformer(input: string): RegExp {
+        return RegExp(input);
+    },
+    "useForSnippets": false,
+});

@@ -64,7 +64,7 @@ export interface SessionManagerOptions {
  * The option set for SessionManager.waitForOutputOptions().
  */
 export interface WaitForOutputOptions extends SessionManagerOptions {
-    pattern?: string;
+    pattern?: RegExp | string;
     stream?: IOStream;
 }
 
@@ -355,11 +355,11 @@ export class SessionManager {
     #hasMatchingOutput(cmdMeta: CommandMeta, opts: WaitForOutputOptions = {}) {
         const pattern = opts.pattern ?? ".*";
         const stream  = opts.stream ?? IOStream.ANY;
-        const regex   = new RegExp(pattern);
+        const regexp  = new RegExp(pattern); // pattern may already be a regexp, but this guarantees consistent behavior
 
         return cmdMeta.output.some((outMeta: OutputMeta) => {
             if ([outMeta.stream, IOStream.ANY].includes(stream)) {
-                return regex.test(outMeta.output);
+                return regexp.test(outMeta.output);
             }
 
             return false;

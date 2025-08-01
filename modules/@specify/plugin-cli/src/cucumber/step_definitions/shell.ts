@@ -21,99 +21,58 @@ When("a/the user starts the (async )command/process {string}", execCommand);
 
 When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
 
-When("a/the user waits for terminal output", { "timeout": 60000 }, waitForAnyCommandOutput);
+When("a/the user waits for terminal output", { "timeout": 60000 }, waitForAnyOutput);
+
+When("a/the user waits for terminal output on STDERR", { "timeout": 60000 }, waitForOutputOnSTDERR);
+
+When("a/the user waits for terminal output on STDOUT", { "timeout": 60000 }, waitForOutputOnSTDOUT);
 
 When(
-    "a/the user waits for terminal output on STDERR",
+    "a/the user waits for terminal output on STDERR matching (the regular expression ){ref:consoleOutput}",
     { "timeout": 60000 },
-    waitForCommandOutputOnSTDERR,
+    waitForMatchingOutputOnSTDERR,
 );
 
 When(
-    "a/the user waits for terminal output on STDOUT",
+    "a/the user waits for terminal output on STDERR matching (the regular expression ){regexp}",
     { "timeout": 60000 },
-    waitForCommandOutputOnSTDOUT,
+    waitForMatchingOutputOnSTDERR,
 );
 
 When(
-    "a/the user waits for terminal output on STDERR to be {ref:consoleOutput}",
+    "a/the user waits for terminal output on STDOUT matching (the regular expression ){ref:consoleOutput}",
     { "timeout": 60000 },
-    waitForExactCommandOutputOnSTDERR,
+    waitForMatchingOutputOnSTDOUT,
 );
 
 When(
-    "a/the user waits for terminal output on STDOUT to be {ref:consoleOutput}",
+    "a/the user waits for terminal output on STDOUT matching (the regular expression ){regexp}",
     { "timeout": 60000 },
-    waitForExactCommandOutputOnSTDOUT,
+    waitForMatchingOutputOnSTDOUT,
 );
 
 When(
-    "a/the user waits for terminal output on STDERR to be {string}",
+    "a/the user waits for terminal output matching (the regular expression ){ref:consoleOutput}",
     { "timeout": 60000 },
-    waitForExactCommandOutputOnSTDERR,
+    waitForMatchingOutput,
 );
 
 When(
-    "a/the user waits for terminal output on STDOUT to be {string}",
+    "a/the user waits for terminal output matching (the regular expression ){regexp}",
     { "timeout": 60000 },
-    waitForExactCommandOutputOnSTDOUT,
-);
-
-When(
-    "a/the user waits for terminal output on STDERR to include {ref:consoleOutput}",
-    { "timeout": 60000 },
-    waitForSimilarCommandOutputOnSTDERR,
-);
-
-When(
-    "a/the user waits for terminal output on STDOUT to include {ref:consoleOutput}",
-    { "timeout": 60000 },
-    waitForSimilarCommandOutputOnSTDOUT,
-);
-
-When(
-    "a/the user waits for terminal output on STDERR to include {string}",
-    { "timeout": 60000 },
-    waitForSimilarCommandOutputOnSTDERR,
-);
-
-When(
-    "a/the user waits for terminal output on STDOUT to include {string}",
-    { "timeout": 60000 },
-    waitForSimilarCommandOutputOnSTDOUT,
-);
-
-When(
-    "a/the user waits for terminal output to be {ref:consoleOutput}",
-    { "timeout": 60000 },
-    waitForExactCommandOutput,
-);
-
-When(
-    "a/the user waits for terminal output to be {string}",
-    { "timeout": 60000 },
-    waitForExactCommandOutput,
-);
-
-When(
-    "a/the user waits for terminal output to include {ref:consoleOutput}",
-    { "timeout": 60000 },
-    waitForSimilarCommandOutput,
-);
-
-When(
-    "a/the user waits for terminal output to include {string}",
-    { "timeout": 60000 },
-    waitForSimilarCommandOutput,
+    waitForMatchingOutput,
 );
 
 Then("the command should return a/an/the {ref:exitCode} exit code", verifyExitCode);
 
-Then("the last command's terminal output should be/include {string}", verifyOutput);
+Then(
+    "the last command's terminal output should match (the regular expression ){ref:consoleOutput}",
+    verifyMatchingOutput,
+);
 
 Then(
-    "the last command's terminal output should be/include a/an/the {ref:consoleOutput}",
-    verifyOutput,
+    "the last command's terminal output should match (the regular expression ){regexp}",
+    verifyMatchingOutput,
 );
 
 /**
@@ -160,27 +119,6 @@ function startDefaultShell(): void {
 }
 
 /**
- * Verify that the CLI output for the last command matches the given regexp.
- *
- * @param consoleOutput - The matcher to use for the output
- *
- * @throws {@link AssertionError}
- * If the matcher regexp wasnt found
- */
-function verifyOutput(consoleOutput: RegExp | string): void {
-    if (typeof consoleOutput === "string") {
-        consoleOutput = new RegExp(consoleOutput, "u");
-    }
-
-    assert.ok(
-        consoleOutput.test(this.cli.manager.output),
-        new AssertionError({
-            "message": `Command output did not match expectations. Output:\n${this.cli.manager.output}`,
-        }),
-    );
-}
-
-/**
  * Verify that the CLI exit code for the last command is as expected.
  *
  * @param exitCode - The exit code expected from the last command
@@ -194,6 +132,32 @@ function verifyExitCode(exitCode: number): void {
         exitCode,
         "The command's status code did not match expectations.",
     );
+}
+
+/**
+ * Verify that the CLI output for the last command matches the given regexp.
+ *
+ * @param pattern - The pattern to match output against
+ *
+ * @throws {@link AssertionError}
+ * If no matches for the regexp pattern were found
+ */
+function verifyMatchingOutput(pattern: RegExp | string): void {
+    const regexp = new RegExp(pattern);
+
+    assert.ok(
+        regexp.test(this.cli.manager.output),
+        new AssertionError({
+            "message": `Command output did not match expectations. Output:\n${this.cli.manager.output}`,
+        }),
+    );
+}
+
+/**
+ * Wait for literally any output.
+ */
+async function waitForAnyOutput(): Promise<void> {
+    await waitForOutput.call(this);
 }
 
 /**
@@ -213,82 +177,48 @@ async function waitForCommandReturn(): Promise<void> {
  * @param stream  - The stream to watch for output
  * @param pattern - The pattern to match output against
  */
-async function waitForCommandOutput(stream?: IOStream, pattern?: string): Promise<void> {
+async function waitForOutput(stream?: IOStream, pattern?: RegExp): Promise<void> {
     assert.ok(this.cli.manager);
     await this.cli.manager.waitForOutput({ pattern, stream });
 }
 
 /**
- * Wait for literally any output.
- */
-async function waitForAnyCommandOutput(): Promise<void> {
-    await waitForCommandOutput.call(this);
-}
-
-/**
  * Wait for output on the STDERR stream.
  */
-async function waitForCommandOutputOnSTDERR(): Promise<void> {
-    await waitForCommandOutput.call(this, IOStream.STDERR);
+async function waitForOutputOnSTDERR(): Promise<void> {
+    await waitForOutput.call(this, IOStream.STDERR);
 }
 
 /**
  * Wait for output on the STDOUTstream.
  */
-async function waitForCommandOutputOnSTDOUT(): Promise<void> {
-    await waitForCommandOutput.call(this, IOStream.STDOUT);
+async function waitForOutputOnSTDOUT(): Promise<void> {
+    await waitForOutput.call(this, IOStream.STDOUT);
 }
 
 /**
- * Wait for output exactly matching a specific phrase.
+ * Wait for output matching a specific phrase.
  *
  * @param pattern - The pattern to match output against
  */
-async function waitForExactCommandOutput(pattern: string): Promise<void> {
-    await waitForCommandOutput.call(this, IOStream.ANY, `^${pattern}$`);
+async function waitForMatchingOutput(pattern: RegExp): Promise<void> {
+    await waitForOutput.call(this, IOStream.ANY, pattern);
 }
 
 /**
- * Wait for output exactly matching a specific phrase on the STDERR stream.
+ * Wait for output matching a specific phrase on the STDERR stream.
  *
  * @param pattern - The pattern to match output against
  */
-async function waitForExactCommandOutputOnSTDERR(pattern: string): Promise<void> {
-    await waitForCommandOutput.call(this, IOStream.STDERR, `^${pattern}$`);
+async function waitForMatchingOutputOnSTDERR(pattern: RegExp): Promise<void> {
+    await waitForOutput.call(this, IOStream.STDERR, pattern);
 }
 
 /**
- * Wait for output exactly matching a specific phrase on the STDOUT stream.
+ * Wait for output matching a specific phrase on the STDOUT stream.
  *
  * @param pattern - The pattern to match output against
  */
-async function waitForExactCommandOutputOnSTDOUT(pattern: string): Promise<void> {
-    await waitForCommandOutput.call(this, IOStream.STDOUT, `^${pattern}$`);
-}
-
-/**
- * Wait for output partially matching a specific phrase.
- *
- * @param pattern - The pattern to match output against
- */
-async function waitForSimilarCommandOutput(pattern: string): Promise<void> {
-    await waitForCommandOutput.call(this, IOStream.ANY, pattern);
-}
-
-/**
- * Wait for output partially matching a specific phrase on the STDERR stream.
- *
- * @param pattern - The pattern to match output against
- */
-async function waitForSimilarCommandOutputOnSTDERR(pattern: string): Promise<void> {
-    await waitForCommandOutput.call(this, IOStream.STDERR, pattern);
-}
-
-/**
- * Wait for output partially matching a specific phrase on the STDOUT stream.
- *
- * @param pattern - The pattern to match output against
- */
-async function waitForSimilarCommandOutputOnSTDOUT(pattern: string): Promise<void> {
-    await waitForCommandOutput.call(this, IOStream.STDOUT, pattern);
+async function waitForMatchingOutputOnSTDOUT(pattern: RegExp): Promise<void> {
+    await waitForOutput.call(this, IOStream.STDOUT, pattern);
 }
