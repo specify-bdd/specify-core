@@ -52,7 +52,7 @@ defineParameterType({
     "name":   "regexp",
     "regexp": quotedString,
     transformer(input: string): RegExp {
-        return RegExp(input);
+        return RegExp(input.slice(1, -1));
     },
     "useForSnippets": false,
 });
