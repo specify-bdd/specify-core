@@ -44,19 +44,19 @@ Feature: Retry Flaky Tests
         Scenario: Multiple integers are rejected
             When a user runs the command "npx specify test --retry 1 2"
             Then the command should return an "error" exit code
-            And the console output should be a "help message"
+            And the console output should match "help message"
         
         @skip
         Scenario: Floats are rejected
             When a user runs the command "npx specify test --retry 0.5"
             Then the command should return an "error" exit code
-            And the console output should be a "help message"
+            And the console output should match "help message"
         
         @skip
         Scenario: Text is rejected
             When a user runs the command "npx specify test --retry 'bad-value'"
             Then the command should return an "error" exit code
-            And the console output should be a "help message"
+            And the console output should match "help message"
     
     Rule: Retry-tag option must be a valid tag
 
@@ -64,7 +64,7 @@ Feature: Retry Flaky Tests
         Scenario: Invalid tags are rejected
             When a user runs the command "npx specify test --retry-tag 'bad-tag'"
             Then the command should return an "error" exit code
-            And the console output should be a "help message"
+            And the console output should match "help message"
     
     @skip @todo
     Scenario: A retry value of 0 disables retries

@@ -36,13 +36,13 @@ Feature: Parallel Execution
         Scenario: Floats are rejected
             When a user runs the command "npx specify test --parallel 0.5"
             Then the command should return an "error" exit code
-            And the console output should be a "help message"
+            And the console output should match "help message"
 
         @skip
         Scenario: Non-numeric values are rejected
             When a user runs the command "npx specify test --parallel 'bad-value'"
             Then the command should return an "error" exit code
-            And the console output should be a "help message"
+            And the console output should match "help message"
 
         @skip @todo
         Scenario: A value of 0 is equivalent to no limit
