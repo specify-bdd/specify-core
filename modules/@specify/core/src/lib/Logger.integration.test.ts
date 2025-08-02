@@ -1,8 +1,7 @@
-import { existsSync    } from "node:fs";
-import { rm, writeFile } from "node:fs/promises";
-import { tmpdir        } from "node:os";
-import { join          } from "node:path";
-import { Logger        } from "./Logger";
+import { existsSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir                            } from "node:os";
+import { join                              } from "node:path";
+import { Logger                            } from "./Logger";
 
 describe("Logger (integration)", () => {
     const logger = new Logger();
@@ -14,7 +13,7 @@ describe("Logger (integration)", () => {
 
     afterEach(async () => {
         if (existsSync(path)) {
-            await rm(path);
+            rmSync(path);
         }
     });
 
@@ -24,11 +23,11 @@ describe("Logger (integration)", () => {
             expect(path).toMatch(/specify\/integration-test-[\w-]+\.json$/);
         });
 
-        it("creates the specify directory if it doesnt already exist", async () => {
+        it("creates the specify directory if it doesn't already exist", async () => {
             const path = join(tmpdir(), "specify");
 
             if (existsSync(path)) {
-                await rm(path, { "recursive": true, "force": true });
+                rmSync(path, { "recursive": true, "force": true });
             }
 
             expect(existsSync(path)).toBeFalsy();
@@ -47,7 +46,7 @@ describe("Logger (integration)", () => {
         it("returns json object when JSON is valid", async () => {
             const json = { "hello": "world" };
 
-            await writeFile(path, JSON.stringify(json), "utf-8");
+            writeFileSync(path, JSON.stringify(json), "utf-8");
 
             const result = await logger.readTmpLog(path);
 
@@ -55,7 +54,7 @@ describe("Logger (integration)", () => {
         });
 
         it("throws on invalid JSON", async () => {
-            await writeFile(path, "not-json", "utf-8");
+            writeFileSync(path, "not-json", "utf-8");
 
             await expect(logger.readTmpLog(path)).rejects.toThrow(SyntaxError);
         });
@@ -64,7 +63,7 @@ describe("Logger (integration)", () => {
     it("consumeTmpLog() reads JSON and deletes the file", async () => {
         const json = { "test": "data" };
 
-        await writeFile(path, JSON.stringify(json), "utf-8");
+        writeFileSync(path, JSON.stringify(json), "utf-8");
 
         const result = await logger.consumeTmpLog(path);
 
