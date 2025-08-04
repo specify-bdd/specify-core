@@ -23,10 +23,10 @@ defineParameterType({
 });
 
 defineParameterType({
-    "name":   "ref:terminalOutput",
+    "name":   "ref:exitCode",
     "regexp": refName,
-    transformer(input: string): RegExp {
-        return new RegExp(this.quickRef.lookup("terminalOutput", input.slice(1)));
+    transformer(input: string): number {
+        return parseInt(this.quickRef.lookup("exitCode", input.slice(1)), 10);
     },
     "useForSnippets": false,
 });
@@ -41,10 +41,10 @@ defineParameterType({
 });
 
 defineParameterType({
-    "name":   "ref:exitCode",
+    "name":   "ref:terminalOutput",
     "regexp": refName,
-    transformer(input: string): number {
-        return parseInt(this.quickRef.lookup("exitCode", input.slice(1)), 10);
+    transformer(input: string): RegExp {
+        return new RegExp(this.quickRef.lookup("terminalOutput", input.slice(1)));
     },
     "useForSnippets": false,
 });
