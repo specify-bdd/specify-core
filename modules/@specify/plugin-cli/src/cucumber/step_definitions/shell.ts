@@ -28,7 +28,7 @@ When("a/the user waits for terminal output on STDERR", { "timeout": 60000 }, wai
 When("a/the user waits for terminal output on STDOUT", { "timeout": 60000 }, waitForOutputOnSTDOUT);
 
 When(
-    "a/the user waits for terminal output on STDERR matching (the regular expression ){ref:consoleOutput}",
+    "a/the user waits for terminal output on STDERR matching (the regular expression ){ref:terminalOutput}",
     { "timeout": 60000 },
     waitForMatchingOutputOnSTDERR,
 );
@@ -40,7 +40,7 @@ When(
 );
 
 When(
-    "a/the user waits for terminal output on STDOUT matching (the regular expression ){ref:consoleOutput}",
+    "a/the user waits for terminal output on STDOUT matching (the regular expression ){ref:terminalOutput}",
     { "timeout": 60000 },
     waitForMatchingOutputOnSTDOUT,
 );
@@ -52,7 +52,7 @@ When(
 );
 
 When(
-    "a/the user waits for terminal output matching (the regular expression ){ref:consoleOutput}",
+    "a/the user waits for terminal output matching (the regular expression ){ref:terminalOutput}",
     { "timeout": 60000 },
     waitForMatchingOutput,
 );
@@ -63,10 +63,12 @@ When(
     waitForMatchingOutput,
 );
 
+Then("the command should return a/an/the {int} exit code", verifyExitCode);
+
 Then("the command should return a/an/the {ref:exitCode} exit code", verifyExitCode);
 
 Then(
-    "the last command's terminal output should match (the regular expression ){ref:consoleOutput}",
+    "the last command's terminal output should match (the regular expression ){ref:terminalOutput}",
     verifyMatchingOutput,
 );
 

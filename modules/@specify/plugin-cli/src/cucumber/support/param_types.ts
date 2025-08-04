@@ -11,6 +11,7 @@ import path                    from "node:path";
 import type { FileParam } from "~/types/params";
 
 const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;
+const refName      = /\$\w+/;
 
 defineParameterType({
     "name":   "path",
@@ -22,28 +23,28 @@ defineParameterType({
 });
 
 defineParameterType({
-    "name":   "ref:consoleOutput",
-    "regexp": quotedString,
+    "name":   "ref:terminalOutput",
+    "regexp": refName,
     transformer(input: string): RegExp {
-        return new RegExp(this.quickRef.lookup("consoleOutput", input.slice(1, -1)));
+        return new RegExp(this.quickRef.lookup("terminalOutput", input.slice(1)));
     },
     "useForSnippets": false,
 });
 
 defineParameterType({
     "name":   "ref:file",
-    "regexp": quotedString,
+    "regexp": refName,
     transformer(input: string): FileParam {
-        return this.quickRef.lookup("file", input.slice(1, -1)) as FileParam;
+        return this.quickRef.lookup("file", input.slice(1)) as FileParam;
     },
     "useForSnippets": false,
 });
 
 defineParameterType({
     "name":   "ref:exitCode",
-    "regexp": quotedString,
+    "regexp": refName,
     transformer(input: string): number {
-        return parseInt(this.quickRef.lookup("exitCode", input.slice(1, -1)), 10);
+        return parseInt(this.quickRef.lookup("exitCode", input.slice(1)), 10);
     },
     "useForSnippets": false,
 });
