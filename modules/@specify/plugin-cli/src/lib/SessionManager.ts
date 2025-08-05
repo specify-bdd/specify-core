@@ -54,7 +54,7 @@ export interface SessionMeta {
 }
 
 /**
- * The basic option set common to all options-accepting SessionMqnager methods.
+ * The basic option set common to all options-accepting SessionManager methods.
  */
 export interface SessionManagerOptions {
     sessionMeta?: SessionMeta;
@@ -264,28 +264,19 @@ export class SessionManager {
      */
     async waitForOutput(opts: WaitForOutputOptions = {}): Promise<OutputMeta> {
         const sessionMeta = opts.sessionMeta ?? this.#activeSession;
-        const lastCmdMeta = this.#getLastCommand({ sessionMeta });
         const stream      = opts.stream ?? IOStream.ANY;
 
         return new Promise((resolve) => {
-            if (this.#hasMatchingOutput(lastCmdMeta, opts)) {
-                resolve(lastCmdMeta.output.at(-1));
-            }
+            this.#callbackOnlyIfOutputMatches(resolve, opts);
 
             if ([IOStream.STDOUT, IOStream.ANY].includes(stream)) {
-                sessionMeta.session.onOutput(() => {
-                    if (this.#hasMatchingOutput(lastCmdMeta, opts)) {
-                        resolve(lastCmdMeta.output.at(-1));
-                    }
-                });
+                sessionMeta.session.onOutput(() =>
+                    this.#callbackOnlyIfOutputMatches(resolve, opts),
+                );
             }
 
             if ([IOStream.STDERR, IOStream.ANY].includes(stream)) {
-                sessionMeta.session.onError(() => {
-                    if (this.#hasMatchingOutput(lastCmdMeta, opts)) {
-                        resolve(lastCmdMeta.output.at(-1));
-                    }
-                });
+                sessionMeta.session.onError(() => this.#callbackOnlyIfOutputMatches(resolve, opts));
             }
         });
     }
@@ -299,6 +290,25 @@ export class SessionManager {
         const sessionMeta = opts.sessionMeta ?? this.#activeSession;
 
         return this.#getLastCommand({ sessionMeta }).promise;
+    }
+
+    /**
+     * Verify whether the last command in a managed session has output matching
+     * certain criteria, and then invoke the callback function if so.
+     *
+     * @param cb   - The callback
+     * @param opts - The options specifying matching requirements
+     */
+    #callbackOnlyIfOutputMatches(
+        cb: (value: OutputMeta) => void,
+        opts: WaitForOutputOptions = {},
+    ): void {
+        const sessionMeta = opts.sessionMeta ?? this.#activeSession;
+        const lastCmdMeta = this.#getLastCommand({ sessionMeta });
+
+        if (this.#hasMatchingOutput(lastCmdMeta, opts)) {
+            cb(lastCmdMeta.output.at(-1));
+        }
     }
 
     /**

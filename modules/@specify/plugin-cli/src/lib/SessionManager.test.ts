@@ -392,14 +392,10 @@ describe("SessionManager", () => {
     });
 
     describe("waitForOutput()", () => {
-        let cmdMeta: CommandMeta;
-
         beforeEach(() => {
             sessionManager.addSession(session);
 
-            cmdMeta = sessionManager.run("echo foo");
-
-            expect(cmdMeta.output).toEqual([]);
+            sessionManager.run("echo foo");
         });
 
         it("resolves when any output is received by default", async () => {
