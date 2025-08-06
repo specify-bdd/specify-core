@@ -306,7 +306,7 @@ export class SessionManager {
         const sessionMeta = opts.sessionMeta ?? this.#activeSession;
         const lastCmdMeta = this.#getLastCommand({ sessionMeta });
 
-        if (this.#hasMatchingOutput(lastCmdMeta, opts)) {
+        if (lastCmdMeta && this.#hasMatchingOutput(lastCmdMeta, opts)) {
             cb(lastCmdMeta.output.at(-1));
         }
     }
@@ -349,10 +349,10 @@ export class SessionManager {
      *
      * @param opts - Options to modify the behavior of #getLastCommand()
      */
-    #getLastCommand(opts: SessionManagerOptions = {}): CommandMeta {
+    #getLastCommand(opts: SessionManagerOptions = {}): CommandMeta | null {
         const sessionMeta = opts.sessionMeta ?? this.#activeSession;
 
-        return sessionMeta?.commands?.at(-1);
+        return sessionMeta?.commands?.at(-1) ?? null;
     }
 
     /**
@@ -362,7 +362,7 @@ export class SessionManager {
      * @param cmdMeta - The command to test
      * @param opts    - The options specifying matching requirements
      */
-    #hasMatchingOutput(cmdMeta: CommandMeta, opts: WaitForOutputOptions = {}) {
+    #hasMatchingOutput(cmdMeta: CommandMeta, opts: WaitForOutputOptions = {}): boolean {
         const pattern = opts.pattern ?? ".*";
         const stream  = opts.stream ?? IOStream.ANY;
         const regexp  = new RegExp(pattern); // pattern may already be a regexp, but this guarantees consistent behavior
