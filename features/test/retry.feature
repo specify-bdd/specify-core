@@ -20,8 +20,7 @@ Feature: Retry Flaky Tests
         Scenario: A test run that fails with 2 retries
             Given that a "3rd retry passing feature" file exists at "./features"
             When a user runs the command "npx specify test --retry 2"
-            # Then the command should return a $failure exit code
-            Then the last command's exit code should be a $success
+            Then the last command's exit code should be a $failure
 
         @skip
         Scenario: A test run that passes with 3 retries
