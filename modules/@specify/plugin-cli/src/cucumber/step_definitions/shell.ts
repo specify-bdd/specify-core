@@ -63,8 +63,10 @@ When(
     waitForMatchingOutput,
 );
 
+Then("the last command's exit code/status should be {int}", verifyExitCode);
 Then("the last command's exit code/status should be a/an {int}", verifyExitCode);
 
+Then("the last command's exit code/status should be {ref:exitCode}", verifyExitCode);
 Then("the last command's exit code/status should be a/an {ref:exitCode}", verifyExitCode);
 
 Then(
