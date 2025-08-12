@@ -357,6 +357,35 @@ describe("SessionManager", () => {
         });
     });
 
+    describe("switchToNextSession()", () => {
+        let altSession: MockShellSession;
+
+        beforeEach(() => {
+            altSession = new ShellSession() as unknown as MockShellSession;
+
+            sessionManager.addSession(session);
+            sessionManager.addSession(altSession, "altSession", false);
+
+            expect(sessionManager.activeSession.session).toBe(session);
+        });
+
+        it("switches to the next managed session", () => {
+            sessionManager.switchToNextSession();
+
+            expect(sessionManager.activeSession.session).toBe(altSession);
+        });
+
+        it("switches to the first managed session if already at the last one", () => {
+            sessionManager.switchToNextSession();
+
+            expect(sessionManager.activeSession.session).toBe(altSession);
+
+            sessionManager.switchToNextSession();
+
+            expect(sessionManager.activeSession.session).toBe(session);
+        });
+    });
+
     describe("waitForReturn()", () => {
         beforeEach(() => {
             sessionManager.addSession(session);

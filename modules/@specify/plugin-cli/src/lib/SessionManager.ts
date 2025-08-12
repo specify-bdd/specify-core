@@ -258,6 +258,19 @@ export class SessionManager {
     }
 
     /**
+     * Switch to the next session in the list.
+     *
+     * @remarks
+     * If there is no next session, the first session in the list is activated.
+     */
+    switchToNextSession(): void {
+        const currentIndex = this.#sessions.indexOf(this.#activeSession);
+        const nextIndex    = (currentIndex + 1) % this.#sessions.length;
+
+        this.#activeSession = this.#sessions[nextIndex];
+    }
+
+    /**
      * Wait for the last command in a managed session to produce output.
      *
      * @param opts - Options to modify the behavior of waitForOutput()
