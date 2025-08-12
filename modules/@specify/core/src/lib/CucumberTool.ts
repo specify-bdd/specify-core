@@ -11,6 +11,22 @@ import type {
 
 import { Logger } from "./Logger";
 
+interface StepResult {
+    status: string;
+}
+
+interface Step {
+    result: StepResult;
+}
+
+interface Element {
+    steps: Step[];
+}
+
+interface ScenarioResult {
+    elements: Element[];
+}
+
 /**
  * Encapsulates the lifecycle of configuring, loading support, and running
  * Cucumber test executions, with result logging handled by Logger.
@@ -114,10 +130,43 @@ export class CucumberTool {
      *         cannot be parsed properly.
      */
     static async #checkForRunErrors(): Promise<void> {
-        const scenarioResults = await this.#logger.consumeTmpLog(this.#logPath);
+        const scenarioResults = (await this.#logger.consumeTmpLog(
+            this.#logPath,
+        )) as unknown as ScenarioResult[];
 
+        this.#checkForTestExecution(scenarioResults);
+        this.#checkForUndefinedSteps(scenarioResults);
+    }
+
+    /**
+     * Validates that the test execution produced results.
+     *
+     * @param scenarioResults - The results of the test execution
+     *
+     * @throws If no tests were executed.
+     */
+    static #checkForTestExecution(scenarioResults: ScenarioResult[]): void {
         if (!Array.isArray(scenarioResults) || scenarioResults.length === 0) {
             throw new Error("No tests were executed.");
         }
+    }
+
+    /**
+     * Checks for undefined step definitions in the test results.
+     *
+     * @param scenarioResults - The results of the test execution
+     *
+     * @throws If any undefined step definitions are found.
+     */
+    static #checkForUndefinedSteps(scenarioResults: ScenarioResult[]): void {
+        scenarioResults.forEach((result) => {
+            result.elements.forEach((element: Element) => {
+                element.steps.forEach((step: Step) => {
+                    if (step.result.status === "undefined") {
+                        throw new Error("Found undefined step definition(s).");
+                    }
+                });
+            });
+        });
     }
 }

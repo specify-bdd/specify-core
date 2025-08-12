@@ -32,12 +32,12 @@ Feature: Basic Test Execution
 
     Rule: The run should error if there are invalid features
 
-        @skip @dependency
+        @dependency
         Scenario: Feature has a Gherkin syntax error
             When a user runs the command "npx specify test ./assets/gherkin/invalid.feature"
             Then the command should return an "error" exit code
 
-        @skip @dependency
+        @dependency
         Scenario: Feature contains undefined step definitions
             When a user runs the command "npx specify test ./assets/gherkin/undefined.feature"
             Then the command should return an "error" exit code
