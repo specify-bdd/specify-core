@@ -22,7 +22,11 @@ describe("CucumberTool", () => {
     const fakeTmpLogPath = "/fake/path.json";
     const fakeLogger     = {
         "generateTmpLogPath": vi.fn(() => fakeTmpLogPath),
-        "consumeTmpLog":      vi.fn().mockResolvedValue([{ "id": 1, "result": "passed" }]),
+        "consumeTmpLog":      vi
+            .fn()
+            .mockResolvedValue([
+                { "elements": [{ "steps": [{ "result": { "status": "pass" } }] }] },
+            ]),
     };
 
     CucumberTool.logger = fakeLogger as unknown as Logger;
