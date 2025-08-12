@@ -115,5 +115,19 @@ describe("CucumberTool", () => {
                 "No tests were executed.",
             );
         });
+
+        it("throws if an undefined step definition is found during testing", async () => {
+            const fakeLog = [
+                { "elements": [{ "steps": [{ "result": { "status": "undefined" } }] }] },
+            ];
+
+            fakeLogger.consumeTmpLog.mockImplementationOnce(() => fakeLog);
+
+            await CucumberTool.loadConfiguration({ "format": [] });
+
+            await expect(CucumberTool.runCucumber({} as IRunOptions)).rejects.toThrow(
+                "Found undefined step definition(s).",
+            );
+        });
     });
 });
