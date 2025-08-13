@@ -15,6 +15,8 @@ Given("a/another CLI shell", startDefaultShell);
 
 When("a/the user starts a/another CLI shell", startDefaultShell);
 
+When("a/the user switches shells", switchShell);
+
 When("a/the user runs the command/process {string}", { "timeout": 60000 }, execCommandSync);
 
 When("a/the user starts the (async )command/process {string}", execCommand);
@@ -120,6 +122,18 @@ function startNamedDefaultShell(name?: string): void {
  */
 function startDefaultShell(): void {
     startNamedDefaultShell.call(this);
+}
+
+/**
+ * Switch to the next shell in the list.
+ *
+ * @throws {@link AssertionError}
+ * If there is no SessionManager initialized.
+ */
+function switchShell(): void {
+    assert.ok(this.cli.manager, "No SessionManager initialized.");
+
+    this.cli.manager.switchToNextSession();
 }
 
 /**
