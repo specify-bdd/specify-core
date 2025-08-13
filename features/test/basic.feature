@@ -44,28 +44,24 @@ Feature: Basic Test Execution
 
     Rule: The run should error if there are no available tests
 
-        @skip
         Scenario: User-specified path does not exist
             When a user runs the command "npx specify test ./nonexistent/path/"
             Then the last command's exit code should be an $error
             And the last command's terminal output should match $pathNotFoundError
 
-        @skip
         Scenario: User-specified path is empty
             When a user runs the command "npx specify test ./assets/gherkin/empty/"
             Then the last command's exit code should be an $error
             And the last command's terminal output should match $noTestCasesError
 
-        @skip
         Scenario: User-specified path contains no features
             When a user runs the command "npx specify test ./assets/gherkin/no-features/test.md"
             Then the last command's exit code should be an $error
             And the last command's terminal output should match $noTestCasesError
 
-        @skip
         Scenario: User-specified path contains no scenarios
             When a user runs the command "npx specify test ./assets/gherkin/empty.feature"
-            Then the last command's exit code should be a $failure
+            Then the last command's exit code should be an $error
             And the last command's terminal output should match $noTestCasesError
 
     Rule: Execution without a subcommand should default to testing

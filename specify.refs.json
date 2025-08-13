@@ -12,6 +12,7 @@
     "terminalOutput": {
         "failingTestResult": "\\(\\d+ failed.*\\n.*\\(\\d+ failed",
         "noTestCasesError": "No tests were executed.",
-        "passingTestResult": "\\(\\d+ passed\\)\\n.*\\(\\d+ passed\\)"
+        "passingTestResult": "\\(\\d+ passed\\)\\n.*\\(\\d+ passed\\)",
+        "pathNotFoundError": "Invalid path:"
     }
 }
