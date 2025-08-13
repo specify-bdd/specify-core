@@ -365,17 +365,19 @@ describe("SessionManager", () => {
 
             sessionManager.addSession(session);
             sessionManager.addSession(altSession, "altSession", false);
-
-            expect(sessionManager.activeSession.session).toBe(session);
         });
 
         it("switches to the next managed session", () => {
+            expect(sessionManager.activeSession.session).toBe(session);
+
             sessionManager.switchToNextSession();
 
             expect(sessionManager.activeSession.session).toBe(altSession);
         });
 
         it("switches to the first managed session if already at the last one", () => {
+            expect(sessionManager.activeSession.session).toBe(session);
+
             sessionManager.switchToNextSession();
 
             expect(sessionManager.activeSession.session).toBe(altSession);
