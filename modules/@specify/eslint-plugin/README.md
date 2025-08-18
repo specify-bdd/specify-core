@@ -21,9 +21,9 @@ Enforces alignment of assignment operators in adjacent variable declarations and
 **✅ Correct:**
 
 ```typescript
-const shortVar = "value";
+const shortVar      = "value";
 const muchLongerVar = "another value";
-const medium = "third value";
+const medium        = "third value";
 ```
 
 **❌ Incorrect:**
@@ -48,10 +48,13 @@ Enforces consistent alignment of import statements, including proper spacing aro
 **✅ Correct:**
 
 ```typescript
-import shortName from "./module1";
+import shortName                    from "./module1";
 import { veryLongDestructuredName } from "./module2";
 
-import { multiLineImport, anotherImport } from "./multi-line-module";
+import {
+    multiLineImport,
+    anotherImport,
+} from "./multi-line-module";
 
 import { singleAfterMulti } from "./module3";
 ```
@@ -79,9 +82,9 @@ Enforces alignment of object property values in multi-line object expressions.
 
 ```typescript
 const config = {
-    short: "value",
+    short:         "value",
     muchLongerKey: "another value",
-    medium: "third value",
+    medium:        "third value",
 };
 ```
 
