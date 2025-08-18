@@ -1,27 +1,23 @@
 {
   "name": "@specify/core",
   "version": "0.0.1",
-  "description": "The standalone engine for Specify.",
+  "description": "An open-source, command-line testing tool based on Cucumber.js, built to support and streamline Behavior-Driven Development (BDD).",
+  "type": "module",
+  "contributors": [
+    "Adam Lacoste",
+    "Michael Brown",
+    "Wild Love"
+  ],
+  "license": "MIT",
   "main": "dist/main.js",
   "bin": {
     "specify": "bin/specify.js"
   },
-  "type": "module",
   "scripts": {
     "build": "tsc --project tsconfig.build.json && tsc-alias --resolve-full-paths",
     "generate-types": "tsx ./scripts/generate-types.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/software-pirates/specify-core.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/software-pirates/specify-core/issues"
-  },
-  "homepage": "https://github.com/software-pirates/specify-core#readme",
   "dependencies": {
     "@cucumber/cucumber": "^11.3.0",
     "@specify/quick-ref": "workspace:*",
@@ -41,6 +37,14 @@
     "type-fest": "^4.41.0",
     "typescript": "^5.8.3"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specify-bdd/specify-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/specify-bdd/specify-core/issues"
+  },
+  "homepage": "https://github.com/specify-bdd/specify-core#readme",
   "engines": {
     "node": ">=22.0.0"
   }
