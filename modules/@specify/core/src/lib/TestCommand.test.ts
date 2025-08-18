@@ -23,7 +23,7 @@ vi.mock("./CucumberTool", () => ({
 }));
 
 describe("TestCommand", () => {
-    const emptyArgs = { "_": [] };
+    const emptyArgs = { "paths": [] };
 
     afterEach(() => {
         vi.resetAllMocks();
@@ -33,7 +33,7 @@ describe("TestCommand", () => {
         describe("parses command arguments", () => {
             it("paths", async () => {
                 const featPath = "./assets/gherkin/binary/passing.feature";
-                const userArgs = { "_": [featPath] };
+                const userArgs = { "paths": [featPath] };
                 const cmd      = new TestCommand();
 
                 await cmd.execute(userArgs);
@@ -70,7 +70,7 @@ describe("TestCommand", () => {
 
             describe("test results", () => {
                 it("passing", async () => {
-                    const userArgs = { "_": ["./assets/gherkin/binary/passing.feature"] };
+                    const userArgs = { "paths": ["./assets/gherkin/binary/passing.feature"] };
                     const cmd      = new TestCommand(userOpts);
 
                     mockRunCucumber.mockResolvedValueOnce({
@@ -84,7 +84,7 @@ describe("TestCommand", () => {
                 });
 
                 it("failing", async () => {
-                    const userArgs = { "_": ["./assets/gherkin/binary/failing.feature"] };
+                    const userArgs = { "paths": ["./assets/gherkin/binary/failing.feature"] };
                     const cmd      = new TestCommand(userOpts);
 
                     mockRunCucumber.mockResolvedValueOnce({
@@ -110,7 +110,7 @@ describe("TestCommand", () => {
 
                 it("no executed tests", async () => {
                     const error    = Error("No tests were executed.");
-                    const userArgs = { "_": ["./assets/gherkin/empty"] };
+                    const userArgs = { "paths": ["./assets/gherkin/empty"] };
 
                     mockRunCucumber.mockRejectedValueOnce(error);
 
@@ -130,7 +130,7 @@ describe("TestCommand", () => {
 
                 it("invalid test file path", async () => {
                     const error    = Error("Invalid path: ./path/that/doesnt/exist/");
-                    const userArgs = { "_": ["./path/that/doesnt/exist/"] };
+                    const userArgs = { "paths": ["./path/that/doesnt/exist/"] };
 
                     const res = await new TestCommand().execute(userArgs);
 
