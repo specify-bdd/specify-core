@@ -1,9 +1,11 @@
 {
   "name": "@specify/eslint-plugin",
   "version": "0.0.1",
-  "description": "Miscellaneous linting rules for @specify.",
-  "private": true,
+  "description": "Miscellaneous linting rules for Specify.",
   "type": "module",
+  "private": true,
+  "author": "Michael Brown",
+  "license": "MIT",
   "main": "main.ts",
   "devDependencies": {
     "@typescript-eslint/utils": "^8.33.1"
