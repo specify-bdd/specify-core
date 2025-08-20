@@ -26,6 +26,7 @@ export default {
 
     create(context: Rule.RuleContext): Rule.RuleListener {
         const { sourceCode } = context;
+        const processedNodes = new Set<Rule.Node>();
 
         function checkSpacingAroundMultiLine(imports: Rule.Node[]) {
             imports.forEach((node, index) => {
@@ -193,7 +194,11 @@ export default {
                     for (const importNode of group.imports) {
                         if (!isSingleLineNode(importNode)) {
                             continue;
+                        } else if (processedNodes.has(importNode)) {
+                            continue;
                         }
+
+                        processedNodes.add(importNode);
 
                         // get the offset of the "from" keyword based on the group's targetFromPosition
                         const fromPos = getFromKeywordPosition(importNode);
@@ -211,16 +216,25 @@ export default {
                                 "messageId": "misalignedImport",
 
                                 fix(fixer) {
-                                    const closingBraceToken = sourceCode
-                                        .getTokens(importNode)
-                                        .find((token) => token.value === "}");
-
                                     const fromToken = sourceCode
                                         .getTokens(importNode)
                                         .find((token) => token.value === "from");
 
+                                    let closingBraceToken = sourceCode
+                                        .getTokens(importNode)
+                                        .find((token) => token.value === "}");
+
                                     if (!fromToken || !importNode.range) {
                                         return null;
+                                    }
+
+                                    // if the fromToken's position is before the closing brace,
+                                    // align based on the from position only
+                                    if (
+                                        closingBraceToken &&
+                                        fromToken.range[0] < closingBraceToken.range[0]
+                                    ) {
+                                        closingBraceToken = undefined;
                                     }
 
                                     if (closingBraceToken) {
