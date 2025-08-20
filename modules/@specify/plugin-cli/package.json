@@ -1,19 +1,19 @@
 {
   "name": "@specify/plugin-cli",
   "version": "0.0.1",
-  "description": "A plugin for Specify adding CLI testing support.",
-  "main": "dist/main.js",
+  "description": "A plugin for Specify BDD adding CLI testing support.",
   "type": "module",
+  "contributors": [
+    "Adam Lacoste",
+    "Michael Brown",
+    "Wild Love"
+  ],
+  "license": "MIT",
+  "main": "dist/main.js",
   "scripts": {
     "build": "tsc --project tsconfig.build.json && tsc-alias --resolve-full-paths",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/software-pirates/specify-core.git"
-  },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "validate-npm-package-name": "^6.0.1"
   },
@@ -24,5 +24,13 @@
   },
   "peerDependencies": {
     "@cucumber/cucumber": "^11.3.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specify-bdd/specify-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/specify-bdd/specify-core/issues"
+  },
+  "homepage": "https://github.com/specify-bdd/specify-core#readme"
 }

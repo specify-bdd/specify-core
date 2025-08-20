@@ -1,8 +1,14 @@
 {
   "name": "specify",
   "version": "0.0.1",
-  "description": "Core repository description",
+  "description": "The monorepo for all open-source package development for Specify BDD.",
   "type": "module",
+  "contributors": [
+    "Adam Lacoste",
+    "Michael Brown",
+    "Wild Love"
+  ],
+  "license": "MIT",
   "scripts": {
     "build": "pnpm -r --if-present run build",
     "dev:reset": "bash ./scripts/dev-reset.sh",
@@ -17,16 +23,6 @@
     "type-check": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit",
     "type-check:watch": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit --watch"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/software-pirates/specify-core.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/software-pirates/specify-core/issues"
-  },
-  "homepage": "https://github.com/software-pirates/specify-core#readme",
   "dependencies": {
     "@specify/core": "workspace:*",
     "@specify/plugin-cli": "workspace:*",
@@ -61,5 +57,13 @@
     "typescript-eslint": "^8.32.0",
     "vitest": "^3.2.4"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specify-bdd/specify-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/specify-bdd/specify-core/issues"
+  },
+  "homepage": "https://github.com/specify-bdd/specify-core#readme",
   "packageManager": "pnpm@10.12.1"
 }
