@@ -12,6 +12,8 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc --project tsconfig.build.json && tsc-alias --resolve-full-paths",
+    "docs:html": "typedoc --options typedoc.html.json",
+    "docs:markdown": "typedoc --options typedoc.markdown.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

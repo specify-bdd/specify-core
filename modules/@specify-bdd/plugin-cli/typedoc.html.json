@@ -1,0 +1,10 @@
+{
+    "entryPoints": ["src/lib"],
+    "entryPointStrategy": "expand",
+    "out": "docs/html",
+    "readme": "README.md",
+    "exclude": ["**/*.test.ts", "**/__mocks__/**"],
+    "excludePrivate": true,
+    "excludeProtected": false,
+    "excludeInternal": true
+}
