@@ -1,5 +1,5 @@
 import eslint              from "@eslint/js";
-import specifyESLintPlugin from "@specify/eslint-plugin";
+import specifyESLintPlugin from "@specify-bdd/eslint-plugin";
 import globals             from "globals";
 import eslintParserJSONC   from "jsonc-eslint-parser";
 import eslintPluginJSONC   from "eslint-plugin-jsonc";
