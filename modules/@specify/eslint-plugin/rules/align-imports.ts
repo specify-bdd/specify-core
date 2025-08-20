@@ -216,16 +216,25 @@ export default {
                                 "messageId": "misalignedImport",
 
                                 fix(fixer) {
-                                    const closingBraceToken = sourceCode
-                                        .getTokens(importNode)
-                                        .find((token) => token.value === "}");
-
                                     const fromToken = sourceCode
                                         .getTokens(importNode)
                                         .find((token) => token.value === "from");
 
+                                    let closingBraceToken = sourceCode
+                                        .getTokens(importNode)
+                                        .find((token) => token.value === "}");
+
                                     if (!fromToken || !importNode.range) {
                                         return null;
+                                    }
+
+                                    // if the fromToken's position is before the closing brace,
+                                    // align based on the from position only
+                                    if (
+                                        closingBraceToken &&
+                                        fromToken.range[0] < closingBraceToken.range[0]
+                                    ) {
+                                        closingBraceToken = undefined;
                                     }
 
                                     if (closingBraceToken) {
