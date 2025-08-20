@@ -4,8 +4,8 @@ Feature: Rerun Failed Tests
     In order to verify that changes I've made fixed the cause of the failure
 
     Background:
-        Given that the "@specify/core" NPM package is installed
-        And that the "@specify/plugin-cli" NPM package is installed
+        Given that the "@specify-bdd/specify" NPM package is installed
+        And that the "@specify-bdd/plugin-cli" NPM package is installed
         And a CLI shell
 
     Rule: Failed tests can be targeted for reruns
