@@ -8,7 +8,7 @@ type RegExpString = string;
 /**
  * A string representing a directory path to watch.
  *
- * @example "./features" or "./modules/\@specify/core/dist"
+ * @example "./features" or "./modules/\@specify-bdd/specify/dist"
  */
 type DirectoryString = string;
 

@@ -1,9 +1,13 @@
 {
-  "name": "@specify/quick-ref",
+  "name": "@specify-bdd/plugin-cli",
   "version": "0.0.1",
-  "description": "A utility for referencing test param data quickly and easily.",
+  "description": "A plugin for Specify BDD adding CLI testing support.",
   "type": "module",
-  "author": "Adam Lacoste",
+  "contributors": [
+    "Adam Lacoste",
+    "Michael Brown",
+    "Wild Love"
+  ],
   "license": "MIT",
   "main": "dist/main.js",
   "scripts": {
@@ -11,12 +15,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "deepmerge": "^4.3.1",
-    "type-fest": "^4.41.0"
+    "validate-npm-package-name": "^6.0.1"
   },
   "devDependencies": {
+    "@types/validate-npm-package-name": "^4.0.2",
     "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "@cucumber/cucumber": "^11.3.0"
   },
   "repository": {
     "type": "git",

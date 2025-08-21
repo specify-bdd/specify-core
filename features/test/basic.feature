@@ -4,8 +4,8 @@ Feature: Basic Test Execution
     In order to ensure that my software functions as the specs say it should
 
     Background:
-        Given that the "@specify/core" NPM package is installed
-        And that the "@specify/plugin-cli" NPM package is installed
+        Given that the "@specify-bdd/specify" NPM package is installed
+        And that the "@specify-bdd/plugin-cli" NPM package is installed
         And a CLI shell
 
     Rule: The run should succeed only if all tests pass
