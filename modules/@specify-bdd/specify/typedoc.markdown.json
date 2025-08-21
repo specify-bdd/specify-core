@@ -1,7 +1,7 @@
 {
     "entryPoints": ["src/lib"],
     "entryPointStrategy": "expand",
-    "out": "docs/markdown",
+    "out": "docs/markdown/typedoc",
     "readme": "README.md",
     "exclude": ["**/*.test.ts", "**/__mocks__/**"],
     "excludePrivate": true,
