@@ -87,20 +87,12 @@ Feature: Basic Test Execution
 
     Rule: Invalid commands display usage help
 
-        @skip
-        Scenario: Unsupported subcommand
-            When a user runs the command "npx specify bad-subcommand"
-            Then the last command's exit code should be a $failure
-            And the last command's terminal output should match $invalidCommandMessage
-
-        @skip
         Scenario: Unsupported option
             When a user runs the command "npx specify --bad-option"
             Then the last command's exit code should be a $failure
-            And the last command's terminal output should match $invalidCommandMessage
+            And the last command's terminal output should match $invalidOptionMessage
 
-        @skip
         Scenario: Mix of supported and unsupported options
             When a user runs the command "npx specify --tags '@pass' --bad-option"
             Then the last command's exit code should be a $failure
-            And the last command's terminal output should match $invalidCommandMessage
+            And the last command's terminal output should match $invalidOptionMessage
