@@ -8,6 +8,7 @@ import assert                from "node:assert/strict";
 
 Given("that this step definition fails", fail);
 Given("that this step definition passes", pass);
+Given("this step passes in {float} seconds", pass);
 
 When("this step definition fails", fail);
 When("this step definition passes", pass);
@@ -25,6 +26,9 @@ function fail(): void {
 /**
  * Always passes.
  */
-function pass(): void {
-    // no return or throw is a passing scenario result
+async function pass(delay: number): Promise<void> {
+    // no return or throw is a passing step result
+    if (delay > 0) {
+        await new Promise((resolve) => setTimeout(resolve, delay * 1000));
+    }
 }
