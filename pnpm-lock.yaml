@@ -8,15 +8,15 @@ importers:
 
   .:
     dependencies:
-      '@specify/core':
+      '@specify-bdd/plugin-cli':
         specifier: workspace:*
-        version: link:modules/@specify/core
-      '@specify/plugin-cli':
+        version: link:modules/@specify-bdd/plugin-cli
+      '@specify-bdd/quick-ref':
         specifier: workspace:*
-        version: link:modules/@specify/plugin-cli
-      '@specify/quick-ref':
+        version: link:modules/@specify-bdd/quick-ref
+      '@specify-bdd/specify':
         specifier: workspace:*
-        version: link:modules/@specify/quick-ref
+        version: link:modules/@specify-bdd/specify
     devDependencies:
       '@eslint/js':
         specifier: ^9.26.0
@@ -27,9 +27,9 @@ importers:
       '@microsoft/tsdoc-config':
         specifier: ^0.17.1
         version: 0.17.1
-      '@specify/eslint-plugin':
+      '@specify-bdd/eslint-plugin':
         specifier: workspace:*
-        version: link:modules/@specify/eslint-plugin
+        version: link:modules/@specify-bdd/eslint-plugin
       '@stylistic/eslint-plugin-js':
         specifier: ^4.2.0
         version: 4.2.0(eslint@9.27.0(jiti@2.4.2))
@@ -100,12 +100,60 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@22.15.18)(@vitest/ui@3.2.4)(jiti@2.4.2)(tsx@4.19.4)(yaml@2.8.0)
 
-  modules/@specify/core:
+  modules/@specify-bdd/eslint-plugin:
+    dependencies:
+      tsc-alias:
+        specifier: ^1.8.16
+        version: 1.8.16
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+    devDependencies:
+      '@typescript-eslint/utils':
+        specifier: ^8.33.1
+        version: 8.33.1(eslint@9.27.0(jiti@2.4.2))(typescript@5.8.3)
+
+  modules/@specify-bdd/plugin-cli:
     dependencies:
       '@cucumber/cucumber':
         specifier: ^11.3.0
         version: 11.3.0
-      '@specify/quick-ref':
+      validate-npm-package-name:
+        specifier: ^6.0.1
+        version: 6.0.1
+    devDependencies:
+      '@types/validate-npm-package-name':
+        specifier: ^4.0.2
+        version: 4.0.2
+      tsc-alias:
+        specifier: ^1.8.16
+        version: 1.8.16
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
+  modules/@specify-bdd/quick-ref:
+    dependencies:
+      deepmerge:
+        specifier: ^4.3.1
+        version: 4.3.1
+      type-fest:
+        specifier: ^4.41.0
+        version: 4.41.0
+    devDependencies:
+      tsc-alias:
+        specifier: ^1.8.16
+        version: 1.8.16
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
+  modules/@specify-bdd/specify:
+    dependencies:
+      '@cucumber/cucumber':
+        specifier: ^11.3.0
+        version: 11.3.0
+      '@specify-bdd/quick-ref':
         specifier: workspace:*
         version: link:../quick-ref
       chalk:
@@ -145,54 +193,6 @@ importers:
       type-fest:
         specifier: ^4.41.0
         version: 4.41.0
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
-
-  modules/@specify/eslint-plugin:
-    dependencies:
-      tsc-alias:
-        specifier: ^1.8.16
-        version: 1.8.16
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
-    devDependencies:
-      '@typescript-eslint/utils':
-        specifier: ^8.33.1
-        version: 8.33.1(eslint@9.27.0(jiti@2.4.2))(typescript@5.8.3)
-
-  modules/@specify/plugin-cli:
-    dependencies:
-      '@cucumber/cucumber':
-        specifier: ^11.3.0
-        version: 11.3.0
-      validate-npm-package-name:
-        specifier: ^6.0.1
-        version: 6.0.1
-    devDependencies:
-      '@types/validate-npm-package-name':
-        specifier: ^4.0.2
-        version: 4.0.2
-      tsc-alias:
-        specifier: ^1.8.16
-        version: 1.8.16
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
-
-  modules/@specify/quick-ref:
-    dependencies:
-      deepmerge:
-        specifier: ^4.3.1
-        version: 4.3.1
-      type-fest:
-        specifier: ^4.41.0
-        version: 4.41.0
-    devDependencies:
-      tsc-alias:
-        specifier: ^1.8.16
-        version: 1.8.16
       typescript:
         specifier: ^5.8.3
         version: 5.8.3

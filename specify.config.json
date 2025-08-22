@@ -10,9 +10,9 @@
     "watch": {
         "paths": [
             "./features",
-            "./modules/@specify/core/dist",
-            "./modules/@specify/plugin-cli/dist",
-            "./modules/@specify/quick-ref/dist"
+            "./modules/@specify-bdd/specify/dist",
+            "./modules/@specify-bdd/plugin-cli/dist",
+            "./modules/@specify-bdd/quick-ref/dist"
         ],
         "ignore": [
             "\\/logs\\/",
@@ -25,5 +25,5 @@
             "\\.git"
         ]
     },
-    "plugins": [ "@specify/plugin-cli" ]
+    "plugins": [ "@specify-bdd/plugin-cli" ]
 }

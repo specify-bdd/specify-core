@@ -1,5 +1,5 @@
 import { setWorldConstructor, World } from "@cucumber/cucumber";
-import { QuickRef                   } from "@specify/quick-ref";
+import { QuickRef                   } from "@specify-bdd/quick-ref";
 
 import type { IWorldOptions } from "@cucumber/cucumber";
 

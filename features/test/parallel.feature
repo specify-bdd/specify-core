@@ -4,8 +4,8 @@ Feature: Parallel Execution
     So that testing is faster and more efficient
 
     Background:
-        Given that the "@specify/core" NPM package is installed
-        And that the "@specify/plugin-cli" NPM package is installed
+        Given that the "@specify-bdd/specify" NPM package is installed
+        And that the "@specify-bdd/plugin-cli" NPM package is installed
         And a CLI shell
 
     Rule: Tests run serially by default

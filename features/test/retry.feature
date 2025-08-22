@@ -4,8 +4,8 @@ Feature: Retry Flaky Tests
     In order to ensure that flaky tests don't trigger alarms for transitory issues
 
     Background:
-        Given that the "@specify/core" NPM package is installed
-        And that the "@specify/plugin-cli" NPM package is installed
+        Given that the "@specify-bdd/specify" NPM package is installed
+        And that the "@specify-bdd/plugin-cli" NPM package is installed
         And a CLI shell
 
     @skip @todo

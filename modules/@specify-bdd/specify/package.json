@@ -1,5 +1,5 @@
 {
-  "name": "@specify/core",
+  "name": "@specify-bdd/specify",
   "version": "0.0.1",
   "description": "An open-source, command-line testing tool based on Cucumber.js, built to support and streamline Behavior-Driven Development (BDD).",
   "type": "module",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@cucumber/cucumber": "^11.3.0",
-    "@specify/quick-ref": "workspace:*",
+    "@specify-bdd/quick-ref": "workspace:*",
     "chalk": "^5.4.1",
     "chokidar": "^4.0.3",
     "deepmerge": "^4.3.1",

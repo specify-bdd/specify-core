@@ -1,8 +1,9 @@
 {
-  "name": "specify",
+  "name": "@specify-bdd/core",
   "version": "0.0.1",
   "description": "The monorepo for all open-source package development for Specify BDD.",
   "type": "module",
+  "private": true,
   "contributors": [
     "Adam Lacoste",
     "Michael Brown",
@@ -24,15 +25,15 @@
     "type-check:watch": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit --watch"
   },
   "dependencies": {
-    "@specify/core": "workspace:*",
-    "@specify/plugin-cli": "workspace:*",
-    "@specify/quick-ref": "workspace:*"
+    "@specify-bdd/specify": "workspace:*",
+    "@specify-bdd/plugin-cli": "workspace:*",
+    "@specify-bdd/quick-ref": "workspace:*"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
     "@microsoft/tsdoc": "^0.15.1",
     "@microsoft/tsdoc-config": "^0.17.1",
-    "@specify/eslint-plugin": "workspace:*",
+    "@specify-bdd/eslint-plugin": "workspace:*",
     "@stylistic/eslint-plugin-js": "^4.2.0",
     "@types/lodash": "^4.17.17",
     "@types/node": "^22.15.17",
