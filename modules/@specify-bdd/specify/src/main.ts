@@ -37,29 +37,22 @@ for (const plugin of config.plugins) {
 cucumberCfg.import.push(path.resolve(import.meta.dirname, "cucumber"));
 
 // build CLI app behavior
-const app = new App();
+const app      = new App();
+const helpText = config.content.commander.specify;
 
 app.name("specify")
-    .description(
-        "An open-source, command-line testing tool based on Cucumber.js, built to support and streamline Behavior-" +
-            "Driven Development (BDD).",
-    )
-    .version(npmPackage.version, "-v, --version", "Display the version of this software.")
-    .helpCommand("help [command]", "Display help info for a command.")
-    .helpOption("-h, --help", "Display this help screen.");
+    .description(npmPackage.description)
+    .version(npmPackage.version, "-v, --version", helpText.options.version)
+    .helpCommand("help [command]", helpText.commands.help)
+    .helpOption("-h, --help", helpText.options.help);
 
 app.command("test", { "isDefault": true })
-    .summary(
-        "Test behavior specifications.  Default if no other command is used.  See help info for more details.",
-    )
-    .description(
-        "Read behavior specifications written in Gherkin syntax and execute tests enacting the described behavior.  " +
-            "Utilizes Cucumber.js (https://github.com/cucumber/cucumber-js) under the hood.",
-    )
-    .argument("[paths...]", "The path(s) to the specification files to test.")
-    .helpOption("-h, --help", "Display this help screen.")
-    .option("-t, --tags <tags>", "Run only the tests which satisfy this tag expression.")
-    .option("-w, --watch", "Watch for changes and re-run tests.")
+    .summary(helpText.commands.test.summary)
+    .description(helpText.commands.test.description)
+    .argument("[paths...]", helpText.commands.test.arguments.paths)
+    .helpOption("-h, --help", helpText.commands.test.options.help)
+    .option("-t, --tags <tags>", helpText.commands.test.options.tags)
+    .option("-w, --watch", helpText.commands.test.options.watch)
     .action(runTests);
 
 // process args and execute commands
