@@ -65,6 +65,11 @@ When(
     waitForMatchingOutput,
 );
 
+Then(
+    "the last command's execution time should be at least {float} seconds",
+    verifyElapsedTimeGreaterThan,
+);
+
 Then("the last command's exit code/status should be {int}", verifyExitCode);
 Then("the last command's exit code/status should be a/an {int}", verifyExitCode);
 
@@ -81,22 +86,17 @@ Then(
     verifyMatchingOutput,
 );
 
-Then(
-    "the last command's total execution time should be greater than {float} seconds",
-    checkTotalTime,
-);
-
 /**
- * Check that the last command's total execution time is greater than the
+ * Verify that the last command's execution time is greater than the
  * specified number of seconds.
  *
  * @param seconds - The minimum number of seconds that should have elapsed
  *
  * @throws {@link AssertionError}
- * If the last command's total execution time is not greater than the specified
+ * If the last command's execution time is not greater than the specified
  * number of seconds.
  */
-function checkTotalTime(seconds: number): void {
+function verifyElapsedTimeGreaterThan(seconds: number): void {
     const command      = this.cli.manager.activeSession.commands.at(-1);
     const endTimestamp = command.output.at(-1).timestamp;
     const elapsedMs    = endTimestamp - command.timestamp;

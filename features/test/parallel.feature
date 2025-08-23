@@ -13,7 +13,7 @@ Feature: Parallel Execution
         Scenario: Serial execution takes more than 4 seconds
             When a user runs the command "npx specify test ./assets/gherkin/slow.feature"
             Then the last command's exit code should be a $success
-            And the last command's total execution time should be greater than 4 seconds
+            And the last command's execution time should be at least 4 seconds
 
     Rule: Tests can be run in parallel
 
