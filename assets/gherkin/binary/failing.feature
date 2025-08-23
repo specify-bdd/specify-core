@@ -1,7 +1,7 @@
 Feature: Gherking feature file that should fail
     @fail
     Scenario: Scenario that should fail
-        Given that this step fails
+        Given that this step will fail
 
     @fail
     Scenario: Another scenario that should fail
