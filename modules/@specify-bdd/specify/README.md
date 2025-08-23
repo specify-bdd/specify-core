@@ -22,7 +22,7 @@ your-project/
 1. Installation
 
     ```bash
-    npm i -D @specify/core
+    npm i -D @specify-bdd/specify
     ```
 
 1. Execute the features

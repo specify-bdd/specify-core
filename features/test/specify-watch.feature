@@ -5,8 +5,8 @@ Feature: Watch Mode
     So that I can get immediate feedback during development without manually rerunning tests
 
     Background:
-        Given that the "@specify/core" NPM package is installed
-        And that the "@specify/plugin-cli" NPM package is installed
+        Given that the "@specify-bdd/specify" NPM package is installed
+        And that the "@specify-bdd/plugin-cli" NPM package is installed
         And that a command line prompt is available
 
     Rule: Watch mode monitors file changes and reruns tests automatically

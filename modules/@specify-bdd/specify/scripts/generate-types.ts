@@ -1,6 +1,6 @@
 /**
  * Generates type definitions using the type generation scripts in the
- * `@specify/core/scripts/types` directory.
+ * `@specify-bdd/specify/scripts/types` directory.
  *
  * The generated type definitions are written to the `@/types/index.d.ts` file.
  */

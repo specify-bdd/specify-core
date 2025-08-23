@@ -1,4 +1,4 @@
-# @specify/eslint-plugin
+# @specify-bdd/eslint-plugin
 
 Custom ESLint rules for the Specify Core BDD testing framework that enforce consistent code alignment and styling across TypeScript files.
 
@@ -109,11 +109,11 @@ const config = {
 ### Standalone Installation
 
 ```bash
-npm install --save-dev @specify/eslint-plugin
+npm install --save-dev @specify-bdd/eslint-plugin
 # or
-yarn add --dev @specify/eslint-plugin
+yarn add --dev @specify-bdd/eslint-plugin
 # or
-pnpm add --save-dev @specify/eslint-plugin
+pnpm add --save-dev @specify-bdd/eslint-plugin
 ```
 
 ### Monorepo Usage
@@ -164,7 +164,7 @@ npx eslint src/**/*.ts --fix
 ### Project Structure
 
 ```
-modules/@specify/eslint-plugin/
+modules/@specify-bdd/eslint-plugin/
 ├── README.md    # This file
 ├── package.json # Package configuration
 ├── main.ts      # Plugin entry point

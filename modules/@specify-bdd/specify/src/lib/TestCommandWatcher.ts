@@ -24,7 +24,7 @@ export interface TestCommandWatcherOptions {
 
 export const DEBOUNCE_MS = 500;
 
-const PACKAGE_NAME = "@specify/core";
+const PACKAGE_NAME = "@specify-bdd/specify";
 
 export class TestCommandWatcher {
     /**

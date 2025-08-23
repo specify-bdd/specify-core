@@ -1,4 +1,4 @@
 packages:
-  - modules/@specify/*
+  - modules/@specify-bdd/*
 onlyBuiltDependencies:
   - esbuild
