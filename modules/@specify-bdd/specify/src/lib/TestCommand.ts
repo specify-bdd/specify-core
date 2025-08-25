@@ -161,6 +161,9 @@ export class TestCommand extends Command {
             let optVal = args[optKey];
 
             switch (optKey) {
+                case "parallel":
+                    config.parallel = parseInt(optVal, 10);
+                    break;
                 case "paths":
                     config.paths = this.#parsePathArgs(optVal);
                     break;

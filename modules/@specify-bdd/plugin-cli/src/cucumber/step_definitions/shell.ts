@@ -70,6 +70,11 @@ Then(
     verifyMinimumElapsedTime,
 );
 
+Then(
+    "the last command's execution time should be at most {float} seconds",
+    verifyElapsedTimeLessThan,
+);
+
 Then("the last command's exit code/status should be {int}", verifyExitCode);
 Then("the last command's exit code/status should be a/an {int}", verifyExitCode);
 
@@ -85,6 +90,27 @@ Then(
     "the last command's terminal output should match (the regular expression ){regexp}",
     verifyMatchingOutput,
 );
+
+/**
+ * Verify that the last command's execution time is less than the
+ * specified number of seconds.
+ *
+ * @param seconds - The maximum number of seconds that should have elapsed
+ *
+ * @throws {@link AssertionError}
+ * If the last command's execution time is not less than the specified
+ * number of seconds.
+ */
+function verifyElapsedTimeLessThan(seconds: number): void {
+    const command      = this.cli.manager.activeSession.commands.at(-1);
+    const endTimestamp = command.output.at(-1).timestamp;
+    const elapsedMs    = endTimestamp - command.timestamp;
+
+    assert.ok(
+        elapsedMs < seconds * 1000,
+        `The last command's total execution time ${elapsedMs / 1000}s was greater than ${seconds}s.`,
+    );
+}
 
 /**
  * Execute the given command via the CLI asynchronously and move on without
