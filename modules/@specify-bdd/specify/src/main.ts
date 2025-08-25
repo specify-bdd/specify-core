@@ -38,7 +38,7 @@ cucumberCfg.import.push(path.resolve(import.meta.dirname, "cucumber"));
 
 // build CLI app behavior
 const app      = new App();
-const helpText = config.content.commander.specify;
+const helpText = config.content.help.specify;
 
 app.name("specify")
     .description(npmPackage.description)

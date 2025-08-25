@@ -1,31 +1,45 @@
 export type ContentConfig = {
-    commander: {
-        specify: {
-            commands: {
-                help: string;
-                test: {
-                    arguments: {
-                        paths: string;
-                    };
-                    description: string;
-                    options: {
-                        help: string;
-                        tags: string;
-                        watch: string;
-                    };
-                    summary: string;
-                };
-            };
-            options: {
-                help: string;
-                version: string;
-            };
-        };
-    };
+    help: HelpContent;
+};
+
+type HelpContent = {
+    specify: SpecifyHelpContent;
+};
+
+type SpecifyCommandsHelpContent = {
+    help: string;
+    test: SpecifyTestCommandHelpContent;
+};
+
+type SpecifyHelpContent = {
+    commands: SpecifyCommandsHelpContent;
+    options:  SpecifyOptionsHelpContent;
+};
+
+type SpecifyOptionsHelpContent = {
+    help: string;
+    version: string;
+};
+
+type SpecifyTestCommandArgumentsHelpContent = {
+    paths: string;
+};
+
+type SpecifyTestCommandHelpContent = {
+    arguments: SpecifyTestCommandArgumentsHelpContent;
+    description: string;
+    options: SpecifyTestCommandOptionsHelpContent;
+    summary: string;
+};
+
+type SpecifyTestCommandOptionsHelpContent = {
+    help: string;
+    tags: string;
+    watch: string;
 };
 
 export const content: ContentConfig = {
-    "commander": {
+    "help": {
         "specify": {
             "commands": {
                 "help": "Display help info for a command.",
