@@ -23,6 +23,48 @@ describe("SessionManager", () => {
         });
     });
 
+    describe("commandElapsedTime", () => {
+        it("returns the elepsed time of the command", () => {
+            const timeStart = Math.random();
+            const timeEnd   = Math.random() + 1;
+
+            sessionManager.addSession(session);
+            vi.spyOn(Date, "now").mockReturnValueOnce(timeStart);
+
+            sessionManager.run("echo test");
+            vi.spyOn(Date, "now").mockReturnValueOnce(timeEnd);
+            session.emitDelimiter(0);
+
+            expect(sessionManager.commandElapsedTime).toBe(timeEnd - timeStart);
+        });
+    });
+
+    describe("commandEndTime", () => {
+        it("returns the end time of the command", () => {
+            const time = Math.random();
+
+            sessionManager.addSession(session);
+            sessionManager.run("echo test");
+            vi.spyOn(Date, "now").mockReturnValueOnce(time);
+            session.emitDelimiter(0);
+
+            expect(sessionManager.commandEndTime).toBe(time);
+        });
+    });
+
+    describe("commandStartTime", () => {
+        it("returns the start time of the command", () => {
+            const time = Math.random();
+
+            sessionManager.addSession(session);
+            vi.spyOn(Date, "now").mockReturnValueOnce(time);
+
+            sessionManager.run("echo test");
+
+            expect(sessionManager.commandStartTime).toBe(time);
+        });
+    });
+
     describe("exitCode", () => {
         it("returns the last command's exit code", async () => {
             sessionManager.addSession(session);

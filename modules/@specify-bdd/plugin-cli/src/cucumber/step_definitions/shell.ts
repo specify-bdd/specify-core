@@ -67,7 +67,7 @@ When(
 
 Then(
     "the last command's execution time should be at least {float} seconds",
-    verifyElapsedTimeGreaterThan,
+    verifyMinimumElapsedTime,
 );
 
 Then("the last command's exit code/status should be {int}", verifyExitCode);
@@ -85,27 +85,6 @@ Then(
     "the last command's terminal output should match (the regular expression ){regexp}",
     verifyMatchingOutput,
 );
-
-/**
- * Verify that the last command's execution time is greater than the
- * specified number of seconds.
- *
- * @param seconds - The minimum number of seconds that should have elapsed
- *
- * @throws {@link AssertionError}
- * If the last command's execution time is not greater than the specified
- * number of seconds.
- */
-function verifyElapsedTimeGreaterThan(seconds: number): void {
-    const command      = this.cli.manager.activeSession.commands.at(-1);
-    const endTimestamp = command.output.at(-1).timestamp;
-    const elapsedMs    = endTimestamp - command.timestamp;
-
-    assert.ok(
-        elapsedMs > seconds * 1000,
-        `The last command's total execution time ${elapsedMs / 1000}s was not greater than ${seconds}s.`,
-    );
-}
 
 /**
  * Execute the given command via the CLI asynchronously and move on without
@@ -194,6 +173,22 @@ function verifyMatchingOutput(pattern: RegExp | string): void {
         new AssertionError({
             "message": `Command output did not match expectations. Output:\n${this.cli.manager.output}`,
         }),
+    );
+}
+
+/**
+ * Verify that the last command's execution time is the specified number of seconds or more.
+ *
+ * @param seconds - The minimum number of seconds that should have elapsed
+ *
+ * @throws {@link AssertionError}
+ * If the last command's execution time is less than the specified
+ * number of seconds.
+ */
+function verifyMinimumElapsedTime(seconds: number): void {
+    assert.ok(
+        this.cli.manager.commandElapsedTime > seconds * 1000,
+        `The last command's total execution time ${this.cli.manager.commandElapsedTime / 1000}s was less than ${seconds}s.`,
     );
 }
 
