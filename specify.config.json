@@ -1,7 +1,6 @@
 {
     "cucumber": {
-        "format": [ "progress" ],
-        "parallel": 3
+        "format": [ "progress" ]
     },
     "debug": false,
     "paths": {
