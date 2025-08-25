@@ -35,9 +35,9 @@ describe("TestCommand", () => {
                 const userArgs = { "parallel": 2, ...emptyArgs };
                 const userOpts = { "debug": true };
                 const cmd      = new TestCommand(userOpts);
-    
+
                 await cmd.execute(userArgs);
-    
+
                 expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
                     expect.objectContaining({
                         "parallel": 2,
