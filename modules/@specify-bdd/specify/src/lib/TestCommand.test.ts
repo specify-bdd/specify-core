@@ -31,6 +31,20 @@ describe("TestCommand", () => {
 
     describe("execute()", () => {
         describe("parses command arguments", () => {
+            it("parallel", async () => {
+                const userArgs = { "parallel": 2, ...emptyArgs };
+                const userOpts = { "debug": true };
+                const cmd      = new TestCommand(userOpts);
+    
+                await cmd.execute(userArgs);
+    
+                expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        "parallel": 2,
+                    }),
+                );
+            });
+
             it("paths", async () => {
                 const featPath = "./assets/gherkin/binary/passing.feature";
                 const userArgs = { "paths": [featPath] };
