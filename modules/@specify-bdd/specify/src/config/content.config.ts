@@ -1,44 +1,4 @@
-export type ContentConfig = {
-    help: HelpContent;
-};
-
-type HelpContent = {
-    specify: SpecifyHelpContent;
-};
-
-type SpecifyCommandsHelpContent = {
-    help: string;
-    test: SpecifyTestCommandHelpContent;
-};
-
-type SpecifyHelpContent = {
-    commands: SpecifyCommandsHelpContent;
-    options:  SpecifyOptionsHelpContent;
-};
-
-type SpecifyOptionsHelpContent = {
-    help: string;
-    version: string;
-};
-
-type SpecifyTestCommandArgumentsHelpContent = {
-    paths: string;
-};
-
-type SpecifyTestCommandHelpContent = {
-    arguments: SpecifyTestCommandArgumentsHelpContent;
-    description: string;
-    options: SpecifyTestCommandOptionsHelpContent;
-    summary: string;
-};
-
-type SpecifyTestCommandOptionsHelpContent = {
-    help: string;
-    tags: string;
-    watch: string;
-};
-
-export const content: ContentConfig = {
+const contentObj = {
     "help": {
         "specify": {
             "commands": {
@@ -65,3 +25,7 @@ export const content: ContentConfig = {
         },
     },
 };
+
+export type ContentConfig = typeof contentObj;
+
+export const content: ContentConfig = contentObj;
