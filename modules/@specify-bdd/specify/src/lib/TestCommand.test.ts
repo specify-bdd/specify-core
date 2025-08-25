@@ -134,7 +134,7 @@ describe("TestCommand", () => {
                 });
 
                 it("unsupported command option", async () => {
-                    const error    = Error("Invalid option: --bad");
+                    const error    = Error('Option "--bad" not being used to configure Cucumber');
                     const userArgs = { ...emptyArgs, "bad": "test" };
 
                     const res = await new TestCommand().execute(userArgs);
