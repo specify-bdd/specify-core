@@ -6,9 +6,9 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import assert                from "node:assert/strict";
 
-Given("(that )this step will fail", fail);
-Given("(that )this step will pass", pass);
-Given("(that )this step will pass after {float} seconds", passAfterDelay);
+Given("that this step fails", fail);
+Given("that this step passes", pass);
+Given("that this step passes after {float} seconds", passAfterDelay);
 
 When("this step fails", fail);
 When("this step passes", pass);
