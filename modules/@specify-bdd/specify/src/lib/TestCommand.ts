@@ -175,7 +175,7 @@ export class TestCommand extends Command {
                 case "watch":
                     break; // this is handled by TestCommandWatcher
                 default:
-                    throw new Error(`Invalid option: --${optKey}`);
+                    throw new Error(`Option "--${optKey}" not being used to configure Cucumber`);
             }
         }
 
