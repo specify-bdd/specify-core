@@ -1,0 +1,11 @@
+[**@specify/core**](../../README.md)
+
+***
+
+[@specify/core](../../modules.md) / [TestCommandWatcher](../README.md) / DEBOUNCE\_MS
+
+# Variable: DEBOUNCE\_MS
+
+> `const` **DEBOUNCE\_MS**: `500` = `500`
+
+Defined in: [modules/@specify/core/src/lib/TestCommandWatcher.ts:26](https://github.com/specify-bdd/specify-core/blob/47b04e46253b9c5ba29e870a4c53fb0503a1b0ae/modules/@specify/core/src/lib/TestCommandWatcher.ts#L26)
