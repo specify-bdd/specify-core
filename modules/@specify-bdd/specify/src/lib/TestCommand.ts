@@ -11,10 +11,8 @@ import fs                 from "node:fs";
 import path               from "node:path";
 import { serializeError } from "serialize-error";
 
-import { Command, CommandResultStatus, SPECIFY_ARGS } from "./Command";
-import { CucumberTool                               } from "./CucumberTool";
-
-import type { ParsedArgs } from "minimist";
+import { Command, CommandResultStatus } from "./Command";
+import { CucumberTool                 } from "./CucumberTool";
 
 import type {
     IConfiguration,
@@ -37,6 +35,12 @@ export const TEST_COMMAND_DEFAULT_OPTS: TestCommandOptions = {
     "logPath":      `./specify-test-log-${Date.now()}.json`,
 };
 
+export interface TestCommandArguments {
+    paths?: string[];
+    tags?: string[];
+    watch?: boolean;
+}
+
 export interface TestCommandOptions extends CommandOptions {
     cucumber?: Partial<IConfiguration>;
     gherkinPaths?: string[];
@@ -48,6 +52,7 @@ export interface TestCommandResult extends CommandResult {
 }
 
 export interface TestCommandResultDebugInfo extends CommandResultDebugInfo {
+    args?: TestCommandArguments;
     cucumber?: {
         runConfiguration?: IRunConfiguration;
         runEnvironment?: IRunEnvironment;
@@ -99,7 +104,7 @@ export class TestCommand extends Command {
      *
      * @returns The Command result
      */
-    async execute(userArgs: ParsedArgs): Promise<TestCommandResult> {
+    async execute(userArgs: TestCommandArguments): Promise<TestCommandResult> {
         const testRes: TestCommandResult = {
             "ok":     false,
             "status": CommandResultStatus.error,
@@ -142,33 +147,32 @@ export class TestCommand extends Command {
      * Build a ready-to-use Cucumber configuration based on command line args
      * and initialized Command options.
      *
-     * @param args - Command line arguments, as parsed by Minimist
+     * @param args - Command line arguments
      *
      * @returns The Cucumber configuration
      *
      * @throws {@link Error}
      * If any command line args are invalid for this Command.
      */
-    #buildCucumberConfig(args: ParsedArgs): IConfiguration {
+    #buildCucumberConfig(args: TestCommandArguments): IConfiguration {
         const config = merge({}, this.cucumber);
 
         for (const optKey in args) {
             let optVal = args[optKey];
 
             switch (optKey) {
+                case "paths":
+                    config.paths = this.#parsePathArgs(optVal);
+                    break;
                 case "tags":
                     optVal = Array.isArray(optVal) ? optVal : [optVal];
                     optVal.push(config.tags);
                     config.tags = this.#parseTagArgs(optVal);
                     break;
-                case "_": // gherkin paths
-                    config.paths = this.#parsePathArgs(optVal);
-                    break;
+                case "watch":
+                    break; // this is handled by TestCommandWatcher
                 default:
-                    // only throw for non-Cucumber args that are not our own custom execution args
-                    if (!SPECIFY_ARGS.includes(optKey)) {
-                        throw new Error(`Invalid option: --${optKey}`);
-                    }
+                    throw new Error(`Invalid option: --${optKey}`);
             }
         }
 

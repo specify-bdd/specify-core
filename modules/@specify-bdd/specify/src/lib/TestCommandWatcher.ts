@@ -15,8 +15,7 @@ import path                 from "node:path";
 import { deserializeError } from "serialize-error";
 import { config           } from "@/config/all";
 
-import type { ParsedArgs  } from "minimist";
-import type { TestCommand } from "./TestCommand";
+import type { TestCommand, TestCommandArguments } from "./TestCommand";
 
 export interface TestCommandWatcherOptions {
     debounceMs?: number;
@@ -125,7 +124,7 @@ export class TestCommandWatcher {
      *
      * @param args - Command line arguments to pass to the TestCommand
      */
-    async #executeCommand(args: ParsedArgs): Promise<void> {
+    async #executeCommand(args: TestCommandArguments): Promise<void> {
         try {
             this.#debugLog(`Creating lock file (${chalk.gray(this.#lockFilePath)})...`);
 
@@ -207,7 +206,7 @@ export class TestCommandWatcher {
      *
      * @param args - Command line arguments to pass to the TestCommand
      */
-    async start(args: ParsedArgs): Promise<void> {
+    async start(args: TestCommandArguments): Promise<void> {
         clear();
 
         const watchPaths = config.watch.paths.map((watchPath) => path.resolve(watchPath));

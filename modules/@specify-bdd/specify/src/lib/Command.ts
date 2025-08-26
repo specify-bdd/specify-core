@@ -7,16 +7,12 @@
 import merge              from "deepmerge";
 import { serializeError } from "serialize-error";
 
-import type { ParsedArgs } from "minimist";
-
 import type { JsonObject, JsonValue } from "type-fest";
 
 export const COMMAND_DEFAULT_OPTS: CommandOptions = {
     "debug":   false,
     "logPath": `./specify-log-${Date.now()}.json`,
 };
-
-export const SPECIFY_ARGS = ["help", "watch"];
 
 export interface CommandOptions {
     debug?: boolean;
@@ -32,12 +28,7 @@ export interface CommandResult {
 }
 
 export interface CommandResultDebugInfo {
-    args: ParsedArgs;
-}
-
-export interface SpecifyArgs {
-    help?: boolean;
-    watch?: boolean;
+    args?: object;
 }
 
 export enum CommandResultStatus {
@@ -77,7 +68,7 @@ export abstract class Command {
      *
      * @returns The Command result
      */
-    async execute(userArgs: ParsedArgs): Promise<CommandResult> {
+    async execute(userArgs: JsonObject): Promise<CommandResult> {
         const res: CommandResult = {
             "ok":     false,
             "status": CommandResultStatus.error,
