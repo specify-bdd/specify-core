@@ -12,7 +12,7 @@ const contentObj = {
                     "options": {
                         "help": "Display this help screen.",
                         "parallel":
-                            "Run tests in parallel using the specified number of CPU cores.",
+                            "Run tests in parallel using the specified number of threads.",
                         "tags":  "Run only the tests which satisfy this tag expression.",
                         "watch": "Watch for changes and re-run tests.",
                     },
