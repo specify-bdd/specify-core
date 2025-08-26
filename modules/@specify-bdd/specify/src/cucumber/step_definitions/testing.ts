@@ -36,7 +36,5 @@ function pass(): void {
  * @param delay - The number of seconds to wait before passing.
  */
 async function passAfterDelay(delay: number): Promise<void> {
-    if (delay > 0) {
-        await new Promise((resolve) => setTimeout(resolve, delay * 1000));
-    }
+    return new Promise((resolve) => setTimeout(resolve, delay * 1000));
 }

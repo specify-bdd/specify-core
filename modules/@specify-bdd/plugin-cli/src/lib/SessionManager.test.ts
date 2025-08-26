@@ -341,8 +341,8 @@ describe("SessionManager", () => {
                 const cmdMeta = sessionManager.run("echo test");
                 const endTS   = Date.now();
 
-                expect(cmdMeta.timestamp).toBeGreaterThanOrEqual(startTS);
-                expect(cmdMeta.timestamp).toBeLessThanOrEqual(endTS);
+                expect(cmdMeta.timeStart).toBeGreaterThanOrEqual(startTS);
+                expect(cmdMeta.timeStart).toBeLessThanOrEqual(endTS);
             });
 
             describe("with an output array...", () => {

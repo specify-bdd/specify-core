@@ -22,7 +22,8 @@ export interface CommandMeta {
     promise?: Promise<CommandMeta>;
     reject?: ((err: Error) => void) | null;
     resolve?: ((cmdMeta: CommandMeta) => void) | null;
-    timestamp: number;
+    timeEnd: number;
+    timeStart: number;
 }
 
 /**
@@ -118,14 +119,14 @@ export class SessionManager {
      * The end time of the active session's last completed command.
      */
     get commandEndTime(): number {
-        return this.#getLastCommand().output.at(-1).timestamp;
+        return this.#getLastCommand().timeEnd;
     }
 
     /**
      * The start time of the active session's last completed command.
      */
     get commandStartTime(): number {
-        return this.#getLastCommand().timestamp;
+        return this.#getLastCommand().timeStart;
     }
 
     /**
@@ -264,7 +265,7 @@ export class SessionManager {
             command,
             "delimiter": this.#createDelimiter(),
             "output":    [],
-            "timestamp": Date.now(),
+            "timeStart": Date.now(),
         } as CommandMeta;
 
         newCmdMeta.promise = new Promise((resolve, reject) => {
@@ -429,6 +430,8 @@ export class SessionManager {
         lastCmdMeta.output.push({ "output": cleanOutput, stream, timestamp } as OutputMeta);
 
         if (output.includes(lastCmdMeta.delimiter.uuid)) {
+            lastCmdMeta.timeEnd = timestamp;
+
             try {
                 lastCmdMeta.exitCode = this.#extractKeyedValue(
                     output,
