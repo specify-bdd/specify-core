@@ -92,27 +92,6 @@ Then(
 );
 
 /**
- * Verify that the last command's execution time is less than the
- * specified number of seconds.
- *
- * @param seconds - The maximum number of seconds that should have elapsed
- *
- * @throws {@link AssertionError}
- * If the last command's execution time is not less than the specified
- * number of seconds.
- */
-function verifyElapsedTimeLessThan(seconds: number): void {
-    const command      = this.cli.manager.activeSession.commands.at(-1);
-    const endTimestamp = command.output.at(-1).timestamp;
-    const elapsedMs    = endTimestamp - command.timestamp;
-
-    assert.ok(
-        elapsedMs < seconds * 1000,
-        `The last command's total execution time ${elapsedMs / 1000}s was greater than ${seconds}s.`,
-    );
-}
-
-/**
  * Execute the given command via the CLI asynchronously and move on without
  * waiting for it to return.
  *
