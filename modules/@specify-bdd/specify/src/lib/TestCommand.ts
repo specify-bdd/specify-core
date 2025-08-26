@@ -162,7 +162,7 @@ export class TestCommand extends Command {
 
             switch (optKey) {
                 case "parallel":
-                    config.parallel = parseInt(optVal, 10);
+                    config.parallel = optVal;
                     break;
                 case "paths":
                     config.paths = this.#parsePathArgs(optVal);
