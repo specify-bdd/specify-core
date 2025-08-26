@@ -108,6 +108,27 @@ export class SessionManager {
     }
 
     /**
+     * The elapsed time, in milliseconds, of the active session's last completed command.
+     */
+    get commandElapsedTime(): number {
+        return this.commandEndTime - this.commandStartTime;
+    }
+
+    /**
+     * The end time of the active session's last completed command.
+     */
+    get commandEndTime(): number {
+        return this.#getLastCommand().output.at(-1).timestamp;
+    }
+
+    /**
+     * The start time of the active session's last completed command.
+     */
+    get commandStartTime(): number {
+        return this.#getLastCommand().timestamp;
+    }
+
+    /**
      * The numeric exit code of the active session's last completed command.
      */
     get exitCode(): number {

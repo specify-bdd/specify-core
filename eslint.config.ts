@@ -98,6 +98,7 @@ export default tseslint.config(
             "**/*.d.ts",
             "**/.DS_Store/**",
             "**/.vscode/**",
+            "**/docs/**",
             "**/logs/**",
             "**/node_modules/**",
             "**/dist/**",
