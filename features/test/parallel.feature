@@ -22,12 +22,6 @@ Feature: Parallel Execution
             Then the last command's exit code should be a $success
             And the last command's execution time should be at most 4 seconds
 
-        @skip @review
-        Scenario: Parallel option defaults to a value of one less than total CPU cores
-            When a user runs the command "npx specify test --parallel"
-            Then the last command's exit code should be a $success
-            And the elapsed time should be less than 6 seconds
-
     Rule: Parallel option only accepts a single integer argument
 
         @skip
