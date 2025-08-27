@@ -10,9 +10,10 @@ const contentObj = {
                     "description":
                         "Read behavior specifications written in Gherkin syntax and execute tests enacting the described behavior.  Utilizes Cucumber.js (https://github.com/cucumber/cucumber-js) under the hood.",
                     "options": {
-                        "help":  "Display this help screen.",
-                        "tags":  "Run only the tests which satisfy this tag expression.",
-                        "watch": "Watch for changes and re-run tests.",
+                        "help":     "Display this help screen.",
+                        "parallel": "Run in parallel with the given number of workers.",
+                        "tags":     "Run only the tests which satisfy this tag expression.",
+                        "watch":    "Watch for changes and re-run tests.",
                     },
                     "summary":
                         "Test behavior specifications.  Default if no other command is used.",

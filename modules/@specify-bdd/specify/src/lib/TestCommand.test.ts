@@ -31,6 +31,20 @@ describe("TestCommand", () => {
 
     describe("execute()", () => {
         describe("parses command arguments", () => {
+            it("parallel", async () => {
+                const userArgs = { "parallel": 2, ...emptyArgs };
+                const userOpts = { "debug": true };
+                const cmd      = new TestCommand(userOpts);
+
+                await cmd.execute(userArgs);
+
+                expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        "parallel": 2,
+                    }),
+                );
+            });
+
             it("paths", async () => {
                 const featPath = "./assets/gherkin/binary/passing.feature";
                 const userArgs = { "paths": [featPath] };
@@ -120,7 +134,7 @@ describe("TestCommand", () => {
                 });
 
                 it("unsupported command option", async () => {
-                    const error    = Error("Invalid option: --bad");
+                    const error    = Error('Option "--bad" not being used to configure Cucumber');
                     const userArgs = { ...emptyArgs, "bad": "test" };
 
                     const res = await new TestCommand().execute(userArgs);

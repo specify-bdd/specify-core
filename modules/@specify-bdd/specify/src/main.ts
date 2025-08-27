@@ -53,6 +53,11 @@ app.command("test", { "isDefault": true })
     .argument("[paths...]", helpText.commands.test.arguments.paths)
     .helpOption("-h, --help", helpText.commands.test.options.help)
     .option("-t, --tags <tags>", helpText.commands.test.options.tags)
+    .option(
+        "-p, --parallel <number_of_workers>",
+        helpText.commands.test.options.parallel,
+        (value) => parseInt(value, 10),
+    )
     .option("-w, --watch", helpText.commands.test.options.watch)
     .action(runTests);
 
