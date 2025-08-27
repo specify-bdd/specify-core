@@ -4,48 +4,34 @@
  * Cucumber step definitions covering interactions with a file system.
  */
 
-// import { Given, When } from "@cucumber/cucumber";
-// import fs              from "node:fs/promises";
-// import path            from "node:path";
+import { Given, When            } from "@cucumber/cucumber";
+import assert, { AssertionError } from "node:assert/strict";
 
-// import type { FileParam } from "~/types/params";
+Given("(that )the working directory is {path}", changeDirectory);
 
-// Given("(that )a(n) {ref:file} file exists at {path}", copyFile);
-
-// When("a/the user puts a(n) {ref:file} file in {path}", copyFile);
+When("a/the user changes the working directory to {path}", changeDirectory);
 
 /**
- * Copies an existing file to a specific file system location. Will not overwrite
- * or throw if the destination path already exists.
+ * Change the current working directory in the active shell.
  *
- * @param file     - The referenced file object to copy
- * @param destPath - The location to copy the file to
- */
-// async function copyFile(file: FileParam, destPath: string): Promise<void> {
-//     try {
-//         await fs.copyFile(
-//             path.resolve(file.sourcePath),
-//             path.resolve(destPath),
-//             fs.constants.COPYFILE_EXCL,
-//         );
-//     } catch (error) {
-//         if (!error.message.includes("EEXIST")) {
-//             throw error;
-//         }
-//     }
-// }
-
-/**
- * Writes a defined file's contents to a specific file system location.
+ * @param dirPath - The new working directory
  *
- * @param file     - The referenced file object to write
- * @param destPath - The location to write the file to
+ * @throws AssertionError
+ * If there is no SessionManager initialized.
+ *
+ * @throws AssertionError
+ * If the CD command returns a non-zero exit code.
  */
-// async function writeFile(file: FileParam, destPath: string): Promise<void> {
-//     const opts = {
-//         "encoding": file.encoding || "utf8",
-//         "mode": file.mode || 0o644,
-//     } as Partial<ObjectEncodingOptions>;
+async function changeDirectory(dirPath: string): Promise<void> {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
-//     await fs.writeFile(destPath, file.name), file.content, opts);
-// }
+    this.cli.manager.run(`cd ${dirPath}`);
+
+    await this.cli.manager.waitForReturn();
+
+    assert.equal(
+        this.cli.manager.exitCode,
+        0,
+        new AssertionError({ "message": `Could not change directory to ${dirPath}.` }),
+    );
+}
