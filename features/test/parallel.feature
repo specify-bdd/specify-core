@@ -19,7 +19,7 @@ Feature: Parallel Execution
     Rule: Tests can be run in parallel
 
         Scenario: Parallel execution takes less than 4 seconds
-            When a user runs the command "npx specify test --parallel 3 ./slow.feature"
+            When a user runs the command "npx specify test --parallel 2 ./slow.feature"
             Then the last command's exit code should be a $success
             And the last command's execution time should be at most 4 seconds
 
