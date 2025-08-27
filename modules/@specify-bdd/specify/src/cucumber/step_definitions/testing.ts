@@ -6,14 +6,15 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import assert                from "node:assert/strict";
 
-Given("that this step definition fails", fail);
-Given("that this step definition passes", pass);
+Given("that this step fails", fail);
+Given("that this step passes", pass);
+Given("that this step passes after {float} seconds", passAfterDelay);
 
-When("this step definition fails", fail);
-When("this step definition passes", pass);
+When("this step fails", fail);
+When("this step passes", pass);
 
-Then("this step definition should fail", fail);
-Then("this step definition should pass", pass);
+Then("this step should fail", fail);
+Then("this step should pass", pass);
 
 /**
  * Always throws, causing a scenario failure.
@@ -26,5 +27,14 @@ function fail(): void {
  * Always passes.
  */
 function pass(): void {
-    // no return or throw is a passing scenario result
+    // no return or throw is a passing step result
+}
+
+/**
+ * Always passes after delay.
+ *
+ * @param delay - The number of seconds to wait before passing.
+ */
+async function passAfterDelay(delay: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, delay * 1000));
 }

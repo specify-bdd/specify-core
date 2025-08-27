@@ -65,6 +65,11 @@ When(
     waitForMatchingOutput,
 );
 
+Then(
+    "the last command's execution time should be at least {float} seconds",
+    verifyMinimumElapsedTime,
+);
+
 Then("the last command's exit code/status should be {int}", verifyExitCode);
 Then("the last command's exit code/status should be a/an {int}", verifyExitCode);
 
@@ -168,6 +173,22 @@ function verifyMatchingOutput(pattern: RegExp | string): void {
         new AssertionError({
             "message": `Command output did not match expectations. Output:\n${this.cli.manager.output}`,
         }),
+    );
+}
+
+/**
+ * Verify that the last command's execution time is the specified number of seconds or more.
+ *
+ * @param seconds - The minimum number of seconds that should have elapsed
+ *
+ * @throws {@link AssertionError}
+ * If the last command's execution time is less than the specified
+ * number of seconds.
+ */
+function verifyMinimumElapsedTime(seconds: number): void {
+    assert.ok(
+        this.cli.manager.commandElapsedTime > seconds * 1000,
+        `The last command's total execution time ${this.cli.manager.commandElapsedTime / 1000}s was less than ${seconds}s.`,
     );
 }
 
