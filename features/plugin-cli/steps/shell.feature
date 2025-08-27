@@ -27,17 +27,6 @@ Feature: Shell Step Definitions
         #     When the user kills another CLI shell
         #     Then there should be 0 active CLI shells
 
-    Rule: I can change my working directory
-
-        Background:
-            Given that the "@specify-bdd/specify" NPM package is installed
-            And that the "@specify-bdd/plugin-cli" NPM package is installed
-            And a CLI shell
-
-        Scenario:
-            When the user changes the working directory to "./assets"
-            # Then the working directory will include "assets" 
-
     Rule: I can execute commands and verify results
 
         Background:
