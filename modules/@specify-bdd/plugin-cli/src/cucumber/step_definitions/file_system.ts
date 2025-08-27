@@ -25,7 +25,7 @@ When("a/the user changes the working directory to {path}", changeDirectory);
 async function changeDirectory(dirPath: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
-    this.cli.manager.run(`cd ${dirPath}`);
+    this.cli.manager.run(`cd ${dirPath}`); // TODO: generalize this so it will work for any OS/shell
 
     await this.cli.manager.waitForReturn();
 
