@@ -22,8 +22,8 @@ export interface CommandMeta {
     promise?: Promise<CommandMeta>;
     reject?: ((err: Error) => void) | null;
     resolve?: ((cmdMeta: CommandMeta) => void) | null;
-    timeEnd: number;
-    timeStart: number;
+    timeEnd?: number;
+    timeStart?: number;
 }
 
 /**
