@@ -1,12 +1,22 @@
 {
-  "name": "specify",
+  "name": "@specify-bdd/core",
   "version": "0.0.1",
-  "description": "Core repository description",
+  "description": "The monorepo for all open-source package development for Specify BDD.",
   "type": "module",
+  "private": true,
+  "contributors": [
+    "Adam Lacoste",
+    "Michael Brown",
+    "Wild Love"
+  ],
+  "license": "MIT",
   "scripts": {
     "build": "pnpm -r --if-present run build",
     "dev:reset": "bash ./scripts/dev-reset.sh",
     "dev:watch": "tsx scripts/dev-watcher.ts",
+    "docs:all": "concurrently --prefixColors \"greenBright,cyan\" -n html,markdown --kill-others-on-fail --success first \"pnpm docs:html\" \"pnpm docs:markdown\"", 
+    "docs:html": "pnpm -r --if-present run docs:html",
+    "docs:markdown": "pnpm -r --if-present run docs:markdown",
     "generate-types": "pnpm -r --if-present run generate-types",
     "lint": "prettier --check '**/*.ts' & eslint .",
     "lint:fix": "prettier --write '**/*.ts' && eslint . --fix",
@@ -17,32 +27,23 @@
     "type-check": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit",
     "type-check:watch": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit --watch"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/software-pirates/specify-core.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/software-pirates/specify-core/issues"
-  },
-  "homepage": "https://github.com/software-pirates/specify-core#readme",
   "dependencies": {
-    "@specify/core": "workspace:*",
-    "@specify/plugin-cli": "workspace:*",
-    "@specify/quick-ref": "workspace:*"
+    "@specify-bdd/specify": "workspace:*",
+    "@specify-bdd/plugin-cli": "workspace:*",
+    "@specify-bdd/quick-ref": "workspace:*"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
     "@microsoft/tsdoc": "^0.15.1",
     "@microsoft/tsdoc-config": "^0.17.1",
-    "@specify/eslint-plugin": "workspace:*",
+    "@specify-bdd/eslint-plugin": "workspace:*",
     "@stylistic/eslint-plugin-js": "^4.2.0",
     "@types/lodash": "^4.17.17",
     "@types/node": "^22.15.17",
     "@vitest/ui": "^3.2.4",
     "chalk": "^5.4.1",
     "chokidar": "^4.0.3",
+    "concurrently": "^9.2.0",
     "eslint": "^9.27.0",
     "eslint-plugin-jsonc": "^2.20.0",
     "eslint-plugin-tsdoc": "^0.4.0",
@@ -57,9 +58,19 @@
     "tsc-alias": "^1.8.16",
     "tsx": "^4.19.4",
     "type-fest": "^4.41.0",
+    "typedoc": "^0.28.10",
+    "typedoc-plugin-markdown": "^4.8.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.0",
     "vitest": "^3.2.4"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specify-bdd/specify-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/specify-bdd/specify-core/issues"
+  },
+  "homepage": "https://github.com/specify-bdd/specify-core#readme",
   "packageManager": "pnpm@10.12.1"
 }

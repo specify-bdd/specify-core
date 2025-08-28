@@ -1,0 +1,31 @@
+{
+  "name": "@specify-bdd/quick-ref",
+  "version": "0.0.1",
+  "description": "A utility for referencing test param data quickly and easily.",
+  "type": "module",
+  "author": "Adam Lacoste",
+  "license": "MIT",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json && tsc-alias --resolve-full-paths",
+    "docs:html": "typedoc --options typedoc.html.json",
+    "docs:markdown": "typedoc --options typedoc.markdown.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "deepmerge": "^4.3.1",
+    "type-fest": "^4.41.0"
+  },
+  "devDependencies": {
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.8.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specify-bdd/specify-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/specify-bdd/specify-core/issues"
+  },
+  "homepage": "https://github.com/specify-bdd/specify-core#readme"
+}
