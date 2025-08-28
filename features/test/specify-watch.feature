@@ -8,6 +8,7 @@ Feature: Watch Mode
         Given that the "@specify-bdd/specify" NPM package is installed
         And that the "@specify-bdd/plugin-cli" NPM package is installed
         And that a command line prompt is available
+        And that the working directory is "./assets/gherkin"
 
     Rule: Watch mode monitors file changes and reruns tests automatically
 

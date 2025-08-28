@@ -97,11 +97,11 @@ Then(
  *
  * @param command - The command to run
  *
- * @throws {@link AssertionError}
+ * @throws AssertionError
  * If there is no SessionManager initialized.
  */
 function execCommand(command: string): void {
-    assert.ok(this.cli.manager);
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     this.cli.manager.run(command);
 }
 
@@ -137,11 +137,11 @@ function startDefaultShell(): void {
 /**
  * Switch to the next shell in the list.
  *
- * @throws {@link AssertionError}
+ * @throws AssertionError
  * If there is no SessionManager initialized.
  */
 function switchShell(): void {
-    assert.ok(this.cli.manager, "No SessionManager initialized.");
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     this.cli.manager.switchToNextSession();
 }
@@ -151,7 +151,7 @@ function switchShell(): void {
  *
  * @param exitCode - The exit code expected from the last command
  *
- * @throws {@link AssertionError}
+ * @throws AssertionError
  * If the actual exit code is different
  */
 function verifyExitCode(exitCode: number): void {
@@ -167,7 +167,7 @@ function verifyExitCode(exitCode: number): void {
  *
  * @param pattern - The pattern to match output against
  *
- * @throws {@link AssertionError}
+ * @throws AssertionError
  * If no matches for the regexp pattern were found
  */
 function verifyMatchingOutput(pattern: RegExp | string): void {
@@ -182,34 +182,46 @@ function verifyMatchingOutput(pattern: RegExp | string): void {
 }
 
 /**
- * Verify that the last command's execution time is the specified number of seconds or less.
+ * Verify that the last command's execution time is the specified number of 
+ * seconds or less.
  *
- * @param seconds - The maximum number of seconds that should have elapsed
+ * @param maxTime - The maximum amount of time, in seconds, that should have 
+ *                  elapsed
  *
- * @throws {@link AssertionError}
- * If the last command's execution time is more than the specified
- * number of seconds.
+ * @throws AssertionError
+ * If the last command's execution time is more than the specified number of 
+ * seconds.
  */
-function verifyMaximumElapsedTime(seconds: number): void {
+function verifyMaximumElapsedTime(maxTime: number): void {
+    const elapsed = this.cli.manager.commandElapsedTime / 1000;
+
     assert.ok(
-        this.cli.manager.commandElapsedTime < seconds * 1000,
-        `The last command's total execution time ${this.cli.manager.commandElapsedTime / 1000}s was more than ${seconds}s.`,
+        elapsed < maxTime,
+        new AssertionError({
+            "message": `The last command's total execution time ${elapsed}s was more than ${maxTime}s.`,
+        }),
     );
 }
 
 /**
- * Verify that the last command's execution time is the specified number of seconds or more.
+ * Verify that the last command's execution time is the specified number of 
+ * seconds or more.
  *
- * @param seconds - The minimum number of seconds that should have elapsed
+ * @param minTime - The minimum amount of time, in seconds, that should have 
+ *                  elapsed
  *
- * @throws {@link AssertionError}
- * If the last command's execution time is less than the specified
- * number of seconds.
+ * @throws AssertionError
+ * If the last command's execution time is less than the specified number of 
+ * seconds.
  */
-function verifyMinimumElapsedTime(seconds: number): void {
+function verifyMinimumElapsedTime(minTime: number): void {
+    const elapsed = this.cli.manager.commandElapsedTime / 1000;
+
     assert.ok(
-        this.cli.manager.commandElapsedTime > seconds * 1000,
-        `The last command's total execution time ${this.cli.manager.commandElapsedTime / 1000}s was less than ${seconds}s.`,
+        elapsed > minTime,
+        new AssertionError({
+            "message": `The last command's total execution time ${elapsed}s was less than ${minTime}s.`,
+        }),
     );
 }
 
@@ -223,11 +235,11 @@ async function waitForAnyOutput(): Promise<void> {
 /**
  * Wait for the last command to return.
  *
- * @throws {@link AssertionError}
+ * @throws AssertionError
  * If there is no SessionManager initialized.
  */
 async function waitForCommandReturn(): Promise<void> {
-    assert.ok(this.cli.manager);
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     await this.cli.manager.waitForReturn();
 }
 
@@ -236,9 +248,12 @@ async function waitForCommandReturn(): Promise<void> {
  *
  * @param stream  - The stream to watch for output
  * @param pattern - The pattern to match output against
+ *
+ * @throws AssertionError
+ * If there is no SessionManager initialized.
  */
 async function waitForOutput(stream?: IOStream, pattern?: RegExp): Promise<void> {
-    assert.ok(this.cli.manager);
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     await this.cli.manager.waitForOutput({ pattern, stream });
 }
 
