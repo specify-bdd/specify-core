@@ -182,41 +182,45 @@ function verifyMatchingOutput(pattern: RegExp | string): void {
 }
 
 /**
- * Verify that the last command's execution time is the specified number of seconds or less.
+ * Verify that the last command's execution time is the specified number of 
+ * seconds or less.
  *
- * @param timeout - The maximum number of seconds that should have elapsed
+ * @param maxTime - The maximum amount of time, in seconds, that should have 
+ *                  elapsed
  *
  * @throws AssertionError
- * If the last command's execution time is more than the specified
- * number of seconds.
+ * If the last command's execution time is more than the specified number of 
+ * seconds.
  */
-function verifyMaximumElapsedTime(timeout: number): void {
+function verifyMaximumElapsedTime(maxTime: number): void {
     const elapsed = this.cli.manager.commandElapsedTime / 1000;
 
     assert.ok(
-        this.cli.manager.commandElapsedTime < timeout * 1000,
+        elapsed < maxTime,
         new AssertionError({
-            "message": `The last command's total execution time ${elapsed}s was more than ${timeout}s.`,
+            "message": `The last command's total execution time ${elapsed}s was more than ${maxTime}s.`,
         }),
     );
 }
 
 /**
- * Verify that the last command's execution time is the specified number of seconds or more.
+ * Verify that the last command's execution time is the specified number of 
+ * seconds or more.
  *
- * @param timeout - The minimum number of seconds that should have elapsed
+ * @param minTime - The minimum amount of time, in seconds, that should have 
+ *                  elapsed
  *
  * @throws AssertionError
- * If the last command's execution time is less than the specified
- * number of seconds.
+ * If the last command's execution time is less than the specified number of 
+ * seconds.
  */
-function verifyMinimumElapsedTime(timeout: number): void {
+function verifyMinimumElapsedTime(minTime: number): void {
     const elapsed = this.cli.manager.commandElapsedTime / 1000;
 
     assert.ok(
-        this.cli.manager.commandElapsedTime > timeout * 1000,
+        elapsed > minTime,
         new AssertionError({
-            "message": `The last command's total execution time ${elapsed}s was less than ${timeout}s.`,
+            "message": `The last command's total execution time ${elapsed}s was less than ${minTime}s.`,
         }),
     );
 }
