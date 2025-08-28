@@ -20,12 +20,12 @@ When("a/the user changes the working directory to {path}", changeDirectory);
  * If there is no SessionManager initialized.
  *
  * @throws AssertionError
- * If the CD command returns a non-zero exit code.
+ * If the `cd` command returns a non-zero exit code.
  */
 async function changeDirectory(dirPath: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
-    this.cli.manager.run(`cd ${dirPath}`); // TODO: generalize this so it will work for any OS/shell
+    this.cli.manager.run(`cd ${dirPath}`);
 
     await this.cli.manager.waitForReturn();
 
