@@ -32,6 +32,6 @@ async function changeDirectory(dirPath: string): Promise<void> {
     assert.equal(
         this.cli.manager.exitCode,
         0,
-        new AssertionError({ "message": `Could not change directory to ${dirPath}.` }),
+        `Could not change directory to ${dirPath}.`,
     );
 }

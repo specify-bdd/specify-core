@@ -158,7 +158,7 @@ function verifyExitCode(exitCode: number): void {
     assert.equal(
         this.cli.manager.exitCode,
         exitCode,
-        new AssertionError({ "message": "The command's exit code did not match expectations." }),
+        "The command's exit code did not match expectations.",
     );
 }
 
