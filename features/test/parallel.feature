@@ -30,11 +30,10 @@ Feature: Parallel Execution
             Then the last command's exit code should be an $failure
             And the last command's terminal output should match $invalidParallelError
 
-        @skip
         Scenario: Non-numeric values are rejected
             When a user runs the command "npx specify test --parallel 'bad-value'"
-            Then the last command's exit code should be an $error
-            And the console output should match "help message"
+            Then the last command's exit code should be an $failure
+            And the last command's terminal output should match $invalidParallelError
 
         @skip @todo
         Scenario: A value of 0 is equivalent to no limit
