@@ -25,11 +25,10 @@ Feature: Parallel Execution
 
     Rule: Parallel option only accepts a single integer argument
 
-        @skip
         Scenario: Floats are rejected
             When a user runs the command "npx specify test --parallel 0.5"
-            Then the last command's exit code should be an $error
-            And the console output should match "help message"
+            Then the last command's exit code should be an $failure
+            And the last command's terminal output should match $invalidParallelError
 
         @skip
         Scenario: Non-numeric values are rejected

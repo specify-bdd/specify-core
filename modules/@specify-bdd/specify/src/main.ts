@@ -13,6 +13,7 @@ import path                 from "node:path";
 import { deserializeError } from "serialize-error";
 
 import { config                            } from "@/config/all";
+import { parseParallelOption               } from "./lib/cli-parsers";
 import { CommandResult                     } from "./lib/Command";
 import { TestCommand, TestCommandArguments } from "./lib/TestCommand";
 import { TestCommandWatcher                } from "./lib/TestCommandWatcher";
@@ -56,7 +57,7 @@ app.command("test", { "isDefault": true })
     .option(
         "-p, --parallel <number_of_workers>",
         helpText.commands.test.options.parallel,
-        (value) => parseInt(value, 10),
+        parseParallelOption,
     )
     .option("-w, --watch", helpText.commands.test.options.watch)
     .action(runTests);
