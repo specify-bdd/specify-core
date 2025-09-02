@@ -4,7 +4,7 @@ export type CucumberConfig = Partial<IConfiguration>;
 
 export const cucumber: CucumberConfig = {
     "retry":           1,
-    "retryTagFilter":  "@retry",
+    "retryTagFilter":  "@flaky or @retry",
     "tags":            "not @skip",
     "worldParameters": {
         // similar value as to what you'd see if you ran $PATH in your terminal,
