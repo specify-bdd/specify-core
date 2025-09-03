@@ -9,12 +9,15 @@ import assert                from "node:assert/strict";
 Given("that this step fails", fail);
 Given("that this step passes", pass);
 Given("that this step passes after {float} seconds", passAfterDelay);
+Given("that this step passes on the {ordinal} attempt", passOnNthAttempt);
 
 When("this step fails", fail);
 When("this step passes", pass);
+When("this step passes on the {ordinal} attempt", passOnNthAttempt);
 
 Then("this step should fail", fail);
 Then("this step should pass", pass);
+Then("this step should pass on the {ordinal} attempt", passOnNthAttempt);
 
 /**
  * Always throws, causing a scenario failure.
@@ -37,4 +40,18 @@ function pass(): void {
  */
 async function passAfterDelay(delay: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, delay * 1000));
+}
+
+/**
+ * Only passes on the Nth attempt for any given test case.  Multiple attempts 
+ * are managed via the "retry" feature.
+ * 
+ * @param attempt - The attempt number to pass
+ */
+async function passOnNthAttempt(attempt: number): Promise<void> {
+    assert.equal(
+        Object.keys(this.pickles[this.pickle.id].attempts).length,
+        attempt,
+        "This is not the correct attempt.",
+    );
 }
