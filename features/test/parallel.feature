@@ -39,6 +39,3 @@ Feature: Parallel Execution
             When a user runs the command "npx specify test --parallel 0"
             Then the last command's exit code should be an $failure
             And the last command's terminal output should match $invalidParallelError
-
-        @skip @todo @review
-        Scenario: An excessively high value is rejected (or handled gracefully) 
