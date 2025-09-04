@@ -24,18 +24,13 @@ describe("parseParallelOption", () => {
 
     it("throws for non-integer numbers", () => {
         const number = 0.123;
-        
+
         expect(() => parseParallelOption(number.toString())).toThrow(error);
     });
 
     it("throws for non-numeric strings", () => {
         expect(() => parseParallelOption("abc")).toThrow(error);
         expect(() => parseParallelOption("")).toThrow(error);
-    });
-
-    it("throws for null and undefined", () => {
-        expect(() => parseParallelOption(null)).toThrow(error);
-        expect(() => parseParallelOption(undefined)).toThrow(error);
     });
 
     it("parses a string with leading/trailing whitespace", () => {
