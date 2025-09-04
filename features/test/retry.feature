@@ -35,11 +35,11 @@ Feature: Retry Flaky Tests
 
     Rule: By default, tests are run with just one retry
 
-        @skip @todo
+        #@skip @todo
         Scenario: A test with the retry tag makes two attempts
             When a user runs the command "npx specify test ./retry/attempt3.feature"
             Then the last command's exit code should be a $failure
-            And the last command's terminal output should match "\\(attempt 2\\)"
+            And the last command's terminal output should match "(attempt 2)"
 
     Rule: Tests with no retry tag fail after first attempt
 
@@ -55,8 +55,8 @@ Feature: Retry Flaky Tests
         Scenario: A test with the retry tag makes two attempts if given 1 retry
             When a user runs the command "npx specify test --retry 1 ./retry/attempt3.feature"
             Then the last command's exit code should be a $failure
-            And the last command's terminal output should match "\\(attempt 1, retried\\)"
-            And the last command's terminal output should match "\\(attempt 2\\)"
+            And the last command's terminal output should match "(attempt 1, retried)"
+            And the last command's terminal output should match "(attempt 2)"
 
     Rule: Retry tag can be overridden
 
@@ -70,7 +70,7 @@ Feature: Retry Flaky Tests
         Scenario: A test with a custom retry tag will retry if the tag has been overridden
             When a user runs the command "npx specify test --retry 1 --retry-tag '@custom-retry ./retry/custom.feature"
             Then the last command's exit code should be a $success
-            And the last command's terminal output should match "\\(attempt 1, retried\\)"
+            And the last command's terminal output should match "(attempt 1, retried)"
 
     Rule: Retry option only accepts a single integer argument
 
