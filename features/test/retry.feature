@@ -45,7 +45,7 @@ Feature: Retry Flaky Tests
 
         @skip @todo
         Scenario: A test with no retry tag makes just one attempt even if given 1 retry
-            When a user runs the command "npx specify test --retry 1 ./retry/attempt2.feature"
+            When a user runs the command "npx specify test --retry 1 ./binary/failing.feature"
             Then the last command's exit code should be a $failure
             And the last command's terminal output should not match "retried"
 
