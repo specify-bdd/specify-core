@@ -50,7 +50,7 @@ async function passAfterDelay(delay: number): Promise<void> {
  */
 async function passOnNthAttempt(attempt: number): Promise<void> {
     assert.equal(
-        Object.keys(this.pickles[this.pickle.id].attempts).length,
+        Object.keys(this.pickle.attempts).length,
         attempt,
         "This is not the correct attempt.",
     );

@@ -12,7 +12,7 @@ import { pathToFileURL            } from "node:url";
 import type { JsonObject } from "type-fest";
 
 const cwd = process.cwd(),
-    pickles = {};
+    pickleJar = {}; // keep a store of pickles in the module scope so we can track test case attempts
 
 let refsMods = [];
 
@@ -32,18 +32,22 @@ BeforeAll(async function () {
 });
 
 Before({ "name": "Core before hook" }, async function (data) {
+    const attempts = {};
+
     this.quickRef.add(...refsMods);
 
-    this.pickle = data.pickle;
-    this.pickles = pickles;
+    // attaching this pickle (test case) to the scenario World allows us to reference its data later
+    // we'll use the existing pickle data if it exists in the store, but if not, we'll initialize a new entry
+    this.pickle = pickleJar[this.pickle.id] ?? { ...data.pickle, attempts };
 
-    if (!pickles[data.pickle.id]) {
-        pickles[data.pickle.id] = { ...data.pickle, "attempts": {} };
-    }
+    // add the pickle to the store, if necessary
+    pickleJar[this.pickle.id] ??= this.pickle;
 
-    pickles[data.pickle.id].attempts[data.testCaseStartedId] = {};
+    // initialize an empty attempt object with a unique ID
+    this.pickle.attempts[data.testCaseStartedId] = {};
 });
 
 After({ "name": "Core after hook" }, async function (data) {
-    pickles[data.pickle.id].attempts[data.testCaseStartedId] = data.result;
+    // update the attempt data with results
+    this.pickple.attempts[data.testCaseStartedId] = data.result;
 });
