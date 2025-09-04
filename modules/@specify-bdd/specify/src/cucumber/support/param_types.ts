@@ -24,7 +24,7 @@ defineParameterType({
 });
 
 defineParameterType({
-    "name": "ordinal",
+    "name":   "ordinal",
     "regexp": ordinal,
     transformer(input: string): number {
         return parseInt(input.slice(0, -2), 10);

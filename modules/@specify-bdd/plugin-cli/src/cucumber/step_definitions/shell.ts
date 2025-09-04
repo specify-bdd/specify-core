@@ -192,7 +192,7 @@ function verifyMatchingOutput(pattern: RegExp | string): void {
 }
 
 /**
- * Verify that the CLI output for the last command does NOT match the given 
+ * Verify that the CLI output for the last command does NOT match the given
  * regexp.
  *
  * @param pattern - The pattern to match output against
@@ -212,14 +212,14 @@ function verifyNoMatchingOutput(pattern: RegExp | string): void {
 }
 
 /**
- * Verify that the last command's execution time is the specified number of 
+ * Verify that the last command's execution time is the specified number of
  * seconds or less.
  *
- * @param maxTime - The maximum amount of time, in seconds, that should have 
+ * @param maxTime - The maximum amount of time, in seconds, that should have
  *                  elapsed
  *
  * @throws AssertionError
- * If the last command's execution time is more than the specified number of 
+ * If the last command's execution time is more than the specified number of
  * seconds.
  */
 function verifyMaximumElapsedTime(maxTime: number): void {
@@ -234,14 +234,14 @@ function verifyMaximumElapsedTime(maxTime: number): void {
 }
 
 /**
- * Verify that the last command's execution time is the specified number of 
+ * Verify that the last command's execution time is the specified number of
  * seconds or more.
  *
- * @param minTime - The minimum amount of time, in seconds, that should have 
+ * @param minTime - The minimum amount of time, in seconds, that should have
  *                  elapsed
  *
  * @throws AssertionError
- * If the last command's execution time is less than the specified number of 
+ * If the last command's execution time is less than the specified number of
  * seconds.
  */
 function verifyMinimumElapsedTime(minTime: number): void {

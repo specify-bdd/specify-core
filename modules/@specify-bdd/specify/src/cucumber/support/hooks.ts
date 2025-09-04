@@ -11,7 +11,7 @@ import { pathToFileURL            } from "node:url";
 
 import type { JsonObject } from "type-fest";
 
-const cwd   = process.cwd(),
+const cwd = process.cwd(),
     pickles = {};
 
 let refsMods = [];
@@ -34,7 +34,7 @@ BeforeAll(async function () {
 Before({ "name": "Core before hook" }, async function (data) {
     this.quickRef.add(...refsMods);
 
-    this.pickle  = data.pickle;
+    this.pickle = data.pickle;
     this.pickles = pickles;
 
     if (!pickles[data.pickle.id]) {

@@ -43,9 +43,9 @@ async function passAfterDelay(delay: number): Promise<void> {
 }
 
 /**
- * Only passes on the Nth attempt for any given test case.  Multiple attempts 
+ * Only passes on the Nth attempt for any given test case.  Multiple attempts
  * are managed via the "retry" feature.
- * 
+ *
  * @param attempt - The attempt number to pass
  */
 async function passOnNthAttempt(attempt: number): Promise<void> {
