@@ -38,7 +38,7 @@ Before({ "name": "Core before hook" }, async function (data) {
 
     // attaching this pickle (test case) to the scenario World allows us to reference its data later
     // we'll use the existing pickle data if it exists in the store, but if not, we'll initialize a new entry
-    this.pickle = pickleJar[this.pickle.id] ?? { ...data.pickle, attempts };
+    this.pickle = pickleJar[data.pickle.id] ?? { ...data.pickle, attempts };
 
     // add the pickle to the store, if necessary
     pickleJar[this.pickle.id] ??= this.pickle;
