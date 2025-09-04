@@ -167,6 +167,14 @@ export class TestCommand extends Command {
                 case "paths":
                     config.paths = this.#parsePathArgs(optVal);
                     break;
+                case "retry":
+                    config.retry = optVal;
+
+                    if (config.retry === 0) {
+                        delete config.retryTagFilter;
+                    }
+
+                    break;
                 case "tags":
                     optVal = Array.isArray(optVal) ? optVal : [optVal];
                     optVal.push(config.tags);

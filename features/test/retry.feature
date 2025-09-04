@@ -11,7 +11,6 @@ Feature: Retry Flaky Tests
 
     Rule: Tests can be run without retrying
 
-        @skip @todo
         Scenario: A test with the retry tag that fails if retries are disabled
             When a user runs the command "npx specify test --retry 0 ./retry/attempt2.feature"
             Then the last command's exit code should be a $failure

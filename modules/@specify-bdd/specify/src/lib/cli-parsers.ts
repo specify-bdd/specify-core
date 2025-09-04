@@ -19,3 +19,14 @@ export function parseParallelOption(value: string): number {
 
     return parsed;
 }
+
+/**
+ * Parses the value of the `--retry` CLI option.
+ *
+ * @param value - The value provided by the user.
+ *
+ * @returns The parsed value as a non-negative integer.
+ */
+export function parseRetryOption(value: string): number {
+    return Number(value);
+}

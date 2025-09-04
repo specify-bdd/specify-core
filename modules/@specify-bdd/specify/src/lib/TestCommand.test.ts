@@ -59,6 +59,35 @@ describe("TestCommand", () => {
                 );
             });
 
+            describe("retry", () => {
+                it("accepts a positive integer", async () => {
+                    const userArgs = { "retry": 2, ...emptyArgs };
+                    const cmd      = new TestCommand();
+
+                    await cmd.execute(userArgs);
+
+                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                        expect.objectContaining({
+                            "retry": 2,
+                        }),
+                    );
+                });
+
+                // this is an integration test, it depends on our real config having "retryTagFilter"
+                it("deletes the retryTagFilter from config when retry is 0", async () => {
+                    const userArgs = { "retry": 0, ...emptyArgs };
+                    const cmd      = new TestCommand();
+
+                    await cmd.execute(userArgs);
+
+                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                        expect.not.objectContaining({
+                            "retryTagFilter": "@test",
+                        }),
+                    );
+                });
+            });
+
             it("tags", async () => {
                 const userArgs = { "tags": ["@foo", "not @bar"], ...emptyArgs };
                 const userOpts = { "debug": true };

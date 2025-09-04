@@ -1,5 +1,5 @@
-import { InvalidOptionArgumentError } from "commander";
-import { parseParallelOption        } from "./cli-parsers";
+import { InvalidOptionArgumentError            } from "commander";
+import { parseParallelOption, parseRetryOption } from "./cli-parsers";
 
 describe("parseParallelOption", () => {
     const error = new InvalidOptionArgumentError(
@@ -22,5 +22,13 @@ describe("parseParallelOption", () => {
 
     it("parses a string with leading/trailing whitespace", () => {
         expect(parseParallelOption(" 7 ")).toBe(7);
+    });
+});
+
+describe("parseRetryOption", () => {
+    it("parses a valid positive integer string", () => {
+        const number = 123;
+
+        expect(parseRetryOption(number.toString())).toBe(number);
     });
 });
