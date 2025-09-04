@@ -91,6 +91,16 @@ Then(
     verifyMatchingOutput,
 );
 
+Then(
+    "the last command's terminal output should not match (the regular expression ){ref:terminalOutput}",
+    verifyNoMatchingOutput,
+);
+
+Then(
+    "the last command's terminal output should not match (the regular expression ){regexp}",
+    verifyNoMatchingOutput,
+);
+
 /**
  * Execute the given command via the CLI asynchronously and move on without
  * waiting for it to return.
@@ -176,7 +186,27 @@ function verifyMatchingOutput(pattern: RegExp | string): void {
     assert.ok(
         regexp.test(this.cli.manager.output),
         new AssertionError({
-            "message": `Command output did not match expectations. Output:\n${this.cli.manager.output}`,
+            "message": `Command output did not match the specified pattern. Output:\n${this.cli.manager.output}`,
+        }),
+    );
+}
+
+/**
+ * Verify that the CLI output for the last command does NOT match the given 
+ * regexp.
+ *
+ * @param pattern - The pattern to match output against
+ *
+ * @throws AssertionError
+ * If no matches for the regexp pattern were found
+ */
+function verifyNoMatchingOutput(pattern: RegExp | string): void {
+    const regexp = new RegExp(pattern);
+
+    assert.ok(
+        !regexp.test(this.cli.manager.output),
+        new AssertionError({
+            "message": `Command output matched the specified pattern. Output:\n${this.cli.manager.output}`,
         }),
     );
 }
