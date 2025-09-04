@@ -12,23 +12,10 @@ describe("parseParallelOption", () => {
         expect(parseParallelOption(number.toString())).toBe(number);
     });
 
-    it("throws for zero", () => {
+    it("throws for invalid input", () => {
         expect(() => parseParallelOption("0")).toThrow(error);
-    });
-
-    it("throws for negative numbers", () => {
-        const number = -123;
-
-        expect(() => parseParallelOption(number.toString())).toThrow(error);
-    });
-
-    it("throws for non-integer numbers", () => {
-        const number = 0.123;
-
-        expect(() => parseParallelOption(number.toString())).toThrow(error);
-    });
-
-    it("throws for non-numeric strings", () => {
+        expect(() => parseParallelOption("-123")).toThrow(error);
+        expect(() => parseParallelOption("0.123")).toThrow(error);
         expect(() => parseParallelOption("abc")).toThrow(error);
         expect(() => parseParallelOption("")).toThrow(error);
     });
