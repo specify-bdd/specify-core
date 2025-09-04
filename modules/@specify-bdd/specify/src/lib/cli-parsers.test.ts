@@ -7,7 +7,7 @@ describe("parseParallelOption", () => {
     );
 
     it("parses a valid positive integer string", () => {
-        const number = Math.floor(Math.random() * 1000);
+        const number = 123;
 
         expect(parseParallelOption(number.toString())).toBe(number);
     });
@@ -17,13 +17,15 @@ describe("parseParallelOption", () => {
     });
 
     it("throws for negative numbers", () => {
-        const number = Math.floor(Math.random() * -1000);
+        const number = -123;
 
         expect(() => parseParallelOption(number.toString())).toThrow(error);
     });
 
     it("throws for non-integer numbers", () => {
-        expect(() => parseParallelOption(Math.random().toString())).toThrow(error);
+        const number = 0.123;
+        
+        expect(() => parseParallelOption(number.toString())).toThrow(error);
     });
 
     it("throws for non-numeric strings", () => {
