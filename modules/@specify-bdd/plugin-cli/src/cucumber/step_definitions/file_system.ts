@@ -29,9 +29,5 @@ async function changeDirectory(dirPath: string): Promise<void> {
 
     await this.cli.manager.waitForReturn();
 
-    assert.equal(
-        this.cli.manager.exitCode,
-        0,
-        `Could not change directory to ${dirPath}.`,
-    );
+    assert.equal(this.cli.manager.exitCode, 0, `Could not change directory to ${dirPath}.`);
 }

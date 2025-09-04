@@ -10,6 +10,7 @@ import path                    from "node:path";
 
 import type { FileParam } from "~/types/params";
 
+const ordinal      = /[0-9]*(?:1st|2nd|3rd|[4-90]th)/;
 const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;
 const refName      = /\$\w+/;
 
@@ -18,6 +19,15 @@ defineParameterType({
     "regexp": quotedString,
     transformer(input: string): string {
         return path.resolve(input.slice(1, -1));
+    },
+    "useForSnippets": false,
+});
+
+defineParameterType({
+    "name":   "ordinal",
+    "regexp": ordinal,
+    transformer(input: string): number {
+        return parseInt(input.slice(0, -2), 10);
     },
     "useForSnippets": false,
 });
