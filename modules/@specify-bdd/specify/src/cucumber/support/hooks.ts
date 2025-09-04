@@ -32,13 +32,11 @@ BeforeAll(async function () {
 });
 
 Before({ "name": "Core before hook" }, async function (data) {
-    const attempts = {};
-
     this.quickRef.add(...refsMods);
 
     // attaching this pickle (test case) to the scenario World allows us to reference its data later
     // we'll use the existing pickle data if it exists in the store, but if not, we'll initialize a new entry
-    this.pickle = pickleJar[data.pickle.id] ?? { ...data.pickle, attempts };
+    this.pickle = pickleJar[data.pickle.id] ?? { ...data.pickle, "attempts": {} };
 
     // add the pickle to the store, if necessary
     pickleJar[this.pickle.id] ??= this.pickle;
@@ -49,5 +47,5 @@ Before({ "name": "Core before hook" }, async function (data) {
 
 After({ "name": "Core after hook" }, async function (data) {
     // update the attempt data with results
-    this.pickple.attempts[data.testCaseStartedId] = data.result;
+    this.pickle.attempts[data.testCaseStartedId] = data.result;
 });
