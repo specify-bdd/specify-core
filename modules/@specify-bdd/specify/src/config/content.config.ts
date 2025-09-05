@@ -12,8 +12,10 @@ const contentObj = {
                     "options": {
                         "help":     "Display this help screen.",
                         "parallel": "Run in parallel with the given number of workers.",
-                        "tags":     "Run only the tests which satisfy this tag expression.",
-                        "watch":    "Watch for changes and re-run tests.",
+                        "retry":
+                            "Retry failed tests up to the given number of times before counting them as failed. (default: %d)",
+                        "tags":  "Run only the tests which satisfy this tag expression.",
+                        "watch": "Watch for changes and re-run tests.",
                     },
                     "summary":
                         "Test behavior specifications.  Default if no other command is used.",

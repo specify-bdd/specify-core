@@ -10,14 +10,15 @@ import { Command as App   } from "commander"; // aliased to avoid confusion with
 import merge                from "deepmerge";
 import { error            } from "node:console";
 import path                 from "node:path";
+import util                 from "node:util";
 import { deserializeError } from "serialize-error";
 
-import { config                            } from "@/config/all";
-import { parseParallelOption               } from "./lib/cli-parsers";
-import { CommandResult                     } from "./lib/Command";
-import { TestCommand, TestCommandArguments } from "./lib/TestCommand";
-import { TestCommandWatcher                } from "./lib/TestCommandWatcher";
-import npmPackage                            from "../package.json" with { "type": "json" };
+import { config                                } from "@/config/all";
+import { parseParallelOption, parseRetryOption } from "./lib/cli-parsers";
+import { CommandResult                         } from "./lib/Command";
+import { TestCommand, TestCommandArguments     } from "./lib/TestCommand";
+import { TestCommandWatcher                    } from "./lib/TestCommandWatcher";
+import npmPackage                                from "../package.json" with { "type": "json" };
 
 let cucumberCfg = config.cucumber;
 
@@ -53,6 +54,11 @@ app.command("test", { "isDefault": true })
     .description(helpText.commands.test.description)
     .argument("[paths...]", helpText.commands.test.arguments.paths)
     .helpOption("-h, --help", helpText.commands.test.options.help)
+    .option(
+        "-r, --retry <number_of_retries>",
+        util.format(helpText.commands.test.options.retry, cucumberCfg.retry),
+        parseRetryOption,
+    )
     .option("-t, --tags <tags>", helpText.commands.test.options.tags)
     .option(
         "-p, --parallel <number_of_workers>",
