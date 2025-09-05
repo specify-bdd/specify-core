@@ -73,10 +73,9 @@ describe("TestCommand", () => {
                     );
                 });
 
-                // this is an integration test, it depends on our real config having "retryTagFilter"
                 it("deletes the retryTagFilter from config when retry is 0", async () => {
                     const userArgs = { "retry": 0, ...emptyArgs };
-                    const cmd      = new TestCommand();
+                    const cmd      = new TestCommand({ "cucumber": { "retryTagFilter": "@test" } });
 
                     await cmd.execute(userArgs);
 
