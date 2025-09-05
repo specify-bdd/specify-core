@@ -10,6 +10,7 @@ import { Command as App   } from "commander"; // aliased to avoid confusion with
 import merge                from "deepmerge";
 import { error            } from "node:console";
 import path                 from "node:path";
+import util                 from "node:util";
 import { deserializeError } from "serialize-error";
 
 import { config                                } from "@/config/all";
@@ -55,7 +56,7 @@ app.command("test", { "isDefault": true })
     .helpOption("-h, --help", helpText.commands.test.options.help)
     .option(
         "-r, --retry <number_of_retries>",
-        helpText.commands.test.options.retry,
+        util.format(helpText.commands.test.options.retry, cucumberCfg.retry),
         parseRetryOption,
     )
     .option("-t, --tags <tags>", helpText.commands.test.options.tags)
