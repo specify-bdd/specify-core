@@ -21,7 +21,6 @@ Feature: Retry Flaky Tests
 
     Rule: Tests run with any number of retries count as passing if any attempt succeeds
 
-        @skip @todo
         Scenario: A test which passes on the 3rd attempt fails if given only 1 retry
             When a user runs the command "npx specify test --retry 1 ./retry/attempt3.feature"
             Then the last command's exit code should be a $failure
