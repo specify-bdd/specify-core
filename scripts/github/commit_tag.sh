@@ -1,15 +1,23 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(dirname -- "$( readlink -f -- "$0"; )")"
+source $(dirname $SCRIPT_DIR)/common.sh
+
 GIT_BRANCH="develop"
+GIT_REMOTE="origin"
 GIT_TAG="$1"
 TITLE="$2"
 
 # don't proceed past this point unless we have a GIT_TAG, all the tools we need, and we're on GIT_BRANCH
-[[ -n "$GIT_TAG" ]] || exit 1
-[[ -n "$(which git)" ]] || exit 1
-[[ -n "$(which npm)" ]] || exit 1
-[[ -n "$(which tr)" ]] || exit 1
-[[ -n "$(git branch | grep "*" | grep "$GIT_BRANCH")" ]] || exit 1
+[[ -n "$GIT_TAG" ]] || fail "No Git tag name argument supplied."
+
+[[ -n "$(which git)" ]] || fail "Git is not installed."
+[[ -n "$(which npm)" ]] || fail "NPM is not installed."
+[[ -n "$(which tr)" ]]  || fail "Tr is not installed."
+
+[[ -n "$(git branch | grep "* $GIT_BRANCH")" ]] || fail "The active Git branch must be $GIT_BRANCH."
+
+info "Tagging release. ($GIT_TAG)"
 
 COMMIT_MSG="Specify release $GIT_TAG"
 
@@ -19,11 +27,10 @@ fi
 
 echo "title=$COMMIT_MSG"
 
-# commit all changes
-git commit -a -m "$COMMIT_MSG" || exit 1
+git commit -a -m "$COMMIT_MSG" || fail "Couldn't commit changes to Git repo."
 
-# tag the new commit
-git tag -a -m "$COMMIT_MSG" $GIT_TAG || exit 1
+git tag -a -m "$COMMIT_MSG" $GIT_TAG || fail "Couldn't tag the latest commit."
 
-# push everything to the origin repo
-git push -t origin $GIT_BRANCH
+git push -t $GIT_REMOTE $GIT_BRANCH || fail "Couldn't push changes to $GIT_REMOTE."
+
+end

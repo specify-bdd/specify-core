@@ -6,14 +6,14 @@ source $(dirname $SCRIPT_DIR)/common.sh
 VERSION="$1"
 
 # don't proceed past this point unless we have a VERSION and all the tools we need
-[[ -n "$VERSION" ]]      || fail "No version argument supplied."
+[[ -n "$VERSION" ]] || fail "No version argument supplied."
+
 [[ -n "$(which npm)" ]]  || fail "NPM is not installed."
 [[ -n "$(which pnpm)" ]] || fail "PNPM is not installed."
 
 info "Updating all package versions. ($VERSION)"
 debug "Initial package version is $(npm pkg get version)."
 
-# set the NPM version at the top level
 VTAG="$(npm version --no-git-tag-version $VERSION)" || fail "Failed to set the top-level package version."
 debug "Top-level package version set. ($VTAG)"
 
