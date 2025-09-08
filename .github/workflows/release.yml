@@ -76,4 +76,4 @@ jobs:
     runs-on: ubuntu-${{ env.ubuntu_version }}
     steps:
       - name: Create release
-        run: ./scripts/github/release.sh "${{ needs.tag.outputs.git_tag }}" "${{ needs.tag.outputs.title }}"
+        run: ./scripts/github/release.sh "${{ needs.tag.outputs.git_tag }}" "${{ inputs.title }}"
