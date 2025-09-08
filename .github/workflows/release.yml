@@ -54,8 +54,7 @@ jobs:
       - id: pkg_versions
         name: Update package versions
         run: ./scripts/github/version.sh "${{ inputs.version }}"
-      - id: gen_docs
-        name: Generate docs
+      - name: Generate docs
         run: pnpm docs:all
       - id: commit_tag
         name: Commit changes and tag
@@ -77,4 +76,4 @@ jobs:
     runs-on: ubuntu-${{ env.ubuntu_version }}
     steps:
       - name: Create release
-        run: ./scripts/github/release.sh ${{ needs.tag.outputs.git_tag }} "${{ needs.tag.outputs.title }}"
+        run: ./scripts/github/release.sh "${{ needs.tag.outputs.git_tag }}" "${{ needs.tag.outputs.title }}"
