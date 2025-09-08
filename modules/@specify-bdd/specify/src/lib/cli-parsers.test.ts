@@ -1,0 +1,34 @@
+import { InvalidOptionArgumentError            } from "commander";
+import { parseParallelOption, parseRetryOption } from "./cli-parsers";
+
+describe("parseParallelOption", () => {
+    const error = new InvalidOptionArgumentError(
+        "\n<number_of_workers> must be a positive integer.",
+    );
+
+    it("parses a valid positive integer string", () => {
+        const number = 123;
+
+        expect(parseParallelOption(number.toString())).toBe(number);
+    });
+
+    it("throws for invalid input", () => {
+        expect(() => parseParallelOption("0")).toThrow(error);
+        expect(() => parseParallelOption("-123")).toThrow(error);
+        expect(() => parseParallelOption("0.123")).toThrow(error);
+        expect(() => parseParallelOption("abc")).toThrow(error);
+        expect(() => parseParallelOption("")).toThrow(error);
+    });
+
+    it("parses a string with leading/trailing whitespace", () => {
+        expect(parseParallelOption(" 7 ")).toBe(7);
+    });
+});
+
+describe("parseRetryOption", () => {
+    it("parses a valid positive integer string", () => {
+        const number = 123;
+
+        expect(parseRetryOption(number.toString())).toBe(number);
+    });
+});

@@ -167,6 +167,9 @@ export class TestCommand extends Command {
                 case "paths":
                     config.paths = this.#parsePathArgs(optVal);
                     break;
+                case "retry":
+                    config.retry = optVal;
+                    break;
                 case "tags":
                     optVal = Array.isArray(optVal) ? optVal : [optVal];
                     optVal.push(config.tags);
@@ -177,6 +180,11 @@ export class TestCommand extends Command {
                 default:
                     throw new Error(`Option "--${optKey}" not being used to configure Cucumber`);
             }
+        }
+
+        // Cucumber errors if retry === 0 while retryTagFilter is truthy
+        if (!config.retry) {
+            delete config.retryTagFilter;
         }
 
         return config;

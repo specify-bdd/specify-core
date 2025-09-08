@@ -25,20 +25,17 @@ Feature: Parallel Execution
 
     Rule: Parallel option only accepts a single integer argument
 
-        @skip
         Scenario: Floats are rejected
             When a user runs the command "npx specify test --parallel 0.5"
-            Then the last command's exit code should be an $error
-            And the console output should match "help message"
+            Then the last command's exit code should be a $failure
+            And the last command's terminal output should match $invalidParallelError
 
-        @skip
         Scenario: Non-numeric values are rejected
             When a user runs the command "npx specify test --parallel 'bad-value'"
-            Then the last command's exit code should be an $error
-            And the console output should match "help message"
+            Then the last command's exit code should be a $failure
+            And the last command's terminal output should match $invalidParallelError
 
-        @skip @todo
-        Scenario: A value of 0 is equivalent to no limit
-
-        @skip @todo
-        Scenario: An excessively high value is rejected (or handled gracefully) 
+        Scenario: A value of 0 is rejected
+            When a user runs the command "npx specify test --parallel 0"
+            Then the last command's exit code should be a $failure
+            And the last command's terminal output should match $invalidParallelError
