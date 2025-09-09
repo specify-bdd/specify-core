@@ -18,6 +18,7 @@ VTAG="$(npm version --no-git-tag-version $VERSION)" || fail "Failed to set the t
 debug "Top-level package version set. ($VTAG)"
 
 # use the same Git tag to set the NPM version for all packages
+# capturing the output from this command prevents multiple redundant v-tags from being dumped to STDOUT
 MOD_VTAGS="$(pnpm -r exec -- npm version --no-git-tag-version $VTAG)" \
     || fail "Failed to set the module-level package version."
 debug "Module-level package versions set."
