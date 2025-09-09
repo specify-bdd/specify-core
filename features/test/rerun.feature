@@ -9,38 +9,71 @@ Feature: Rerun Failed Tests
         And a CLI shell
         And that the working directory is "./assets/gherkin"
 
-    Rule: Failed tests can be targeted for reruns
+    Rule: Every test run creates a rerun file
 
-        @skip
-        Scenario: Only failed tests are rerun
-            Given that a "passing feature" file exists at "./features"
-            And that a "failing feature" file exists at "./features"
-            When a user runs the command "npx specify test"
-            And a user runs the command "npx specify test --rerun"
-            Then the last command's exit code should be a $failure
-            And the console output should match $failingTestResult
-            And the console output should not match $passingTestResult
+        @skip @todo
+        Scenario: Passing test run creates an empty rerun file
+            Given that the file path "./specify-rerun.txt" does not exist # creative assertion
+            When a user runs the command "npx specify test ./binary/passing.feature"
+            Then the file path "./specify-rerun.txt" should exist
+            And the content of file path "./specify-rerun.txt" should be empty
 
-        @skip
-        Scenario: No tests are rerun after a 100% passing run
-            Given that a "passing feature" file exists at "./features"
-            When a user runs the command "npx specify test"
-            And a user runs the command "npx specify test --rerun"
+        @skip @todo
+        Scenario: Failing test run creates a rerun file
+            Given that the file path "./specify-rerun.txt" does not exist # creative assertion
+            When a user runs the command "npx specify test ./binary/failing.feature"
+            Then the file path "./specify-rerun.txt" should exist
+            And the content of file path "./specify-rerun.txt" should match "^binary/failing.feature:3:7:11$"
+
+    Rule: Only failing tests are included in the rerun file
+
+        @skip @todo
+        Scenario: Mixed test run creates rerun file with only failures
+            Given that the file path "./specify-rerun.txt" does not exist # creative assertion
+            When a user runs the command "npx specify test ./binary/passing.feature ./binary/failing.feature:3"
+            Then the content of file path "./specify-rerun.txt" should match "^binary/failing.feature:3$"
+
+    Rule: Rerun only executes the tests that failed in the last test run
+
+        @skip @todo
+        Scenario: Rerun only one scenario in failing.feature
+            Given that the file path "./specify-rerun.txt" exists # creative assertion
+            And that the content of file path "./specify-rerun.txt" is "binary/failing.feature:3" # creative assertion
+            When a user runs the command "npx specify test --rerun"
+            Then the last command's terminal output should match "1 scenario \\(1 failed)"
+            And the last command's terminal output should match "Scenario: Scenario that should fail # binary/failing.feature:3"
+
+        @skip @todo
+        Scenario: Rerun all three scenarios in failing.feature
+            Given that the file path "./specify-rerun.txt" exists # creative assertion
+            And that the content of file path "./specify-rerun.txt" is "binary/failing.feature:3:7:11" # creative assertion
+            When a user runs the command "npx specify test --rerun"
+            Then the last command's terminal output should match "3 scenario \\(3 failed)"
+
+    Rule: Rerun does nothing if the last test run passed completely
+
+        @skip @todo
+        Scenario: Rerun after the last test run passed returns an error
+            Given that the file path "./specify-rerun.txt" exists # creative assertion
+            And that the content of file path "./specify-rerun.txt" is empty # creative assertion
+            When a user runs the command "npx specify test --rerun"
             Then the last command's exit code should be an $error
-            And the console output should match $noTestsToRerun
-        
-        @skip
-        Scenario: A previously failing test passes after a rerun
-            Given that a "failing feature" file exists at "./features"
-            When a user runs the command "npx specify test"
-            And the code under test is modified so the issue is resolved
-            And the user runs the command "npx specify test --rerun"
-            Then the last command's exit code should be a $success
-            And the console output should match $passingTestResult
+            And the last command's terminal output should match $noTestCasesError
 
-        @skip
-        Scenario: Rerun is attempted with no prior test run
-            Given that a "failing feature" file exists at "./features"
-            When the user runs the command "npx specify test --rerun"
+    Rule: Rerun can't be used with feature paths
+
+        @skip @todo
+        Scenario: Rerun with a feature path returns an error
+            When a user runs the command "npx specify test --rerun ./binary/passing.feature"
             Then the last command's exit code should be an $error
-            And the console output should match $noTestsToRerun
+            And the last command's terminal output should match $noPathsWithRerunError
+
+    Rule: Rerun can't be used without a rerun file
+
+        @skip @todo
+        Scenario: Rerun without a rerun file
+            Given that the file path "./specify-rerun.txt" does not exist # creative assertion
+            When a user runs the command "npx specify test --rerun"
+            Then the last command's exit code should be an $error
+            And the last command's terminal output should match $noRerunFileError
+
