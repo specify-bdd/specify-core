@@ -12,8 +12,6 @@ TITLE="$2"
 [[ -n "$GIT_TAG" ]] || fail "No Git tag name argument supplied."
 
 [[ -n "$(which git)" ]] || fail "Git is not installed."
-[[ -n "$(which npm)" ]] || fail "NPM is not installed."
-[[ -n "$(which tr)" ]]  || fail "Tr is not installed."
 
 [[ -n "$(git branch | grep "* $GIT_BRANCH")" ]] || fail "The active Git branch must be $GIT_BRANCH."
 
