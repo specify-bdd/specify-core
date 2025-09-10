@@ -59,9 +59,8 @@ Feature: Retry Flaky Tests
             Then the last command's exit code should be a $failure
             And the last command's terminal output should not match "retried"
 
-        @skip @todo
         Scenario: A test with a custom retry tag will retry if the tag has been overridden
-            When a user runs the command "npx specify test --retry 1 --retry-tag '@custom-retry ./retry/custom.feature"
+            When a user runs the command "npx specify test --retry 1 --retry-tag '@custom-retry' ./retry/custom.feature"
             Then the last command's exit code should be a $success
             And the last command's terminal output should match "(attempt 1, retried)"
 
