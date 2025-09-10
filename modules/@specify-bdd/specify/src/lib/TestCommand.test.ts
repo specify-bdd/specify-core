@@ -87,6 +87,21 @@ describe("TestCommand", () => {
                 });
             });
 
+            it("retry-tag", async () => {
+                const userArgs = { "retryTag": "@test", ...emptyArgs };
+                const cmd      = new TestCommand({
+                    "cucumber": { "retryTagFilter": "@should-override" },
+                });
+
+                await cmd.execute(userArgs);
+
+                expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        "retryTagFilter": "@test",
+                    }),
+                );
+            });
+
             it("tags", async () => {
                 const userArgs = { "tags": ["@foo", "not @bar"], ...emptyArgs };
                 const userOpts = { "debug": true };

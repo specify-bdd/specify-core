@@ -59,6 +59,10 @@ app.command("test", { "isDefault": true })
         util.format(helpText.commands.test.options.retry, cucumberCfg.retry),
         parseRetryOption,
     )
+    .option(
+        "-R, --retry-tag <tags>",
+        util.format(helpText.commands.test.options.retryTag, cucumberCfg.retryTagFilter),
+    )
     .option("-t, --tags <tags>", helpText.commands.test.options.tags)
     .option(
         "-p, --parallel <number_of_workers>",

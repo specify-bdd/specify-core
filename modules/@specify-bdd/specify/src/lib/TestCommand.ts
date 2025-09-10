@@ -37,6 +37,7 @@ export const TEST_COMMAND_DEFAULT_OPTS: TestCommandOptions = {
 
 export interface TestCommandArguments {
     paths?: string[];
+    retryTag?: string;
     tags?: string[];
     watch?: boolean;
 }
@@ -170,6 +171,9 @@ export class TestCommand extends Command {
                 case "retry":
                     config.retry = optVal;
                     break;
+                case "retryTag":
+                    config.retryTagFilter = optVal;
+                    break;
                 case "tags":
                     optVal = Array.isArray(optVal) ? optVal : [optVal];
                     optVal.push(config.tags);
@@ -183,7 +187,7 @@ export class TestCommand extends Command {
         }
 
         // Cucumber errors if retry === 0 while retryTagFilter is truthy
-        if (!config.retry) {
+        if (config.retry === 0) {
             delete config.retryTagFilter;
         }
 

@@ -54,7 +54,6 @@ Feature: Retry Flaky Tests
 
     Rule: Retry tag can be overridden
 
-        @skip @todo
         Scenario: A test with the standard retry tag won't retry if the tag has been overridden
             When a user runs the command "npx specify test --retry 1 --retry-tag '@custom-retry' ./retry/attempt2.feature"
             Then the last command's exit code should be a $failure
