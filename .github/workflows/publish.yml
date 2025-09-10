@@ -1,7 +1,4 @@
 name: Publish Packages
-env:
-  node_version: 22.x
-  ubuntu_version: "24.04"
 on:
   release:
     types: [published]
@@ -11,15 +8,15 @@ permissions:
   packages: write
 jobs:
   # publish-github:
-  #   runs-on: ubuntu-24.04
+  #   runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
   #   steps:
   #     - name: Check out repository code
   #       uses: actions/checkout@v4
-  #     - name: Setup Node.js ${{ env.node_version }}
+  #     - name: Setup Node.js ${{ vars.NODE_VERSION }}
   #       uses: actions/setup-node@v4
   #       with:
   #         cache: pnpm
-  #         node-version: ${{ env.node_version }}
+  #         node-version: ${{ vars.NODE_VERSION }}
   #         registry-url: 'https://npm.pkg.github.com'
   #     - name: Install dependencies and build
   #       run: pnpm install
@@ -27,17 +24,17 @@ jobs:
   #       run: pnpm publish --access=public -r
   publish-npm:
     name: Publish package to NPM
-    runs-on: ubuntu-${{ env.ubuntu_version }}
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
           ref: main
-      - name: Setup Node.js ${{ env.node_version }}
+      - name: Setup Node.js ${{ vars.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
           cache: pnpm
-          node-version: ${{ env.node_version }}
+          node-version: ${{ vars.NODE_VERSION }}
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies and build
         run: pnpm install
