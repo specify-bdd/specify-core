@@ -13,8 +13,8 @@ jobs:
       - name: Setup Node.js ${{ env.node_version }}
         uses: actions/setup-node@v4
         with:
+          cache: pnpm
           node-version: ${{ env.node_version }}
-          cache: 'pnpm'
       - name: Install dependencies and build
         run: pnpm install
       - name: Lint
