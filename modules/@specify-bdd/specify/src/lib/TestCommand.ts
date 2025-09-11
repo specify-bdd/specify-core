@@ -154,7 +154,7 @@ export class TestCommand extends Command {
      *
      * @returns The Cucumber configuration
      *
-     * @throws {@link Error}
+     * @throws Error
      * If any command line args are invalid for this Command.
      */
     #buildCucumberConfig(args: TestCommandArguments): IConfiguration {
@@ -204,7 +204,7 @@ export class TestCommand extends Command {
      *
      * @returns The list of parsed paths
      *
-     * @throws {@link Error}
+     * @throws Error
      * If any path argument does cannot be confirmed by node:fs to exist on the
      * file system.
      */

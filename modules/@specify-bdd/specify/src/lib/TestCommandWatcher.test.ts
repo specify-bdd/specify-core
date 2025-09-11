@@ -14,7 +14,7 @@ vi.mock("./TestCommand", () => ({
 }));
 
 // test constants
-const MOCK_ARGS        = { "_": [] };
+const MOCK_ARGS        = { "paths": [] };
 const LOCK_FILE_NAME   = "specify-core-watch.lock";
 const TEST_FILE_PATH   = "/some/file.ts";
 const CONFIG_FILE_NAME = "specify.config.json";

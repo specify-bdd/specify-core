@@ -247,7 +247,7 @@ export class SessionManager {
      * @param command - The command to execute
      * @param opts    - Options to modify the behavior of run()
      *
-     * @throws {@link AssertionError}
+     * @throws AssertionError
      * If another command is already in progress
      */
     run(command: string, opts: SessionManagerOptions = {}): CommandMeta {
