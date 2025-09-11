@@ -15,7 +15,7 @@ const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;
 const refName      = /\$\w+/;
 
 defineParameterType({
-    "name":   "path",
+    "name":   "filePath",
     "regexp": quotedString,
     transformer(input: string): string {
         return path.resolve(input.slice(1, -1));
@@ -33,10 +33,10 @@ defineParameterType({
 });
 
 defineParameterType({
-    "name":   "ref:file",
+    "name":   "ref:filePath",
     "regexp": refName,
-    transformer(input: string): FileParam {
-        return this.quickRef.lookup("file", input.slice(1)) as FileParam;
+    transformer(input: string): string {
+        return this.quickRef.lookup("filePath", input.slice(1)) as string;
     },
     "useForSnippets": false,
 });

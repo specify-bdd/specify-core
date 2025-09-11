@@ -4,10 +4,8 @@
         "failure": 1,
         "success": 0
     },
-    "file": {
-        "passingFeature" : {
-            "sourcePath": "./assets/tests/passing.feature"
-        }
+    "filePath": {
+        "rerun": "./specify.rerun.txt"
     },
     "terminalOutput": {
         "failingTestResult": "\\(\\d+ failed.*\\n.*\\(\\d+ failed",
@@ -15,6 +13,7 @@
         "invalidParallelError": "<number_of_workers> must be a positive integer.",
         "noTestCasesError": "No tests were executed.",
         "passingTestResult": "\\(\\d+ passed\\)\\n.*\\(\\d+ passed\\)",
-        "pathNotFoundError": "Invalid path:"
+        "pathNotFoundError": "Invalid path:",
+        "rerunFailingScenarios": "^binary/failing.feature:3:7:11$"
     }
 }
