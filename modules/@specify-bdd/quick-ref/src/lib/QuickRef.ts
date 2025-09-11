@@ -79,7 +79,7 @@ export class QuickRef {
      *
      * @returns The value found at given address
      *
-     * @throws {@link Error}
+     * @throws Error
      * If the provided address segments do not exist in the reference object
      * hierarchy
      */

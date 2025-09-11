@@ -48,10 +48,10 @@ export class Logger {
      *
      * @returns The parsed JSON contents of the log file
      *
-     * @throws {@link SyntaxError}
+     * @throws SyntaxError
      * If the file contents are not valid JSON.
      *
-     * @throws {@link Error}
+     * @throws Error
      * If the file does not exist or cannot be read/deleted.
      */
     async consumeTmpLog(path: string): Promise<JsonObject> {
@@ -69,10 +69,10 @@ export class Logger {
      *
      * @returns The parsed JSON contents of the file
      *
-     * @throws {@link SyntaxError}
+     * @throws SyntaxError
      * If the file contents are not valid JSON.
      *
-     * @throws {@link Error}
+     * @throws Error
      * If the file does not exist or cannot be read.
      */
     async readTmpLog(path: string): Promise<JsonObject> {
