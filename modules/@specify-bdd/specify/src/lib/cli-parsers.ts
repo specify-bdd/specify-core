@@ -26,7 +26,16 @@ export function parseParallelOption(value: string): number {
  * @param value - The value provided by the user.
  *
  * @returns The parsed value as a non-negative integer.
+ *
+ * @throws InvalidOptionArgumentError
+ * If the value is not a non-negative integer.
  */
 export function parseRetryOption(value: string): number {
+    if (!/^\d+$/.test(value)) {
+        throw new InvalidOptionArgumentError(
+            "\n<number_of_retries> must be a non-negative integer.",
+        );
+    }
+
     return Number(value);
 }
