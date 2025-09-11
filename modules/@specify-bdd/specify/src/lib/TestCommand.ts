@@ -36,7 +36,9 @@ export const TEST_COMMAND_DEFAULT_OPTS: TestCommandOptions = {
 };
 
 export interface TestCommandArguments {
+    parallel?: number;
     paths?: string[];
+    retry?: number;
     retryTag?: string;
     tags?: string[];
     watch?: boolean;
