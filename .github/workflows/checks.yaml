@@ -1,20 +1,18 @@
 name: PR Checks
 on: pull_request
-env:
-  node_version: 22.x
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
-      - name: Setup Node.js ${{ env.node_version }}
+      - name: Setup Node.js ${{ vars.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
           cache: pnpm
-          node-version: ${{ env.node_version }}
+          node-version: ${{ vars.NODE_VERSION }}
       - name: Install dependencies and build
         run: pnpm install
       - name: Lint
