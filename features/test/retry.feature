@@ -67,13 +67,11 @@ Feature: Retry Flaky Tests
 
     Rule: Retry option only accepts a single integer argument
 
-        @skip @todo
         Scenario: Floats are rejected
             When a user runs the command "npx specify test --retry 0.5 ./binary/passing.feature"
             Then the last command's exit code should be a $failure
             And the last command's terminal output should match $invalidRetryError
 
-        @skip @todo
         Scenario: Non-numeric values are rejected
             When a user runs the command "npx specify test --retry 'bad-value' ./binary/passing.feature"
             Then the last command's exit code should be a $failure

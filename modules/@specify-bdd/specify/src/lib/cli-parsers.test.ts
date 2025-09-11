@@ -26,9 +26,19 @@ describe("parseParallelOption", () => {
 });
 
 describe("parseRetryOption", () => {
-    it("parses a valid positive integer string", () => {
-        const number = 123;
+    const error = new InvalidOptionArgumentError(
+        "\n<number_of_retries> must be a non-negative integer.",
+    );
 
-        expect(parseRetryOption(number.toString())).toBe(number);
+    it("parses a valid integer string", () => {
+        expect(parseRetryOption("123")).toBe(123);
+        expect(parseRetryOption("0")).toBe(0);
+    });
+
+    it("throws for invalid input", () => {
+        expect(() => parseRetryOption("-123")).toThrow(error);
+        expect(() => parseRetryOption("0.123")).toThrow(error);
+        expect(() => parseRetryOption("abc")).toThrow(error);
+        expect(() => parseRetryOption("")).toThrow(error);
     });
 });
