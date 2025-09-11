@@ -45,7 +45,6 @@ Feature: Retry Flaky Tests
 
     Rule: Tests with retry tag fail only after retries
 
-        @skip @todo
         Scenario: A test with the retry tag makes two attempts if given 1 retry
             When a user runs the command "npx specify test --retry 1 ./retry/attempt3.feature"
             Then the last command's exit code should be a $failure
