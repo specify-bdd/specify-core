@@ -14,6 +14,8 @@ const contentObj = {
                         "parallel": "Run in parallel with the given number of workers.",
                         "retry":
                             "Retry failed tests up to the given number of times before counting them as failed. (default: %d)",
+                        "retryTag":
+                            "Only retry tests which satisfy this tag expression. (default: %s)",
                         "tags":  "Run only the tests which satisfy this tag expression.",
                         "watch": "Watch for changes and re-run tests.",
                     },
