@@ -34,6 +34,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: develop
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
       - name: Setup Node.js ${{ vars.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
