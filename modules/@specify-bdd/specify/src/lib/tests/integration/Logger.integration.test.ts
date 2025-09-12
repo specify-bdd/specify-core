@@ -1,7 +1,7 @@
 import { existsSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir                            } from "node:os";
 import { join                              } from "node:path";
-import { Logger                            } from "./Logger";
+import { Logger                            } from "../../Logger";
 
 describe("Logger (integration)", () => {
     const logger = new Logger();

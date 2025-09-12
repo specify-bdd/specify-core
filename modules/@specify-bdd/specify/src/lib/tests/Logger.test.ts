@@ -1,5 +1,5 @@
 import os         from "node:os";
-import { Logger } from "./Logger";
+import { Logger } from "../Logger";
 
 const testFileFactory = (filename: string) => {
     const json = { filename };

@@ -1,4 +1,4 @@
-import { Command, COMMAND_DEFAULT_OPTS } from "./Command";
+import { Command, COMMAND_DEFAULT_OPTS } from "../Command";
 
 class ConcreteCommand extends Command {}
 

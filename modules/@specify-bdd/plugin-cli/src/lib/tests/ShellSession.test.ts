@@ -1,6 +1,6 @@
 import { spawn        } from "node:child_process";
 import { Writable     } from "stream";
-import { ShellSession } from "./ShellSession";
+import { ShellSession } from "../ShellSession";
 import { vi           } from "vitest";
 
 import type { ChildProcessWithoutNullStreams } from "node:child_process";

@@ -1,6 +1,6 @@
 import { IConfiguration, IRunEnvironment, IRunOptions } from "@cucumber/cucumber/api";
-import { CucumberTool                                 } from "./CucumberTool";
-import { Logger                                       } from "./Logger";
+import { CucumberTool                                 } from "../CucumberTool";
+import { Logger                                       } from "../Logger";
 
 const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted(() => {
     return {
