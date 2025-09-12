@@ -7,14 +7,15 @@ Feature: Rerun Failed Tests
         Given that the "@specify-bdd/specify" NPM package is installed
         And that the "@specify-bdd/plugin-cli" NPM package is installed
         And a CLI shell
-        And that the working directory is "./assets/gherkin"
+        And that a temp directory named "rerunScenario" exists
+        And that the working directory is $rerunScenario
 
     Rule: Every test run creates a rerun file
 
         @skip @todo
         Scenario: Passing test run creates an empty rerun file
             Given that the $rerun file path does not exist
-            When a user runs the command "npx specify test ./binary/passing.feature"
+            When a user runs the command "npx specify test ./binary/passing.feature" # doesn't work now, we're in the temp
             Then the $rerun file path should exist
             And the $rerun file content should be empty
 
