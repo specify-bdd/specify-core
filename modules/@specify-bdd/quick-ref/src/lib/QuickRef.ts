@@ -9,6 +9,8 @@ import merge from "deepmerge";
 
 import type { JsonObject, JsonValue } from "type-fest";
 
+export const refNotation = /\$\{[\w.]+\}/;
+
 export class QuickRef {
     /**
      * All the references stored in this QuickRef instance.
@@ -133,7 +135,7 @@ export class QuickRef {
      * @returns The parsed input string
      */
     parse(input: string): string {
-        const matches = input.match(/\$\{[\w.]+\}/g);
+        const matches = input.match(new RegExp(refNotation, "g"));
 
         if (!matches) {
             return input;
@@ -144,7 +146,7 @@ export class QuickRef {
         for (const ref of matches) {
             const val = this.lookupByAddress(ref.slice(2, -1));
 
-            parsed = parsed.replace(ref, val);
+            parsed = parsed.replace(ref, `${val}`);
         }
 
         return parsed;

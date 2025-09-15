@@ -4,8 +4,12 @@
         "failure": 1,
         "success": 0
     },
-    "filePath": {
-        "rerun": "./specify.rerun.txt"
+    "file": {
+        "rerun": {
+            "content": {
+                "failingScenarios": "^binary/failing.feature:3:7:11$"
+            }
+        }
     },
     "terminalOutput": {
         "failingTestResult": "\\(\\d+ failed.*\\n.*\\(\\d+ failed",
@@ -13,7 +17,6 @@
         "invalidParallelError": "<number_of_workers> must be a positive integer.",
         "noTestCasesError": "No tests were executed.",
         "passingTestResult": "\\(\\d+ passed\\)\\n.*\\(\\d+ passed\\)",
-        "pathNotFoundError": "Invalid path:",
-        "rerunFailingScenarios": "^binary/failing.feature:3:7:11$"
+        "pathNotFoundError": "Invalid path:"
     }
 }

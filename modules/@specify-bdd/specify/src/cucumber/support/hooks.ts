@@ -9,6 +9,8 @@ import { globby                   } from "globby";
 import path                         from "node:path";
 import { pathToFileURL            } from "node:url";
 
+import { config } from "@/config/all";
+
 import type { JsonObject } from "type-fest";
 
 const cwd = process.cwd(),
@@ -26,13 +28,13 @@ BeforeAll(async function () {
         modPaths.map((modPath) =>
             import(pathToFileURL(modPath).href, {
                 "with": { "type": "json" },
-            }).then((mod) => mod.default as JsonObject),
+            }).then((mod) => ({ "ref": mod.default }) as JsonObject),
         ),
     );
 });
 
 Before({ "name": "Core before hook" }, async function (data) {
-    this.quickRef.add(...refsMods);
+    this.quickRef.add(...refsMods, { config });
 
     // attaching this pickle (test case) to the scenario World allows us to reference its data later
     // we'll use the existing pickle data if it exists in the store, but if not, we'll initialize a new entry
