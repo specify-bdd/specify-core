@@ -90,10 +90,10 @@ Feature: Basic Test Execution
 
         Scenario: Unsupported option
             When a user runs the command "npx specify --bad-option"
-            Then the last command's exit code should be a $failure
+            Then the last command's exit code should be a $error
             And the last command's terminal output should match $invalidOptionMessage
 
         Scenario: Mix of supported and unsupported options
             When a user runs the command "npx specify --tags '@pass' --bad-option"
-            Then the last command's exit code should be a $failure
+            Then the last command's exit code should be a $error
             And the last command's terminal output should match $invalidOptionMessage
