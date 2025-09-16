@@ -1,5 +1,5 @@
 import { InvalidOptionArgumentError            } from "commander";
-import { parseParallelOption, parseRetryOption } from "./cli-parsers";
+import { parseParallelOption, parseRetryOption } from "../cli-parsers";
 
 describe("parseParallelOption", () => {
     const error = new InvalidOptionArgumentError(
