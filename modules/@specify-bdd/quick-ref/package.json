@@ -6,6 +6,9 @@
   "author": "Adam Lacoste",
   "license": "MIT",
   "main": "dist/main.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc --project tsconfig.build.json && tsc-alias --resolve-full-paths",
     "docs:html": "typedoc --options typedoc.html.json",

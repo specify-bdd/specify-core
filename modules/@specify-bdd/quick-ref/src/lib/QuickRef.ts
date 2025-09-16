@@ -98,7 +98,7 @@ export class QuickRef {
      *
      * @returns The value found at given key(s)
      *
-     * @throws {@link Error}
+     * @throws Error
      * If the provided keys do not exist in the reference object hierarchy.
      */
     lookupByKeys(...segments: string[]): JsonValue {

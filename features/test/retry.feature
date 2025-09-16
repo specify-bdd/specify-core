@@ -31,7 +31,6 @@ Feature: Retry Flaky Tests
 
     Rule: By default, tests are run with just one retry
 
-        @skip @todo
         Scenario: A test with the retry tag makes two attempts
             When a user runs the command "npx specify test ./retry/attempt3.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
@@ -39,7 +38,6 @@ Feature: Retry Flaky Tests
 
     Rule: Tests with no retry tag fail after first attempt
 
-        @skip @todo
         Scenario: A test with no retry tag makes just one attempt even if given 1 retry
             When a user runs the command "npx specify test --retry 1 ./binary/failing.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
@@ -47,7 +45,6 @@ Feature: Retry Flaky Tests
 
     Rule: Tests with retry tag fail only after retries
 
-        @skip @todo
         Scenario: A test with the retry tag makes two attempts if given 1 retry
             When a user runs the command "npx specify test --retry 1 ./retry/attempt3.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
@@ -56,27 +53,23 @@ Feature: Retry Flaky Tests
 
     Rule: Retry tag can be overridden
 
-        @skip @todo
         Scenario: A test with the standard retry tag won't retry if the tag has been overridden
             When a user runs the command "npx specify test --retry 1 --retry-tag '@custom-retry' ./retry/attempt2.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
             And the last command's terminal output should not match "retried"
 
-        @skip @todo
         Scenario: A test with a custom retry tag will retry if the tag has been overridden
-            When a user runs the command "npx specify test --retry 1 --retry-tag '@custom-retry ./retry/custom.feature"
+            When a user runs the command "npx specify test --retry 1 --retry-tag '@custom-retry' ./retry/custom.feature"
             Then the last command's exit code should be a ${ref.exitCode.success}
             And the last command's terminal output should match "(attempt 1, retried)"
 
     Rule: Retry option only accepts a single integer argument
 
-        @skip @todo
         Scenario: Floats are rejected
             When a user runs the command "npx specify test --retry 0.5 ./binary/passing.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
             And the last command's terminal output should match ${ref.terminalOutput.invalidRetryError}
 
-        @skip @todo
         Scenario: Non-numeric values are rejected
             When a user runs the command "npx specify test --retry 'bad-value' ./binary/passing.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}

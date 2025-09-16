@@ -1,0 +1,78 @@
+name: Tag and Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "The version to release"
+        required: true
+        default: patch
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          # - premajor
+          # - preminor
+          # - prepatch
+      title:
+        description: "The name of the release"
+        required: false
+        type: string
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+  packages: write
+jobs:
+  tag:
+    name: Tag develop branch
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    outputs:
+      git_tag: ${{ steps.pkg_versions.outputs.version }}
+      title: ${{ steps.commit_tag.outputs.title }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+      - name: Setup Node.js ${{ vars.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: ${{ vars.NODE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies and build
+        run: pnpm install
+      - name: Lint
+        run: pnpm lint
+      - name: Test
+        run: pnpm test
+      - name: Audit
+        run: pnpm audit --prod --audit-level=moderate
+      - id: pkg_versions
+        name: Update package versions
+        run: ./scripts/github/version.sh "${{ inputs.version }}"
+      - name: Generate docs
+        run: pnpm docs:all
+      - id: commit_tag
+        name: Commit changes and tag
+        run: ./scripts/github/commit_tag.sh "${{ steps.pkg_versions.outputs.version }}" "${{ inputs.title }}"
+  merge:
+    name: Merge to main branch
+    needs: tag
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Merge develop branch into main
+        run: ./scripts/github/merge_develop_to_main.sh "${{ needs.tag.outputs.git_tag }}"
+  release:
+    name: Create release in GitHub
+    needs: [tag, merge]
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    steps:
+      - name: Create release
+        run: ./scripts/github/release.sh "${{ needs.tag.outputs.git_tag }}" "${{ inputs.title }}"

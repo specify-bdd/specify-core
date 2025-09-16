@@ -1,0 +1,44 @@
+name: Publish Packages
+on:
+  release:
+    types: [published]
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+  packages: write
+jobs:
+  # publish-github:
+  #   runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+  #   steps:
+  #     - name: Check out repository code
+  #       uses: actions/checkout@v4
+  #     - name: Setup Node.js ${{ vars.NODE_VERSION }}
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         cache: pnpm
+  #         node-version: ${{ vars.NODE_VERSION }}
+  #         registry-url: 'https://npm.pkg.github.com'
+  #     - name: Install dependencies and build
+  #       run: pnpm install
+  #     - name: Publish to GitHub
+  #       run: pnpm publish --access=public -r
+  publish-npm:
+    name: Publish package to NPM
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+      - name: Setup Node.js ${{ vars.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: ${{ vars.NODE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies and build
+        run: pnpm install
+      - name: Publish to NPM
+        run: pnpm publish --access=public -r

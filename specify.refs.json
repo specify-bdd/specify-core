@@ -15,6 +15,7 @@
         "failingTestResult": "\\(\\d+ failed.*\\n.*\\(\\d+ failed",
         "invalidOptionMessage": "error: unknown option",
         "invalidParallelError": "<number_of_workers> must be a positive integer.",
+        "invalidRetryError": "<number_of_retries> must be a non-negative integer.",
         "noTestCasesError": "No tests were executed.",
         "passingTestResult": "\\(\\d+ passed\\)\\n.*\\(\\d+ passed\\)",
         "pathNotFoundError": "Invalid path:"

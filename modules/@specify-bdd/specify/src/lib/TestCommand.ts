@@ -36,7 +36,10 @@ export const TEST_COMMAND_DEFAULT_OPTS: TestCommandOptions = {
 };
 
 export interface TestCommandArguments {
+    parallel?: number;
     paths?: string[];
+    retry?: number;
+    retryTag?: string;
     tags?: string[];
     watch?: boolean;
 }
@@ -151,7 +154,7 @@ export class TestCommand extends Command {
      *
      * @returns The Cucumber configuration
      *
-     * @throws {@link Error}
+     * @throws Error
      * If any command line args are invalid for this Command.
      */
     #buildCucumberConfig(args: TestCommandArguments): IConfiguration {
@@ -170,6 +173,9 @@ export class TestCommand extends Command {
                 case "retry":
                     config.retry = optVal;
                     break;
+                case "retryTag":
+                    config.retryTagFilter = optVal;
+                    break;
                 case "tags":
                     optVal = Array.isArray(optVal) ? optVal : [optVal];
                     optVal.push(config.tags);
@@ -183,7 +189,7 @@ export class TestCommand extends Command {
         }
 
         // Cucumber errors if retry === 0 while retryTagFilter is truthy
-        if (!config.retry) {
+        if (config.retry === 0) {
             delete config.retryTagFilter;
         }
 
@@ -198,7 +204,7 @@ export class TestCommand extends Command {
      *
      * @returns The list of parsed paths
      *
-     * @throws {@link Error}
+     * @throws Error
      * If any path argument does cannot be confirmed by node:fs to exist on the
      * file system.
      */
