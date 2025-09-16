@@ -27,7 +27,7 @@ export class QuickRef {
     }
 
     /**
-     * A read-only accessor for all the references stored in this QuickRef 
+     * A read-only accessor for all the references stored in this QuickRef
      * instance.
      */
     get all(): JsonObject {
@@ -93,7 +93,7 @@ export class QuickRef {
      * Look up a reference by its keys.  Params drill down through the
      * reference object hierarchy in the key sequence provided.
      *
-     * @param segments - The keys to look up.  For example, ("foo", "bar", 
+     * @param segments - The keys to look up.  For example, ("foo", "bar",
      *                   "baz") will retrieve the value of all.foo.bar.baz.
      *
      * @returns The value found at given key(s)
@@ -127,11 +127,11 @@ export class QuickRef {
     }
 
     /**
-     * Parse a string which may contain reference notation and replace all ref 
+     * Parse a string which may contain reference notation and replace all ref
      * addresses found with their corresponding values.
-     * 
+     *
      * @param input - The input string to parse
-     * 
+     *
      * @returns The parsed input string
      */
     parse(input: string): string {

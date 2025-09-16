@@ -39,7 +39,7 @@ defineParameterType({
     transformer(input: string): JsonValue {
         return this.quickRef.lookupByAddress(input.slice(2, -1));
     },
-    "useForSnippets": false
+    "useForSnippets": false,
 });
 
 defineParameterType({
@@ -48,7 +48,7 @@ defineParameterType({
     transformer(input: string): string {
         return this.quickRef.parse(input.slice(1, -1));
     },
-    "useForSnippets": false
+    "useForSnippets": false,
 });
 
 defineParameterType({
