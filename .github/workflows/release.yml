@@ -57,6 +57,9 @@ jobs:
         run: pnpm docs:all
       - id: commit_tag
         name: Commit changes and tag
+        env:
+          GIT_USER_NAME: ${{ vars.GIT_USER_NAME }}
+          GIT_USER_EMAIL: ${{ vars.GIT_USER_EMAIL }}
         run: ./scripts/github/commit_tag.sh "${{ steps.pkg_versions.outputs.version }}" "${{ inputs.title }}"
   merge:
     name: Merge to main branch
