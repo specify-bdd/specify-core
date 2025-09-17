@@ -5,8 +5,10 @@
         "success": 0
     },
     "file": {
-        "passingFeature" : {
-            "sourcePath": "./assets/tests/passing.feature"
+        "rerun": {
+            "content": {
+                "failingScenarios": "^binary/failing.feature:3:7:11$"
+            }
         }
     },
     "terminalOutput": {

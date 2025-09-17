@@ -6,4 +6,4 @@
  * are expected to conform to JSON format.
  */
 
-export { QuickRef } from "./lib/QuickRef";
+export { QuickRef, refNotation } from "./lib/QuickRef";

@@ -7,7 +7,7 @@ import { Given   } from "@cucumber/cucumber";
 import assert      from "node:assert/strict";
 import npmValidate from "validate-npm-package-name";
 
-Given("(that )the {string} NPM package is installed", verifyNPMPackage);
+Given("(that )the {refstr} NPM package is installed", verifyNPMPackage);
 
 /**
  * Verify that an NPM package is installed

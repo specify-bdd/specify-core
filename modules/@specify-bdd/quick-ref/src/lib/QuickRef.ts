@@ -9,8 +9,13 @@ import merge from "deepmerge";
 
 import type { JsonObject, JsonValue } from "type-fest";
 
+export const refNotation = /\$\{[\w.]+\}/;
+
 export class QuickRef {
-    #refs: JsonObject = {};
+    /**
+     * All the references stored in this QuickRef instance.
+     */
+    #all: JsonObject = {};
 
     /**
      * Initialize the reference object hierarchy with one or more JSON objects.
@@ -22,10 +27,11 @@ export class QuickRef {
     }
 
     /**
-     * The cached reference objects aggregated into one JSON hierarchy
+     * A read-only accessor for all the references stored in this QuickRef
+     * instance.
      */
-    get refs(): JsonObject {
-        return this.#refs;
+    get all(): JsonObject {
+        return this.#all;
     }
 
     /**
@@ -64,29 +70,41 @@ export class QuickRef {
             // }
         };
 
-        this.#refs = merge.all([this.#refs, ...refs], opts) as JsonObject;
+        this.#all = merge.all([this.#all, ...refs], opts) as JsonObject;
 
         return this;
     }
 
     /**
-     * Look up a reference by its address.  Params drill down through the
-     * reference object hierarchy in the sequence provided.
+     * Look up a reference by its dot notation address.
      *
-     * @param segments - The address segments to look up.  For example, ("foo",
-     *                   "bar", "baz") will retrieve the value of
-     *                   refs.foo.bar.baz.
+     * @param address - The address to look up.  For example, ("foo.bar.baz")
+     *                  will retrieve the value of all.foo.bar.baz.
      *
-     * @returns The value found at given address
+     * @returns The value found at the given address
+     */
+    lookupByAddress(address: string): JsonValue {
+        const keys = address?.split(".") ?? [];
+
+        return this.lookupByKeys(...keys);
+    }
+
+    /**
+     * Look up a reference by its keys.  Params drill down through the
+     * reference object hierarchy in the key sequence provided.
+     *
+     * @param segments - The keys to look up.  For example, ("foo", "bar",
+     *                   "baz") will retrieve the value of all.foo.bar.baz.
+     *
+     * @returns The value found at given key(s)
      *
      * @throws Error
-     * If the provided address segments do not exist in the reference object
-     * hierarchy
+     * If the provided keys do not exist in the reference object hierarchy.
      */
-    lookup(...segments: string[]): JsonValue {
+    lookupByKeys(...segments: string[]): JsonValue {
         const usedSegments = ["<refs>"];
 
-        let location: JsonValue = this.#refs;
+        let location: JsonValue = this.#all;
 
         while (segments.length) {
             const segment = segments.shift();
@@ -106,5 +124,31 @@ export class QuickRef {
         }
 
         return location;
+    }
+
+    /**
+     * Parse a string which may contain reference notation and replace all ref
+     * addresses found with their corresponding values.
+     *
+     * @param input - The input string to parse
+     *
+     * @returns The parsed input string
+     */
+    parse(input: string): string {
+        const matches = input.match(new RegExp(refNotation, "g"));
+
+        if (!matches) {
+            return input;
+        }
+
+        let parsed = input;
+
+        for (const ref of matches) {
+            const val = this.lookupByAddress(ref.slice(2, -1));
+
+            parsed = parsed.replace(ref, `${val}`);
+        }
+
+        return parsed;
     }
 }

@@ -1,3 +1,5 @@
+import os from "node:os";
+
 export type PathsConfig = {
     [key: string]: string;
     gherkin: string;
@@ -9,4 +11,5 @@ export const paths: PathsConfig = {
     "gherkin": "./features/**/*.feature",
     "logs":    "./logs/specify",
     "refs":    "./specify.refs.json",
+    "rerun":   `${os.tmpdir()}/specify/rerun.txt`,
 };

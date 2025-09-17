@@ -17,9 +17,9 @@ When("a/the user starts a/another CLI shell", startDefaultShell);
 
 When("a/the user switches shells", switchShell);
 
-When("a/the user runs the command/process {string}", { "timeout": 60000 }, execCommandSync);
+When("a/the user runs the command/process {refstr}", { "timeout": 60000 }, execCommandSync);
 
-When("a/the user starts the (async )command/process {string}", execCommand);
+When("a/the user starts the (async )command/process {refstr}", execCommand);
 
 When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
 
@@ -30,7 +30,7 @@ When("a/the user waits for terminal output on STDERR", { "timeout": 60000 }, wai
 When("a/the user waits for terminal output on STDOUT", { "timeout": 60000 }, waitForOutputOnSTDOUT);
 
 When(
-    "a/the user waits for terminal output on STDERR matching (the regular expression ){ref:terminalOutput}",
+    "a/the user waits for terminal output on STDERR matching (the regular expression ){ref}",
     { "timeout": 60000 },
     waitForMatchingOutputOnSTDERR,
 );
@@ -42,7 +42,7 @@ When(
 );
 
 When(
-    "a/the user waits for terminal output on STDOUT matching (the regular expression ){ref:terminalOutput}",
+    "a/the user waits for terminal output on STDOUT matching (the regular expression ){ref}",
     { "timeout": 60000 },
     waitForMatchingOutputOnSTDOUT,
 );
@@ -54,7 +54,7 @@ When(
 );
 
 When(
-    "a/the user waits for terminal output matching (the regular expression ){ref:terminalOutput}",
+    "a/the user waits for terminal output matching (the regular expression ){ref}",
     { "timeout": 60000 },
     waitForMatchingOutput,
 );
@@ -78,11 +78,11 @@ Then(
 Then("the last command's exit code/status should be {int}", verifyExitCode);
 Then("the last command's exit code/status should be a/an {int}", verifyExitCode);
 
-Then("the last command's exit code/status should be {ref:exitCode}", verifyExitCode);
-Then("the last command's exit code/status should be a/an {ref:exitCode}", verifyExitCode);
+Then("the last command's exit code/status should be {ref}", verifyExitCode);
+Then("the last command's exit code/status should be a/an {ref}", verifyExitCode);
 
 Then(
-    "the last command's terminal output should match (the regular expression ){ref:terminalOutput}",
+    "the last command's terminal output should match (the regular expression ){ref}",
     verifyMatchingOutput,
 );
 
@@ -92,7 +92,7 @@ Then(
 );
 
 Then(
-    "the last command's terminal output should not match (the regular expression ){ref:terminalOutput}",
+    "the last command's terminal output should not match (the regular expression ){ref}",
     verifyNoMatchingOutput,
 );
 

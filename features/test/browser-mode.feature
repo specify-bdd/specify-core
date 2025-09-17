@@ -16,14 +16,14 @@ Feature: Browser Testing Mode
         Scenario: Headless testing is the default
             When a user runs the command "npx specify test"
             Then a browser window should not open
-            Then the last command's exit code should be a $success
+            Then the last command's exit code should be a ${ref.exitCode.success}
 
     Rule: Headless mode testing is local and non-visible
 
         @skip @manual
         Scenario: Headless testing is local
             When a user runs the command "npx specify test --headless"
-            Then the last command's exit code should be a $success
+            Then the last command's exit code should be a ${ref.exitCode.success}
             And the test ran locally
 
         @skip @manual
@@ -36,7 +36,7 @@ Feature: Browser Testing Mode
         @skip @manual
         Scenario: Visual testing is local
             When a user runs the command "npx specify test --visual"
-            Then the last command's exit code should be a $success
+            Then the last command's exit code should be a ${ref.exitCode.success}
             And the test ran locally
         
         @skip @manual
@@ -51,13 +51,13 @@ Feature: Browser Testing Mode
             Given that a Selenium Grid is available at "http://localhost:4444"
             When a user runs the command "npx specify test --grid http://localhost:4444"
             Then the Selenium Grid should execute the tests
-            Then the last command's exit code should be a $success
+            Then the last command's exit code should be a ${ref.exitCode.success}
 
         @skip @manual
         Scenario: Grid testing fails without a grid
             Given that a Selenium Grid is not available at "http://localhost:4444"
             When the user runs the command "npx specify test --grid http://localhost:4444"
-            Then the last command's exit code should be an $error
+            Then the last command's exit code should be an ${ref.exitCode.error}
             And the console output should include "unable to connect to Selenium Grid"
         
         @skip @todo @manual
@@ -68,11 +68,11 @@ Feature: Browser Testing Mode
         @skip
         Scenario: Using both --visual and --headless
             When a user runs the command "npx specify test --visual --headless"
-            Then the last command's exit code should be an $error
+            Then the last command's exit code should be an ${ref.exitCode.error}
             And the console output should include "conflicting browser mode options"
         
         @skip
         Scenario: Using both --visual and --grid
             When a user runs the command "npx specify test --visual --grid"
-            Then the last command's exit code should be an $error
+            Then the last command's exit code should be an ${ref.exitCode.error}
             And the console output should include "conflicting browser mode options"
