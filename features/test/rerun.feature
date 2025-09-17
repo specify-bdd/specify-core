@@ -59,6 +59,7 @@ Feature: Rerun Failed Tests
 
         @skip @todo
         Scenario: Failing test run creates a rerun file in the default location
+            Given that the ${config.paths.rerun} file content is empty
             When a user runs the command "npx specify test ./binary/failing.feature"
             Then the ${config.paths.rerun} file path should exist
             And the ${config.paths.rerun} file content should match ${ref.file.rerun.content.failingScenarios}
