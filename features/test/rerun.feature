@@ -7,7 +7,7 @@ Feature: Rerun Failed Tests
         Given that the "@specify-bdd/specify" NPM package is installed
         And that the "@specify-bdd/plugin-cli" NPM package is installed
         And a CLI shell
-        And a temp file path referenced as "ref.file.rerun.path" # generates a unique temp file path and stores it as ref
+        And a new temp file path referenced as "ref.file.rerun.path" # generates a unique temp file path and stores it as ref
         And that the working directory is "./assets/gherkin"
 
     Rule: Every test run creates a rerun file
