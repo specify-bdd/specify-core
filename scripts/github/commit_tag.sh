@@ -32,6 +32,6 @@ git commit -a -m "$COMMIT_MSG" || fail "Couldn't commit changes to Git repo."
 
 git tag -a -m "$COMMIT_MSG" $GIT_TAG || fail "Couldn't tag the latest commit."
 
-git push -t $GIT_REMOTE $GIT_BRANCH || fail "Couldn't push changes to $GIT_REMOTE."
+git push --tags $GIT_REMOTE $GIT_BRANCH || fail "Couldn't push changes to $GIT_REMOTE."
 
 end
