@@ -76,14 +76,15 @@ export class QuickRef {
     }
 
     /**
-     * Look up a reference by its dot notation address.
+     * Look up a reference by its dot notation address.  If no address is 
+     * provided, the entire reference store will be returned.
      *
-     * @param address - The address to look up.  For example, ("foo.bar.baz")
-     *                  will retrieve the value of all.foo.bar.baz.
+     * @param address - The address to look up. For example, ("foo.bar.baz")
+     *                  will retrieve the value of this.#all.foo.bar.baz.
      *
      * @returns The value found at the given address
      */
-    lookupByAddress(address: string): JsonValue {
+    lookupByAddress(address?: string): JsonValue {
         const keys = address?.split(".") ?? [];
 
         return this.lookupByKeys(...keys);
@@ -91,10 +92,11 @@ export class QuickRef {
 
     /**
      * Look up a reference by its keys.  Params drill down through the
-     * reference object hierarchy in the key sequence provided.
+     * reference object hierarchy in the key sequence provided.  If no keys are
+     * provided, the entire reference store will be returned.
      *
-     * @param segments - The keys to look up.  For example, ("foo", "bar",
-     *                   "baz") will retrieve the value of all.foo.bar.baz.
+     * @param segments - The keys to look up. For example, ("foo", "bar", "baz")
+     *                   will retrieve the value of this.#all.foo.bar.baz.
      *
      * @returns The value found at given key(s)
      *
