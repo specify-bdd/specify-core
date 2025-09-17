@@ -49,7 +49,8 @@ app.name("specify")
     .helpCommand("help [command]", helpText.commands.help)
     .helpOption("-h, --help", helpText.options.help);
 
-app.command("test", { "isDefault": true })
+app.exitOverride(() => process.exit(2))
+    .command("test", { "isDefault": true })
     .summary(helpText.commands.test.summary)
     .description(helpText.commands.test.description)
     .argument("[paths...]", helpText.commands.test.arguments.paths)

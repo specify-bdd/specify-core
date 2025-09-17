@@ -6,7 +6,8 @@ source $(dirname $SCRIPT_DIR)/common.sh
 VERSION="$1"
 
 # don't proceed past this point unless we have a VERSION and all the tools we need
-[[ -n "$VERSION" ]] || fail "No version argument supplied."
+[[ -n "$VERSION" ]]       || fail "No version argument supplied."
+[[ -n "$GITHUB_OUTPUT" ]] || fail "No GitHub output env var defined."
 
 [[ -n "$(which npm)" ]]  || fail "NPM is not installed."
 [[ -n "$(which pnpm)" ]] || fail "PNPM is not installed."
@@ -23,6 +24,6 @@ MOD_VTAGS="$(pnpm -r exec -- npm version --no-git-tag-version $VTAG)" \
     || fail "Failed to set the module-level package version."
 debug "Module-level package versions set."
 
-echo "version=$VTAG"
+echo "version=$VTAG" >> "$GITHUB_OUTPUT"
 
 end

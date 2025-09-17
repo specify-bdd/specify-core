@@ -3,11 +3,11 @@ import path      from "node:path";
 import os        from "node:os";
 import { watch } from "chokidar";
 
-import { DEBOUNCE_MS, TestCommandWatcher } from "./TestCommandWatcher";
-import { TestCommand                     } from "./TestCommand";
+import { DEBOUNCE_MS, TestCommandWatcher } from "../TestCommandWatcher";
+import { TestCommand                     } from "../TestCommand";
 
 // mock TestCommand class completely
-vi.mock("./TestCommand", () => ({
+vi.mock("../TestCommand", () => ({
     "TestCommand": vi.fn().mockImplementation(() => ({
         "execute": vi.fn().mockResolvedValue({ "ok": true, "status": 0 }),
     })),
@@ -140,7 +140,9 @@ describe("TestCommandWatcher", () => {
             // clear modules to force reimport with new mock
             vi.resetModules();
 
-            const { "TestCommandWatcher": emptyPathWatcher } = await import("./TestCommandWatcher");
+            const { "TestCommandWatcher": emptyPathWatcher } = await import(
+                "../TestCommandWatcher"
+            );
 
             const emptyWatcher = new emptyPathWatcher(mockCommand);
 
