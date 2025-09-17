@@ -67,12 +67,12 @@ Feature: Retry Flaky Tests
 
         Scenario: Floats are rejected
             When a user runs the command "npx specify test --retry 0.5 ./binary/passing.feature"
-            Then the last command's exit code should be a ${ref.exitCode.failure}
+            Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidRetryError}
 
         Scenario: Non-numeric values are rejected
             When a user runs the command "npx specify test --retry 'bad-value' ./binary/passing.feature"
-            Then the last command's exit code should be a ${ref.exitCode.failure}
+            Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidRetryError}
 
     # Rule: Retry tag option only accepts well-formed tag expressions

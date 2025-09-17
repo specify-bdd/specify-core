@@ -27,15 +27,15 @@ Feature: Parallel Execution
 
         Scenario: Floats are rejected
             When a user runs the command "npx specify test --parallel 0.5"
-            Then the last command's exit code should be a ${ref.exitCode.failure}
+            Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidParallelError}
 
         Scenario: Non-numeric values are rejected
             When a user runs the command "npx specify test --parallel 'bad-value'"
-            Then the last command's exit code should be a ${ref.exitCode.failure}
+            Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidParallelError}
 
         Scenario: A value of 0 is rejected
             When a user runs the command "npx specify test --parallel 0"
-            Then the last command's exit code should be a ${ref.exitCode.failure}
+            Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidParallelError}
