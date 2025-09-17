@@ -9,7 +9,9 @@ GIT_TAG="$1"
 TITLE="$2"
 
 # don't proceed past this point unless we have a GIT_TAG, all the tools we need, and we're on GIT_BRANCH
-[[ -n "$GIT_TAG" ]] || fail "No Git tag name argument supplied."
+[[ -n "$GIT_TAG" ]]        || fail "No Git tag name argument supplied."
+[[ -n "$GIT_USER_NAME" ]]  || fail "No Git user name env var defined."
+[[ -n "$GIT_USER_EMAIL" ]] || fail "No Git user email address env var defined."
 
 [[ -n "$(which git)" ]] || fail "Git is not installed."
 
@@ -22,6 +24,9 @@ COMMIT_MSG="Specify release $GIT_TAG"
 if [[ -n "$TITLE" ]]; then
     COMMIT_MSG="$COMMIT_MSG ($TITLE)"
 fi
+
+git config user.name "$GIT_USER_NAME"   || fail "Couldn't configure Git user name."
+git config user.email "$GIT_USER_EMAIL" || fail "Couldn't configure Git user email address."
 
 git commit -a -m "$COMMIT_MSG" || fail "Couldn't commit changes to Git repo."
 
