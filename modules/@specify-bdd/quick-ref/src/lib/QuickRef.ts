@@ -83,7 +83,7 @@ export class QuickRef {
      *
      * @returns The value found at the given address
      */
-    lookupByAddress(address: string): JsonValue {
+    lookupByAddress(address?: string): JsonValue {
         const keys = address?.split(".") ?? [];
 
         return this.lookupByKeys(...keys);
