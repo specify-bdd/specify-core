@@ -22,18 +22,22 @@ permissions:
   id-token: write # Required for OIDC
   contents: read
   packages: write
+env:
+  GIT_REMOTE: origin
 jobs:
   tag:
     name: Tag develop branch
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    env:
+      GIT_BRANCH: develop
     outputs:
-      git_tag: ${{ steps.pkg_versions.outputs.version }}
-      title: ${{ steps.commit_tag.outputs.title }}
+      git_tag: ${{ steps.reg.outputs.git_tag }}
+      title: ${{ steps.reg.outputs.title }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: ${{ env.GIT_BRANCH }}
           ssh-key: "${{ secrets.RELEASE_DEPLOY_KEY }}"
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
@@ -55,30 +59,55 @@ jobs:
         run: |
           git config user.name "${{ vars.GIT_USER_NAME }}"
           git config user.email "${{ vars.GIT_USER_EMAIL }}"
-      - id: pkg_versions
-        name: Update package versions
-        run: ./scripts/github/version.sh "${{ inputs.version }}"
+      - name: Update monorepo package version
+        run: echo "GIT_TAG=$(npm version --no-git-tag-version ${{ inputs.version }})" >> "$GITHUB_ENV"
+      - name: Update sub-package versions
+        run: pnpm -r exec -- npm version --no-git-tag-version "$GIT_TAG"
       - name: Generate docs
         run: pnpm docs:all
-      - id: commit_tag
-        name: Commit changes and tag
-        run: ./scripts/github/commit_tag.sh "${{ steps.pkg_versions.outputs.version }}" "${{ inputs.title }}"
+      - name: Set default release title
+        run: echo "TITLE=Specify release $GIT_TAG" >> "$GITHUB_ENV"
+      - name: Append user input title
+        if: ${{ inputs.title }}
+        run: echo "TITLE=$TITLE (${{ inputs.title }})" >> "$GITHUB_ENV"
+      - name: Commit changes
+        run: git commit -a -m "$TITLE"
+      - name: Create release tag ${{ env.GIT_TAG }}
+        run: git tag -a -m "$TITLE" $GIT_TAG
+      - name: Push changes to ${{ env.GIT_REMOTE }}
+        run: git push --tags $GIT_REMOTE $GIT_BRANCH
+      - name: Register job output values
+        id: reg
+        run: |
+          echo "git_tag=$GIT_TAG" >> "$GITHUB_OUTPUT"
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
   merge:
     name: Merge to main branch
     needs: tag
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    env:
+      GIT_BRANCH: main
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ env.GIT_BRANCH }}
           ssh-key: "${{ secrets.RELEASE_DEPLOY_KEY }}"
       - name: Merge develop branch into main
-        run: ./scripts/github/merge_develop_to_main.sh "${{ needs.tag.outputs.git_tag }}"
+        run: git merge --ff-only "${{ needs.tag.outputs.git_tag }}"
+      - name: Push changes to ${{ env.GIT_REMOTE }}
+        run: git push ${{ env.GIT_REMOTE }} ${{ env.GIT_BRANCH }}
   release:
     name: Create release in GitHub
-    needs: [tag, merge]
+    needs: [ tag, merge ]
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
     steps:
       - name: Create release
-        run: ./scripts/github/release.sh "${{ needs.tag.outputs.git_tag }}" "${{ inputs.title }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ needs.tag.outputs.git_tag }}" \
+            --title "${{ inputs.title }}" \
+            --fail-on-no-commits \
+            --generate-notes \
+            --verify-tag
