@@ -6,7 +6,7 @@
 
 # Class: TestCommand
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:58](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L58)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:66](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L66)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:58](https://git
 
 > **new TestCommand**(`userOpts`): `TestCommand`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:74](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L74)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:82](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L82)
 
 Parse user arguments and options data to prepare operational parameters
 
@@ -44,7 +44,7 @@ User-supplied options
 
 > **cucumber**: `Partial`\<`IConfiguration`\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:62](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L62)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:70](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L70)
 
 A raw Cucumber configuration.
 
@@ -54,7 +54,7 @@ A raw Cucumber configuration.
 
 > **debug**: `boolean`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:53](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L53)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:44](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Command.ts#L44)
 
 Output debug info for this command.
 
@@ -68,7 +68,7 @@ Output debug info for this command.
 
 > **gherkinPaths**: `string`[]
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:67](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L67)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:75](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L75)
 
 A list of paths to Gherkin feature files this Command should execute.
 
@@ -78,7 +78,7 @@ A list of paths to Gherkin feature files this Command should execute.
 
 > **logPath**: `string`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:58](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L58)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:49](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Command.ts#L49)
 
 The file system path to write log output to.
 
@@ -92,7 +92,7 @@ The file system path to write log output to.
 
 > **execute**(`userArgs`): `Promise`\<[`TestCommandResult`](../interfaces/TestCommandResult.md)\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:102](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L102)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:110](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L110)
 
 Execute tests with Cucumber.  Consider a no-op result from Cucumber to
 be an error condition.
@@ -101,7 +101,7 @@ be an error condition.
 
 ##### userArgs
 
-`ParsedArgs`
+[`TestCommandArguments`](../interfaces/TestCommandArguments.md)
 
 User-supplied arguments
 

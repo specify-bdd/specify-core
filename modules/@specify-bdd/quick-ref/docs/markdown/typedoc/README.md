@@ -7,3 +7,7 @@
 ## Classes
 
 - [QuickRef](classes/QuickRef.md)
+
+## Variables
+
+- [refNotation](variables/refNotation.md)

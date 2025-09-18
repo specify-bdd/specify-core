@@ -6,7 +6,7 @@
 
 # Class: CucumberTool
 
-Defined in: [modules/@specify-bdd/specify/src/lib/CucumberTool.ts:37](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/CucumberTool.ts#L37)
+Defined in: [modules/@specify-bdd/specify/src/lib/CucumberTool.ts:37](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/CucumberTool.ts#L37)
 
 Encapsulates the lifecycle of configuring, loading support, and running
 Cucumber test executions, with result logging handled by Logger.
@@ -32,7 +32,7 @@ and manages temporary log files to record and validate test execution output.
 
 > **set** `static` **logger**(`logger`): `void`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/CucumberTool.ts:65](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/CucumberTool.ts#L65)
+Defined in: [modules/@specify-bdd/specify/src/lib/CucumberTool.ts:65](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/CucumberTool.ts#L65)
 
 Inject custom Logger instance (for alternative behavior or testing).
 
@@ -52,7 +52,7 @@ Inject custom Logger instance (for alternative behavior or testing).
 
 > `static` **loadConfiguration**(`config`): `Promise`\<`IRunConfiguration`\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/CucumberTool.ts:77](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/CucumberTool.ts#L77)
+Defined in: [modules/@specify-bdd/specify/src/lib/CucumberTool.ts:77](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/CucumberTool.ts#L77)
 
 Load and prepare Cucumber run configuration, including setting up
 the JSON log output path and preloading support code.
@@ -77,7 +77,7 @@ A fully resolved and prepared Cucumber run configuration object
 
 > `static` **runCucumber**(`options`, `environment?`): `Promise`\<`IRunResult`\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/CucumberTool.ts:110](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/CucumberTool.ts#L110)
+Defined in: [modules/@specify-bdd/specify/src/lib/CucumberTool.ts:110](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/CucumberTool.ts#L110)
 
 Execute the Cucumber test run. No tests run is considered an error.
 

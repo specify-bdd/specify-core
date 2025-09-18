@@ -6,7 +6,7 @@
 
 # Interface: CommandResult
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:26](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L26)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:22](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Command.ts#L22)
 
 ## Extended by
 
@@ -18,7 +18,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:26](https://github.
 
 > `optional` **debug**: [`CommandResultDebugInfo`](CommandResultDebugInfo.md)
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:31](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L31)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:27](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Command.ts#L27)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:31](https://github.
 
 > `optional` **error**: `JsonObject`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:29](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L29)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:25](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Command.ts#L25)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:29](https://github.
 
 > **ok**: `boolean`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:27](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L27)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:23](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Command.ts#L23)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:27](https://github.
 
 > `optional` **result**: `JsonValue`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:30](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L30)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:26](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Command.ts#L26)
 
 ***
 
@@ -50,4 +50,4 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:30](https://github.
 
 > **status**: [`CommandResultStatus`](../enumerations/CommandResultStatus.md)
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:28](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L28)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:24](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Command.ts#L24)

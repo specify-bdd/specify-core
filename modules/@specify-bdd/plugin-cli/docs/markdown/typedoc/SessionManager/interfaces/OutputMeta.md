@@ -6,7 +6,7 @@
 
 # Interface: OutputMeta
 
-Defined in: [SessionManager.ts:41](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L41)
+Defined in: [SessionManager.ts:42](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L42)
 
 A metadata object representing a single chunk of output from a command.
 
@@ -16,7 +16,7 @@ A metadata object representing a single chunk of output from a command.
 
 > **output**: `string`
 
-Defined in: [SessionManager.ts:42](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L42)
+Defined in: [SessionManager.ts:43](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L43)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [SessionManager.ts:42](https://github.com/specify-bdd/specify-core/b
 
 > **stream**: [`IOStream`](../enumerations/IOStream.md)
 
-Defined in: [SessionManager.ts:43](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L43)
+Defined in: [SessionManager.ts:44](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L44)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [SessionManager.ts:43](https://github.com/specify-bdd/specify-core/b
 
 > **timestamp**: `number`
 
-Defined in: [SessionManager.ts:44](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L44)
+Defined in: [SessionManager.ts:45](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L45)
