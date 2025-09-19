@@ -6,7 +6,7 @@
 
 # Class: TestCommand
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:66](https://github.com/specify-bdd/specify-core/blob/c3c8ea2d9aaff082b901a629fe828faeb8afe9a8/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L66)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:66](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L66)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:66](https://git
 
 > **new TestCommand**(`userOpts`): `TestCommand`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:82](https://github.com/specify-bdd/specify-core/blob/c3c8ea2d9aaff082b901a629fe828faeb8afe9a8/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L82)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:82](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L82)
 
 Parse user arguments and options data to prepare operational parameters
 
@@ -44,7 +44,7 @@ User-supplied options
 
 > **cucumber**: `Partial`\<`IConfiguration`\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:70](https://github.com/specify-bdd/specify-core/blob/c3c8ea2d9aaff082b901a629fe828faeb8afe9a8/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L70)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:70](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L70)
 
 A raw Cucumber configuration.
 
@@ -54,7 +54,7 @@ A raw Cucumber configuration.
 
 > **debug**: `boolean`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:44](https://github.com/specify-bdd/specify-core/blob/c3c8ea2d9aaff082b901a629fe828faeb8afe9a8/modules/@specify-bdd/specify/src/lib/Command.ts#L44)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:44](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/Command.ts#L44)
 
 Output debug info for this command.
 
@@ -68,7 +68,7 @@ Output debug info for this command.
 
 > **gherkinPaths**: `string`[]
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:75](https://github.com/specify-bdd/specify-core/blob/c3c8ea2d9aaff082b901a629fe828faeb8afe9a8/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L75)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:75](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L75)
 
 A list of paths to Gherkin feature files this Command should execute.
 
@@ -78,7 +78,7 @@ A list of paths to Gherkin feature files this Command should execute.
 
 > **logPath**: `string`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:49](https://github.com/specify-bdd/specify-core/blob/c3c8ea2d9aaff082b901a629fe828faeb8afe9a8/modules/@specify-bdd/specify/src/lib/Command.ts#L49)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:49](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/Command.ts#L49)
 
 The file system path to write log output to.
 
@@ -92,7 +92,7 @@ The file system path to write log output to.
 
 > **execute**(`userArgs`): `Promise`\<[`TestCommandResult`](../interfaces/TestCommandResult.md)\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:110](https://github.com/specify-bdd/specify-core/blob/c3c8ea2d9aaff082b901a629fe828faeb8afe9a8/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L110)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:110](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L110)
 
 Execute tests with Cucumber.  Consider a no-op result from Cucumber to
 be an error condition.
