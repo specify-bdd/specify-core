@@ -6,7 +6,7 @@
 
 # Class: Logger
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Logger.ts:23](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Logger.ts#L23)
+Defined in: [modules/@specify-bdd/specify/src/lib/Logger.ts:23](https://github.com/specify-bdd/specify-core/blob/088ccad253a8897bc366dec613dbf080821f32a3/modules/@specify-bdd/specify/src/lib/Logger.ts#L23)
 
 Utility for working with temporary Cucumber JSON log files on disk.
 
@@ -20,7 +20,7 @@ behavior can be customized for testing purposes via injected dependencies.
 
 > **new Logger**(`options`): `Logger`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Logger.ts:38](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Logger.ts#L38)
+Defined in: [modules/@specify-bdd/specify/src/lib/Logger.ts:38](https://github.com/specify-bdd/specify-core/blob/088ccad253a8897bc366dec613dbf080821f32a3/modules/@specify-bdd/specify/src/lib/Logger.ts#L38)
 
 Create a Logger instance with file system behavior overrides.
 
@@ -42,7 +42,7 @@ Overrides for reading, deleting, and creating directories
 
 > **consumeTmpLog**(`path`): `Promise`\<`JsonObject`\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Logger.ts:57](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Logger.ts#L57)
+Defined in: [modules/@specify-bdd/specify/src/lib/Logger.ts:57](https://github.com/specify-bdd/specify-core/blob/088ccad253a8897bc366dec613dbf080821f32a3/modules/@specify-bdd/specify/src/lib/Logger.ts#L57)
 
 Read a JSON log file from disk and delete it afterward.
 
@@ -76,7 +76,7 @@ If the file does not exist or cannot be read/deleted.
 
 > **generateTmpLogPath**(`prefix`): `Promise`\<`string`\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Logger.ts:96](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Logger.ts#L96)
+Defined in: [modules/@specify-bdd/specify/src/lib/Logger.ts:96](https://github.com/specify-bdd/specify-core/blob/088ccad253a8897bc366dec613dbf080821f32a3/modules/@specify-bdd/specify/src/lib/Logger.ts#L96)
 
 Generate a unique file path in the system's temp directory
 for writing a JSON log file. Ensures the parent directory exists.
@@ -111,7 +111,7 @@ This only creates a path to the file, its does not create the file itself
 
 > **readTmpLog**(`path`): `Promise`\<`JsonObject`\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Logger.ts:78](https://github.com/specify-bdd/specify-core/blob/b47338cce98c34b2e68fbf033eb22e90c70e41ea/modules/@specify-bdd/specify/src/lib/Logger.ts#L78)
+Defined in: [modules/@specify-bdd/specify/src/lib/Logger.ts:78](https://github.com/specify-bdd/specify-core/blob/088ccad253a8897bc366dec613dbf080821f32a3/modules/@specify-bdd/specify/src/lib/Logger.ts#L78)
 
 Read and parse a JSON log file from disk.
 
