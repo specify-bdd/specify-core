@@ -3,13 +3,13 @@
  *
  * Cucumber step definitions that interact with Specify reference data.
  */
-import { Given, Then              } from "@cucumber/cucumber";
-import { AssertionError           } from "node:assert";
-import assert                       from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
-import { mkdtemp                  } from "node:fs/promises";
-import { tmpdir                   } from "node:os";
-import { join                     } from "node:path";
+import { Given, Then       } from "@cucumber/cucumber";
+import { AssertionError    } from "node:assert";
+import assert                from "node:assert/strict";
+import { existsSync        } from "node:fs";
+import { mkdtemp, readFile } from "node:fs/promises";
+import { tmpdir            } from "node:os";
+import { join              } from "node:path";
 
 Given("a new temp file path referenced as {string}", createTempFileRef);
 
@@ -23,10 +23,10 @@ async function createTempFileRef(address: string): Promise<void> {
     this.quickRef.setRefByAddress(address, filePath);
 }
 
-function verifyFileIsEmpty(filePath: string): void {
-    verifyFilePathExists(filePath);
+async function verifyFileIsEmpty(filePath: string): Promise<void> {
+    await verifyFilePathExists(filePath);
 
-    const content = readFileSync(filePath, "utf8");
+    const content = await readFile(filePath, "utf8");
 
     assert.ok(
         !content,
@@ -34,7 +34,7 @@ function verifyFileIsEmpty(filePath: string): void {
     );
 }
 
-function verifyFilePathExists(filePath: string): void {
+async function verifyFilePathExists(filePath: string): Promise<void> {
     assert.ok(
         existsSync(filePath),
         new AssertionError({ "message": `The file path "${filePath}" does not exist` }),
