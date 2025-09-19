@@ -67,7 +67,7 @@ async function createTempFileRef(address: string): Promise<void> {
  * If the file is not empty.
  */
 async function verifyFileIsEmpty(filePath: string): Promise<void> {
-    await verifyFilePathExists(filePath);
+    await verifyFilePathExists.call(this, filePath);
 
     const content = await readFile(filePath, "utf8");
 
