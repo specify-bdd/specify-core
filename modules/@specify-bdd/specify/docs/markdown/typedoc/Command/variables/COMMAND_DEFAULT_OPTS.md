@@ -8,4 +8,4 @@
 
 > `const` **COMMAND\_DEFAULT\_OPTS**: [`CommandOptions`](../interfaces/CommandOptions.md)
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:12](https://github.com/specify-bdd/specify-core/blob/755ba0ac7fc807524132ad16639722b0d2dce1ff/modules/@specify-bdd/specify/src/lib/Command.ts#L12)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:12](https://github.com/specify-bdd/specify-core/blob/c3c8ea2d9aaff082b901a629fe828faeb8afe9a8/modules/@specify-bdd/specify/src/lib/Command.ts#L12)
