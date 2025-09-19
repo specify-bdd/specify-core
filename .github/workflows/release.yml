@@ -87,16 +87,19 @@ jobs:
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
     env:
       GIT_BRANCH: main
+      GIT_TAG: ${{ needs.tag.outputs.git_tag }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
           ref: ${{ env.GIT_BRANCH }}
           ssh-key: "${{ secrets.RELEASE_DEPLOY_KEY }}"
-      - name: Merge develop branch into main
-        run: git merge --ff-only "${{ needs.tag.outputs.git_tag }}"
+      - name: Fetch ${{ env.GIT_TAG }} tag from ${{ env.GIT_REMOTE }}
+        run: git fetch ${{ env.GIT_REMOTE }} ${{ env.GIT_TAG }}
+      - name: Merge ${{ env.GIT_TAG }} tag into ${{ env.GIT_BRANCH }}
+        run: git merge --ff-only "$GIT_TAG"
       - name: Push changes to ${{ env.GIT_REMOTE }}
-        run: git push ${{ env.GIT_REMOTE }} ${{ env.GIT_BRANCH }}
+        run: git push $GIT_REMOTE $GIT_BRANCH
   release:
     name: Create release in GitHub
     needs: [ tag, merge ]
