@@ -6,7 +6,7 @@
 
 # Interface: TestCommandResult
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:53](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L53)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:53](https://github.com/specify-bdd/specify-core/blob/42c1866a3db2e68f64cc8f97432cb50c7153b7f5/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L53)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:53](https://git
 
 > `optional` **debug**: [`TestCommandResultDebugInfo`](TestCommandResultDebugInfo.md)
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:54](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L54)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:54](https://github.com/specify-bdd/specify-core/blob/42c1866a3db2e68f64cc8f97432cb50c7153b7f5/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L54)
 
 #### Overrides
 
@@ -30,7 +30,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:54](https://git
 
 > `optional` **error**: `JsonObject`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:25](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/Command.ts#L25)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:25](https://github.com/specify-bdd/specify-core/blob/42c1866a3db2e68f64cc8f97432cb50c7153b7f5/modules/@specify-bdd/specify/src/lib/Command.ts#L25)
 
 #### Inherited from
 
@@ -42,7 +42,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:25](https://github.
 
 > **ok**: `boolean`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:23](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/Command.ts#L23)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:23](https://github.com/specify-bdd/specify-core/blob/42c1866a3db2e68f64cc8f97432cb50c7153b7f5/modules/@specify-bdd/specify/src/lib/Command.ts#L23)
 
 #### Inherited from
 
@@ -54,7 +54,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:23](https://github.
 
 > `optional` **result**: `JsonValue`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:26](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/Command.ts#L26)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:26](https://github.com/specify-bdd/specify-core/blob/42c1866a3db2e68f64cc8f97432cb50c7153b7f5/modules/@specify-bdd/specify/src/lib/Command.ts#L26)
 
 #### Inherited from
 
@@ -66,7 +66,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:26](https://github.
 
 > **status**: [`CommandResultStatus`](../../Command/enumerations/CommandResultStatus.md)
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:24](https://github.com/specify-bdd/specify-core/blob/8d56e00368fb4979647536584799f41d4f8aa6f7/modules/@specify-bdd/specify/src/lib/Command.ts#L24)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:24](https://github.com/specify-bdd/specify-core/blob/42c1866a3db2e68f64cc8f97432cb50c7153b7f5/modules/@specify-bdd/specify/src/lib/Command.ts#L24)
 
 #### Inherited from
 
