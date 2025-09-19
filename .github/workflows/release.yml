@@ -20,8 +20,8 @@ on:
         type: string
 permissions:
   id-token: write # Required for OIDC
-  contents: read
-  packages: write
+  contents: write # Required to create releases
+  #packages: write 
 env:
   GIT_REMOTE: origin
 jobs:
