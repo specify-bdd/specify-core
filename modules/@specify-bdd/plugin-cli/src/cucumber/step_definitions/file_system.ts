@@ -4,12 +4,12 @@
  * Cucumber step definitions covering interactions with a file system.
  */
 
-import { Given, Then, When            } from "@cucumber/cucumber";
+import { Given, Then, When      } from "@cucumber/cucumber";
 import assert, { AssertionError } from "node:assert/strict";
-import { existsSync        } from "node:fs";
-import { mkdtemp, readFile } from "node:fs/promises";
-import { tmpdir            } from "node:os";
-import { join              } from "node:path";
+import { existsSync             } from "node:fs";
+import { mkdtemp, readFile      } from "node:fs/promises";
+import { tmpdir                 } from "node:os";
+import { join                   } from "node:path";
 
 Given("a new temp file path referenced as {string}", createTempFileRef);
 Given("(that )the working directory is {filePath}", changeDirectory);
@@ -45,7 +45,7 @@ async function changeDirectory(dirPath: string): Promise<void> {
 
 /**
  * Create a new /tmp filepath and store it in QuickRef at the given address.
- * 
+ *
  * @param address - The dot notation address at which to store the temp file path
  */
 async function createTempFileRef(address: string): Promise<void> {
@@ -57,12 +57,12 @@ async function createTempFileRef(address: string): Promise<void> {
 
 /**
  * Verify that the file at the given path is empty.
- * 
+ *
  * @param filePath - The file path to check for emptiness
- * 
+ *
  * @throws AssertionError
  * If the file does not exist.
- * 
+ *
  * @throws AssertionError
  * If the file is not empty.
  */
@@ -79,9 +79,9 @@ async function verifyFileIsEmpty(filePath: string): Promise<void> {
 
 /**
  * Verify that a file exists at the given path.
- * 
+ *
  * @param filePath - The file path to check for existence
- * 
+ *
  * @throws AssertionError
  * If the file does not exist.
  */
