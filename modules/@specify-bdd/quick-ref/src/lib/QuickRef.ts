@@ -76,7 +76,7 @@ export class QuickRef {
     }
 
     /**
-     * Look up a reference by its dot notation address.  If no address is 
+     * Look up a reference by its dot notation address.  If no address is
      * provided, the entire reference store will be returned.
      *
      * @param address - The address to look up. For example, ("foo.bar.baz")
@@ -152,5 +152,30 @@ export class QuickRef {
         }
 
         return parsed;
+    }
+
+    /**
+     * Set a reference value by its dot notation address. If the address
+     * already exists, it will be overwritten.
+     *
+     * @param address - The address to look up. For example, ("foo.bar.baz")
+     *                  will retrieve the value of this.#all.foo.bar.baz.
+     * @param value   - The value to set at the given address.
+     */
+    setRefByAddress(address: string, value: JsonObject | JsonValue): void {
+        const keys    = address.split(".");
+        const lastKey = keys.pop();
+        const refObj  = {};
+
+        let curObj = refObj;
+
+        keys.forEach((key) => {
+            curObj[key] = {};
+            curObj = curObj[key];
+        });
+
+        curObj[lastKey] = value;
+
+        this.add(refObj);
     }
 }

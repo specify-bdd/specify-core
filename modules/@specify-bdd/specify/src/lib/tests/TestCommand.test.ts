@@ -59,6 +59,36 @@ describe("TestCommand", () => {
                 );
             });
 
+            describe("rerun-file", () => {
+                it("adds a rerun formatter entry if none exists", async () => {
+                    const userArgs = { "rerunFile": "/test/rerun.txt" };
+                    const cmd      = new TestCommand();
+
+                    await cmd.execute(userArgs);
+
+                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                        expect.objectContaining({
+                            "format": expect.arrayContaining(["rerun:/test/rerun.txt"]),
+                        }),
+                    );
+                });
+
+                it("overrides an existing rerun formatter entry", async () => {
+                    const userArgs = { "rerunFile": "/test/new.txt" };
+                    const cmd      = new TestCommand({
+                        "cucumber": { "format": ["rerun:old.txt"] },
+                    });
+
+                    await cmd.execute(userArgs);
+
+                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                        expect.objectContaining({
+                            "format": expect.arrayContaining(["rerun:/test/new.txt"]),
+                        }),
+                    );
+                });
+            });
+
             describe("retry", () => {
                 it("accepts a positive integer", async () => {
                     const userArgs = { "retry": 2, ...emptyArgs };

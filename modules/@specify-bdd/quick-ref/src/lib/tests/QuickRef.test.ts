@@ -159,4 +159,35 @@ describe("QuickRef", () => {
             });
         });
     });
+
+    describe("setRefByAddress()", () => {
+        it("can initialize values", () => {
+            const quickRef = new QuickRef();
+
+            quickRef.setRefByAddress("foo", "test1");
+            quickRef.setRefByAddress("bar.baz", ["test2"]);
+
+            expect(quickRef.all.foo).toBe("test1");
+            expect(quickRef.all.bar.baz).toEqual(["test2"]);
+        });
+
+        it("can overwrite values", () => {
+            const quickRef = new QuickRef({ "foo": "old1", "bar": { "baz": ["old2"] } });
+
+            quickRef.setRefByAddress("foo", "new1");
+            quickRef.setRefByAddress("bar.baz", ["new2"]);
+
+            expect(quickRef.all.foo).toBe("new1");
+            expect(quickRef.all.bar.baz).toEqual(["new2"]);
+        });
+
+        it("creates only missing segments for partially existing address", () => {
+            const quickRef = new QuickRef({ "foo": { "test": "test1" } });
+
+            quickRef.setRefByAddress("foo.bar.baz", "test2");
+
+            expect(quickRef.all.foo.test).toBe("test1");
+            expect(quickRef.all.foo.bar.baz).toBe("test2");
+        });
+    });
 });
