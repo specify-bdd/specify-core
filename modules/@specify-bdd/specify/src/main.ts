@@ -56,6 +56,10 @@ app.exitOverride(() => process.exit(2))
     .argument("[paths...]", helpText.commands.test.arguments.paths)
     .helpOption("-h, --help", helpText.commands.test.options.help)
     .option(
+        "-f, --rerun-file <path>",
+        util.format(helpText.commands.test.options.rerunFile, cucumberCfg.retry),
+    )
+    .option(
         "-r, --retry <number_of_retries>",
         util.format(helpText.commands.test.options.retry, cucumberCfg.retry),
         parseRetryOption,
