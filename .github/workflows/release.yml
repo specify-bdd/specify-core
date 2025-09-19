@@ -94,8 +94,8 @@ jobs:
         with:
           ref: ${{ env.GIT_BRANCH }}
           ssh-key: "${{ secrets.RELEASE_DEPLOY_KEY }}"
-      - name: Fetch ${{ env.GIT_TAG }} tag from ${{ env.GIT_REMOTE }}
-        run: git fetch ${{ env.GIT_REMOTE }} ${{ env.GIT_TAG }}
+      - name: Fetch tags from ${{ env.GIT_REMOTE }}
+        run: git fetch --tags ${{ env.GIT_REMOTE }}
       - name: Merge ${{ env.GIT_TAG }} tag into ${{ env.GIT_BRANCH }}
         run: git merge --ff-only "$GIT_TAG"
       - name: Push changes to ${{ env.GIT_REMOTE }}
