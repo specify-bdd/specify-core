@@ -1,0 +1,35 @@
+name: Release Stage 2 - Merge
+on:
+  workflow_call:
+    inputs:
+      git_tag:
+        description: "The Git tag produced by stage 1"
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      git_tag:
+        description: "The Git tag produced by stage 1"
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  merge:
+    name: Merge tag to main branch
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    env:
+      GIT_BRANCH: main
+      GIT_TAG: ${{ inputs.git_tag }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_BRANCH }}
+          ssh-key: "${{ secrets.RELEASE_DEPLOY_KEY }}"
+      - name: Fetch tags from origin
+        run: git fetch --tags origin
+      - name: Merge ${{ env.GIT_TAG }} tag into ${{ env.GIT_BRANCH }}
+        run: git merge --ff-only "$GIT_TAG"
+      - name: Push changes to origin
+        run: git push origin $GIT_BRANCH

@@ -1,0 +1,93 @@
+name: Release Stage 1 - Tag
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: "The version to release"
+        required: true
+        type: string
+      title:
+        description: "The name of the release"
+        required: false
+        type: string
+    outputs:
+      git_tag:
+        description: "The Git tag produced by stage 1"
+        value: ${{ jobs.tag.outputs.git_tag }}
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "The version to release"
+        required: true
+        default: patch
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          # - premajor
+          # - preminor
+          # - prepatch
+      title:
+        description: "The name of the release"
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  tag:
+    name: Create version tag
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    env:
+      GIT_BRANCH: develop
+    outputs:
+      git_tag: ${{ steps.export.outputs.git_tag }}
+      title: ${{ steps.export.outputs.title }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_BRANCH }}
+          ssh-key: "${{ secrets.RELEASE_DEPLOY_KEY }}"
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+      - name: Setup Node.js ${{ vars.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: ${{ vars.NODE_VERSION }}
+          registry-url: "https://registry.npmjs.org"
+      - name: Install dependencies and build
+        run: pnpm install
+      - name: Lint
+        run: pnpm lint
+      - name: Test
+        run: pnpm test
+      - name: Audit
+        run: pnpm audit --prod --audit-level=moderate
+      - name: Configure Git
+        run: |
+          git config user.name "${{ vars.GIT_USER_NAME }}"
+          git config user.email "${{ vars.GIT_USER_EMAIL }}"
+      - name: Update monorepo package version
+        run: echo "GIT_TAG=$(npm version --no-git-tag-version ${{ inputs.version }})" >> "$GITHUB_ENV"
+      - name: Update sub-package versions
+        run: pnpm -r exec -- npm version --no-git-tag-version "$GIT_TAG"
+      - name: Generate docs
+        run: pnpm docs:all
+      - name: Set default release title
+        run: echo "TITLE=Specify release $GIT_TAG" >> "$GITHUB_ENV"
+      - name: Append user input title
+        if: ${{ inputs.title }}
+        run: echo "TITLE=$TITLE (${{ inputs.title }})" >> "$GITHUB_ENV"
+      - name: Commit changes
+        run: git commit -a -m "$TITLE"
+      - name: Create release tag ${{ env.GIT_TAG }}
+        run: git tag -a -m "$TITLE" $GIT_TAG
+      - name: Push changes to origin
+        run: git push --tags origin $GIT_BRANCH
+      - name: Register job output values
+        id: export
+        run: |
+          echo "git_tag=$GIT_TAG" >> "$GITHUB_OUTPUT"
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"

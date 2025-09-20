@@ -1,11 +1,11 @@
-name: Publish Packages
+name: Release Stage 4 - Publish
 on:
-  release:
-    types: [published]
+  workflow_call:
+  workflow_dispatch:
 permissions:
   id-token: write # Required for OIDC
   contents: read
-  # packages: write # Required to publish to to GitHub
+  # packages: write # Required to publish to GitHub
 jobs:
   # publish-github:
   #   runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
@@ -25,11 +25,13 @@ jobs:
   publish-npm:
     name: Publish package to NPM
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    env:
+      GIT_BRANCH: main
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ env.GIT_BRANCH }}
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
       - name: Setup Node.js ${{ vars.NODE_VERSION }}
