@@ -6,7 +6,7 @@
 
 # Class: QuickRef
 
-Defined in: [QuickRef.ts:14](https://github.com/specify-bdd/specify-core/blob/ff8f0729666668ac0689da959ff440a4b4121187/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L14)
+Defined in: [QuickRef.ts:14](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L14)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [QuickRef.ts:14](https://github.com/specify-bdd/specify-core/blob/ff
 
 > **new QuickRef**(...`refs`): `QuickRef`
 
-Defined in: [QuickRef.ts:25](https://github.com/specify-bdd/specify-core/blob/ff8f0729666668ac0689da959ff440a4b4121187/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L25)
+Defined in: [QuickRef.ts:25](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L25)
 
 Initialize the reference object hierarchy with one or more JSON objects.
 
@@ -38,7 +38,7 @@ One or more reference objects to combine and cache
 
 > **get** **all**(): `JsonObject`
 
-Defined in: [QuickRef.ts:33](https://github.com/specify-bdd/specify-core/blob/ff8f0729666668ac0689da959ff440a4b4121187/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L33)
+Defined in: [QuickRef.ts:33](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L33)
 
 A read-only accessor for all the references stored in this QuickRef
 instance.
@@ -53,7 +53,7 @@ instance.
 
 > **add**(...`refs`): `QuickRef`
 
-Defined in: [QuickRef.ts:51](https://github.com/specify-bdd/specify-core/blob/ff8f0729666668ac0689da959ff440a4b4121187/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L51)
+Defined in: [QuickRef.ts:51](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L51)
 
 Add one or more new JSON objects to the unified reference object
 hierarchy.
@@ -85,7 +85,7 @@ certain that we know how we want this to behave.
 
 > **lookupByAddress**(`address?`): `JsonValue`
 
-Defined in: [QuickRef.ts:87](https://github.com/specify-bdd/specify-core/blob/ff8f0729666668ac0689da959ff440a4b4121187/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L87)
+Defined in: [QuickRef.ts:87](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L87)
 
 Look up a reference by its dot notation address.  If no address is 
 provided, the entire reference store will be returned.
@@ -111,7 +111,7 @@ The value found at the given address
 
 > **lookupByKeys**(...`segments`): `JsonValue`
 
-Defined in: [QuickRef.ts:106](https://github.com/specify-bdd/specify-core/blob/ff8f0729666668ac0689da959ff440a4b4121187/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L106)
+Defined in: [QuickRef.ts:106](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L106)
 
 Look up a reference by its keys.  Params drill down through the
 reference object hierarchy in the key sequence provided.  If no keys are
@@ -143,7 +143,7 @@ If the provided keys do not exist in the reference object hierarchy.
 
 > **parse**(`input`): `string`
 
-Defined in: [QuickRef.ts:139](https://github.com/specify-bdd/specify-core/blob/ff8f0729666668ac0689da959ff440a4b4121187/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L139)
+Defined in: [QuickRef.ts:139](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/quick-ref/src/lib/QuickRef.ts#L139)
 
 Parse a string which may contain reference notation and replace all ref
 addresses found with their corresponding values.
