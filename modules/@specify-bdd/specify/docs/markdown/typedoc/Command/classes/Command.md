@@ -6,7 +6,7 @@
 
 # Abstract Class: Command
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:40](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/specify/src/lib/Command.ts#L40)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:40](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/specify/src/lib/Command.ts#L40)
 
 ## Extended by
 
@@ -18,7 +18,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:40](https://github.
 
 > **new Command**(`userOpts`): `Command`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:56](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/specify/src/lib/Command.ts#L56)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:56](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/specify/src/lib/Command.ts#L56)
 
 Store user args and options data.
 
@@ -40,7 +40,7 @@ User-supplied options
 
 > **debug**: `boolean`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:44](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/specify/src/lib/Command.ts#L44)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:44](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/specify/src/lib/Command.ts#L44)
 
 Output debug info for this command.
 
@@ -50,7 +50,7 @@ Output debug info for this command.
 
 > **logPath**: `string`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:49](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/specify/src/lib/Command.ts#L49)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:49](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/specify/src/lib/Command.ts#L49)
 
 The file system path to write log output to.
 
@@ -60,7 +60,7 @@ The file system path to write log output to.
 
 > **execute**(`userArgs`): `Promise`\<[`CommandResult`](../interfaces/CommandResult.md)\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:71](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/specify/src/lib/Command.ts#L71)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:71](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/specify/src/lib/Command.ts#L71)
 
 Execute the Command.  This method should be overridden by child
 classes, or it will just return an error result.

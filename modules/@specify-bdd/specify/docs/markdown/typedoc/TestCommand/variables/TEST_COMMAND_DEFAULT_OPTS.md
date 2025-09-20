@@ -8,4 +8,4 @@
 
 > `const` **TEST\_COMMAND\_DEFAULT\_OPTS**: [`TestCommandOptions`](../interfaces/TestCommandOptions.md)
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:26](https://github.com/specify-bdd/specify-core/blob/67fcf13e97d7dd51571b4867185f0bf446eae83d/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L26)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:26](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L26)
