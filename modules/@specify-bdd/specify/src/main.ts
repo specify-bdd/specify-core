@@ -49,7 +49,8 @@ app.name("specify")
     .helpCommand("help [command]", helpText.commands.help)
     .helpOption("-h, --help", helpText.options.help);
 
-app.command("test", { "isDefault": true })
+app.exitOverride(() => process.exit(2))
+    .command("test", { "isDefault": true })
     .summary(helpText.commands.test.summary)
     .description(helpText.commands.test.description)
     .argument("[paths...]", helpText.commands.test.arguments.paths)
@@ -58,6 +59,10 @@ app.command("test", { "isDefault": true })
         "-r, --retry <number_of_retries>",
         util.format(helpText.commands.test.options.retry, cucumberCfg.retry),
         parseRetryOption,
+    )
+    .option(
+        "-R, --retry-tag <tags>",
+        util.format(helpText.commands.test.options.retryTag, cucumberCfg.retryTagFilter),
     )
     .option("-t, --tags <tags>", helpText.commands.test.options.tags)
     .option(

@@ -6,7 +6,7 @@
 
 # Enumeration: CommandResultStatus
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:43](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L43)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:34](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/specify/src/lib/Command.ts#L34)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:43](https://github.
 
 > **error**: `2`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:46](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L46)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:37](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/specify/src/lib/Command.ts#L37)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:46](https://github.
 
 > **failure**: `1`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:45](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L45)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:36](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/specify/src/lib/Command.ts#L36)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:45](https://github.
 
 > **success**: `0`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:44](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/specify/src/lib/Command.ts#L44)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:35](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/specify/src/lib/Command.ts#L35)

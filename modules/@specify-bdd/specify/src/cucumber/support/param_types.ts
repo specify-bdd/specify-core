@@ -8,17 +8,18 @@
 import { defineParameterType } from "@cucumber/cucumber";
 import path                    from "node:path";
 
-import type { FileParam } from "~/types/params";
+import { refNotation } from "@specify-bdd/quick-ref";
+
+import type { JsonValue } from "type-fest";
 
 const ordinal      = /[0-9]*(?:1st|2nd|3rd|[4-90]th)/;
 const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;
-const refName      = /\$\w+/;
 
 defineParameterType({
-    "name":   "path",
+    "name":   "filePath",
     "regexp": quotedString,
     transformer(input: string): string {
-        return path.resolve(input.slice(1, -1));
+        return path.resolve(this.quickRef.parse(input.slice(1, -1)));
     },
     "useForSnippets": false,
 });
@@ -33,10 +34,19 @@ defineParameterType({
 });
 
 defineParameterType({
-    "name":   "ref:file",
-    "regexp": refName,
-    transformer(input: string): FileParam {
-        return this.quickRef.lookup("file", input.slice(1)) as FileParam;
+    "name":   "ref",
+    "regexp": refNotation,
+    transformer(input: string): JsonValue {
+        return this.quickRef.lookupByAddress(input.slice(2, -1));
+    },
+    "useForSnippets": false,
+});
+
+defineParameterType({
+    "name":   "refstr",
+    "regexp": quotedString,
+    transformer(input: string): string {
+        return this.quickRef.parse(input.slice(1, -1));
     },
     "useForSnippets": false,
 });
@@ -45,7 +55,7 @@ defineParameterType({
     "name":   "regexp",
     "regexp": quotedString,
     transformer(input: string): RegExp {
-        return RegExp(input.slice(1, -1));
+        return RegExp(this.quickRef.parse(input.slice(1, -1)));
     },
     "useForSnippets": false,
 });

@@ -12,6 +12,7 @@
 
 ## Interfaces
 
+- [TestCommandArguments](interfaces/TestCommandArguments.md)
 - [TestCommandOptions](interfaces/TestCommandOptions.md)
 - [TestCommandResult](interfaces/TestCommandResult.md)
 - [TestCommandResultDebugInfo](interfaces/TestCommandResultDebugInfo.md)

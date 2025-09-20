@@ -1,12 +1,12 @@
 import { vi } from "vitest";
 
-import { SessionManager, IOStream } from "./SessionManager";
-import { ShellSession             } from "./ShellSession";
+import { SessionManager, IOStream } from "../SessionManager";
+import { ShellSession             } from "../ShellSession";
 
-import type { ShellSession as MockShellSession } from "./__mocks__/ShellSession";
-import type { CommandMeta                      } from "./SessionManager";
+import { ShellSession as MockShellSession } from "../__mocks__/ShellSession";
+import type { CommandMeta                 } from "../SessionManager";
 
-vi.mock("./ShellSession");
+vi.mock("../ShellSession");
 
 describe("SessionManager", () => {
     let session: MockShellSession;

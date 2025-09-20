@@ -1,6 +1,6 @@
 {
   "name": "@specify-bdd/quick-ref",
-  "version": "0.0.1",
+  "version": "0.0.11",
   "description": "A utility for referencing test param data quickly and easily.",
   "type": "module",
   "author": "Adam Lacoste",

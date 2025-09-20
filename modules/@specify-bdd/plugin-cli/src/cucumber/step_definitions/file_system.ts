@@ -7,9 +7,9 @@
 import { Given, When            } from "@cucumber/cucumber";
 import assert, { AssertionError } from "node:assert/strict";
 
-Given("(that )the working directory is {path}", changeDirectory);
+Given("(that )the working directory is {filePath}", changeDirectory);
 
-When("a/the user changes the working directory to {path}", changeDirectory);
+When("a/the user changes the working directory to {filePath}", changeDirectory);
 
 /**
  * Change the current working directory in the active shell.

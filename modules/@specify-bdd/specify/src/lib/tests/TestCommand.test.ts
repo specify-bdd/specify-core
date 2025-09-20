@@ -1,8 +1,8 @@
 import path                 from "node:path";
 import { deserializeError } from "serialize-error";
 
-import { TestCommand, TestCommandOptions } from "./TestCommand";
-import { CucumberTool                    } from "./CucumberTool";
+import { TestCommand, TestCommandOptions } from "../TestCommand";
+import { CucumberTool                    } from "../CucumberTool";
 
 const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted(() => {
     return {
@@ -14,7 +14,7 @@ const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted((
     };
 });
 
-vi.mock("./CucumberTool", () => ({
+vi.mock("../CucumberTool", () => ({
     "CucumberTool": {
         "loadConfiguration": mockLoadConfiguration,
         "loadSupport":       mockLoadSupport,
@@ -85,6 +85,21 @@ describe("TestCommand", () => {
                         }),
                     );
                 });
+            });
+
+            it("retry-tag", async () => {
+                const userArgs = { "retryTag": "@test", ...emptyArgs };
+                const cmd      = new TestCommand({
+                    "cucumber": { "retryTagFilter": "@should-override" },
+                });
+
+                await cmd.execute(userArgs);
+
+                expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        "retryTagFilter": "@test",
+                    }),
+                );
             });
 
             it("tags", async () => {

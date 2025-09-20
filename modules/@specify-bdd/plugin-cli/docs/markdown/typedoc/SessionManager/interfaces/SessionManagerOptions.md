@@ -6,7 +6,7 @@
 
 # Interface: SessionManagerOptions
 
-Defined in: [SessionManager.ts:59](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L59)
+Defined in: [SessionManager.ts:60](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L60)
 
 The basic option set common to all options-accepting SessionManager methods.
 
@@ -20,4 +20,4 @@ The basic option set common to all options-accepting SessionManager methods.
 
 > `optional` **sessionMeta**: [`SessionMeta`](SessionMeta.md)
 
-Defined in: [SessionManager.ts:60](https://github.com/specify-bdd/specify-core/blob/f886d17f9d8689640b41a37f683750a408f0c53c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L60)
+Defined in: [SessionManager.ts:61](https://github.com/specify-bdd/specify-core/blob/bc1131707d11b7271041451cead3b7997bd10476/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L61)

@@ -6,6 +6,7 @@
 
 ## Modules
 
+- [cli-parsers](cli-parsers/README.md)
 - [Command](Command/README.md)
 - [CucumberTool](CucumberTool/README.md)
 - [Logger](Logger/README.md)

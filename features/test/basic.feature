@@ -13,17 +13,17 @@ Feature: Basic Test Execution
 
         Scenario: All tests pass
             When a user runs the command "npx specify test ./binary/passing.feature"
-            Then the last command's exit code should be a $success
-            And the last command's terminal output should match $passingTestResult
+            Then the last command's exit code should be a ${ref.exitCode.success}
+            And the last command's terminal output should match ${ref.terminalOutput.passingTestResult}
 
         Scenario: All tests fail
             When a user runs the command "npx specify test ./binary/failing.feature"
-            Then the last command's exit code should be a $failure
-            And the last command's terminal output should match $failingTestResult
+            Then the last command's exit code should be a ${ref.exitCode.failure}
+            And the last command's terminal output should match ${ref.terminalOutput.failingTestResult}
 
         Scenario: Mixed pass/fail tests
             When a user runs the command "npx specify test ./binary/"
-            Then the last command's exit code should be a $failure
+            Then the last command's exit code should be a ${ref.exitCode.failure}
 
     Rule: The run should allow verification of string values in terminal output
 
@@ -36,64 +36,64 @@ Feature: Basic Test Execution
         @dependency
         Scenario: Feature has a Gherkin syntax error
             When a user runs the command "npx specify test ./invalid.feature"
-            Then the last command's exit code should be an $error
+            Then the last command's exit code should be an ${ref.exitCode.error}
 
         @dependency
         Scenario: Feature contains undefined step definitions
             When a user runs the command "npx specify test ./undefined.feature"
-            Then the last command's exit code should be an $error
+            Then the last command's exit code should be an ${ref.exitCode.error}
 
     Rule: The run should error if there are no available tests
 
         Scenario: User-specified path does not exist
             When a user runs the command "npx specify test ./nonexistent/path/"
-            Then the last command's exit code should be an $error
-            And the last command's terminal output should match $pathNotFoundError
+            Then the last command's exit code should be an ${ref.exitCode.error}
+            And the last command's terminal output should match ${ref.terminalOutput.pathNotFoundError}
 
         Scenario: User-specified path is empty
             When a user runs the command "npx specify test ./empty/"
-            Then the last command's exit code should be an $error
-            And the last command's terminal output should match $noTestCasesError
+            Then the last command's exit code should be an ${ref.exitCode.error}
+            And the last command's terminal output should match ${ref.terminalOutput.noTestCasesError}
 
         Scenario: User-specified path contains no features
             When a user runs the command "npx specify test ./no-features/test.md"
-            Then the last command's exit code should be an $error
-            And the last command's terminal output should match $noTestCasesError
+            Then the last command's exit code should be an ${ref.exitCode.error}
+            And the last command's terminal output should match ${ref.terminalOutput.noTestCasesError}
 
         Scenario: User-specified path contains no scenarios
             When a user runs the command "npx specify test ./empty.feature"
-            Then the last command's exit code should be an $error
-            And the last command's terminal output should match $noTestCasesError
+            Then the last command's exit code should be an ${ref.exitCode.error}
+            And the last command's terminal output should match ${ref.terminalOutput.noTestCasesError}
 
     Rule: Execution without a subcommand should default to testing
 
         Scenario: Passing test without subcommand
             When a user runs the command "npx specify ./binary/passing.feature"
-            Then the last command's exit code should be a $success
+            Then the last command's exit code should be a ${ref.exitCode.success}
 
     Rule: Users can run subsets of tests by path or tag
 
         Scenario: Only run tests with the specified tag
             When a user runs the command "npx specify test --tags '@pass' ./binary/"
-            Then the last command's exit code should be a $success
+            Then the last command's exit code should be a ${ref.exitCode.success}
 
         Scenario: Do not run tests with the specified inverted tag
             When a user runs the command "npx specify test --tags 'not @fail' ./binary/"
-            Then the last command's exit code should be a $success
+            Then the last command's exit code should be a ${ref.exitCode.success}
 
         Scenario: Unmatched tags cause an error
             When a user runs the command "npx specify test --tags '@nevermatch'"
-            Then the last command's exit code should be an $error
-            And the last command's terminal output should match $noTestCasesError
+            Then the last command's exit code should be an ${ref.exitCode.error}
+            And the last command's terminal output should match ${ref.terminalOutput.noTestCasesError}
 
     Rule: Invalid commands display usage help
 
         Scenario: Unsupported option
             When a user runs the command "npx specify --bad-option"
-            Then the last command's exit code should be a $failure
-            And the last command's terminal output should match $invalidOptionMessage
+            Then the last command's exit code should be a ${ref.exitCode.error}
+            And the last command's terminal output should match ${ref.terminalOutput.invalidOptionMessage}
 
         Scenario: Mix of supported and unsupported options
             When a user runs the command "npx specify --tags '@pass' --bad-option"
-            Then the last command's exit code should be a $failure
-            And the last command's terminal output should match $invalidOptionMessage
+            Then the last command's exit code should be a ${ref.exitCode.error}
+            And the last command's terminal output should match ${ref.terminalOutput.invalidOptionMessage}
