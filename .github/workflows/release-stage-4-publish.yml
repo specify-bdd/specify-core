@@ -6,6 +6,8 @@ permissions:
   id-token: write # Required for OIDC
   contents: read
   # packages: write # Required to publish to GitHub
+concurrency:
+  group: ${{ github.workflow }}
 jobs:
   # publish-github:
   #   runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}

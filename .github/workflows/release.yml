@@ -21,6 +21,8 @@ on:
 permissions:
   id-token: write # Required for OIDC
   contents: write # Required to create releases
+concurrency:
+  group: ${{ github.workflow }}
 jobs:
   tag:
     name: Stage 1 - Tag

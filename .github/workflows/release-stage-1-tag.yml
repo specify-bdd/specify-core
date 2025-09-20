@@ -34,6 +34,8 @@ on:
         type: string
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}
 jobs:
   tag:
     name: Create version tag

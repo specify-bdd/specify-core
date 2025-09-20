@@ -14,6 +14,8 @@ on:
         type: string
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}
 jobs:
   merge:
     name: Merge tag to main branch

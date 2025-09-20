@@ -22,6 +22,8 @@ on:
         type: string
 permissions:
   contents: write # Required to create releases
+concurrency:
+  group: ${{ github.workflow }}
 jobs:
   announce:
     name: Announce the release
