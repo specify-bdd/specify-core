@@ -15,7 +15,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: ${{ github.workflow }}
+  group: release-stages
 jobs:
   merge:
     name: Merge tag to main branch

@@ -23,7 +23,7 @@ on:
 permissions:
   contents: write # Required to create releases
 concurrency:
-  group: ${{ github.workflow }}
+  group: release-stages
 jobs:
   announce:
     name: Announce the release

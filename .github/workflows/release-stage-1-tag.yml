@@ -35,7 +35,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: ${{ github.workflow }}
+  group: release-stages
 jobs:
   tag:
     name: Create version tag

@@ -7,7 +7,7 @@ permissions:
   contents: read
   # packages: write # Required to publish to GitHub
 concurrency:
-  group: ${{ github.workflow }}
+  group: release-stages
 jobs:
   # publish-github:
   #   runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
