@@ -24,7 +24,6 @@ Feature: Rerun Failed Tests
 
     Rule: Only failing tests are included in the rerun file
 
-        @skip @todo
         Scenario: Mixed test run creates rerun file with only failures
             When a user runs the command "npx specify test --rerun-file=${rerun.path} ./binary/passing.feature ./binary/failing.feature"
             Then the ${rerun.path} file content should match ${ref.file.rerun.content.failingScenarios}
