@@ -1,3 +1,4 @@
+import { resolve                    } from "node:path";
 import { InvalidOptionArgumentError } from "commander";
 
 /**
@@ -18,6 +19,17 @@ export function parseParallelOption(value: string): number {
     }
 
     return parsed;
+}
+
+/**
+ * Parses the value of the `--rerun-file` CLI option.
+ *
+ * @param value - The value provided by the user.
+ *
+ * @returns The resolved absolute path.
+ */
+export function parseRerunFileOption(value: string): string {
+    return resolve(value);
 }
 
 /**

@@ -1,5 +1,6 @@
-import { InvalidOptionArgumentError            } from "commander";
-import { parseParallelOption, parseRetryOption } from "../cli-parsers";
+import { InvalidOptionArgumentError } from "commander";
+
+import { parseParallelOption, parseRerunFileOption, parseRetryOption } from "../cli-parsers";
 
 describe("parseParallelOption", () => {
     const error = new InvalidOptionArgumentError(
@@ -22,6 +23,20 @@ describe("parseParallelOption", () => {
 
     it("parses a string with leading/trailing whitespace", () => {
         expect(parseParallelOption(" 7 ")).toBe(7);
+    });
+});
+
+describe("parseRerunFileOption", () => {
+    it("resolves a string into a full path", () => {
+        const cwd = process.cwd();
+
+        expect(parseRerunFileOption("test")).toBe(cwd + "/test");
+        expect(parseRerunFileOption("/test")).toBe("/test");
+        expect(parseRerunFileOption("")).toBe(cwd);
+        expect(parseRerunFileOption(".")).toBe(cwd);
+        expect(parseRerunFileOption("./test")).toBe(cwd + "/test");
+        expect(parseRerunFileOption("test/")).toBe(cwd + "/test");
+        expect(parseRerunFileOption("foo/../bar")).toBe(cwd + "/bar");
     });
 });
 

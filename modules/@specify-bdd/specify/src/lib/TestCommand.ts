@@ -38,6 +38,7 @@ export const TEST_COMMAND_DEFAULT_OPTS: TestCommandOptions = {
 export interface TestCommandArguments {
     parallel?: number;
     paths?: string[];
+    rerunFile?: string;
     retry?: number;
     retryTag?: string;
     tags?: string[];
@@ -170,6 +171,9 @@ export class TestCommand extends Command {
                 case "paths":
                     config.paths = this.#parsePathArgs(optVal);
                     break;
+                case "rerunFile":
+                    this.#configureRerunFormatter(config, optVal);
+                    break;
                 case "retry":
                     config.retry = optVal;
                     break;
@@ -242,5 +246,27 @@ export class TestCommand extends Command {
             .filter((tag) => tag.trim().length)
             .map((tag) => `(${tag})`)
             .join(" and ");
+    }
+
+    /**
+     * Configure the rerun formatter in the Cucumber configuration to use the given filepath.
+     * Will override any existing rerun formatter configuration.
+     *
+     * @param config - The Cucumber configuration to modify
+     * @param rerunFilePath - The path to the rerun file
+     */
+    #configureRerunFormatter(config: IConfiguration, rerunFilePath: string): void {
+        const rerunFormatPrefix = "rerun:";
+        const newRerunFormat    = `${rerunFormatPrefix}${rerunFilePath}`;
+
+        const rerunFormatIndex = config.format.findIndex((formatter) => {
+            return formatter.includes(rerunFormatPrefix);
+        });
+
+        if (rerunFormatIndex >= 0) {
+            config.format[rerunFormatIndex] = newRerunFormat;
+        } else {
+            config.format.push(newRerunFormat);
+        }
     }
 }
