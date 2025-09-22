@@ -16,10 +16,10 @@ Given("(that )the working directory is {filePath}", changeDirectory);
 
 When("a/the user changes the working directory to {filePath}", changeDirectory);
 
-// TODO: add {filePath} variant
+Then("the {filePath} file content should be empty", verifyFileIsEmpty);
 Then("the {ref} file content should be empty", verifyFileIsEmpty);
 
-// TODO: add {filePath} variant
+Then("the {filePath} file path should exist", verifyFilePathExists);
 Then("the {ref} file path should exist", verifyFilePathExists);
 
 /**
