@@ -17,7 +17,6 @@ Feature: Rerun Failed Tests
             Then the ${rerun.path} file path should exist
             And the ${rerun.path} file content should be empty
 
-        @skip @todo
         Scenario: Failing test run creates a rerun file
             When a user runs the command "npx specify test --rerun-file=${rerun.path} ./binary/failing.feature"
             Then the ${rerun.path} file path should exist

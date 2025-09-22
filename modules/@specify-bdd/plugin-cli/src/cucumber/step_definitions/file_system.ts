@@ -19,6 +19,9 @@ When("a/the user changes the working directory to {filePath}", changeDirectory);
 Then("the {filePath} file content should be empty", verifyFileIsEmpty);
 Then("the {ref} file content should be empty", verifyFileIsEmpty);
 
+Then("the {filePath} file content should match {ref}", verifyFileContent);
+Then("the {ref} file content should match {ref}", verifyFileContent);
+
 Then("the {filePath} file path should exist", verifyFilePathExists);
 Then("the {ref} file path should exist", verifyFilePathExists);
 
@@ -53,6 +56,26 @@ async function createTempFileRef(address: string): Promise<void> {
     const filePath = join(dirPath, "rerun.txt");
 
     this.quickRef.setRefByAddress(address, filePath);
+}
+
+/**
+ * Verify that the file at the given path has content matching the given pattern.
+ *
+ * @param filePath - The file path to check the content of
+ * @param pattern  - The regex pattern (as string) the file content should match
+ *
+ * @throws AssertionError
+ * If the file does not exist.
+ *
+ * @throws AssertionError
+ * If the file content doesn't match the pattern.
+ */
+async function verifyFileContent(filePath: string, pattern: string): Promise<void> {
+    await verifyFilePathExists.call(this, filePath);
+
+    const content = await readFile(filePath, "utf8");
+
+    assert.match(content, RegExp(pattern));
 }
 
 /**
