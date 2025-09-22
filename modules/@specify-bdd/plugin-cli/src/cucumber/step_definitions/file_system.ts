@@ -75,7 +75,7 @@ async function verifyFileContent(filePath: string, pattern: string): Promise<voi
 
     const content = await readFile(filePath, "utf8");
 
-    assert.match(content, RegExp(pattern));
+    assert.match(content, RegExp(pattern), "File content does not match the expected pattern.");
 }
 
 /**
