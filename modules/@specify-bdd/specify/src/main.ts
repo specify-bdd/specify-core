@@ -13,12 +13,13 @@ import path                 from "node:path";
 import util                 from "node:util";
 import { deserializeError } from "serialize-error";
 
-import { config                                } from "@/config/all";
-import { parseParallelOption, parseRetryOption } from "./lib/cli-parsers";
-import { CommandResult                         } from "./lib/Command";
-import { TestCommand, TestCommandArguments     } from "./lib/TestCommand";
-import { TestCommandWatcher                    } from "./lib/TestCommandWatcher";
-import npmPackage                                from "../package.json" with { "type": "json" };
+import { config                            } from "@/config/all";
+import { CommandResult                     } from "./lib/Command";
+import { TestCommand, TestCommandArguments } from "./lib/TestCommand";
+import { TestCommandWatcher                } from "./lib/TestCommandWatcher";
+import npmPackage                            from "../package.json" with { "type": "json" };
+
+import { parseParallelOption, parseRerunFileOption, parseRetryOption } from "./lib/cli-parsers";
 
 let cucumberCfg = config.cucumber;
 
@@ -55,6 +56,11 @@ app.exitOverride(() => process.exit(2))
     .description(helpText.commands.test.description)
     .argument("[paths...]", helpText.commands.test.arguments.paths)
     .helpOption("-h, --help", helpText.commands.test.options.help)
+    .option(
+        "--rerun-file <path>",
+        util.format(helpText.commands.test.options.rerunFile, cucumberCfg.retry),
+        parseRerunFileOption,
+    )
     .option(
         "-r, --retry <number_of_retries>",
         util.format(helpText.commands.test.options.retry, cucumberCfg.retry),

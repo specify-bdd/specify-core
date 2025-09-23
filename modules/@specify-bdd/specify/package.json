@@ -1,6 +1,6 @@
 {
   "name": "@specify-bdd/specify",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "An open-source, command-line testing tool based on Cucumber.js, built to support and streamline Behavior-Driven Development (BDD).",
   "type": "module",
   "contributors": [
