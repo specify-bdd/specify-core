@@ -1,6 +1,6 @@
 {
   "name": "@specify-bdd/core",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "The monorepo for all open-source package development for Specify BDD.",
   "type": "module",
   "private": true,
