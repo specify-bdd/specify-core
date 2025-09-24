@@ -76,7 +76,7 @@ jobs:
       - name: Update sub-package versions
         run: pnpm -r exec -- npm version --no-git-tag-version "$GIT_TAG"
       - name: Generate docs
-        run: pnpm docs:all
+        run: pnpm generate-docs
       - name: Set default release title
         run: echo "TITLE=Specify release $GIT_TAG" >> "$GITHUB_ENV"
       - name: Append user input title
