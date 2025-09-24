@@ -36,6 +36,8 @@ jobs:
           ref: ${{ env.GIT_BRANCH }}
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
+        with:
+          run_install: false
       - name: Setup Node.js ${{ vars.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
