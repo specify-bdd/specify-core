@@ -81,29 +81,29 @@ describe("TestCommand", () => {
 
             describe("rerun-file", () => {
                 it("adds a rerun formatter entry if none exists", async () => {
-                    const userArgs = { "rerunFile": "/test/@rerun.txt" };
+                    const userArgs = { "rerunFile": "/test/rerun.txt" };
                     const cmd      = new TestCommand();
 
                     await cmd.execute(userArgs);
 
                     expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
-                            "format": expect.arrayContaining(["rerun:/test/@rerun.txt"]),
+                            "format": expect.arrayContaining(["rerun:/test/rerun.txt"]),
                         }),
                     );
                 });
 
                 it("overrides an existing rerun formatter entry", async () => {
-                    const userArgs = { "rerunFile": "/test/@new.txt" };
+                    const userArgs = { "rerunFile": "/test/new.txt" };
                     const cmd      = new TestCommand({
-                        "cucumber": { "format": ["rerun:@old.txt"] },
+                        "cucumber": { "format": ["rerun:old.txt"] },
                     });
 
                     await cmd.execute(userArgs);
 
                     expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
-                            "format": expect.arrayContaining(["rerun:/test/@new.txt"]),
+                            "format": expect.arrayContaining(["rerun:/test/new.txt"]),
                         }),
                     );
                 });
