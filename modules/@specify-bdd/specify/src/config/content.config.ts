@@ -12,6 +12,7 @@ const contentObj = {
                     "options": {
                         "help":      "Display this help screen.",
                         "parallel":  "Run in parallel with the given number of workers.",
+                        "rerun":     "Rerun the failed tests from the last test run.",
                         "rerunFile": "The location of the rerun log file. (default: %s)",
                         "retry":
                             "Retry failed tests up to the given number of times before counting them as failed. (default: %d)",

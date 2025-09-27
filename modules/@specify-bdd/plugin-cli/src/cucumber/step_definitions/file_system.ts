@@ -4,15 +4,18 @@
  * Cucumber step definitions covering interactions with a file system.
  */
 
-import { Given, Then, When      } from "@cucumber/cucumber";
-import assert, { AssertionError } from "node:assert/strict";
-import { existsSync             } from "node:fs";
-import { mkdtemp, readFile      } from "node:fs/promises";
-import { tmpdir                 } from "node:os";
-import { join                   } from "node:path";
+import { Given, Then, When            } from "@cucumber/cucumber";
+import assert, { AssertionError       } from "node:assert/strict";
+import { existsSync                   } from "node:fs";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { tmpdir                       } from "node:os";
+import { join                         } from "node:path";
 
 Given("a new temp file path referenced as {string}", createTempFileRef);
 Given("(that )the working directory is {filePath}", changeDirectory);
+
+Given("(that )the {filePath} file content is {string}", setFileContent);
+Given("(that )the {ref} file content is {string}", setFileContent);
 
 When("a/the user changes the working directory to {filePath}", changeDirectory);
 
@@ -56,6 +59,17 @@ async function createTempFileRef(address: string): Promise<void> {
     const filePath = join(dirPath, "rerun.txt");
 
     this.quickRef.setRefByAddress(address, filePath);
+}
+
+/**
+ * Set the content of the file at the given path. Creates the file if it does not exist,
+ * overwrites if it does.
+ *
+ * @param filepath - The path to the file to set content for
+ * @param content  - The content to write to the file
+ */
+async function setFileContent(filepath: string, content: string): Promise<void> {
+    await writeFile(filepath, content);
 }
 
 /**

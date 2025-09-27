@@ -30,18 +30,16 @@ Feature: Rerun Failed Tests
 
     Rule: Rerun only executes the tests that failed in the last test run
 
-        @skip @todo
         Scenario: Rerun only one scenario in failing.feature
             Given that the ${rerun.path} file content is "binary/failing.feature:3"
             When a user runs the command "npx specify test --rerun --rerun-file=${rerun.path}"
-            Then the last command's terminal output should match "1 scenario \\(1 failed)"
+            Then the last command's terminal output should match "1 scenario \(1 failed\)"
             And the last command's terminal output should match "Scenario: Scenario that should fail # binary/failing.feature:3"
 
-        @skip @todo
         Scenario: Rerun all three scenarios in failing.feature
             And that the ${rerun.path} file content is "binary/failing.feature:3:7:11"
             When a user runs the command "npx specify test --rerun --rerun-file=${rerun.path}"
-            Then the last command's terminal output should match "3 scenario \\(3 failed)"
+            Then the last command's terminal output should match "3 scenarios \(3 failed\)"
 
     Rule: Rerun does nothing if the last test run passed completely
 
