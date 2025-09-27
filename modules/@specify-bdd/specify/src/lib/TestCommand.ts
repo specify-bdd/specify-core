@@ -13,6 +13,7 @@ import { serializeError } from "serialize-error";
 
 import { Command, CommandResultStatus } from "./Command";
 import { CucumberTool                 } from "./CucumberTool";
+import { RerunFile                    } from "./RerunFile";
 
 import type {
     IConfiguration,
@@ -38,6 +39,7 @@ export const TEST_COMMAND_DEFAULT_OPTS: TestCommandOptions = {
 export interface TestCommandArguments {
     parallel?: number;
     paths?: string[];
+    rerun?: string;
     rerunFile?: string;
     retry?: number;
     retryTag?: string;
@@ -119,7 +121,7 @@ export class TestCommand extends Command {
         }
 
         try {
-            const cucumberConfig    = this.#buildCucumberConfig(userArgs);
+            const cucumberConfig    = await this.#buildCucumberConfig(userArgs);
             const cucumberRunConfig = await CucumberTool.loadConfiguration(cucumberConfig);
             const cucumberEnv       = { "debug": this.debug };
 
@@ -131,6 +133,8 @@ export class TestCommand extends Command {
             }
 
             const cucumberRes = await CucumberTool.runCucumber(cucumberRunConfig, cucumberEnv);
+
+            await RerunFile.makeAbsolute(this.#getRerunFilepath(), process.cwd());
 
             if (this.debug) {
                 testRes.debug.cucumber.runResult = cucumberRes;
@@ -158,7 +162,7 @@ export class TestCommand extends Command {
      * @throws Error
      * If any command line args are invalid for this Command.
      */
-    #buildCucumberConfig(args: TestCommandArguments): IConfiguration {
+    async #buildCucumberConfig(args: TestCommandArguments): Promise<IConfiguration> {
         const config = merge({}, this.cucumber);
 
         for (const optKey in args) {
@@ -170,6 +174,9 @@ export class TestCommand extends Command {
                     break;
                 case "paths":
                     config.paths = this.#parsePathArgs(optVal);
+                    break;
+                case "rerun":
+                    // this is handled below, needs path and rerunFile options to complete first
                     break;
                 case "rerunFile":
                     this.#configureRerunFormatter(config, optVal);
@@ -195,6 +202,11 @@ export class TestCommand extends Command {
         // Cucumber errors if retry === 0 while retryTagFilter is truthy
         if (config.retry === 0) {
             delete config.retryTagFilter;
+        }
+
+        // TODO: remove the "args.rerunFile" check once the default value scenario is implemented
+        if (args.rerun && args.rerunFile) {
+            config.paths = await RerunFile.read(args.rerunFile);
         }
 
         return config;
@@ -268,5 +280,20 @@ export class TestCommand extends Command {
         } else {
             config.format.push(newRerunFormat);
         }
+    }
+
+    /**
+     * Get the path that the rerun file will be read from and written to.
+     *
+     * @returns The path found in the formatter, otherwise the default path
+     */
+    #getRerunFilepath(): string {
+        const defaultFilepath = "/tmp/specify/rerun.txt";
+
+        const rerunFormat = this.cucumber.format.find((format) => {
+            return format.includes("rerun:");
+        }) as string;
+
+        return rerunFormat ? rerunFormat.replace("rerun:", "") : defaultFilepath;
     }
 }

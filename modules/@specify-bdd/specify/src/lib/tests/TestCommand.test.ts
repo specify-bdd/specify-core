@@ -3,6 +3,7 @@ import { deserializeError } from "serialize-error";
 
 import { TestCommand, TestCommandOptions } from "../TestCommand";
 import { CucumberTool                    } from "../CucumberTool";
+import { RerunFile                       } from "../RerunFile";
 
 const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted(() => {
     return {
@@ -21,6 +22,8 @@ vi.mock("../CucumberTool", () => ({
         "runCucumber":       mockRunCucumber,
     },
 }));
+
+vi.mock("../RerunFile");
 
 describe("TestCommand", () => {
     const emptyArgs = { "paths": [] };
@@ -59,31 +62,48 @@ describe("TestCommand", () => {
                 );
             });
 
-            describe("rerun-file", () => {
-                it("adds a rerun formatter entry if none exists", async () => {
-                    const userArgs = { "rerunFile": "/test/rerun.txt" };
+            describe("rerun", () => {
+                it("uses the file provided with the --rerun-file option", async () => {
+                    vi.mocked(RerunFile).read.mockResolvedValueOnce(["test.feature:123"]);
+
+                    const userArgs = { "rerun": "true", "rerunFile": "/test/rerun.txt" };
                     const cmd      = new TestCommand();
 
                     await cmd.execute(userArgs);
 
                     expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
-                            "format": expect.arrayContaining(["rerun:/test/rerun.txt"]),
+                            "paths": ["test.feature:123"],
+                        }),
+                    );
+                });
+            });
+
+            describe("rerun-file", () => {
+                it("adds a rerun formatter entry if none exists", async () => {
+                    const userArgs = { "rerunFile": "/test/@rerun.txt" };
+                    const cmd      = new TestCommand();
+
+                    await cmd.execute(userArgs);
+
+                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                        expect.objectContaining({
+                            "format": expect.arrayContaining(["rerun:/test/@rerun.txt"]),
                         }),
                     );
                 });
 
                 it("overrides an existing rerun formatter entry", async () => {
-                    const userArgs = { "rerunFile": "/test/new.txt" };
+                    const userArgs = { "rerunFile": "/test/@new.txt" };
                     const cmd      = new TestCommand({
-                        "cucumber": { "format": ["rerun:old.txt"] },
+                        "cucumber": { "format": ["rerun:@old.txt"] },
                     });
 
                     await cmd.execute(userArgs);
 
                     expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
-                            "format": expect.arrayContaining(["rerun:/test/new.txt"]),
+                            "format": expect.arrayContaining(["rerun:/test/@new.txt"]),
                         }),
                     );
                 });
