@@ -134,7 +134,10 @@ export class TestCommand extends Command {
 
             const cucumberRes = await CucumberTool.runCucumber(cucumberRunConfig, cucumberEnv);
 
-            await RerunFile.makeAbsolute(this.#getRerunFilepath(), process.cwd());
+            // TODO: remove this conditional once rerun files are always created
+            if(userArgs.rerun && userArgs.rerunFile) {
+                await RerunFile.makeAbsolute(this.#getRerunFilepath(), process.cwd());
+            }
 
             if (this.debug) {
                 testRes.debug.cucumber.runResult = cucumberRes;
