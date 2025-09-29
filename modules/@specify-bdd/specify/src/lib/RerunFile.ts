@@ -13,7 +13,7 @@ export class RerunFile {
      * @returns An array of paths contained in the rerun file
      */
     static async read(filepath: string): Promise<string[]> {
-        const contents = await readFile(filepath, { "encoding": "utf-8" });
+        const contents = await readFile(filepath, { "encoding": "utf8" });
 
         return contents ? contents.split("\n") : [];
     }
@@ -36,6 +36,6 @@ export class RerunFile {
             return join(basePath, featurePath) + fileLines;
         });
 
-        await writeFile(rerunFilepath, absolutePaths.join("\n"), { "encoding": "utf-8" });
+        await writeFile(rerunFilepath, absolutePaths.join("\n"), { "encoding": "utf8" });
     }
 }
