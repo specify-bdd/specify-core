@@ -12,7 +12,7 @@ describe("RerunFile", () => {
         it("reads a file from path", async () => {
             await RerunFile.read("/foo/bar");
 
-            expect(fs.readFile).toBeCalledWith("/foo/bar", { "encoding": "utf-8" });
+            expect(fs.readFile).toBeCalledWith("/foo/bar", { "encoding": "utf8" });
         });
 
         it("returns an array of paths when reading a rerun file", async () => {
@@ -38,9 +38,9 @@ describe("RerunFile", () => {
 
             await RerunFile.makeAbsolute("/test", "/foo/bar/baz");
 
-            expect(fs.readFile).toBeCalledWith("/test", { "encoding": "utf-8" });
+            expect(fs.readFile).toBeCalledWith("/test", { "encoding": "utf8" });
             expect(fs.writeFile).toBeCalledWith("/test", "/foo/bar/baz/test-feature:1", {
-                "encoding": "utf-8",
+                "encoding": "utf8",
             });
         });
     });
