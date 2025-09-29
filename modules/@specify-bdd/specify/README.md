@@ -63,8 +63,14 @@ The `plugins` property of `CoreConfig` is an array of strings which identify Spe
 scoped package name (the same one used to install the package) or a file system path for the directory which contains
 the plugin's package.json file.
 
+```json
+{
+  "plugins": [ "@specify-bdd/plugin-cli" ]
+}
+```
+
 Official Specify plugin packages:
-* [CLI](https://www.npmjs.com/package/@specify-bdd/plugin-cli)
+* [CLI](https://www.npmjs.com/package/@specify-bdd/plugin-cli): Command-line interface support
 
 ## Defining Behavior
 
