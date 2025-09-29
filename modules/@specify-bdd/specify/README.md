@@ -1,72 +1,83 @@
-# Specify Core
+# Specify BDD
 
-### Prerequisites
+Behavior-Driven Development (BDD) doesn't have to be a slog.  **Specify** makes it easy to turn requirements into
+actionable tests, streamlining your development process with clear acceptance criteria, rapid iteration, and confident
+deployments.
 
-- Node.js v22 or newer
-- If browser testing locally:
-  - Chrome, Edge, Firefox, or Safari browser install
-
-## Project Structure
-
-```
-your-project/
-├── features/
-│   ├── *.feature        # Your Gherkin feature files
-│   └── steps/           # Custom step definitions (optional)
-├── specify.config.json  # Specify config (optional)
-└── ...
-```
+Built on [Cucumber.js](https://github.com/cucumber/cucumber-js) and enhanced with numerous convenience features and QOL
+improvements informed by over a decade of experience in automated testing, Specify was built using the same BDD 
+principles it exists to support.  We use Specify to test itself end-to-end (E2E) in addition to our unit and 
+integration tests.  Whether you want to embrace BDD fully or just experiment with automated testing, Specify can help.
 
 ## Quick Start
 
-1. Installation
-
-    ```bash
-    npm i -D @specify-bdd/specify
-    ```
-
-1. Execute the features
-
-    ```bash
-    npx specify
-    ```
-
-    or 
-
-    ```bash
-    npx specify test
-    ```
-
-## CLI Usage
-
-```bash
-npx specify [subcommand] [options] [argument]
+Create a behavior spec file:
+```gherkin
+Feature: Gherkin feature file that should pass
+    Scenario: Scenario that should pass
+        When this step passes
 ```
 
-### Common Options
+Run the behavior spec as a test:
+```bash
+$ npx specify path/to/behavior.feature
+.....
 
-| Option                | Description                          |
-|-----------------------|--------------------------------------|
-| `--parallel <n>`      | Run the tests using `n` cpu cores    |
-| `--rerun`             | Rerun only previously failed tests   |
-| `--retry <n>`         | Retry failed tests up to `n` times   |
-| `--retry-tag <tag>`   | Retry only tests with a specific tag |
+1 scenario (1 passed)
+1 step (1 passed)
+0m00.697s (executing steps: 0m00.009s)
+```
 
-### Browser Testing Options
-| Option                | Description                                 |
-|-----------------------|---------------------------------------------|
-| `--headless`          | Execute in headless mode (default)          |
-| `--visual`            | Execute in non-headless mode                |
-| `--grid <url>`        | Execute in a selenium grid located at `url` |
+## Installation
+
+```bash
+npm i -D @specify-bdd/specify
+```
+
+### Prerequisites
+
+- Node.js v22.x (LTS Jod) or newer
+
+## Configuration
+
+TODO
+
+### Plugins
+
+TODO
+
+## Defining Behavior
+
+TODO
+
+## Running Tests
+
+TODO
+
+### Runtime Options
+
+TODO
 
 ## Extending Specify
 
-Specify is designed to be extensible:
+TODO
 
-- Plug in custom step definitions
-- Configure runtime behavior via `specify.config.json` in your project's `root` directory
-- Integrate with any WebDriver-compatible browser
+### Cucumber Support Code
 
-### Custom Step Definitions
+TODO
 
-**I AM A STUB, FIX ME @adamlacoste**
+#### Step Definitions
+
+TODO
+
+#### Hooks
+
+TODO
+
+### Custom Plugins
+
+TODO
+
+## Get Help
+
+TODO
