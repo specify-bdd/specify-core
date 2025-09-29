@@ -31,9 +31,9 @@ export class RerunFile {
         const absolutePaths = rerunPaths.map((rerunPath) => {
             const separatorIndex = rerunPath.indexOf(":");
             const featurePath    = rerunPath.slice(0, separatorIndex);
-            const fileLines      = rerunPath.slice(separatorIndex + 1);
+            const fileLines      = rerunPath.slice(separatorIndex);
 
-            return join(absolutePath, featurePath) + ":" + fileLines;
+            return join(absolutePath, featurePath) + fileLines;
         });
 
         await writeFile(rerunFilepath, absolutePaths.join("\n"), { "encoding": "utf-8" });
