@@ -53,11 +53,18 @@ Install these additional packages in the same manner (dev dependency or global) 
 
 ## Configuration
 
-TODO
+Specify's default settings can be overridden by creating a file in the current working directory named 
+`specify.config.json`.  (This should be the directory that the user will be executing `specify` commands from.)  This 
+JSON object should conform to structure of a [CoreConfig](https://github.com/specify-bdd/specify-core/blob/main/modules/%40specify-bdd/specify/types/index.d.ts).
 
 ### Plugins
 
-TODO
+The `plugins` property of `CoreConfig` is an array of strings which identify Specify plugin packages by either their
+scoped package name (the same one used to install the package) or a file system path for the directory which contains
+the plugin's package.json file.
+
+Official Specify plugin packages:
+* [CLI](https://www.npmjs.com/package/@specify-bdd/plugin-cli)
 
 ## Defining Behavior
 
