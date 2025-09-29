@@ -33,7 +33,7 @@ on:
         required: false
         type: string
 permissions:
-  contents: read
+  contents: read # we are using a deployment key to push changes back to develop
 concurrency:
   group: release-stages
 jobs:
