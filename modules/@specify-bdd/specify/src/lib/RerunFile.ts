@@ -23,9 +23,9 @@ export class RerunFile {
      * absolute base path.
      *
      * @param rerunFilepath - The path to the rerun file
-     * @param absolutePath  - The absolute base path to use for conversion
+     * @param basePath  - The absolute base path to use for conversion
      */
-    static async makeAbsolute(rerunFilepath: string, absolutePath: string): Promise<void> {
+    static async makeAbsolute(rerunFilepath: string, basePath: string): Promise<void> {
         const rerunPaths = await RerunFile.read(rerunFilepath);
 
         const absolutePaths = rerunPaths.map((rerunPath) => {
@@ -33,7 +33,7 @@ export class RerunFile {
             const featurePath    = rerunPath.slice(0, separatorIndex);
             const fileLines      = rerunPath.slice(separatorIndex);
 
-            return join(absolutePath, featurePath) + fileLines;
+            return join(basePath, featurePath) + fileLines;
         });
 
         await writeFile(rerunFilepath, absolutePaths.join("\n"), { "encoding": "utf-8" });
