@@ -12,6 +12,7 @@ integration tests.  Whether you want to embrace BDD fully or just experiment wit
 ## Quick Start
 
 Create a behavior spec file:
+
 ```gherkin
 Feature: Gherkin feature file that should pass
     Scenario: Scenario that should pass
@@ -19,6 +20,7 @@ Feature: Gherkin feature file that should pass
 ```
 
 Run the behavior spec as a test:
+
 ```bash
 $ npx specify path/to/behavior.feature
 .....
@@ -30,9 +32,20 @@ $ npx specify path/to/behavior.feature
 
 ## Installation
 
+Specify can be downloaded with NPM.  It's recommended that you save it as a dev dependency for your project:
+
 ```bash
 npm i -D @specify-bdd/specify
 ```
+
+Alternatively, you can install the package globally:
+
+```bash
+npm i -g @specify-bdd/specify
+```
+
+Specify ships with only a few demo step definitions, but many more are available for download as [plugins](#plugins).
+Install these additional packages in the same manner (dev dependency or global) as the main Specify package.
 
 ### Prerequisites
 
