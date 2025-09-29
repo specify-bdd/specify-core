@@ -1,0 +1,46 @@
+name: Release Stage 3 - Announce
+on:
+  workflow_call:
+    inputs:
+      git_tag:
+        description: "The Git tag produced by stage 1"
+        required: true
+        type: string
+      title:
+        description: "The name of the release"
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      git_tag:
+        description: "The Git tag produced by stage 1"
+        required: true
+        type: string
+      title:
+        description: "The title of the release defined in stage 1"
+        required: true
+        type: string
+permissions:
+  contents: write # Required to create releases
+concurrency:
+  group: release-stages
+jobs:
+  announce:
+    name: Announce the release
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GIT_BRANCH: main
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_BRANCH }}
+      - name: Create release
+        run: |
+          gh release create "${{ inputs.git_tag }}" \
+            --title "${{ inputs.title }}" \
+            --fail-on-no-commits \
+            --generate-notes \
+            --verify-tag
+
