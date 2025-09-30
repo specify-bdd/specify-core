@@ -40,6 +40,13 @@ for (const plugin of config.plugins) {
 cucumberCfg.import ??= [];
 cucumberCfg.import.push(path.resolve(import.meta.dirname, "cucumber"));
 
+// add the default rerun format if not already present
+cucumberCfg.format ??= [];
+
+if (!cucumberCfg.format.find((format) => format.includes("rerun:"))) {
+    cucumberCfg.format.push(`rerun:${path.resolve(config.paths.rerun)}`);
+}
+
 // build CLI app behavior
 const app      = new App();
 const helpText = config.content.help.specify;

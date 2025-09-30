@@ -171,6 +171,7 @@ describe("TestCommand", () => {
             const userOpts: Partial<TestCommandOptions> = {
                 "cucumber": {
                     "import": [path.resolve(import.meta.dirname, "../../dist/cucumber")],
+                    "format": ["rerun:/test/rerun.txt"],
                 },
                 "logPath": path.resolve(`./logs/specify-test-vitest-log-${Date.now()}.json`),
             };

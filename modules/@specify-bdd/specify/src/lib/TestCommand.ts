@@ -134,10 +134,7 @@ export class TestCommand extends Command {
 
             const cucumberRes = await CucumberTool.runCucumber(cucumberRunConfig, cucumberEnv);
 
-            // TODO: remove this conditional once rerun files are always created
-            if (userArgs.rerun && userArgs.rerunFile) {
-                await RerunFile.makeAbsolute(this.#getRerunFilepath(), process.cwd());
-            }
+            await RerunFile.makeAbsolute(this.#getRerunFilepath(), process.cwd());
 
             if (this.debug) {
                 testRes.debug.cucumber.runResult = cucumberRes;
@@ -207,8 +204,7 @@ export class TestCommand extends Command {
             delete config.retryTagFilter;
         }
 
-        // TODO: remove the "args.rerunFile" check once the default value scenario is implemented
-        if (args.rerun && args.rerunFile) {
+        if (args.rerun) {
             config.paths = await RerunFile.read(args.rerunFile);
         }
 
@@ -291,12 +287,10 @@ export class TestCommand extends Command {
      * @returns The path found in the formatter, otherwise the default path
      */
     #getRerunFilepath(): string {
-        const defaultFilepath = "/tmp/specify/rerun.txt";
-
         const rerunFormat = this.cucumber.format.find((format) => {
             return format.includes("rerun:");
         }) as string;
 
-        return rerunFormat ? rerunFormat.replace("rerun:", "") : defaultFilepath;
+        return rerunFormat.replace("rerun:", "");
     }
 }
