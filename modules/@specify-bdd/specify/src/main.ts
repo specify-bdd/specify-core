@@ -40,13 +40,6 @@ for (const plugin of config.plugins) {
 cucumberCfg.import ??= [];
 cucumberCfg.import.push(path.resolve(import.meta.dirname, "cucumber"));
 
-// add the default rerun format if not already present
-cucumberCfg.format ??= [];
-
-if (!cucumberCfg.format.find((format) => format.includes("rerun:"))) {
-    cucumberCfg.format.push(`rerun:${path.resolve(config.paths.rerun)}`);
-}
-
 // build CLI app behavior
 const app      = new App();
 const helpText = config.content.help.specify;
@@ -107,10 +100,11 @@ function reportAndExit(res: CommandResult): void {
  */
 async function runTests(paths: string[], opts: TestCommandArguments = {}): Promise<void> {
     const cmd = new TestCommand({
-        "cucumber":     cucumberCfg,
-        "debug":        config.debug,
-        "gherkinPaths": [path.resolve(config.paths.gherkin)],
-        "logPath":      path.resolve(config.paths.logs, `specify-test-log-${Date.now()}.json`),
+        "cucumber":         cucumberCfg,
+        "debug":            config.debug,
+        "defaultRerunPath": path.resolve(config.paths.rerun),
+        "gherkinPaths":     [path.resolve(config.paths.gherkin)],
+        "logPath":          path.resolve(config.paths.logs, `specify-test-log-${Date.now()}.json`),
     });
 
     const args = merge({ paths }, opts) as TestCommandArguments;

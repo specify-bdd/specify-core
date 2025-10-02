@@ -51,6 +51,7 @@ export interface TestCommandOptions extends CommandOptions {
     cucumber?: Partial<IConfiguration>;
     gherkinPaths?: string[];
     plugins?: string[];
+    defaultRerunPath?: string; // TODO: this is temporary, remove when cucumber configuration is extracted
 }
 
 export interface TestCommandResult extends CommandResult {
@@ -66,11 +67,19 @@ export interface TestCommandResultDebugInfo extends CommandResultDebugInfo {
     };
 }
 
+type FormatTuple = [string, string?];
+type Format = string | FormatTuple;
+
 export class TestCommand extends Command {
     /**
      * A raw Cucumber configuration.
      */
     cucumber: Partial<IConfiguration>;
+
+    /**
+     * The default path to use for the rerun file when not specified via CLI option.
+     */
+    defaultRerunPath: string; // TODO: this is temporary, remove when cucumber configuration is extracted
 
     /**
      * A list of paths to Gherkin feature files this Command should execute.
@@ -95,6 +104,7 @@ export class TestCommand extends Command {
         });
 
         this.cucumber = mergedOpts.cucumber;
+        this.defaultRerunPath = mergedOpts.defaultRerunPath;
         this.gherkinPaths = mergedOpts.gherkinPaths;
 
         // Cucumber formatters ensure that user's test result details are logged
@@ -134,7 +144,10 @@ export class TestCommand extends Command {
 
             const cucumberRes = await CucumberTool.runCucumber(cucumberRunConfig, cucumberEnv);
 
-            await RerunFile.makeAbsolute(this.#getRerunFilepath(), process.cwd());
+            await RerunFile.makeAbsolute(
+                this.#getRerunFilepathFromFormat(cucumberConfig.format),
+                process.cwd(),
+            );
 
             if (this.debug) {
                 testRes.debug.cucumber.runResult = cucumberRes;
@@ -179,7 +192,7 @@ export class TestCommand extends Command {
                     // this is handled below, needs path and rerunFile options to complete first
                     break;
                 case "rerunFile":
-                    this.#configureRerunFormatter(config, optVal);
+                    // handled below
                     break;
                 case "retry":
                     config.retry = optVal;
@@ -204,8 +217,17 @@ export class TestCommand extends Command {
             delete config.retryTagFilter;
         }
 
+        // rerun file priority: CLI option > cucumber config > default path
+        if (args.rerunFile) {
+            // prioritize CLI option
+            config.format.unshift("rerun:" + args.rerunFile);
+        } else {
+            // de-prioritize default option
+            config.format.push("rerun:" + this.defaultRerunPath);
+        }
+
         if (args.rerun) {
-            config.paths = await RerunFile.read(args.rerunFile);
+            config.paths = await RerunFile.read(this.#getRerunFilepathFromFormat(config.format));
         }
 
         return config;
@@ -260,34 +282,12 @@ export class TestCommand extends Command {
     }
 
     /**
-     * Configure the rerun formatter in the Cucumber configuration to use the given filepath.
-     * Will override any existing rerun formatter configuration.
-     *
-     * @param config - The Cucumber configuration to modify
-     * @param rerunFilePath - The path to the rerun file
-     */
-    #configureRerunFormatter(config: IConfiguration, rerunFilePath: string): void {
-        const rerunFormatPrefix = "rerun:";
-        const newRerunFormat    = `${rerunFormatPrefix}${rerunFilePath}`;
-
-        const rerunFormatIndex = config.format.findIndex((formatter) => {
-            return formatter.includes(rerunFormatPrefix);
-        });
-
-        if (rerunFormatIndex >= 0) {
-            config.format[rerunFormatIndex] = newRerunFormat;
-        } else {
-            config.format.push(newRerunFormat);
-        }
-    }
-
-    /**
      * Get the path that the rerun file will be read from and written to.
      *
      * @returns The path found in the formatter, otherwise the default path
      */
-    #getRerunFilepath(): string {
-        const rerunFormat = this.cucumber.format.find((format) => {
+    #getRerunFilepathFromFormat(format: Format[]): string {
+        const rerunFormat = format.find((format) => {
             return format.includes("rerun:");
         }) as string;
 

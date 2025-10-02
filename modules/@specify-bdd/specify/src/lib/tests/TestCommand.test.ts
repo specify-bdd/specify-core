@@ -63,14 +63,15 @@ describe("TestCommand", () => {
             });
 
             describe("rerun", () => {
-                it("uses the file provided with the --rerun-file option", async () => {
-                    vi.mocked(RerunFile).read.mockResolvedValueOnce(["test.feature:123"]);
-
+                it("uses the contents of the file provided with the --rerun-file option", async () => {
                     const userArgs = { "rerun": "true", "rerunFile": "/test/rerun.txt" };
                     const cmd      = new TestCommand();
 
+                    vi.mocked(RerunFile).read.mockResolvedValueOnce(["test.feature:123"]);
+
                     await cmd.execute(userArgs);
 
+                    expect(RerunFile.read).toHaveBeenCalledWith("/test/rerun.txt");
                     expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
                             "paths": ["test.feature:123"],
@@ -80,30 +81,58 @@ describe("TestCommand", () => {
             });
 
             describe("rerun-file", () => {
-                it("adds a rerun formatter entry if none exists", async () => {
-                    const userArgs = { "rerunFile": "/test/rerun.txt" };
-                    const cmd      = new TestCommand();
+                it("uses the default file path if no other options are provided", async () => {
+                    const userArgs = { "rerun": "true" };
+                    const cmd      = new TestCommand({ "defaultRerunPath": "/default/rerun.txt" });
 
                     await cmd.execute(userArgs);
 
-                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
-                        expect.objectContaining({
-                            "format": expect.arrayContaining(["rerun:/test/rerun.txt"]),
-                        }),
-                    );
+                    expect(RerunFile.read).toHaveBeenCalledWith("/default/rerun.txt");
                 });
 
-                it("overrides an existing rerun formatter entry", async () => {
-                    const userArgs = { "rerunFile": "/test/new.txt" };
+                it("prioritizes cucumber config over the default", async () => {
+                    const userArgs = { "rerun": "true" };
                     const cmd      = new TestCommand({
-                        "cucumber": { "format": ["rerun:old.txt"] },
+                        "cucumber":         { "format": ["rerun:/config/rerun.txt"] },
+                        "defaultRerunPath": "/default/rerun.txt",
                     });
 
                     await cmd.execute(userArgs);
 
+                    expect(RerunFile.read).toHaveBeenCalledWith("/config/rerun.txt");
+                });
+
+                it("prioritizes --rerun-file option over the default", async () => {
+                    const userArgs = { "rerun": "true", "rerunFile": "/cli/rerun.txt" };
+                    const cmd      = new TestCommand({ "defaultRerunPath": "/default/rerun.txt" });
+
+                    await cmd.execute(userArgs);
+
+                    expect(RerunFile.read).toHaveBeenCalledWith("/cli/rerun.txt");
+                });
+
+                it("prioritizes --rerun-file option over the cucumber config", async () => {
+                    const userArgs = { "rerun": "true", "rerunFile": "/cli/rerun.txt" };
+                    const cmd      = new TestCommand({
+                        "cucumber": { "format": ["rerun:/config/rerun.txt"] },
+                    });
+
+                    await cmd.execute(userArgs);
+
+                    expect(RerunFile.read).toHaveBeenCalledWith("/cli/rerun.txt");
+                });
+
+                it("uses the contents of the file for the gherkin paths", async () => {
+                    const userArgs = { "rerun": "true", "rerunFile": "/test/rerun.txt" };
+                    const cmd      = new TestCommand();
+
+                    vi.mocked(RerunFile).read.mockResolvedValueOnce(["test.feature:123"]);
+
+                    await cmd.execute(userArgs);
+
                     expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
-                            "format": expect.arrayContaining(["rerun:/test/new.txt"]),
+                            "paths": ["test.feature:123"],
                         }),
                     );
                 });
