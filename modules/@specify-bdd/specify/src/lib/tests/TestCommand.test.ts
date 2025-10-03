@@ -78,40 +78,67 @@ describe("TestCommand", () => {
                         }),
                     );
                 });
+
+                it("throws an error if no rerun file was provided", async () => {
+                    const userArgs = { "rerun": "true" };
+                    const cmd      = new TestCommand({
+                        "cucumber": { "format": ["rerun:/config/rerun.txt"] },
+                    });
+                    const result = await cmd.execute(userArgs);
+
+                    expect(result.error.message).toBe(
+                        "No rerun file provided for rerun execution!",
+                    );
+                });
             });
 
             describe("rerun-file", () => {
-                it("uses the default file path if no other options are provided", async () => {
-                    const userArgs = { "rerun": "true" };
-                    const cmd      = new TestCommand({ "defaultRerunPath": "/default/rerun.txt" });
+                it("adds the cli option as a cucumber rerun format", async () => {
+                    const userArgs = { "rerunFile": "/cli/rerun.txt" };
+                    const cmd      = new TestCommand();
 
                     await cmd.execute(userArgs);
 
-                    expect(RerunFile.read).toHaveBeenCalledWith("/default/rerun.txt");
+                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                        expect.objectContaining({
+                            "format": expect.arrayContaining(["rerun:/cli/rerun.txt"]),
+                        }),
+                    );
                 });
 
-                it("prioritizes cucumber config over the default", async () => {
-                    const userArgs = { "rerun": "true" };
+                it("adds the config option as a cucumber rerun format", async () => {
+                    const cmd = new TestCommand({
+                        "cucumber": { "format": ["rerun:/config/rerun.txt"] },
+                    });
+
+                    await cmd.execute({});
+
+                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                        expect.objectContaining({
+                            "format": expect.arrayContaining(["rerun:/config/rerun.txt"]),
+                        }),
+                    );
+                });
+
+                it("adds both the config and cli option as cucumber rerun formats", async () => {
+                    const userArgs = { "rerunFile": "/cli/rerun.txt" };
                     const cmd      = new TestCommand({
-                        "cucumber":         { "format": ["rerun:/config/rerun.txt"] },
-                        "defaultRerunPath": "/default/rerun.txt",
+                        "cucumber": { "format": ["rerun:/config/rerun.txt"] },
                     });
 
                     await cmd.execute(userArgs);
 
-                    expect(RerunFile.read).toHaveBeenCalledWith("/config/rerun.txt");
+                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                        expect.objectContaining({
+                            "format": expect.arrayContaining([
+                                "rerun:/config/rerun.txt",
+                                "rerun:/cli/rerun.txt",
+                            ]),
+                        }),
+                    );
                 });
 
-                it("prioritizes --rerun-file option over the default", async () => {
-                    const userArgs = { "rerun": "true", "rerunFile": "/cli/rerun.txt" };
-                    const cmd      = new TestCommand({ "defaultRerunPath": "/default/rerun.txt" });
-
-                    await cmd.execute(userArgs);
-
-                    expect(RerunFile.read).toHaveBeenCalledWith("/cli/rerun.txt");
-                });
-
-                it("prioritizes --rerun-file option over the cucumber config", async () => {
+                it("always uses the cli option for reruns", async () => {
                     const userArgs = { "rerun": "true", "rerunFile": "/cli/rerun.txt" };
                     const cmd      = new TestCommand({
                         "cucumber": { "format": ["rerun:/config/rerun.txt"] },

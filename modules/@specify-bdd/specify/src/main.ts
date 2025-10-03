@@ -57,7 +57,12 @@ app.exitOverride(() => process.exit(2))
     .argument("[paths...]", helpText.commands.test.arguments.paths)
     .helpOption("-h, --help", helpText.commands.test.options.help)
     .option("--rerun", helpText.commands.test.options.rerun)
-    .option("--rerun-file <path>", helpText.commands.test.options.rerunFile, parseRerunFileOption)
+    .option(
+        "--rerun-file <path>",
+        util.format(helpText.commands.test.options.rerunFile, config.paths.rerun),
+        parseRerunFileOption,
+        config.paths.rerun,
+    )
     .option(
         "-r, --retry <number_of_retries>",
         util.format(helpText.commands.test.options.retry, cucumberCfg.retry),
@@ -100,11 +105,10 @@ function reportAndExit(res: CommandResult): void {
  */
 async function runTests(paths: string[], opts: TestCommandArguments = {}): Promise<void> {
     const cmd = new TestCommand({
-        "cucumber":         cucumberCfg,
-        "debug":            config.debug,
-        "defaultRerunPath": path.resolve(config.paths.rerun),
-        "gherkinPaths":     [path.resolve(config.paths.gherkin)],
-        "logPath":          path.resolve(config.paths.logs, `specify-test-log-${Date.now()}.json`),
+        "cucumber":     cucumberCfg,
+        "debug":        config.debug,
+        "gherkinPaths": [path.resolve(config.paths.gherkin)],
+        "logPath":      path.resolve(config.paths.logs, `specify-test-log-${Date.now()}.json`),
     });
 
     const args = merge({ paths }, opts) as TestCommandArguments;
