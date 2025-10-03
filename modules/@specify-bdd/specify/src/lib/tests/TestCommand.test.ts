@@ -3,6 +3,7 @@ import { deserializeError } from "serialize-error";
 
 import { TestCommand, TestCommandOptions } from "../TestCommand";
 import { CucumberTool                    } from "../CucumberTool";
+import { RerunFile                       } from "../RerunFile";
 
 const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted(() => {
     return {
@@ -21,6 +22,8 @@ vi.mock("../CucumberTool", () => ({
         "runCucumber":       mockRunCucumber,
     },
 }));
+
+vi.mock("../RerunFile");
 
 describe("TestCommand", () => {
     const emptyArgs = { "paths": [] };
@@ -57,6 +60,23 @@ describe("TestCommand", () => {
                         "paths": [path.resolve(featPath)],
                     }),
                 );
+            });
+
+            describe("rerun", () => {
+                it("uses the file provided with the --rerun-file option", async () => {
+                    vi.mocked(RerunFile).read.mockResolvedValueOnce(["test.feature:123"]);
+
+                    const userArgs = { "rerun": "true", "rerunFile": "/test/rerun.txt" };
+                    const cmd      = new TestCommand();
+
+                    await cmd.execute(userArgs);
+
+                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                        expect.objectContaining({
+                            "paths": ["test.feature:123"],
+                        }),
+                    );
+                });
             });
 
             describe("rerun-file", () => {
