@@ -143,8 +143,6 @@ export class TestCommand extends Command {
             await Promise.all(
                 cucumberConfig.format
                     .filter((format) => {
-                        console.log(format);
-
                         return format.includes("rerun:");
                     })
                     .map((format: string) => {
