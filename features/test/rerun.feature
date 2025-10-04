@@ -43,7 +43,6 @@ Feature: Rerun Failed Tests
 
     Rule: Rerun does nothing if the last test run passed completely
 
-        @skip @todo
         Scenario: Rerun after passing test run returns an error
             Given that the ${rerun.path} file content is empty
             When a user runs the command "npx specify test --rerun --rerun-file=${rerun.path}"
