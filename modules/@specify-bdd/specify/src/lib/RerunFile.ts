@@ -11,11 +11,21 @@ export class RerunFile {
      * @param filepath - The path to the rerun file
      *
      * @returns An array of paths contained in the rerun file
+     *
+     * @throws Error
+     * If there are any errors while reading the rerun file.
      */
     static async read(filepath: string): Promise<string[]> {
-        const contents = await readFile(filepath, { "encoding": "utf8" });
-
-        return contents ? contents.split("\n") : [];
+        try {
+            const contents = await readFile(filepath, { "encoding": "utf8" });
+            return contents ? contents.split("\n") : [];
+        } catch (error) {
+            if (error.message.includes("no such file or directory")) {
+                throw Error(`No rerun file found at path: ${filepath}`);
+            } else {
+                throw error;
+            }
+        }
     }
 
     /**

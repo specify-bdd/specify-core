@@ -17,6 +17,7 @@
         "invalidParallelError": "<number_of_workers> must be a positive integer.",
         "invalidRetryError": "<number_of_retries> must be a non-negative integer.",
         "noTestCasesError": "No tests were executed.",
+        "noRerunFileError": "^No rerun file found at path: ",
         "passingTestResult": "\\(\\d+ passed\\)\\n.*\\(\\d+ passed\\)",
         "pathNotFoundError": "Invalid path:"
     }
