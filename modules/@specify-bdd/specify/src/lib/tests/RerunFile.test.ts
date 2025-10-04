@@ -30,6 +30,16 @@ describe("RerunFile", () => {
 
             expect(await RerunFile.read("/test")).toEqual([]);
         });
+
+        it("throws an error if nothing exists at filepath", async () => {
+            vi.mocked(fs).readFile.mockImplementationOnce(async () => {
+                throw Error("ENOENT: no such file or directory, open '/doesnt-exist'");
+            });
+
+            await expect(RerunFile.read("/doesnt-exist")).rejects.toThrow(
+                Error("No rerun file found at path: /doesnt-exist"),
+            );
+        });
     });
 
     describe("makeAbsolute()", () => {

@@ -58,17 +58,8 @@ Feature: Rerun Failed Tests
             Then the ${config.paths.rerun} file path should exist
             And the ${config.paths.rerun} file content should match ${ref.file.rerun.content.failingScenarios}
 
-    Rule: Rerun can't be used with feature paths
-
-        @skip @todo
-        Scenario: Rerun with a feature path returns an error
-            When a user runs the command "npx specify test --rerun ./binary/passing.feature"
-            Then the last command's exit code should be an ${ref.exitCode.error}
-            And the last command's terminal output should match ${ref.terminalOutput.noPathsWithRerunError}
-
     Rule: Rerun can't be used without a rerun file
 
-        @skip @todo
         Scenario: Rerun without a rerun file
             When a user runs the command "npx specify test --rerun --rerun-file=${rerun.path}"
             Then the last command's exit code should be an ${ref.exitCode.error}
