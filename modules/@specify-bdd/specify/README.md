@@ -204,7 +204,7 @@ To create a plugin, ensure that your utility's package.json file defines a `main
 export, a `CoreConfig` object.  This object will be merged with those of other plugins as well as Specify's base config
 and any user override JSON file which may exist.  If your package includes Cucumber support code which you want your
 users to auto-import, simply configure the `cucumber` property of the `CoreConfig` object to include the paths of those
-support files in its `import` sub-property as shown in the [Cucumber configuration](#configuring-cucumber) section.
+support files in its `import` sub-property as shown in the [Configuring Cucumber](#configuring-cucumber) section.
 
 Additional plugin capabilities beyond adding Cucumber support code will be added in the future.
 
