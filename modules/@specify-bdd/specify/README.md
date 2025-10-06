@@ -12,7 +12,7 @@ integration tests.  Whether you want to embrace BDD fully or just experiment wit
 1. [Quick Start](#quick-start)
 2. [Installation](#installation)
     * [Installing Plugins](#installing-plugins)
-    * [Installing Prerequisites](#prerequisites)
+    * [Prerequisites](#prerequisites)
 3. [Configuration](#configuration)
     * [Configuring Cucumber](#configuring-cucumber)
     * [Configuring Plugins](#configuring-plugins)
@@ -20,7 +20,7 @@ integration tests.  Whether you want to embrace BDD fully or just experiment wit
 5. [Running Tests](#running-tests)
     * [Runtime Options](#runtime-options)
 6. [Extending Specify](#extending-specify)
-    * [Cucumber Support Code](#support-code)
+    * [Cucumber Support Code](#cucumber-support-code)
         * [Step Definitions](#step-definitions)
         * [Hooks](#hooks)
     * [Custom Plugins](#custom-plugins)
@@ -175,7 +175,7 @@ meet their own needs and to publish compatible plugin packages when that need is
 
 The simplest way to extend Specify functionality is with Cucumber support code additions.  New step definitions, hooks,
 parameter types, etc. can be created within your project hierarchy and included by Cucumber using the `cucumber.import`
-config setting.  See [Cucumber configuration](#configuring-cucumber) for more details.
+config setting.  See [Configuring Cucumber](#configuring-cucumber) for more details.
 
 #### Step Definitions
 
