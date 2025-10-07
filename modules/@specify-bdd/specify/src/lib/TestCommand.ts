@@ -80,7 +80,7 @@ export class TestCommand extends Command {
     /**
      * The path to the file to load for rerun executions.
      */
-    #rerunFilepath: string;
+    #rerunFilePath: string;
 
     /**
      * Parse user arguments and options data to prepare operational parameters
@@ -139,16 +139,7 @@ export class TestCommand extends Command {
 
             const cucumberRes = await CucumberTool.runCucumber(cucumberRunConfig, cucumberEnv);
 
-            // make all rerun files' feature paths absolute
-            await Promise.all(
-                cucumberConfig.format
-                    .filter((format) => {
-                        return format.includes("rerun:");
-                    })
-                    .map((format: string) => {
-                        return RerunFile.makeAbsolute(format.replace("rerun:", ""), process.cwd());
-                    }),
-            );
+            await RerunFile.makeAbsolute(this.#rerunFilePath, process.cwd());
 
             if (this.debug) {
                 testRes.debug.cucumber.runResult = cucumberRes;
@@ -194,7 +185,7 @@ export class TestCommand extends Command {
                     break;
                 case "rerunFile":
                     config.format.push("rerun:" + optVal);
-                    this.#rerunFilepath = optVal;
+                    this.#rerunFilePath = optVal;
                     break;
                 case "retry":
                     config.retry = optVal;
@@ -220,11 +211,11 @@ export class TestCommand extends Command {
         }
 
         if (args.rerun) {
-            if (!this.#rerunFilepath) {
+            if (!this.#rerunFilePath) {
                 throw new Error("No rerun file provided for rerun execution!");
             }
 
-            config.paths = await RerunFile.read(this.#rerunFilepath);
+            config.paths = await RerunFile.read(this.#rerunFilePath);
         }
 
         return config;
