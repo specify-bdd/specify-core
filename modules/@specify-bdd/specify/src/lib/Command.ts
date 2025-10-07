@@ -68,7 +68,8 @@ export abstract class Command {
      *
      * @returns The Command result
      */
-    async execute(userArgs: JsonObject): Promise<CommandResult> {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async execute(userArgs): Promise<CommandResult> {
         const res: CommandResult = {
             "ok":     false,
             "status": CommandResultStatus.error,

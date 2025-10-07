@@ -17,6 +17,8 @@ Given("(that )the working directory is {filePath}", changeDirectory);
 Given("(that )the {filePath} file content is {string}", setFileContent);
 Given("(that )the {ref} file content is {string}", setFileContent);
 
+Given("(that )the {ref} file content is empty", createEmptyFile);
+
 When("a/the user changes the working directory to {filePath}", changeDirectory);
 
 Then("the {filePath} file content should be empty", verifyFileIsEmpty);
@@ -47,6 +49,16 @@ async function changeDirectory(dirPath: string): Promise<void> {
     await this.cli.manager.waitForReturn();
 
     assert.equal(this.cli.manager.exitCode, 0, `Could not change directory to ${dirPath}.`);
+}
+
+/**
+ * Create an empty file at the given path.
+ * If the file already exists, it will become empty.
+ *
+ * @param filePath - The path to the file
+ */
+async function createEmptyFile(filePath: string): Promise<void> {
+    await writeFile(filePath, "");
 }
 
 /**

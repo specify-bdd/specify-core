@@ -78,6 +78,11 @@ export class TestCommand extends Command {
     gherkinPaths: string[];
 
     /**
+     * The path to the file to load for rerun executions.
+     */
+    #rerunFilePath: string;
+
+    /**
      * Parse user arguments and options data to prepare operational parameters
      *
      * @param userOpts - User-supplied options
@@ -134,10 +139,7 @@ export class TestCommand extends Command {
 
             const cucumberRes = await CucumberTool.runCucumber(cucumberRunConfig, cucumberEnv);
 
-            // TODO: remove this conditional once rerun files are always created
-            if (userArgs.rerun && userArgs.rerunFile) {
-                await RerunFile.makeAbsolute(this.#getRerunFilepath(), process.cwd());
-            }
+            await RerunFile.makeAbsolute(this.#rerunFilePath, process.cwd());
 
             if (this.debug) {
                 testRes.debug.cucumber.runResult = cucumberRes;
@@ -182,7 +184,8 @@ export class TestCommand extends Command {
                     // this is handled below, needs path and rerunFile options to complete first
                     break;
                 case "rerunFile":
-                    this.#configureRerunFormatter(config, optVal);
+                    config.format.push("rerun:" + optVal);
+                    this.#rerunFilePath = optVal;
                     break;
                 case "retry":
                     config.retry = optVal;
@@ -207,9 +210,12 @@ export class TestCommand extends Command {
             delete config.retryTagFilter;
         }
 
-        // TODO: remove the "args.rerunFile" check once the default value scenario is implemented
-        if (args.rerun && args.rerunFile) {
-            config.paths = await RerunFile.read(args.rerunFile);
+        if (args.rerun) {
+            if (!this.#rerunFilePath) {
+                throw new Error("No rerun file provided for rerun execution!");
+            }
+
+            config.paths = await RerunFile.read(this.#rerunFilePath);
         }
 
         return config;
@@ -261,42 +267,5 @@ export class TestCommand extends Command {
             .filter((tag) => tag.trim().length)
             .map((tag) => `(${tag})`)
             .join(" and ");
-    }
-
-    /**
-     * Configure the rerun formatter in the Cucumber configuration to use the given filepath.
-     * Will override any existing rerun formatter configuration.
-     *
-     * @param config - The Cucumber configuration to modify
-     * @param rerunFilePath - The path to the rerun file
-     */
-    #configureRerunFormatter(config: IConfiguration, rerunFilePath: string): void {
-        const rerunFormatPrefix = "rerun:";
-        const newRerunFormat    = `${rerunFormatPrefix}${rerunFilePath}`;
-
-        const rerunFormatIndex = config.format.findIndex((formatter) => {
-            return formatter.includes(rerunFormatPrefix);
-        });
-
-        if (rerunFormatIndex >= 0) {
-            config.format[rerunFormatIndex] = newRerunFormat;
-        } else {
-            config.format.push(newRerunFormat);
-        }
-    }
-
-    /**
-     * Get the path that the rerun file will be read from and written to.
-     *
-     * @returns The path found in the formatter, otherwise the default path
-     */
-    #getRerunFilepath(): string {
-        const defaultFilepath = "/tmp/specify/rerun.txt";
-
-        const rerunFormat = this.cucumber.format.find((format) => {
-            return format.includes("rerun:");
-        }) as string;
-
-        return rerunFormat ? rerunFormat.replace("rerun:", "") : defaultFilepath;
     }
 }

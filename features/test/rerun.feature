@@ -52,7 +52,6 @@ Feature: Rerun Failed Tests
 
     Rule: Rerun file path defaults to os.tmpdir()/specify/rerun.txt
 
-        @skip @todo
         Scenario: Failing test run creates a rerun file in the default location
             Given that the ${config.paths.rerun} file content is empty
             When a user runs the command "npx specify test ./binary/failing.feature"
