@@ -68,6 +68,7 @@ export abstract class Command {
      *
      * @returns The Command result
      */
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async execute(userArgs): Promise<CommandResult> {
         const res: CommandResult = {
             "ok":     false,
