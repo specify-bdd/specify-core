@@ -295,7 +295,9 @@ describe("TestCommand", () => {
 
                     const res = await new TestCommand().execute(userArgs);
 
-                    expect(deserializeError(res.error).message).toEqual("No tests were rerun.");
+                    expect(deserializeError(res.error).message).toEqual(
+                        "No failed tests to rerun.",
+                    );
                 });
 
                 it("unsupported command option", async () => {

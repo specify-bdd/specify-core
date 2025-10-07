@@ -156,7 +156,7 @@ export class TestCommand extends Command {
                 : CommandResultStatus.failure;
         } catch (err) {
             if (err.message === "No tests were executed." && this.#isRerunExecution) {
-                err.message = "No tests were rerun.";
+                err.message = "No failed tests to rerun.";
             }
 
             testRes.error = serializeError(err);
