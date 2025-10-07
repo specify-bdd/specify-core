@@ -49,8 +49,6 @@ $ npx specify path/to/behavior.feature
 0m00.697s (executing steps: 0m00.009s)
 ```
 
----
-
 ## Installation
 
 Specify can be downloaded with NPM.  It's recommended that you save it as a dev dependency for your project:
@@ -80,8 +78,6 @@ Plugins must be added to the Specify configuration before they can be used.  See
 ### Prerequisites
 
 * Node.js v22.x (LTS Jod) or newer
-
----
 
 ## Configuration
 
@@ -116,8 +112,6 @@ the plugin's package.json file.  Only plugins included in this list are known to
 }
 ```
 
----
-
 ## Defining Behavior
 
 Behavior specifications are written in [Gherkin](https://cucumber.io/docs/gherkin/reference), a domain-specific language
@@ -132,8 +126,6 @@ structure and semantic meaning.  The rest of the language used to describe the d
 the feature's author.  However, using consistent and repeatable language to describe common actions can save a lot of
 effort when it comes time to parse the Gherkin and take action.  See
 [Step Definitions](#step-definitions) for more.
-
----
 
 ## Running Tests
 
@@ -161,8 +153,6 @@ The following options governing the runtime behavior of Specify are available:
 | --retry-tag <tags>       | Only retry tests which satisfy this tag expression.                                |
 | -t, --tags <tags>        | Run only the tests which satisfy this tag expression.                              |
 | -w, --watch              | Watch for changes and re-run tests.                                                |
-
----
 
 ## Extending Specify
 
@@ -207,8 +197,6 @@ users to auto-import, simply configure the `cucumber` property of the `CoreConfi
 support files in its `import` sub-property as shown in the [Configuring Cucumber](#configuring-cucumber) section.
 
 Additional plugin capabilities beyond adding Cucumber support code will be added in the future.
-
----
 
 ## Get Help
 
