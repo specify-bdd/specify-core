@@ -49,6 +49,22 @@
     "url": "https://github.com/specify-bdd/specify-core/issues"
   },
   "homepage": "https://github.com/specify-bdd/specify-core#readme",
+  "keywords": [
+    "automation",
+    "automated testing",
+    "bdd",
+    "behavior",
+    "behavior-driven development",
+    "cucumber",
+    "development",
+    "driven",
+    "e2e",
+    "end to end",
+    "specify",
+    "test",
+    "test-driven development",
+    "testing"
+  ],
   "engines": {
     "node": ">=22.0.0"
   }
