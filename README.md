@@ -3,10 +3,8 @@
 A developer-friendly suite of BDD tools built on Gherkin, Cucumber, and Selenium, with batteries-included step definitions / param types and support for adding your own.
 
 [![NPM Version](https://img.shields.io/npm/v/%40specify-bdd%2Fspecify)](https://www.npmjs.com/package/@specify-bdd/specify)
-[![License](https://img.shields.io/badge/License-MIT-blue)](https://raw.githubusercontent.com/specify-bdd/specify-core/refs/heads/main/LICENSE)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/specify-bdd/specify-core/release.yml)
-
-[![CI](https://github.com/specify-bdd/specify-core/actions/workflows/release.yml/badge.svg?label=CI)](https://github.com/specify-bdd/specify-core/actions/workflows/release.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://raw.githubusercontent.com/specify-bdd/specify-core/refs/heads/main/LICENSE)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/specify-bdd/specify-core/release.yml)](https://github.com/specify-bdd/specify-core/actions/workflows/release.yml)
 [![CodeQL](https://github.com/specify-bdd/specify-core/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/specify-bdd/specify-core/actions/workflows/github-code-scanning/codeql)
 [![Dependabot](https://github.com/specify-bdd/specify-core/actions/workflows/dependabot/dependabot-updates/badge.svg?label=Dependabot)](https://github.com/specify-bdd/specify-core/actions/workflows/dependabot/dependabot-updates)
 
