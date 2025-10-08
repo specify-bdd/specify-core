@@ -283,6 +283,23 @@ describe("TestCommand", () => {
                     expect(deserializeError(res.error)).toEqual(error);
                 });
 
+                it("no executed reruns", async () => {
+                    const error    = Error("No tests were executed.");
+                    const userArgs = {
+                        "rerun":     "true",
+                        "rerunFile": "/test/rerun.txt",
+                        "paths":     ["./assets/gherkin/empty"],
+                    };
+
+                    mockRunCucumber.mockRejectedValueOnce(error);
+
+                    const res = await new TestCommand().execute(userArgs);
+
+                    expect(deserializeError(res.error).message).toEqual(
+                        "No failed tests to rerun.",
+                    );
+                });
+
                 it("unsupported command option", async () => {
                     const error    = Error('Option "--bad" not being used to configure Cucumber');
                     const userArgs = { ...emptyArgs, "bad": "test" };

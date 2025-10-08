@@ -78,6 +78,11 @@ export class TestCommand extends Command {
     gherkinPaths: string[];
 
     /**
+     * Flag this test execution for no-op output error message handling.
+     */
+    #isRerunExecution: boolean;
+
+    /**
      * The path to the file to load for rerun executions.
      */
     #rerunFilePath: string;
@@ -150,6 +155,10 @@ export class TestCommand extends Command {
                 ? CommandResultStatus.success
                 : CommandResultStatus.failure;
         } catch (err) {
+            if (err.message === "No tests were executed." && this.#isRerunExecution) {
+                err.message = "No failed tests to rerun.";
+            }
+
             testRes.error = serializeError(err);
         }
 
@@ -181,7 +190,7 @@ export class TestCommand extends Command {
                     config.paths = this.#parsePathArgs(optVal);
                     break;
                 case "rerun":
-                    // this is handled below, needs path and rerunFile options to complete first
+                    // this is handled below, needs path complete first
                     break;
                 case "rerunFile":
                     config.format.push("rerun:" + optVal);
@@ -215,6 +224,7 @@ export class TestCommand extends Command {
                 throw new Error("No rerun file provided for rerun execution!");
             }
 
+            this.#isRerunExecution = true;
             config.paths = await RerunFile.read(this.#rerunFilePath);
         }
 
