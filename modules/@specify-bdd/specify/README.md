@@ -1,5 +1,14 @@
 # Specify BDD
 
+[![NPM Version](https://img.shields.io/npm/v/%40specify-bdd%2Fspecify)](https://www.npmjs.com/package/@specify-bdd/specify)
+![Node LTS](https://img.shields.io/node/v-lts/%40specify-bdd%2Fspecify)
+![NPM Unpacked Size](https://img.shields.io/npm/unpacked-size/%40specify-bdd%2Fspecify)
+![GitHub License](https://img.shields.io/github/license/specify-bdd/specify-core)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/specify-bdd/specify-core/release.yml)
+
+![CodeQL](https://github.com/specify-bdd/specify-core/actions/workflows/github-code-scanning/codeql/badge.svg)
+![Dependabot](https://github.com/specify-bdd/specify-core/actions/workflows/dependabot/dependabot-updates/badge.svg)
+
 Behavior-Driven Development (BDD) doesn't have to be a slog.  **Specify** makes it easy to turn requirements into
 actionable tests, streamlining your development process with clear acceptance criteria, rapid iteration, and confident
 deployments.
@@ -200,6 +209,7 @@ Additional plugin capabilities beyond adding Cucumber support code will be added
 
 ## Get Help
 
-Having trouble with Specify?  We're here to help.  Click
-[here](https://github.com/specify-bdd/specify-core/discussions/new?category=q-a) to open a new Q&A discussion topic on
-GitHub and a member of the team will get back to you soon.
+Having trouble with Specify?  We're here to help.
+
+* [Ask a question](https://github.com/specify-bdd/specify-core/discussions/new?category=q-a)
+* [Report an issue](https://github.com/specify-bdd/specify-core/issues/new?type=bug)
