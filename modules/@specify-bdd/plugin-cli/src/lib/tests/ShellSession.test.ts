@@ -32,18 +32,12 @@ describe("ShellSession", () => {
         expect(spawn).toHaveBeenCalledWith("sh", { "shell": true });
     });
 
-    it("overrides PATH if provided", () => {
-        const customPath = "/test/path";
+    it("overrides spawn options if provided", () => {
+        const options = { "env": { "foo": "bar" } };
 
-        new ShellSession(customPath);
+        new ShellSession(options);
 
-        expect(spawn).toHaveBeenCalledWith(
-            "sh",
-            expect.objectContaining({
-                "shell": true,
-                "env":   expect.objectContaining({ "PATH": customPath }),
-            }),
-        );
+        expect(spawn).toHaveBeenCalledWith("sh", { ...options, "shell": true });
     });
 
     it("writes a command to stdin with an appended newline", () => {

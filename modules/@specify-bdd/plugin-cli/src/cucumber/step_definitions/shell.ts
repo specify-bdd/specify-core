@@ -11,6 +11,8 @@ import assert, { AssertionError } from "node:assert/strict";
 import { SessionManager, IOStream } from "@/lib/SessionManager";
 import { ShellSession             } from "@/lib/ShellSession";
 
+import type { SpawnOptions } from "node:child_process";
+
 Given("a/another CLI shell", startDefaultShell);
 
 When("a/the user starts a/another CLI shell", startDefaultShell);
@@ -131,7 +133,22 @@ async function execCommandSync(command: string): Promise<void> {
  * @param name - The name of the shell
  */
 function startNamedDefaultShell(name?: string): void {
-    const shell = new ShellSession(this.parameters.userPath);
+    const options: SpawnOptions = { "env": process.env };
+
+    // strip Cucumber env vars from the options object that will be passed to the child process
+    // helps to ensure a Specify process run by Specify doesn't get confused by its parent's operating parameters
+    for (const key in options.env) {
+        if (key.slice(0, 9) === "CUCUMBER_") {
+            delete options.env[key];
+        }
+    }
+
+    // preserve the user-defined PATH world param within the child process
+    if (this.parameters.userPath) {
+        options.env.PATH = this.parameters.userPath;
+    }
+
+    const shell = new ShellSession(options);
 
     this.cli.manager ??= new SessionManager();
     this.cli.manager.addSession(shell, name);
