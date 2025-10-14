@@ -63,7 +63,7 @@ When(
 
 When(
     "a/the user waits for terminal output matching (the regular expression ){regexp}",
-    { "timeout": 3000 },
+    { "timeout": 60000 },
     waitForMatchingOutput,
 );
 
