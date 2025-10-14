@@ -133,7 +133,7 @@ async function execCommandSync(command: string): Promise<void> {
  * @param name - The name of the shell
  */
 function startNamedDefaultShell(name?: string): void {
-    const options: SpawnOptions = { "env": process.env };
+    const options: SpawnOptions = { "env": { ...process.env } };
 
     // strip Cucumber env vars from the options object that will be passed to the child process
     // helps to ensure a Specify process run by Specify doesn't get confused by its parent's operating parameters
