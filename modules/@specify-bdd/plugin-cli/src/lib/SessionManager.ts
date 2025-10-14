@@ -398,17 +398,16 @@ export class SessionManager {
      * @param opts    - The options specifying matching requirements
      */
     #hasMatchingOutput(cmdMeta: CommandMeta, opts: WaitForOutputOptions = {}): boolean {
-        const pattern = opts.pattern ?? ".*";
+        const pattern = opts.pattern ?? ".+";
         const stream  = opts.stream ?? IOStream.ANY;
         const regexp  = new RegExp(pattern); // pattern may already be a regexp, but this guarantees consistent behavior
 
-        return cmdMeta.output.some((outMeta: OutputMeta) => {
-            if ([outMeta.stream, IOStream.ANY].includes(stream)) {
-                return regexp.test(outMeta.output);
-            }
-
-            return false;
-        });
+        return regexp.test(
+            cmdMeta.output
+                .filter((outMeta: OutputMeta) => [outMeta.stream, IOStream.ANY].includes(stream))
+                .map((outMeta: OutputMeta) => outMeta.output)
+                .join(""),
+        );
     }
 
     /**

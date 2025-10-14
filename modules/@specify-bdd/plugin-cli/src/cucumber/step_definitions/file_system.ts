@@ -17,9 +17,12 @@ Given("(that )the working directory is {filePath}", changeDirectory);
 Given("(that )the {filePath} file content is {string}", setFileContent);
 Given("(that )the {ref} file content is {string}", setFileContent);
 
+Given("(that )the {filePath} file content is empty", createEmptyFile);
 Given("(that )the {ref} file content is empty", createEmptyFile);
 
 When("a/the user changes the working directory to {filePath}", changeDirectory);
+
+When("the {filePath} file content is changed to {string}", setFileContent);
 
 Then("the {filePath} file content should be empty", verifyFileIsEmpty);
 Then("the {ref} file content should be empty", verifyFileIsEmpty);
