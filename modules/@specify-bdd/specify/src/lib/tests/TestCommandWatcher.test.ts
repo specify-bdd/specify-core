@@ -194,8 +194,6 @@ describe("TestCommandWatcher", () => {
             const configPath = path.join(process.cwd(), CONFIG_FILE_NAME);
             const { log } = await import("node:console");
 
-            // first execution must happen before config changes are detected
-            await changeHandler("change", "/first/change");
             await changeHandler("change", configPath);
 
             expect(log).toHaveBeenCalledWith(
