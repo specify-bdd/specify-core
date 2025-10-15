@@ -24,6 +24,7 @@ When("a/the user changes the working directory to {filePath}", changeDirectory);
 
 When("the {filePath} file content is changed to {string}", setFileContent);
 
+When("the {filePath} file is created", createEmptyFile);
 When("the {filePath} file is deleted", deleteFile);
 
 Then("the {filePath} file content should be empty", verifyFileIsEmpty);

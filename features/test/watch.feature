@@ -44,7 +44,7 @@ Feature: Watch Mode
 
     Rule: Watch mode handles file system events appropriately
 
-        Scenario: Watch mode handles file deletion gracefully
+        Scenario: Watch mode handles file deletion
             Given the "./assets/gherkin/deleteme.feature" file content is empty
             When a user starts the async command "npx specify test --watch ./binary/passing.feature"
             And a user waits for terminal output matching "Watching for changes"
@@ -52,12 +52,13 @@ Feature: Watch Mode
             And the "./assets/gherkin/deleteme.feature" file is deleted
             And a user waits for terminal output matching "Watching[\s\S]+Watching"
 
-        @skip
-        Scenario: Watch mode handles new file creation
-            Given that watch mode is running for "./features"
-            When a new feature file is created at "./features/newtest.feature"
-            Then the tests should automatically rerun
-            And the new test should be included in the test run
+        Scenario: Watch mode handles file creation
+            When a user starts the async command "npx specify test --watch ./binary/passing.feature"
+            And a user waits for terminal output matching "Watching for changes"
+            And a user waits for 0.1 seconds
+            And the "./assets/gherkin/deleteme.feature" file is created
+            And a user waits for terminal output matching "Watching[\s\S]+Watching"
+            And the "./assets/gherkin/deleteme.feature" file is deleted
 
     Rule: Watch mode can be stopped gracefully
 
