@@ -21,8 +21,6 @@ When("a/the user runs the command/process {refstr}", { "timeout": 60000 }, execC
 
 When("a/the user starts the (async )command/process {refstr}", execCommand);
 
-When("a/the user waits for {float} seconds", { "timeout": 60000 }, waitForTime);
-
 When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
 
 When("a/the user waits for terminal output", { "timeout": 60000 }, waitForAnyOutput);
@@ -328,13 +326,4 @@ async function waitForMatchingOutputOnSTDERR(pattern: RegExp): Promise<void> {
  */
 async function waitForMatchingOutputOnSTDOUT(pattern: RegExp): Promise<void> {
     await waitForOutput.call(this, IOStream.STDOUT, pattern);
-}
-
-/**
- * Wait for the specified number of seconds.
- *
- * @param seconds - The number of seconds to wait
- */
-async function waitForTime(seconds: number): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
