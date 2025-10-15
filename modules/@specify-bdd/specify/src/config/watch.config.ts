@@ -35,6 +35,8 @@ export const watch: WatchConfig = {
         "\\.d\\.ts$",
         "\\/node_modules\\/",
         "\\.git",
+        "\\/logs",
+        "\\.tsbuildinfo$",
     ],
     "events": ["add", "change", "unlink"],
 };
