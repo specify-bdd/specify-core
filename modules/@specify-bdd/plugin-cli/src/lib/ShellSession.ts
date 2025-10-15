@@ -6,6 +6,7 @@
  */
 
 import { spawn } from "node:child_process";
+import kill      from "tree-kill";
 
 import type { ChildProcessWithoutNullStreams, SpawnOptions } from "node:child_process";
 
@@ -34,7 +35,7 @@ export class ShellSession implements SystemIOSession {
      * Gracefully terminates the shell session.
      */
     kill(): void {
-        this.childProcess.kill();
+        kill(this.childProcess.pid);
     }
 
     /**

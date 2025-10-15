@@ -1,11 +1,14 @@
-import { spawn        } from "node:child_process";
-import { Writable     } from "stream";
+import { spawn    } from "node:child_process";
+import { Writable } from "stream";
+import kill         from "tree-kill";
+import { vi       } from "vitest";
+
 import { ShellSession } from "../ShellSession";
-import { vi           } from "vitest";
 
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
 
 vi.mock("node:child_process");
+vi.mock("tree-kill");
 
 describe("ShellSession", () => {
     let mockChildProcess: ChildProcessWithoutNullStreams;
@@ -48,10 +51,10 @@ describe("ShellSession", () => {
         expect(mockChildProcess.stdin.write).toHaveBeenCalledWith(`${command}\n`);
     });
 
-    it("calls kill() on the child process", () => {
+    it("calls tree-kill when using kill()", () => {
         new ShellSession().kill();
 
-        expect(mockChildProcess.kill).toHaveBeenCalled();
+        expect(kill).toHaveBeenCalled();
     });
 
     it("registers onClose listener", () => {

@@ -1,27 +1,26 @@
-import fs        from "node:fs";
+import { watch } from "chokidar";
 import path      from "node:path";
 import os        from "node:os";
-import { watch } from "chokidar";
 
-import { DEBOUNCE_MS, TestCommandWatcher } from "../TestCommandWatcher";
-import { TestCommand                     } from "../TestCommand";
+import { TestCommand, TestCommandArguments } from "../TestCommand";
+import { TestCommandWatcher                } from "../TestCommandWatcher";
 
 // mock TestCommand class completely
 vi.mock("../TestCommand", () => ({
     "TestCommand": vi.fn().mockImplementation(() => ({
-        "execute": vi.fn().mockResolvedValue({ "ok": true, "status": 0 }),
+        "execute": vi.fn().mockImplementation(
+            async () =>
+                new Promise((resolve) => {
+                    setTimeout(() => resolve({ "ok": true, "status": 0 }), 100);
+                }),
+        ),
     })),
 }));
 
 // test constants
 const MOCK_ARGS        = { "paths": [] };
-const LOCK_FILE_NAME   = "specify-core-watch.lock";
 const TEST_FILE_PATH   = "/some/file.ts";
 const CONFIG_FILE_NAME = "specify.config.json";
-
-// helper functions
-const mockDebouncedExecution = () =>
-    new Promise((resolve) => setTimeout(resolve, DEBOUNCE_MS + 100));
 
 const createMockConfig = (paths: string[] = ["./src", "./features"]) => ({
     "config": {
@@ -45,19 +44,7 @@ const createMockConfig = (paths: string[] = ["./src", "./features"]) => ({
 });
 
 // mocks
-const mockWatch         = vi.mocked(watch);
-const mockFs            = vi.mocked(fs);
-const mockExistsSync    = vi.fn();
-const mockWriteFileSync = vi.fn();
-const mockUnlinkSync    = vi.fn();
-const mockWatchFs       = vi.fn();
-const mockMkdtempSync   = vi.fn();
-
-mockFs.existsSync = mockExistsSync;
-mockFs.writeFileSync = mockWriteFileSync;
-mockFs.unlinkSync = mockUnlinkSync;
-mockFs.watch = mockWatchFs;
-mockFs.mkdtempSync = mockMkdtempSync;
+const mockWatch = vi.mocked(watch);
 
 vi.mock("chokidar");
 vi.mock("node:fs");
@@ -85,6 +72,12 @@ vi.mock("@/config/all", () => ({
     },
 }));
 
+async function startWatcher(watcher: TestCommandWatcher, args: TestCommandArguments) {
+    const promise = watcher.start(args);
+    vi.runAllTimers();
+    return promise;
+}
+
 describe("TestCommandWatcher", () => {
     let mockCommand: TestCommand;
     let watcher: TestCommandWatcher;
@@ -97,14 +90,10 @@ describe("TestCommandWatcher", () => {
         return allCall?.[1] as (event: string, filePath: string) => Promise<void>;
     };
 
-    const expectLockFile = () => expect.stringContaining(LOCK_FILE_NAME);
-
     beforeEach(() => {
         const { config } = createMockConfig();
 
         vi.clearAllMocks();
-
-        mockMkdtempSync.mockReturnValue(path.join(os.tmpdir(), "specify-test-mocked"));
 
         // create mock command instance using the mocked constructor
         mockCommand = new TestCommand(config);
@@ -116,13 +105,19 @@ describe("TestCommandWatcher", () => {
         mockWatch.mockReturnValue(mockWatcherInstance as unknown as ReturnType<typeof watch>);
 
         watcher = new TestCommandWatcher(mockCommand);
+
+        vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
     });
 
     describe("start()", () => {
         it("clears console and starts watching configured paths", async () => {
             const { clear } = await import("node:console");
 
-            await watcher.start(MOCK_ARGS);
+            await startWatcher(watcher, MOCK_ARGS);
 
             expect(clear).toHaveBeenCalled();
             expect(mockWatch).toHaveBeenCalledWith(
@@ -146,7 +141,7 @@ describe("TestCommandWatcher", () => {
 
             const emptyWatcher = new emptyPathWatcher(mockCommand);
 
-            await emptyWatcher.start(MOCK_ARGS);
+            await startWatcher(emptyWatcher, MOCK_ARGS);
 
             expect(mockWatch).toHaveBeenCalledWith(
                 [process.cwd()],
@@ -157,18 +152,18 @@ describe("TestCommandWatcher", () => {
             );
         });
 
-        it("removes existing lock file on start", async () => {
-            mockExistsSync.mockReturnValueOnce(true);
-
-            await watcher.start(MOCK_ARGS);
-
-            expect(mockUnlinkSync).toHaveBeenCalledWith(expectLockFile());
-        });
-
         it("sets up file system watcher with correct event handler", async () => {
-            await watcher.start(MOCK_ARGS);
+            await startWatcher(watcher, MOCK_ARGS);
 
             expect(mockWatcherInstance.on).toHaveBeenCalledWith("all", expect.any(Function));
+        });
+
+        it("executes the command immediately upon starting", async () => {
+            expect(mockCommand.execute).not.toHaveBeenCalled();
+
+            await startWatcher(watcher, MOCK_ARGS);
+
+            expect(mockCommand.execute).toHaveBeenCalledWith(MOCK_ARGS);
         });
     });
 
@@ -176,21 +171,21 @@ describe("TestCommandWatcher", () => {
         let changeHandler: (event: string, filePath: string) => Promise<void>;
 
         beforeEach(async () => {
-            await watcher.start(MOCK_ARGS);
+            await startWatcher(watcher, MOCK_ARGS);
+
+            vi.mocked(mockCommand).execute.mockClear();
 
             changeHandler = getFileChangeHandler();
         });
 
         it("executes command on valid file change event", async () => {
             await changeHandler("change", TEST_FILE_PATH);
-            await mockDebouncedExecution();
 
             expect(mockCommand.execute).toHaveBeenCalledWith(MOCK_ARGS);
         });
 
         it("ignores events not in watchEvents list", async () => {
             await changeHandler("addDir", "/some/directory");
-            await mockDebouncedExecution();
 
             expect(mockCommand.execute).not.toHaveBeenCalled();
         });
@@ -199,8 +194,6 @@ describe("TestCommandWatcher", () => {
             const configPath = path.join(process.cwd(), CONFIG_FILE_NAME);
             const { log } = await import("node:console");
 
-            await changeHandler("change", "/some/other/file.ts");
-            await mockDebouncedExecution();
             await changeHandler("change", configPath);
 
             expect(log).toHaveBeenCalledWith(
@@ -208,112 +201,15 @@ describe("TestCommandWatcher", () => {
             );
         });
 
-        it("queues execution when lock file exists", async () => {
-            mockExistsSync.mockReturnValueOnce(true);
+        it("queues execution when the watcher is already executing the command", async () => {
+            await changeHandler("change", "/path/one.js");
+            await changeHandler("change", "/path/two.js");
 
-            const mockWatcherClose = vi.fn();
+            expect(mockCommand.execute).toHaveBeenCalledOnce();
 
-            // mock fs.watch to immediately call the callback with "rename" event
-            mockWatchFs.mockImplementation((_filePath, _options, callback) => {
-                // simulate lock file being removed after a short delay
-                setTimeout(() => {
-                    callback("rename");
-                }, 50);
-
-                return { "close": mockWatcherClose };
+            await vi.waitFor(() => {
+                expect(mockCommand.execute).toHaveBeenCalledTimes(2);
             });
-
-            // wait for the change to process
-            await changeHandler("change", TEST_FILE_PATH);
-
-            expect(mockWatchFs).toHaveBeenCalledWith(
-                expect.stringContaining("specify-core-watch.lock"),
-                expect.any(Object),
-                expect.any(Function),
-            );
-
-            expect(mockWatcherClose).toHaveBeenCalled();
-        });
-    });
-
-    describe("command execution", () => {
-        beforeEach(async () => {
-            await watcher.start(MOCK_ARGS);
-        });
-
-        it("creates and removes lock file during execution", async () => {
-            const expectation   = expect.stringContaining("specify-core-watch.lock");
-            const changeHandler = getFileChangeHandler();
-
-            await changeHandler("change", TEST_FILE_PATH);
-            await mockDebouncedExecution();
-
-            expect(mockWriteFileSync).toHaveBeenCalledWith(expectation, "");
-            expect(mockUnlinkSync).toHaveBeenCalledWith(expectation);
-        });
-
-        it("handles command execution errors gracefully", async () => {
-            const error = new Error("Test execution error");
-
-            mockCommand.execute = vi.fn().mockRejectedValue(error);
-
-            const changeHandler = getFileChangeHandler();
-
-            await changeHandler("change", TEST_FILE_PATH);
-            await mockDebouncedExecution();
-
-            // expect the lock file to be cleaned up even on error
-            expect(mockUnlinkSync).toHaveBeenCalled();
-        });
-
-        it("handles command result errors", async () => {
-            const errorResult = {
-                "ok":    false,
-                "error": { "message": "Command failed" },
-            };
-
-            mockCommand.execute = vi.fn().mockResolvedValue(errorResult);
-
-            const changeHandler = getFileChangeHandler();
-
-            await changeHandler("change", TEST_FILE_PATH);
-            await mockDebouncedExecution();
-
-            expect(mockCommand.execute).toHaveBeenCalled();
-            expect(mockUnlinkSync).toHaveBeenCalled();
-        });
-    });
-
-    describe("lock file watching", () => {
-        it("resolves when lock file is removed", async () => {
-            const mockWatcherClose  = vi.fn();
-            const mockEventCallback = vi.fn();
-
-            mockWatchFs.mockImplementation((_filePath, _options, callback) => {
-                mockEventCallback.mockImplementation(callback);
-
-                return { "close": mockWatcherClose };
-            });
-
-            // start the watcher
-            await watcher.start(MOCK_ARGS);
-
-            // simulate file change with lock file present
-            mockExistsSync.mockReturnValueOnce(true);
-
-            const onChangeHandler = getFileChangeHandler();
-
-            // start the change handler (don't await to test the lock waiting)
-            const changePromise = onChangeHandler("change", "/some/file.ts");
-
-            // simulate lock file removal
-            setTimeout(() => {
-                mockEventCallback("rename");
-            }, 100);
-
-            await changePromise;
-
-            expect(mockWatcherClose).toHaveBeenCalled();
         });
     });
 });

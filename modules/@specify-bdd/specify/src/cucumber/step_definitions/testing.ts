@@ -11,6 +11,7 @@ Given("that this step passes on the {ordinal} attempt", passOnNthAttempt);
 
 When("this step passes if there are/is {int} parallel worker(s)", passIfNWorkers);
 When("this step passes on the {ordinal} attempt", passOnNthAttempt);
+When("a/the user waits for {float} seconds", { "timeout": 60000 }, waitForTime);
 
 Then("this step should pass on the {ordinal} attempt", passOnNthAttempt);
 
@@ -54,4 +55,13 @@ async function passOnNthAttempt(attempt: number): Promise<void> {
         attempt,
         "This is not the correct attempt.",
     );
+}
+
+/**
+ * Wait for the specified number of seconds.
+ *
+ * @param seconds - The number of seconds to wait
+ */
+async function waitForTime(seconds: number): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }

@@ -127,6 +127,9 @@ importers:
       '@cucumber/cucumber':
         specifier: ^11.3.0
         version: 11.3.0
+      tree-kill:
+        specifier: ^1.2.2
+        version: 1.2.2
       validate-npm-package-name:
         specifier: ^6.0.1
         version: 6.0.1
