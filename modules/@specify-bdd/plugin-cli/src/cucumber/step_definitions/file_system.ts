@@ -4,12 +4,12 @@
  * Cucumber step definitions covering interactions with a file system.
  */
 
-import { Given, Then, When            } from "@cucumber/cucumber";
-import assert, { AssertionError       } from "node:assert/strict";
-import { existsSync                   } from "node:fs";
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
-import { tmpdir                       } from "node:os";
-import { join                         } from "node:path";
+import { Given, Then, When                    } from "@cucumber/cucumber";
+import assert, { AssertionError               } from "node:assert/strict";
+import { existsSync                           } from "node:fs";
+import { mkdtemp, readFile, unlink, writeFile } from "node:fs/promises";
+import { tmpdir                               } from "node:os";
+import { join                                 } from "node:path";
 
 Given("a new temp file path referenced as {string}", createTempFileRef);
 Given("(that )the working directory is {filePath}", changeDirectory);
@@ -23,6 +23,8 @@ Given("(that )the {ref} file content is empty", createEmptyFile);
 When("a/the user changes the working directory to {filePath}", changeDirectory);
 
 When("the {filePath} file content is changed to {string}", setFileContent);
+
+When("the {filePath} file is deleted", deleteFile);
 
 Then("the {filePath} file content should be empty", verifyFileIsEmpty);
 Then("the {ref} file content should be empty", verifyFileIsEmpty);
@@ -74,6 +76,17 @@ async function createTempFileRef(address: string): Promise<void> {
     const filePath = join(dirPath, "rerun.txt");
 
     this.quickRef.setRefByAddress(address, filePath);
+}
+
+/**
+ * Delete the file at the given path.
+ *
+ * @param filePath - The path to the file
+ */
+async function deleteFile(filePath: string): Promise<void> {
+    await verifyFilePathExists.call(this, filePath);
+
+    await unlink(filePath);
 }
 
 /**
