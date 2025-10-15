@@ -22,7 +22,8 @@
             "__mocks__",
             "\\.d\\.ts$",
             "\\/node_modules\\/",
-            "\\.git"
+            "\\.git",
+            "\\.ts$"
         ]
     },
     "plugins": [ "@specify-bdd/plugin-cli" ]
