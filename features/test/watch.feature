@@ -7,21 +7,21 @@ Feature: Watch Mode
         Given that the "@specify-bdd/specify" NPM package is installed
         And that the "@specify-bdd/plugin-cli" NPM package is installed
         And a CLI shell
-        And that the working directory is "./assets/gherkin"
+        And that the working directory is "./test"
 
     Rule: Watch mode monitors file changes and reruns tests automatically
 
         Scenario: Watch mode starts and monitors for changes
-            When a user starts the async command "npx specify test --watch ./binary/passing.feature"
+            When a user starts the async command "npx specify test --watch ./gherkin/binary/passing.feature"
             And a user waits for terminal output matching "Watching for changes"
             Then the last command's terminal output should match "3 scenarios \(3 passed\)"
 
         Scenario: Tests rerun automatically when file changes are detected
-            Given the "./assets/gherkin/watch-test-file.txt" file content is empty
-            When a user starts the async command "npx specify test --watch ./binary/passing.feature"
+            Given the "./test/watch-test-file.txt" file content is empty
+            When a user starts the async command "npx specify test --watch ./gherkin/binary/passing.feature"
             And a user waits for terminal output matching "Watching for changes"
             And a user waits for 0.1 seconds
-            And the "./assets/gherkin/watch-test-file.txt" file content is changed to "new change"
+            And the "./test/watch-test-file.txt" file content is changed to "new change"
             And a user waits for terminal output matching "Watching[\s\S]+Watching"
 
     Rule: Watch mode can be combined with other options
