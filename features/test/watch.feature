@@ -26,26 +26,21 @@ Feature: Watch Mode
 
     Rule: Watch mode can be combined with other options
 
-        @skip
         Scenario: Watch mode with retry option
-            Given that a "flaky feature" file exists at "./features"
-            When a user runs the command "npx specify test --watch --retry 2"
-            Then the command should start in watch mode
-            And failed tests should be retried according to the retry setting
+            When a user starts the async command "npx specify test --watch --retry 2 ./retry/attempt3.feature"
+            And a user waits for terminal output matching "Watching for changes"
+            Then the last command's terminal output should match "(attempt 2)"
 
         @skip
         Scenario: Watch mode with parallel execution
-            Given that multiple "passing feature" files exist at "./features"
-            When a user runs the command "npx specify test --watch --parallel 2"
-            Then the command should start in watch mode
-            And tests should run in parallel according to the parallel setting
+            When a user starts the async command "npx specify test --watch --parallel 2 ./slow.feature"
+            And a user waits for terminal output matching "Watching for changes"
+            Then the last command's execution time should be at most 4 seconds
 
-        @skip
         Scenario: Watch mode with tag filtering
-            Given that a "tagged feature" file exists at "./features"
-            When a user runs the command "npx specify test --watch --tags '@smoke'"
-            Then the command should start in watch mode
-            And only tests matching the tag filter should run
+            When a user starts the async command "npx specify test --watch --tags '@pass' ./binary/"
+            And a user waits for terminal output matching "Watching for changes"
+            Then the last command's terminal output should match "3 scenarios \(3 passed\)"
 
     Rule: Watch mode handles file system events appropriately
 
