@@ -58,7 +58,7 @@ describe("ShellSession", () => {
     });
 
     it("calls tree-kill when using kill()", () => {
-        new ShellSession().kill();
+        new ShellSession().killSession();
 
         expect(kill).toHaveBeenCalled();
     });

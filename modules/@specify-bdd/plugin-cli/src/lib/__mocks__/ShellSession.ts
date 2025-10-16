@@ -29,7 +29,8 @@ export class ShellSession {
         this.#outputCallbacks.forEach((cb) => cb(output + "\n"));
     });
 
-    kill = vi.fn();
+    killCommand = vi.fn();
+    killSession = vi.fn();
 
     onClose = vi.fn((callback: () => void) => this.#closeCallbacks.push(callback));
 

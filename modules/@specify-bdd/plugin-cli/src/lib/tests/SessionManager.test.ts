@@ -213,7 +213,7 @@ describe("SessionManager", () => {
         it("resolves kill() on session close", async () => {
             let resolved = false;
 
-            const promise = sessionManager.kill().then(() => (resolved = true));
+            const promise = sessionManager.killSession().then(() => (resolved = true));
 
             // wait arbitrary time to ensure promise hasn't resolved
             await new Promise((resolve) => setTimeout(resolve, 10));
@@ -225,7 +225,7 @@ describe("SessionManager", () => {
             await promise;
 
             expect(resolved).toBeTruthy();
-            expect(session.kill).toHaveBeenCalled();
+            expect(session.killSession).toHaveBeenCalled();
             expect(sessionManager.sessions.length).toBe(0);
         });
 
@@ -234,19 +234,19 @@ describe("SessionManager", () => {
 
             sessionManager.addSession(altSession);
 
-            const promise = sessionManager.kill();
+            const promise = sessionManager.killSession();
 
             altSession.emitClose();
 
             await promise;
 
-            expect(session.kill).not.toHaveBeenCalled();
-            expect(altSession.kill).toHaveBeenCalled();
+            expect(session.killSession).not.toHaveBeenCalled();
+            expect(altSession.killSession).toHaveBeenCalled();
             expect(sessionManager.sessions.length).toBe(1);
         });
     });
 
-    describe("killAll()", () => {
+    describe("killAllSessions()", () => {
         it("kills all managed sessions", async () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
@@ -257,7 +257,7 @@ describe("SessionManager", () => {
 
             expect(sessionManager.sessions.length).toBe(2);
 
-            const promise = sessionManager.killAll().then(() => (resolved = true));
+            const promise = sessionManager.killAllSessions().then(() => (resolved = true));
 
             // wait arbitrary time to ensure promise hasn't resolved
             await new Promise((resolve) => setTimeout(resolve, 10));
@@ -270,8 +270,8 @@ describe("SessionManager", () => {
             await promise;
 
             expect(resolved).toBeTruthy();
-            expect(session.kill).toHaveBeenCalled();
-            expect(altSession.kill).toHaveBeenCalled();
+            expect(session.killSession).toHaveBeenCalled();
+            expect(altSession.killSession).toHaveBeenCalled();
             expect(sessionManager.sessions.length).toBe(0);
         });
     });

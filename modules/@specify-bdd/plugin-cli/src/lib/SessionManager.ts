@@ -184,19 +184,30 @@ export class SessionManager {
     }
 
     /**
+     * Gracefully terminates the command in a managed session. Resolves once the command is killed.
+     *
+     * @param opts - Options to modify the behavior of killSession()
+     */
+    async killCommand(opts: SessionManagerOptions = {}, signal: string = "SIGTERM"): Promise<void> {
+        const sessionMeta = opts.sessionMeta ?? this.#activeSession;
+
+        await sessionMeta.session.killCommand(signal);
+    }
+
+    /**
      * Gracefully terminates a managed session. Resolves once the session is
      * fully closed.
      *
-     * @param opts - Options to modify the behavior of kill()
+     * @param opts - Options to modify the behavior of killSession()
      */
-    async kill(opts: SessionManagerOptions = {}): Promise<void> {
+    async killSession(opts: SessionManagerOptions = {}, signal: string = "SIGTERM"): Promise<void> {
         const sessionMeta = opts.sessionMeta ?? this.#activeSession;
 
         return new Promise((resolve) => {
             this.removeSession({ sessionMeta });
 
             sessionMeta.session.onClose(resolve);
-            sessionMeta.session.kill();
+            sessionMeta.session.killSession(signal);
         });
     }
 
@@ -204,8 +215,10 @@ export class SessionManager {
      * Gracefully terminate all managed sessions.  Resolves once all sessions
      * are fully closed.
      */
-    async killAll(): Promise<void> {
-        await Promise.all(this.#sessions.slice().map((sessionMeta) => this.kill({ sessionMeta })));
+    async killAllSessions(): Promise<void> {
+        await Promise.all(
+            this.#sessions.slice().map((sessionMeta) => this.killSession({ sessionMeta })),
+        );
 
         // ensure race conditions don't leave session records in a weird state
         this.#activeSession = null;

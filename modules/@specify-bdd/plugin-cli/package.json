@@ -19,6 +19,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "ps-list": "^9.0.0",
     "tree-kill": "^1.2.2",
     "validate-npm-package-name": "^6.0.1"
   },
