@@ -113,7 +113,12 @@ async function runTests(paths: string[], opts: TestCommandArguments = {}): Promi
 
     const args = merge({ paths }, opts) as TestCommandArguments;
 
-    if (opts.watch) {
+    if (args.watch) {
+        if (args.rerun) {
+            error("Conflicting options: --rerun cannot be used with --watch");
+            process.exit(2);
+        }
+
         const watcher = new TestCommandWatcher(cmd);
 
         await watcher.start(args);

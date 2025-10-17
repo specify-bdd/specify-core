@@ -5,12 +5,12 @@
  * debounced execution to run tests when files change.
  */
 
-import chalk                from "chalk";
-import { watch            } from "chokidar";
-import { clear, log       } from "node:console";
-import path                 from "node:path";
-import { deserializeError } from "serialize-error";
-import { config           } from "@/config/all";
+import chalk                 from "chalk";
+import { watch             } from "chokidar";
+import { clear, error, log } from "node:console";
+import path                  from "node:path";
+import { deserializeError  } from "serialize-error";
+import { config            } from "@/config/all";
 
 import type { TestCommand, TestCommandArguments } from "./TestCommand";
 
@@ -122,7 +122,8 @@ export class TestCommandWatcher {
                 const errorMessage =
                     resError instanceof Error ? resError.message : String(resError);
 
-                this.#debugLog(`Command execution failed: ${errorMessage}`, resError, true);
+                error(errorMessage);
+                process.exit(2);
             }
         } catch (error) {
             this.#debugLog(
