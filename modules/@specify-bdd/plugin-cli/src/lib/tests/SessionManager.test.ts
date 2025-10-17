@@ -13,7 +13,7 @@ describe("SessionManager", () => {
     let sessionManager: SessionManager;
 
     beforeEach(() => {
-        session = new ShellSession() as unknown as MockShellSession;
+        session        = new ShellSession() as unknown as MockShellSession;
         sessionManager = new SessionManager();
     });
 
