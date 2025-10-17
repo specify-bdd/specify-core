@@ -7,6 +7,7 @@
 
 import { Given, Then, When      } from "@cucumber/cucumber";
 import assert, { AssertionError } from "node:assert/strict";
+import path                       from "node:path";
 
 import { SessionManager, IOStream } from "@/lib/SessionManager";
 import { ShellSession             } from "@/lib/ShellSession";
@@ -122,7 +123,7 @@ Then(
 async function changeDirectory(dirPath: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
-    const resolvedPath = resolve(this.cli.cwd, dirPath);
+    const resolvedPath = path.resolve(this.cli.cwd, dirPath);
 
     this.cli.manager.run(`cd ${resolvedPath}`);
 
