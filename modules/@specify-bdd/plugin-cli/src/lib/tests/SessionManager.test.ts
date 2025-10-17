@@ -210,10 +210,16 @@ describe("SessionManager", () => {
             sessionManager.addSession(session);
         });
 
-        it("calls killCommand() on active session by default", async () => {
+        it("calls killCommand() with 'SIGTERM' on active session by default", async () => {
             await sessionManager.killCommand();
 
-            expect(session.killCommand).toHaveBeenCalled();
+            expect(session.killCommand).toHaveBeenCalledWith("SIGTERM");
+        });
+
+        it("calls killCommand() with an alternative signal", async () => {
+            await sessionManager.killCommand({}, "test");
+
+            expect(session.killCommand).toHaveBeenCalledWith("test");
         });
     });
 
@@ -241,7 +247,7 @@ describe("SessionManager", () => {
             expect(sessionManager.sessions.length).toBe(0);
         });
 
-        it("kills only the active session by default", async () => {
+        it("kills only the active session via 'SIGTERM' by default", async () => {
             const altSession = new ShellSession() as unknown as MockShellSession;
 
             sessionManager.addSession(altSession);
@@ -253,8 +259,18 @@ describe("SessionManager", () => {
             await promise;
 
             expect(session.killSession).not.toHaveBeenCalled();
-            expect(altSession.killSession).toHaveBeenCalled();
+            expect(altSession.killSession).toHaveBeenCalledWith("SIGTERM");
             expect(sessionManager.sessions.length).toBe(1);
+        });
+
+        it("calls killCommand() with an alternative signal", async () => {
+            const promise = sessionManager.killSession({}, "test");
+
+            session.emitClose();
+
+            await promise;
+
+            expect(session.killSession).toHaveBeenCalledWith("test");
         });
     });
 

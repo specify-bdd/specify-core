@@ -61,17 +61,23 @@ describe("ShellSession", () => {
     });
 
     describe("killCommand()", () => {
-        it("calls tree-kill with the command pid and default signal when using killCommand()", async () => {
-            vi.mocked(psList).mockResolvedValueOnce([
-                { "pid": 123, "ppid": 1, "name": "session" },
-                { "pid": 456, "ppid": 123, "name": "sh" },
-                { "pid": 789, "ppid": 456, "name": "user command" },
-                { "pid": 0, "ppid": 789, "name": "user sub-command" },
-            ]);
+        vi.mocked(psList).mockResolvedValue([
+            { "pid": 123, "ppid": 1, "name": "session" },
+            { "pid": 456, "ppid": 123, "name": "sh" },
+            { "pid": 789, "ppid": 456, "name": "user command" },
+            { "pid": 0, "ppid": 789, "name": "user sub-command" },
+        ]);
 
+        it("calls tree-kill with the command pid and default signal when using killCommand()", async () => {
             await new ShellSession().killCommand();
 
             expect(kill).toHaveBeenCalledWith(789, "SIGTERM");
+        });
+
+        it("accepts an alternative signal", async () => {
+            await new ShellSession().killCommand("test");
+
+            expect(kill).toHaveBeenCalledWith(789, "test");
         });
     });
 
@@ -80,6 +86,12 @@ describe("ShellSession", () => {
             new ShellSession().killSession();
 
             expect(kill).toHaveBeenCalledWith(mockChildProcess.pid, "SIGTERM");
+        });
+
+        it("accepts an alternative signal", async () => {
+            await new ShellSession().killSession("test");
+
+            expect(kill).toHaveBeenCalledWith(mockChildProcess.pid, "test");
         });
     });
 
