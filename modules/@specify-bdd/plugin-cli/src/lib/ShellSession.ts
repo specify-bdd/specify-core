@@ -39,8 +39,8 @@ export class ShellSession implements SystemIOSession {
      */
     async killCommand(signal: string = "SIGTERM"): Promise<void> {
         const processes      = await psList();
-        const subProcess     = processes.find((process) => process.ppid === this.#childProcess.pid);
-        const commandProcess = processes.find((process) => process.ppid === subProcess.pid);
+        const subProcess     = processes.find((proc) => proc.ppid === this.#childProcess.pid);
+        const commandProcess = processes.find((proc) => proc.ppid === subProcess.pid);
 
         kill(commandProcess.pid, signal);
     }

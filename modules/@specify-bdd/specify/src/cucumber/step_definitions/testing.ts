@@ -11,7 +11,7 @@ Given("that this step passes on the {ordinal} attempt", passOnNthAttempt);
 
 When("this step passes if there are/is {int} parallel worker(s)", passIfNWorkers);
 When("this step passes on the {ordinal} attempt", passOnNthAttempt);
-When("a/the user waits for {float} seconds", { "timeout": 60000 }, waitForTime);
+When("a/the user waits for {float} second(s)", { "timeout": 60000 }, waitForTime);
 
 Then("this step should pass on the {ordinal} attempt", passOnNthAttempt);
 

@@ -19,7 +19,7 @@ defineParameterType({
     "name":   "filePath",
     "regexp": quotedString,
     transformer(input: string): string {
-        return path.resolve(this.quickRef.parse(input.slice(1, -1)));
+        return path.normalize(this.quickRef.parse(input.slice(1, -1)));
     },
     "useForSnippets": false,
 });

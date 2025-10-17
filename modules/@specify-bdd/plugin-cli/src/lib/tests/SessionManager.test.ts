@@ -17,86 +17,375 @@ describe("SessionManager", () => {
         sessionManager = new SessionManager();
     });
 
-    describe("activeSession", () => {
-        it("returns undefined when there are no managed sessions", () => {
-            expect(sessionManager.activeSession).toBeNull();
-        });
-    });
-
-    describe("commandElapsedTime", () => {
-        it("returns the elepsed time of the command", () => {
-            const timeStart = Math.random();
-            const timeEnd   = Math.random() + 1;
-
-            sessionManager.addSession(session);
-            vi.spyOn(Date, "now").mockReturnValueOnce(timeStart);
-
-            sessionManager.run("echo test");
-            vi.spyOn(Date, "now").mockReturnValueOnce(timeEnd);
-            session.emitDelimiter(0);
-
-            expect(sessionManager.commandElapsedTime).toBe(timeEnd - timeStart);
-        });
-    });
-
-    describe("commandEndTime", () => {
-        it("returns the end time of the command", () => {
-            const time = Math.random();
-
-            sessionManager.addSession(session);
-            sessionManager.run("echo test");
-            vi.spyOn(Date, "now").mockReturnValueOnce(time);
-            session.emitDelimiter(0);
-
-            expect(sessionManager.commandEndTime).toBe(time);
-        });
-    });
-
-    describe("commandStartTime", () => {
-        it("returns the start time of the command", () => {
-            const time = Math.random();
-
-            sessionManager.addSession(session);
-            vi.spyOn(Date, "now").mockReturnValueOnce(time);
-
-            sessionManager.run("echo test");
-
-            expect(sessionManager.commandStartTime).toBe(time);
-        });
-    });
-
-    describe("exitCode", () => {
-        it("returns the last command's exit code", async () => {
-            sessionManager.addSession(session);
-            sessionManager.run("echo test");
-
-            session.emitDelimiter(0);
-
-            await sessionManager.waitForReturn();
-
-            expect(sessionManager.exitCode).toBe(0);
-        });
-
-        describe("returns undefined when...", () => {
-            it("...there are no managed sessions", () => {
-                expect(sessionManager.exitCode).toBeUndefined();
+    describe("Properties", () => {
+        describe("activeSession", () => {
+            it("returns undefined when there are no managed sessions", () => {
+                expect(sessionManager.activeSession).toBeNull();
             });
+        });
 
-            it("...the active session has not executed any commands", () => {
+        describe("commandElapsedTime", () => {
+            it("returns the elepsed time of the command", () => {
+                const timeStart = Math.random();
+                const timeEnd   = Math.random() + 1;
+
+                sessionManager.addSession(session);
+                vi.spyOn(Date, "now").mockReturnValueOnce(timeStart);
+
+                sessionManager.run("echo test");
+                vi.spyOn(Date, "now").mockReturnValueOnce(timeEnd);
+                session.emitDelimiter(0);
+
+                expect(sessionManager.commandElapsedTime).toBe(timeEnd - timeStart);
+            });
+        });
+
+        describe("commandEndTime", () => {
+            it("returns the end time of the command", () => {
+                const time = Math.random();
+
+                sessionManager.addSession(session);
+                sessionManager.run("echo test");
+                vi.spyOn(Date, "now").mockReturnValueOnce(time);
+                session.emitDelimiter(0);
+
+                expect(sessionManager.commandEndTime).toBe(time);
+            });
+        });
+
+        describe("commandStartTime", () => {
+            it("returns the start time of the command", () => {
+                const time = Math.random();
+
+                sessionManager.addSession(session);
+                vi.spyOn(Date, "now").mockReturnValueOnce(time);
+
+                sessionManager.run("echo test");
+
+                expect(sessionManager.commandStartTime).toBe(time);
+            });
+        });
+
+        describe("cwd", () => {
+            it("returns the active session's working directory", async () => {
                 sessionManager.addSession(session);
 
-                expect(sessionManager.exitCode).toBeUndefined();
+                expect(sessionManager.cwd).toBe(process.cwd());
+
+                const dir = "/foo";
+
+                sessionManager.run(`cd ${dir}`);
+
+                session.emitDelimiter(0, dir);
+
+                await sessionManager.waitForReturn();
+
+                expect(sessionManager.cwd).toBe(dir);
+            });
+
+            it("returns undefined when there are no managed sessions", () => {
+                expect(sessionManager.cwd).toBeUndefined();
+            });
+        });
+
+        describe("exitCode", () => {
+            it("returns the last command's exit code", async () => {
+                sessionManager.addSession(session);
+                sessionManager.run("echo test");
+
+                session.emitDelimiter(0);
+
+                await sessionManager.waitForReturn();
+
+                expect(sessionManager.exitCode).toBe(0);
+            });
+
+            describe("returns undefined when...", () => {
+                it("...there are no managed sessions", () => {
+                    expect(sessionManager.exitCode).toBeUndefined();
+                });
+
+                it("...the active session has not executed any commands", () => {
+                    sessionManager.addSession(session);
+
+                    expect(sessionManager.exitCode).toBeUndefined();
+                });
+            });
+        });
+
+        describe("output", () => {
+            describe("returns the last command's output string when...", () => {
+                beforeEach(() => {
+                    sessionManager.addSession(session);
+                });
+
+                it("...the output is a single line", async () => {
+                    const output  = "test";
+                    const command = `echo ${output}`;
+
+                    sessionManager.run(command);
+
+                    session.emitOutput(output);
+                    session.emitDelimiter(0);
+
+                    await sessionManager.waitForReturn();
+
+                    expect(sessionManager.output).toBe(output);
+                });
+
+                it("...the output is multiple lines", async () => {
+                    const output = ["test 1", "test 2"];
+
+                    sessionManager.run("some-command");
+
+                    session.emitOutput(output[0]);
+                    session.emitOutput(output[1]);
+                    session.emitDelimiter(0);
+
+                    await sessionManager.waitForReturn();
+
+                    expect(sessionManager.output).toBe(output.join("\n"));
+                });
+
+                it("...there is no output", async () => {
+                    sessionManager.run("cd .");
+
+                    session.emitDelimiter(0);
+
+                    await sessionManager.waitForReturn();
+
+                    expect(sessionManager.output).toBe("");
+                });
+            });
+
+            describe("returns undefined when...", () => {
+                it("...there are no managed sessions", () => {
+                    expect(sessionManager.output).toBeUndefined();
+                });
+
+                it("...the active session has not executed any commands", () => {
+                    sessionManager.addSession(session);
+
+                    expect(sessionManager.output).toBeUndefined();
+                });
+            });
+        });
+
+        describe("sessions", () => {
+            it("returns an empty array when there are no managed sessions", () => {
+                expect(sessionManager.sessions).toEqual([]);
             });
         });
     });
 
-    describe("output", () => {
-        describe("returns the last command's output string when...", () => {
+    describe("Methods", () => {
+        describe("addSession()", () => {
             beforeEach(() => {
                 sessionManager.addSession(session);
             });
 
-            it("...the output is a single line", async () => {
+            it("registers a single managed session", () => {
+                expect(sessionManager.sessions.length).toBe(1);
+                expect(sessionManager.sessions[0].session).toBe(session);
+            });
+
+            it("registers multiple managed sessions", () => {
+                const altSession = new ShellSession() as unknown as MockShellSession;
+
+                sessionManager.addSession(altSession);
+
+                expect(sessionManager.sessions.length).toBe(2);
+                expect(sessionManager.sessions[1].session).toBe(altSession);
+            });
+
+            it("registers named managed sessions", () => {
+                const altSession     = new ShellSession() as unknown as MockShellSession;
+                const altSessionName = "test session";
+
+                sessionManager.addSession(altSession, altSessionName);
+
+                expect(sessionManager.sessions[1].name).toBe(altSessionName);
+            });
+
+            it("registers sessions with an initial working directory", () => {
+                const altSession    = new ShellSession() as unknown as MockShellSession;
+                const altSessionDir = "/foo";
+
+                sessionManager.addSession(altSession, "altSession", altSessionDir);
+
+                expect(sessionManager.sessions[1].cwd).toBe(altSessionDir);
+            });
+
+            it("activates new managed sessions by default", () => {
+                expect(sessionManager.activeSession.session).toBe(session);
+            });
+
+            it("switches the active session when adding more than one", () => {
+                expect(sessionManager.activeSession.session).toBe(session);
+
+                const altSession = new ShellSession() as unknown as MockShellSession;
+
+                sessionManager.addSession(altSession);
+
+                expect(sessionManager.activeSession.session).toBe(altSession);
+            });
+
+            it("doesn't activate new managed sessions if instructed not to", () => {
+                const altSession = new ShellSession() as unknown as MockShellSession;
+
+                sessionManager.addSession(altSession, "whatever", "/foo", false);
+
+                expect(sessionManager.activeSession.session).toBe(session);
+            });
+        });
+
+        describe("killCommand()", () => {
+            beforeEach(() => {
+                sessionManager.addSession(session);
+            });
+
+            it("calls killCommand() with 'SIGTERM' on active session by default", async () => {
+                await sessionManager.killCommand();
+
+                expect(session.killCommand).toHaveBeenCalledWith("SIGTERM");
+            });
+
+            it("calls killCommand() with an alternative signal", async () => {
+                await sessionManager.killCommand({}, "test");
+
+                expect(session.killCommand).toHaveBeenCalledWith("test");
+            });
+        });
+
+        describe("killSession()", () => {
+            beforeEach(() => {
+                sessionManager.addSession(session);
+            });
+
+            it("resolves killSession() on session close", async () => {
+                let resolved = false;
+
+                const promise = sessionManager.killSession().then(() => (resolved = true));
+
+                // wait arbitrary time to ensure promise hasn't resolved
+                await new Promise((resolve) => setTimeout(resolve, 10));
+
+                expect(resolved).toBeFalsy();
+
+                session.emitClose();
+
+                await promise;
+
+                expect(resolved).toBeTruthy();
+                expect(session.killSession).toHaveBeenCalled();
+                expect(sessionManager.sessions.length).toBe(0);
+            });
+
+            it("kills only the active session via 'SIGTERM' by default", async () => {
+                const altSession = new ShellSession() as unknown as MockShellSession;
+
+                sessionManager.addSession(altSession);
+
+                const promise = sessionManager.killSession();
+
+                altSession.emitClose();
+
+                await promise;
+
+                expect(session.killSession).not.toHaveBeenCalled();
+                expect(altSession.killSession).toHaveBeenCalledWith("SIGTERM");
+                expect(sessionManager.sessions.length).toBe(1);
+            });
+
+            it("calls killCommand() with an alternative signal", async () => {
+                const promise = sessionManager.killSession({}, "test");
+
+                session.emitClose();
+
+                await promise;
+
+                expect(session.killSession).toHaveBeenCalledWith("test");
+            });
+        });
+
+        describe("killAllSessions()", () => {
+            it("kills all managed sessions", async () => {
+                const altSession = new ShellSession() as unknown as MockShellSession;
+
+                let resolved = false;
+
+                sessionManager.addSession(session, "session");
+                sessionManager.addSession(altSession, "altSession");
+
+                expect(sessionManager.sessions.length).toBe(2);
+
+                const promise = sessionManager.killAllSessions().then(() => (resolved = true));
+
+                // wait arbitrary time to ensure promise hasn't resolved
+                await new Promise((resolve) => setTimeout(resolve, 10));
+
+                expect(resolved).toBeFalsy();
+
+                session.emitClose();
+                altSession.emitClose();
+
+                await promise;
+
+                expect(resolved).toBeTruthy();
+                expect(session.killSession).toHaveBeenCalled();
+                expect(altSession.killSession).toHaveBeenCalled();
+                expect(sessionManager.sessions.length).toBe(0);
+            });
+        });
+
+        describe("removeSession()", () => {
+            beforeEach(() => {
+                sessionManager.addSession(session);
+            });
+
+            it("removes the sole managed session", () => {
+                expect(sessionManager.sessions.length).toBe(1);
+
+                sessionManager.removeSession();
+
+                expect(sessionManager.sessions.length).toBe(0);
+                expect(sessionManager.activeSession).toBeNull();
+            });
+
+            it("removes one managed session among several", () => {
+                const altSession     = new ShellSession() as unknown as MockShellSession;
+                const altSessionMeta = sessionManager.addSession(altSession, "whatever", "/foo", false);
+
+                expect(sessionManager.sessions.length).toBe(2);
+                expect(sessionManager.activeSession.session).toBe(session);
+
+                sessionManager.removeSession({ "sessionMeta": altSessionMeta });
+
+                expect(sessionManager.sessions.length).toBe(1);
+                expect(sessionManager.activeSession.session).toBe(session);
+            });
+
+            it("removes the active session among several", () => {
+                const altSession = new ShellSession() as unknown as MockShellSession;
+
+                sessionManager.addSession(altSession);
+
+                expect(sessionManager.sessions.length).toBe(2);
+                expect(sessionManager.activeSession.session).toBe(altSession);
+
+                sessionManager.removeSession();
+
+                expect(sessionManager.sessions.length).toBe(1);
+                expect(sessionManager.activeSession.session).toBe(session);
+            });
+        });
+
+        describe("run()", () => {
+            beforeEach(() => {
+                sessionManager.addSession(session);
+            });
+
+            it("writes command input to the active session", () => {
                 const output  = "test";
                 const command = `echo ${output}`;
 
@@ -105,494 +394,238 @@ describe("SessionManager", () => {
                 session.emitOutput(output);
                 session.emitDelimiter(0);
 
-                await sessionManager.waitForReturn();
-
-                expect(sessionManager.output).toBe(output);
+                expect(session.write).toHaveBeenCalledWith(expect.stringContaining(command));
             });
 
-            it("...the output is multiple lines", async () => {
-                const output = ["test 1", "test 2"];
+            describe("returns a well-formed CommandMeta object...", () => {
+                it("with an accurate timestamp", () => {
+                    const startTS = Date.now();
+                    const cmdMeta = sessionManager.run("echo test");
+                    const endTS   = Date.now();
 
-                sessionManager.run("some-command");
+                    expect(cmdMeta.timeStart).toBeGreaterThanOrEqual(startTS);
+                    expect(cmdMeta.timeStart).toBeLessThanOrEqual(endTS);
+                });
 
-                session.emitOutput(output[0]);
-                session.emitOutput(output[1]);
-                session.emitDelimiter(0);
+                describe("with an output array...", () => {
+                    let cmdMeta: CommandMeta;
 
-                await sessionManager.waitForReturn();
+                    beforeEach(() => {
+                        cmdMeta = sessionManager.run("echo test");
+                    });
 
-                expect(sessionManager.output).toBe(output.join("\n"));
+                    it("which is initially empty", () => {
+                        expect(cmdMeta.output).toEqual([]);
+                    });
+
+                    describe("which fills with OutputMeta objects as session output is received...", () => {
+                        it("with accurate timestamps", () => {
+                            const startTS = Date.now();
+
+                            session.emitOutput("test");
+
+                            const endTS = Date.now();
+
+                            expect(cmdMeta.output[0].timestamp).toBeGreaterThanOrEqual(startTS);
+                            expect(cmdMeta.output[0].timestamp).toBeLessThanOrEqual(endTS);
+                        });
+
+                        it("with accurate source stream records", () => {
+                            session.emitOutput("test");
+                            session.emitError("whoops");
+
+                            expect(cmdMeta.output[0].stream).toBe(IOStream.STDOUT);
+                            expect(cmdMeta.output[1].stream).toBe(IOStream.STDERR);
+                        });
+                    });
+                });
+
+                it("with a promise that resolves after delimiter output is received", async () => {
+                    const cmdMeta = sessionManager.run("echo test");
+
+                    session.emitDelimiter(0);
+
+                    await expect(cmdMeta.promise).resolves.toBe(cmdMeta);
+                });
             });
 
-            it("...there is no output", async () => {
-                sessionManager.run("cd .");
+            it("throws if called while another command is in progress", () => {
+                const command = 'echo "long-running command"';
 
-                session.emitDelimiter(0);
+                // this promise will never resolve due to the throw
+                sessionManager.run(command);
 
-                await sessionManager.waitForReturn();
-
-                expect(sessionManager.output).toBe("");
+                expect(() => sessionManager.run('echo "overlapping command"')).toThrow(
+                    `A command is already running: ${command}`,
+                );
             });
         });
 
-        describe("returns undefined when...", () => {
-            it("...there are no managed sessions", () => {
-                expect(sessionManager.output).toBeUndefined();
+        describe("switchToNextSession()", () => {
+            let altSession: MockShellSession;
+
+            beforeEach(() => {
+                altSession = new ShellSession() as unknown as MockShellSession;
+
+                sessionManager.addSession(session);
+                sessionManager.addSession(altSession, "altSession", "/foo", false);
             });
 
-            it("...the active session has not executed any commands", () => {
+            it("switches to the next managed session", () => {
+                expect(sessionManager.activeSession.session).toBe(session);
+
+                sessionManager.switchToNextSession();
+
+                expect(sessionManager.activeSession.session).toBe(altSession);
+            });
+
+            it("switches to the first managed session if already at the last one", () => {
+                expect(sessionManager.activeSession.session).toBe(session);
+
+                sessionManager.switchToNextSession();
+
+                expect(sessionManager.activeSession.session).toBe(altSession);
+
+                sessionManager.switchToNextSession();
+
+                expect(sessionManager.activeSession.session).toBe(session);
+            });
+        });
+
+        describe("waitForReturn()", () => {
+            beforeEach(() => {
+                sessionManager.addSession(session);
+            });
+
+            it("resolves when delimiter output is received", async () => {
+                sessionManager.run("echo test");
+
+                session.emitOutput("test");
+
+                // wait arbitrary time to ensure promise hasn't resolved
+                await new Promise((resolve) => setTimeout(resolve, 10));
+
+                expect(sessionManager.exitCode).toBeUndefined();
+
+                session.emitDelimiter(0);
+
+                await sessionManager.waitForReturn();
+
+                expect(sessionManager.exitCode).toBeDefined();
+            });
+
+            it("throws if output contains malformed delimiter", async () => {
+                // this promise will never resolve because malformed delimiter doesn't trigger resolution
+                sessionManager.run("echo bad");
+
+                session.emitDelimiter(0, "/foo", true);
+
+                await expect(async () => sessionManager.waitForReturn()).rejects.toThrow(/^Unexpected token/);
+            });
+        });
+
+        describe("waitForOutput()", () => {
+            beforeEach(() => {
                 sessionManager.addSession(session);
 
-                expect(sessionManager.output).toBeUndefined();
-            });
-        });
-    });
-
-    describe("sessions", () => {
-        it("returns an empty array when there are no managed sessions", () => {
-            expect(sessionManager.sessions).toEqual([]);
-        });
-    });
-
-    describe("addSession()", () => {
-        beforeEach(() => {
-            sessionManager.addSession(session);
-        });
-
-        it("registers a single managed session", () => {
-            expect(sessionManager.sessions.length).toBe(1);
-            expect(sessionManager.sessions[0].session).toBe(session);
-        });
-
-        it("registers multiple managed sessions", () => {
-            const altSession = new ShellSession() as unknown as MockShellSession;
-
-            sessionManager.addSession(altSession);
-
-            expect(sessionManager.sessions.length).toBe(2);
-            expect(sessionManager.sessions[1].session).toBe(altSession);
-        });
-
-        it("registers named managed sessions", () => {
-            const altSession     = new ShellSession() as unknown as MockShellSession;
-            const altSessionName = "test session";
-
-            sessionManager.addSession(altSession, altSessionName);
-
-            expect(sessionManager.sessions[1].name).toBe(altSessionName);
-        });
-
-        it("activates new managed sessions by default", () => {
-            expect(sessionManager.activeSession.session).toBe(session);
-        });
-
-        it("switches the active session when adding more than one", () => {
-            expect(sessionManager.activeSession.session).toBe(session);
-
-            const altSession = new ShellSession() as unknown as MockShellSession;
-
-            sessionManager.addSession(altSession);
-
-            expect(sessionManager.activeSession.session).toBe(altSession);
-        });
-
-        it("doesn't activate new managed sessions if instructed not to", () => {
-            const altSession = new ShellSession() as unknown as MockShellSession;
-
-            sessionManager.addSession(altSession, "whatever", false);
-
-            expect(sessionManager.activeSession.session).toBe(session);
-        });
-    });
-
-    describe("killCommand()", () => {
-        beforeEach(() => {
-            sessionManager.addSession(session);
-        });
-
-        it("calls killCommand() with 'SIGTERM' on active session by default", async () => {
-            await sessionManager.killCommand();
-
-            expect(session.killCommand).toHaveBeenCalledWith("SIGTERM");
-        });
-
-        it("calls killCommand() with an alternative signal", async () => {
-            await sessionManager.killCommand({}, "test");
-
-            expect(session.killCommand).toHaveBeenCalledWith("test");
-        });
-    });
-
-    describe("killSession()", () => {
-        beforeEach(() => {
-            sessionManager.addSession(session);
-        });
-
-        it("resolves killSession() on session close", async () => {
-            let resolved = false;
-
-            const promise = sessionManager.killSession().then(() => (resolved = true));
-
-            // wait arbitrary time to ensure promise hasn't resolved
-            await new Promise((resolve) => setTimeout(resolve, 10));
-
-            expect(resolved).toBeFalsy();
-
-            session.emitClose();
-
-            await promise;
-
-            expect(resolved).toBeTruthy();
-            expect(session.killSession).toHaveBeenCalled();
-            expect(sessionManager.sessions.length).toBe(0);
-        });
-
-        it("kills only the active session via 'SIGTERM' by default", async () => {
-            const altSession = new ShellSession() as unknown as MockShellSession;
-
-            sessionManager.addSession(altSession);
-
-            const promise = sessionManager.killSession();
-
-            altSession.emitClose();
-
-            await promise;
-
-            expect(session.killSession).not.toHaveBeenCalled();
-            expect(altSession.killSession).toHaveBeenCalledWith("SIGTERM");
-            expect(sessionManager.sessions.length).toBe(1);
-        });
-
-        it("calls killCommand() with an alternative signal", async () => {
-            const promise = sessionManager.killSession({}, "test");
-
-            session.emitClose();
-
-            await promise;
-
-            expect(session.killSession).toHaveBeenCalledWith("test");
-        });
-    });
-
-    describe("killAllSessions()", () => {
-        it("kills all managed sessions", async () => {
-            const altSession = new ShellSession() as unknown as MockShellSession;
-
-            let resolved = false;
-
-            sessionManager.addSession(session, "session");
-            sessionManager.addSession(altSession, "altSession");
-
-            expect(sessionManager.sessions.length).toBe(2);
-
-            const promise = sessionManager.killAllSessions().then(() => (resolved = true));
-
-            // wait arbitrary time to ensure promise hasn't resolved
-            await new Promise((resolve) => setTimeout(resolve, 10));
-
-            expect(resolved).toBeFalsy();
-
-            session.emitClose();
-            altSession.emitClose();
-
-            await promise;
-
-            expect(resolved).toBeTruthy();
-            expect(session.killSession).toHaveBeenCalled();
-            expect(altSession.killSession).toHaveBeenCalled();
-            expect(sessionManager.sessions.length).toBe(0);
-        });
-    });
-
-    describe("removeSession()", () => {
-        beforeEach(() => {
-            sessionManager.addSession(session);
-        });
-
-        it("removes the sole managed session", () => {
-            expect(sessionManager.sessions.length).toBe(1);
-
-            sessionManager.removeSession();
-
-            expect(sessionManager.sessions.length).toBe(0);
-            expect(sessionManager.activeSession).toBeNull();
-        });
-
-        it("removes one managed session among several", () => {
-            const altSession     = new ShellSession() as unknown as MockShellSession;
-            const altSessionMeta = sessionManager.addSession(altSession, "whatever", false);
-
-            expect(sessionManager.sessions.length).toBe(2);
-            expect(sessionManager.activeSession.session).toBe(session);
-
-            sessionManager.removeSession({ "sessionMeta": altSessionMeta });
-
-            expect(sessionManager.sessions.length).toBe(1);
-            expect(sessionManager.activeSession.session).toBe(session);
-        });
-
-        it("removes the active session among several", () => {
-            const altSession = new ShellSession() as unknown as MockShellSession;
-
-            sessionManager.addSession(altSession);
-
-            expect(sessionManager.sessions.length).toBe(2);
-            expect(sessionManager.activeSession.session).toBe(altSession);
-
-            sessionManager.removeSession();
-
-            expect(sessionManager.sessions.length).toBe(1);
-            expect(sessionManager.activeSession.session).toBe(session);
-        });
-    });
-
-    describe("run()", () => {
-        beforeEach(() => {
-            sessionManager.addSession(session);
-        });
-
-        it("writes command input to the active session", () => {
-            const output  = "test";
-            const command = `echo ${output}`;
-
-            sessionManager.run(command);
-
-            session.emitOutput(output);
-            session.emitDelimiter(0);
-
-            expect(session.write).toHaveBeenCalledWith(expect.stringContaining(command));
-        });
-
-        describe("returns a well-formed CommandMeta object...", () => {
-            it("with an accurate timestamp", () => {
-                const startTS = Date.now();
-                const cmdMeta = sessionManager.run("echo test");
-                const endTS   = Date.now();
-
-                expect(cmdMeta.timeStart).toBeGreaterThanOrEqual(startTS);
-                expect(cmdMeta.timeStart).toBeLessThanOrEqual(endTS);
+                sessionManager.run("echo foo");
             });
 
-            describe("with an output array...", () => {
-                let cmdMeta: CommandMeta;
+            it("resolves when any output is received by default", async () => {
+                let resolved = false;
 
-                beforeEach(() => {
-                    cmdMeta = sessionManager.run("echo test");
-                });
+                const promise = sessionManager.waitForOutput().then(() => (resolved = true));
 
-                it("which is initially empty", () => {
-                    expect(cmdMeta.output).toEqual([]);
-                });
+                expect(resolved).toBe(false);
 
-                describe("which fills with OutputMeta objects as session output is received...", () => {
-                    it("with accurate timestamps", () => {
-                        const startTS = Date.now();
+                session.emitOutput("foo\n");
 
-                        session.emitOutput("test");
+                await promise;
 
-                        const endTS = Date.now();
-
-                        expect(cmdMeta.output[0].timestamp).toBeGreaterThanOrEqual(startTS);
-                        expect(cmdMeta.output[0].timestamp).toBeLessThanOrEqual(endTS);
-                    });
-
-                    it("with accurate source stream records", () => {
-                        session.emitOutput("test");
-                        session.emitError("whoops");
-
-                        expect(cmdMeta.output[0].stream).toBe(IOStream.STDOUT);
-                        expect(cmdMeta.output[1].stream).toBe(IOStream.STDERR);
-                    });
-                });
+                expect(sessionManager.output).toBe("foo");
+                expect(resolved).toBe(true);
             });
 
-            it("with a promise that resolves after delimiter output is received", async () => {
-                const cmdMeta = sessionManager.run("echo test");
+            it("resolves only after output is received matching a certain pattern", async () => {
+                let resolved = false;
 
-                session.emitDelimiter(0);
+                const opts    = { "pattern": "bar" };
+                const promise = sessionManager.waitForOutput(opts).then(() => (resolved = true));
 
-                await expect(cmdMeta.promise).resolves.toBe(cmdMeta);
+                // wait arbitrary time to ensure promise hasn't resolved
+                await new Promise((resolve) => setTimeout(resolve, 10));
+
+                expect(resolved).toBe(false);
+
+                session.emitOutput("foo");
+
+                await new Promise((resolve) => setTimeout(resolve, 10));
+
+                expect(resolved).toBe(false);
+
+                session.emitOutput("bar");
+
+                await promise;
+
+                expect(sessionManager.output).toBe("foo\nbar");
+                expect(resolved).toBe(true);
             });
-        });
 
-        it("throws if called while another command is in progress", () => {
-            const command = 'echo "long-running command"';
+            it("resolves only after output is received on a specific stream", async () => {
+                let resolved = false;
 
-            // this promise will never resolve due to the throw
-            sessionManager.run(command);
+                const opts    = { "stream": IOStream.STDERR };
+                const promise = sessionManager.waitForOutput(opts).then(() => (resolved = true));
 
-            expect(() => sessionManager.run('echo "overlapping command"')).toThrow(
-                `A command is already running: ${command}`,
-            );
-        });
-    });
+                // wait arbitrary time to ensure promise hasn't resolved
+                await new Promise((resolve) => setTimeout(resolve, 10));
 
-    describe("switchToNextSession()", () => {
-        let altSession: MockShellSession;
+                expect(resolved).toBe(false);
 
-        beforeEach(() => {
-            altSession = new ShellSession() as unknown as MockShellSession;
+                session.emitOutput("foo");
 
-            sessionManager.addSession(session);
-            sessionManager.addSession(altSession, "altSession", false);
-        });
+                await new Promise((resolve) => setTimeout(resolve, 10));
 
-        it("switches to the next managed session", () => {
-            expect(sessionManager.activeSession.session).toBe(session);
+                expect(resolved).toBe(false);
 
-            sessionManager.switchToNextSession();
+                session.emitError("bar");
 
-            expect(sessionManager.activeSession.session).toBe(altSession);
-        });
+                await promise;
 
-        it("switches to the first managed session if already at the last one", () => {
-            expect(sessionManager.activeSession.session).toBe(session);
+                expect(sessionManager.output).toBe("foo\nbar");
+                expect(resolved).toBe(true);
+            });
 
-            sessionManager.switchToNextSession();
+            it("resolves only after output is received matching both a certain pattern and stream", async () => {
+                let resolved = false;
 
-            expect(sessionManager.activeSession.session).toBe(altSession);
+                const opts    = { "pattern": "baz", "stream": IOStream.STDERR };
+                const promise = sessionManager.waitForOutput(opts).then(() => (resolved = true));
 
-            sessionManager.switchToNextSession();
+                // wait arbitrary time to ensure promise hasn't resolved
+                await new Promise((resolve) => setTimeout(resolve, 10));
 
-            expect(sessionManager.activeSession.session).toBe(session);
-        });
-    });
+                expect(resolved).toBe(false);
 
-    describe("waitForReturn()", () => {
-        beforeEach(() => {
-            sessionManager.addSession(session);
-        });
+                session.emitOutput("foo");
 
-        it("resolves when delimiter output is received", async () => {
-            sessionManager.run("echo test");
+                await new Promise((resolve) => setTimeout(resolve, 10));
 
-            session.emitOutput("test");
+                expect(resolved).toBe(false);
 
-            // wait arbitrary time to ensure promise hasn't resolved
-            await new Promise((resolve) => setTimeout(resolve, 10));
+                session.emitError("bar");
 
-            expect(sessionManager.exitCode).toBeUndefined();
+                await new Promise((resolve) => setTimeout(resolve, 10));
 
-            session.emitDelimiter(0);
+                expect(resolved).toBe(false);
 
-            await sessionManager.waitForReturn();
+                session.emitError("baz");
 
-            expect(sessionManager.exitCode).toBeDefined();
-        });
+                await promise;
 
-        it("throws if output contains malformed delimiter", async () => {
-            // this promise will never resolve because malformed delimiter doesn't trigger resolution
-            sessionManager.run("echo bad");
-
-            session.emitDelimiter(0, true);
-
-            await expect(async () => sessionManager.waitForReturn()).rejects.toThrow(
-                /^Output does not contain a value for ".+"$/,
-            );
-        });
-    });
-
-    describe("waitForOutput()", () => {
-        beforeEach(() => {
-            sessionManager.addSession(session);
-
-            sessionManager.run("echo foo");
-        });
-
-        it("resolves when any output is received by default", async () => {
-            let resolved = false;
-
-            const promise = sessionManager.waitForOutput().then(() => (resolved = true));
-
-            expect(resolved).toBe(false);
-
-            session.emitOutput("foo\n");
-
-            await promise;
-
-            expect(sessionManager.output).toBe("foo");
-            expect(resolved).toBe(true);
-        });
-
-        it("resolves only after output is received matching a certain pattern", async () => {
-            let resolved = false;
-
-            const opts    = { "pattern": "bar" };
-            const promise = sessionManager.waitForOutput(opts).then(() => (resolved = true));
-
-            // wait arbitrary time to ensure promise hasn't resolved
-            await new Promise((resolve) => setTimeout(resolve, 10));
-
-            expect(resolved).toBe(false);
-
-            session.emitOutput("foo");
-
-            await new Promise((resolve) => setTimeout(resolve, 10));
-
-            expect(resolved).toBe(false);
-
-            session.emitOutput("bar");
-
-            await promise;
-
-            expect(sessionManager.output).toBe("foo\nbar");
-            expect(resolved).toBe(true);
-        });
-
-        it("resolves only after output is received on a specific stream", async () => {
-            let resolved = false;
-
-            const opts    = { "stream": IOStream.STDERR };
-            const promise = sessionManager.waitForOutput(opts).then(() => (resolved = true));
-
-            // wait arbitrary time to ensure promise hasn't resolved
-            await new Promise((resolve) => setTimeout(resolve, 10));
-
-            expect(resolved).toBe(false);
-
-            session.emitOutput("foo");
-
-            await new Promise((resolve) => setTimeout(resolve, 10));
-
-            expect(resolved).toBe(false);
-
-            session.emitError("bar");
-
-            await promise;
-
-            expect(sessionManager.output).toBe("foo\nbar");
-            expect(resolved).toBe(true);
-        });
-
-        it("resolves only after output is received matching both a certain pattern and stream", async () => {
-            let resolved = false;
-
-            const opts    = { "pattern": "baz", "stream": IOStream.STDERR };
-            const promise = sessionManager.waitForOutput(opts).then(() => (resolved = true));
-
-            // wait arbitrary time to ensure promise hasn't resolved
-            await new Promise((resolve) => setTimeout(resolve, 10));
-
-            expect(resolved).toBe(false);
-
-            session.emitOutput("foo");
-
-            await new Promise((resolve) => setTimeout(resolve, 10));
-
-            expect(resolved).toBe(false);
-
-            session.emitError("bar");
-
-            await new Promise((resolve) => setTimeout(resolve, 10));
-
-            expect(resolved).toBe(false);
-
-            session.emitError("baz");
-
-            await promise;
-
-            expect(sessionManager.output).toBe("foo\nbar\nbaz");
-            expect(resolved).toBe(true);
+                expect(sessionManager.output).toBe("foo\nbar\nbaz");
+                expect(resolved).toBe(true);
+            });
         });
     });
 });

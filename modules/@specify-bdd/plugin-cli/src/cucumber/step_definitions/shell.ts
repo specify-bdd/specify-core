@@ -15,15 +15,19 @@ import type { SpawnOptions } from "node:child_process";
 
 Given("a/another CLI shell", startDefaultShell);
 
-When("a/the user starts a/another CLI shell", startDefaultShell);
+Given("(that )the working directory is {filePath}", changeDirectory);
 
-When("a/the user switches shells", switchShell);
+When("a/the user changes the working directory to {filePath}", changeDirectory);
 
 When("a/the user runs the command/process {refstr}", { "timeout": 60000 }, execCommandSync);
 
 When("a/the user sends a {cliSignal} signal to the last command", sendKillSignal);
 
-When("a/the user starts the (async )command/process {refstr}", execCommand);
+When("a/the user starts a/another CLI shell", startDefaultShell);
+
+When("a/the user starts a/an/the (async )command/process {refstr}", execCommand);
+
+When("a/the user switches shells", switchShell);
 
 When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
 
@@ -80,9 +84,8 @@ Then(
 );
 
 Then("the last command's exit code/status should be {int}", verifyExitCode);
-Then("the last command's exit code/status should be a/an {int}", verifyExitCode);
-
 Then("the last command's exit code/status should be {ref}", verifyExitCode);
+Then("the last command's exit code/status should be a/an {int}", verifyExitCode);
 Then("the last command's exit code/status should be a/an {ref}", verifyExitCode);
 
 Then(
@@ -106,6 +109,31 @@ Then(
 );
 
 /**
+ * Change the current working directory in the active shell.
+ *
+ * @param dirPath - The new working directory
+ *
+ * @throws AssertionError
+ * If there is no SessionManager initialized.
+ *
+ * @throws AssertionError
+ * If the `cd` command returns a non-zero exit code.
+ */
+async function changeDirectory(dirPath: string): Promise<void> {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    const resolvedPath = resolve(this.cli.cwd, dirPath);
+
+    this.cli.manager.run(`cd ${resolvedPath}`);
+
+    await this.cli.manager.waitForReturn();
+
+    assert.equal(this.cli.manager.exitCode, 0, `Could not change directory to ${resolvedPath}.`);
+
+    this.cli.cwd = this.cli.manager.cwd;
+}
+
+/**
  * Execute the given command via the CLI asynchronously and move on without
  * waiting for it to return.
  *
@@ -127,6 +155,8 @@ function execCommand(command: string): void {
 async function execCommandSync(command: string): Promise<void> {
     execCommand.call(this, command);
     await waitForCommandReturn.call(this);
+
+    this.cli.cwd = this.cli.manager.cwd;
 }
 
 /**
@@ -145,7 +175,7 @@ async function sendKillSignal(signal: string): Promise<void> {
  * @param name - The name of the shell
  */
 function startNamedDefaultShell(name?: string): void {
-    const options: SpawnOptions = { "env": { ...process.env } };
+    const options: SpawnOptions = { "cwd": this.cli.cwd, "env": { ...process.env } };
 
     // strip Cucumber env vars from the options object that will be passed to the child process
     // helps to ensure a Specify process run by Specify doesn't get confused by its parent's operating parameters
@@ -163,7 +193,7 @@ function startNamedDefaultShell(name?: string): void {
     const shell = new ShellSession(options);
 
     this.cli.manager ??= new SessionManager();
-    this.cli.manager.addSession(shell, name);
+    this.cli.manager.addSession(shell, name, this.cli.manager.cwd);
 }
 
 /**
@@ -183,6 +213,8 @@ function switchShell(): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     this.cli.manager.switchToNextSession();
+
+    this.cli.cwd = this.cli.manager.cwd;
 }
 
 /**
@@ -300,6 +332,8 @@ async function waitForAnyOutput(): Promise<void> {
 async function waitForCommandReturn(): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     await this.cli.manager.waitForReturn();
+
+    this.cli.cwd = this.cli.manager.cwd;
 }
 
 /**
@@ -314,6 +348,8 @@ async function waitForCommandReturn(): Promise<void> {
 async function waitForOutput(stream?: IOStream, pattern?: RegExp): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     await this.cli.manager.waitForOutput({ pattern, stream });
+
+    this.cli.cwd = this.cli.manager.cwd;
 }
 
 /**
