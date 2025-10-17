@@ -84,8 +84,7 @@ Feature: Watch Mode
             Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match "Conflicting options"
 
-        @skip
         Scenario: Watch mode requires valid file paths
             When a user runs the command "npx specify test --watch ./nonexistent/path"
-            Then the command should exit with an "error" status code
-            And the console output should include "path not found error"
+            Then the last command's exit code should be a ${ref.exitCode.error}
+            And the last command's terminal output should match ${ref.terminalOutput.pathNotFoundError}

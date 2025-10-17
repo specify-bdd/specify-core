@@ -122,7 +122,8 @@ export class TestCommandWatcher {
                 const errorMessage =
                     resError instanceof Error ? resError.message : String(resError);
 
-                this.#debugLog(`Command execution failed: ${errorMessage}`, resError, true);
+                log(errorMessage);
+                process.exit(2);
             }
         } catch (error) {
             this.#debugLog(
