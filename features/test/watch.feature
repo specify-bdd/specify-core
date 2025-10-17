@@ -62,20 +62,20 @@ Feature: Watch Mode
 
     Rule: Watch mode can be stopped gracefully
 
-        @skip
         Scenario: Watch mode stops on user interrupt
-            Given that watch mode is running
-            When the user sends a SIGINT signal (Ctrl+C)
-            Then the watch mode should stop gracefully
-            And the console output should include "Watch mode stopped"
+            When a user starts the async command "npx specify test --watch ./binary/passing.feature"
+            And a user waits for terminal output matching "Watching for changes"
+            And a user sends a "SIGINT" signal to the last command
+            And a user waits for the last command to return
+            Then the last command's exit code should be 130
 
-        @skip
         Scenario: Watch mode exits with error status when interrupted during test run
-            Given that a "long running feature" file exists at "./features"
-            And that watch mode is running
-            When the user sends a SIGINT signal during test execution
-            Then the watch mode should stop gracefully
-            And the command should exit with an appropriate status code
+            When a user starts the async command "npx specify test --watch ./slow.feature"
+            And a user waits for 0.5 seconds
+            And a user sends a "SIGINT" signal to the last command
+            And a user waits for the last command to return
+            Then the last command's terminal output should not match "Watching"
+            Then the last command's exit code should be 130
 
     Rule: Watch mode option validation
 

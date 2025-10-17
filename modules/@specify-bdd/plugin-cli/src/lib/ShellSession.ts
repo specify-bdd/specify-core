@@ -6,6 +6,7 @@
  */
 
 import { spawn } from "node:child_process";
+import psList    from "ps-list";
 import kill      from "tree-kill";
 
 import type { ChildProcessWithoutNullStreams, SpawnOptions } from "node:child_process";
@@ -13,7 +14,7 @@ import type { ChildProcessWithoutNullStreams, SpawnOptions } from "node:child_pr
 import type { SystemIOSession } from "@/interfaces/SystemIOSession";
 
 export class ShellSession implements SystemIOSession {
-    private childProcess: ChildProcessWithoutNullStreams;
+    #childProcess: ChildProcessWithoutNullStreams;
 
     /**
      * Creates a new interactive shell session.
@@ -28,14 +29,29 @@ export class ShellSession implements SystemIOSession {
     constructor(options: SpawnOptions = {}) {
         options.shell ??= true;
 
-        this.childProcess = spawn("sh", options);
+        this.#childProcess = spawn("sh", options);
+    }
+
+    /**
+     * Gracefully terminates the current command process.
+     *
+     * @param signal - The system signal to pass to kill()
+     */
+    async killCommand(signal: string = "SIGTERM"): Promise<void> {
+        const processes      = await psList();
+        const subProcess     = processes.find((process) => process.ppid === this.#childProcess.pid);
+        const commandProcess = processes.find((process) => process.ppid === subProcess.pid);
+
+        kill(commandProcess.pid, signal);
     }
 
     /**
      * Gracefully terminates the shell session.
+     *
+     * @param signal - The system signal to pass to kill()
      */
-    kill(): void {
-        kill(this.childProcess.pid);
+    killSession(signal: string = "SIGTERM"): void {
+        kill(this.#childProcess.pid, signal);
     }
 
     /**
@@ -44,7 +60,7 @@ export class ShellSession implements SystemIOSession {
      * @param callback - function to call when the shell session ends
      */
     onClose(callback: () => void): void {
-        this.childProcess.on("close", callback);
+        this.#childProcess.on("close", callback);
     }
 
     /**
@@ -53,7 +69,7 @@ export class ShellSession implements SystemIOSession {
      * @param callback - function that receives error data as a string
      */
     onError(callback: (data: string) => void): void {
-        this.childProcess.stderr.on("data", (data: Buffer) => callback(data.toString("utf8")));
+        this.#childProcess.stderr.on("data", (data: Buffer) => callback(data.toString("utf8")));
     }
 
     /**
@@ -62,7 +78,7 @@ export class ShellSession implements SystemIOSession {
      * @param callback - function that receives output data as a string.
      */
     onOutput(callback: (data: string) => void): void {
-        this.childProcess.stdout.on("data", (data: Buffer) => callback(data.toString("utf8")));
+        this.#childProcess.stdout.on("data", (data: Buffer) => callback(data.toString("utf8")));
     }
 
     /**
@@ -72,6 +88,6 @@ export class ShellSession implements SystemIOSession {
      *                  user pressing the "enter" key on their keyboard
      */
     write(command: string): void {
-        this.childProcess.stdin.write(`${command}\n`);
+        this.#childProcess.stdin.write(`${command}\n`);
     }
 }

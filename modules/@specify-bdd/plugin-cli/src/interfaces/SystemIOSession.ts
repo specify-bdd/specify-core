@@ -1,5 +1,6 @@
 export interface SystemIOSession {
-    kill(): void;
+    killCommand(signal?: string): void;
+    killSession(signal?: string): void;
     onClose(callback: () => void): void;
     onError(callback: (data: string) => void): void;
     onOutput(callback: (data: string) => void): void;
