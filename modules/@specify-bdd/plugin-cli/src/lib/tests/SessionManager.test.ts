@@ -205,12 +205,24 @@ describe("SessionManager", () => {
         });
     });
 
-    describe("kill()", () => {
+    describe("killCommand()", () => {
         beforeEach(() => {
             sessionManager.addSession(session);
         });
 
-        it("resolves kill() on session close", async () => {
+        it("calls killCommand() on active session by default", async () => {
+            await sessionManager.killCommand();
+
+            expect(session.killCommand).toHaveBeenCalled();
+        });
+    });
+
+    describe("killSession()", () => {
+        beforeEach(() => {
+            sessionManager.addSession(session);
+        });
+
+        it("resolves killSession() on session close", async () => {
             let resolved = false;
 
             const promise = sessionManager.killSession().then(() => (resolved = true));
