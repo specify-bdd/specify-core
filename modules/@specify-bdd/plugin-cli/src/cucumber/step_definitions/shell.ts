@@ -19,6 +19,8 @@ When("a/the user switches shells", switchShell);
 
 When("a/the user runs the command/process {refstr}", { "timeout": 60000 }, execCommandSync);
 
+When("a/the user sends a {cliSignal} signal to the last command", sendKillSignal);
+
 When("a/the user starts the (async )command/process {refstr}", execCommand);
 
 When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
@@ -123,6 +125,16 @@ function execCommand(command: string): void {
 async function execCommandSync(command: string): Promise<void> {
     execCommand.call(this, command);
     await waitForCommandReturn.call(this);
+}
+
+/**
+ * Send a system kill signal to the command in the last used CLI.
+ *
+ * @param signal - The system signal to pass to killCommand()
+ */
+async function sendKillSignal(signal: string): Promise<void> {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+    await this.cli.manager.killCommand({}, signal);
 }
 
 /**
