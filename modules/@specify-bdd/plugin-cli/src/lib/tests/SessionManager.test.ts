@@ -354,7 +354,12 @@ describe("SessionManager", () => {
 
             it("removes one managed session among several", () => {
                 const altSession     = new ShellSession() as unknown as MockShellSession;
-                const altSessionMeta = sessionManager.addSession(altSession, "whatever", "/foo", false);
+                const altSessionMeta = sessionManager.addSession(
+                    altSession,
+                    "whatever",
+                    "/foo",
+                    false,
+                );
 
                 expect(sessionManager.sessions.length).toBe(2);
                 expect(sessionManager.activeSession.session).toBe(session);
@@ -520,7 +525,9 @@ describe("SessionManager", () => {
 
                 session.emitDelimiter(0, "/foo", true);
 
-                await expect(async () => sessionManager.waitForReturn()).rejects.toThrow(/^Unexpected token/);
+                await expect(async () => sessionManager.waitForReturn()).rejects.toThrow(
+                    /^Unexpected token/,
+                );
             });
         });
 
