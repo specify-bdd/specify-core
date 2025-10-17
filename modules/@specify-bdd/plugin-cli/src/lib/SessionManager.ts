@@ -190,7 +190,7 @@ export class SessionManager {
         cwd?: string,
         activate: boolean = true,
     ): SessionMeta {
-        cwd ??= process.cwd();
+        cwd ??= this.cwd;
 
         const sessionMeta: SessionMeta = { "commands": [], name, cwd, session };
 

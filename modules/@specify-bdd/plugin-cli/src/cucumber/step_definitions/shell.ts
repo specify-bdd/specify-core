@@ -193,7 +193,7 @@ function startNamedDefaultShell(name?: string): void {
     const shell = new ShellSession(options);
 
     this.cli.manager ??= new SessionManager();
-    this.cli.manager.addSession(shell, name, this.cli.manager.cwd);
+    this.cli.manager.addSession(shell, name, this.cli.cwd);
 }
 
 /**
