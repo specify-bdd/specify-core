@@ -8,7 +8,7 @@
 
 import { Command as App   } from "commander"; // aliased to avoid confusion with our XCommand classes
 import merge                from "deepmerge";
-import { error, log       } from "node:console";
+import { error            } from "node:console";
 import path                 from "node:path";
 import util                 from "node:util";
 import { deserializeError } from "serialize-error";
@@ -115,7 +115,7 @@ async function runTests(paths: string[], opts: TestCommandArguments = {}): Promi
 
     if (args.watch) {
         if (args.rerun) {
-            log("Conflicting options: --rerun cannot be used with --watch");
+            error("Conflicting options: --rerun cannot be used with --watch");
             process.exit(2);
         }
 
