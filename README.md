@@ -9,13 +9,13 @@
 ![CodeQL](https://github.com/specify-bdd/specify-core/actions/workflows/github-code-scanning/codeql/badge.svg)
 ![Dependabot](https://github.com/specify-bdd/specify-core/actions/workflows/dependabot/dependabot-updates/badge.svg)
 
-BDD can be easy.  At **Specify**, we're building a suite of batteries-included tools to help engineers, QA, and product
-managers to collaborate smoothly and effectively through behavior-driven development.  As the beneficiaries of essential
-open-source software like Cucumber and Selenium, we're sharing our core technologies with the world for the mutual
-benefit of all.  We hope that these utilities will be an asset to teams and businesses attempting to implement BDD who
-could use a little help linking together disparate tools with some assembly required.  Specify brings together 
-road-tested underlying technologies, thoughtful quality-of-life improvements informed by years of experience, and a
-commitment to building open architecture extensible and hackable by our users.
+BDD can be easy.  **Specify** brings together road-tested underlying technologies, thoughtful quality-of-life
+improvements informed by years of experience, and a commitment to building open architecture extensible and hackable by
+our users.  Built on top of an open-source foundation including BDD essentials like
+[Cucumber](https://github.com/cucumber/cucumber-js) and [Selenium](https://www.selenium.dev/documentation/), Specify is
+a suite of batteries-included tools designed to help engineers, QA, and product managers to collaborate smoothly and
+effectively through behavior-driven development.  We hope that these utilities will be an asset to teams and businesses
+that want to implement BDD but need a little help bringing everything and everyone together.
 
 ## Open-Source Packages
 * [Specify](https://www.npmjs.com/package/@specify-bdd/specify)
