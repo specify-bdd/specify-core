@@ -44,7 +44,7 @@ interface Delimiter {
  */
 interface DelimiterPayload {
     cwd: string;
-    exitCode: string;
+    exitCode: string; // this is initially set with a util.format placeholder (%d) so it must be a string type
     uuid: string;
 }
 
@@ -393,8 +393,8 @@ export class SessionManager {
         const suffix = "SPECIFY DELIM END";
         const uuid   = randomUUID(); // used to prevent false delimits
 
-        const payload: DelimiterPayload = { "exitCode": "%d", "cwd": "%s", uuid };
-        const payloadStr                = JSON.stringify(payload);
+        const payload    = { "exitCode": "%d", "cwd": "%s", uuid } as DelimiterPayload;
+        const payloadStr = JSON.stringify(payload);
 
         return {
             "command": `;printf '${prefix} ${payloadStr} ${suffix}' "$?" "$(pwd)"`, // Windows friendly?
