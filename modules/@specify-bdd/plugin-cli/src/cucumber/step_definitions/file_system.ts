@@ -12,20 +12,17 @@ import { tmpdir                               } from "node:os";
 import { join                                 } from "node:path";
 
 Given("a new temp file path referenced as {string}", createTempFileRef);
-Given("(that )the working directory is {filePath}", changeDirectory);
 
-Given("(that )the {filePath} file content is {string}", setFileContent);
-Given("(that )the {ref} file content is {string}", setFileContent);
+Given("(that )the {filePath} file content is {string}", writeFileContent);
+Given("(that )the {ref} file content is {string}", writeFileContent);
 
-Given("(that )the {filePath} file content is empty", createEmptyFile);
-Given("(that )the {ref} file content is empty", createEmptyFile);
+Given("(that )the {filePath} file content is empty", writeEmptyFileContent);
+Given("(that )the {ref} file content is empty", writeEmptyFileContent);
 
-When("a/the user changes the working directory to {filePath}", changeDirectory);
+When("a/the user changes the {filePath} file content to {string}", writeFileContent);
 
-When("the {filePath} file content is changed to {string}", setFileContent);
-
-When("the {filePath} file is created", createEmptyFile);
-When("the {filePath} file is deleted", deleteFile);
+When("a/the user creates the {filePath} file", writeEmptyFileContent);
+When("a/the user deletes the {filePath} file", deleteFile);
 
 Then("the {filePath} file content should be empty", verifyFileIsEmpty);
 Then("the {ref} file content should be empty", verifyFileIsEmpty);
@@ -35,37 +32,6 @@ Then("the {ref} file content should match {ref}", verifyFileContent);
 
 Then("the {filePath} file path should exist", verifyFilePathExists);
 Then("the {ref} file path should exist", verifyFilePathExists);
-
-/**
- * Change the current working directory in the active shell.
- *
- * @param dirPath - The new working directory
- *
- * @throws AssertionError
- * If there is no SessionManager initialized.
- *
- * @throws AssertionError
- * If the `cd` command returns a non-zero exit code.
- */
-async function changeDirectory(dirPath: string): Promise<void> {
-    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
-
-    this.cli.manager.run(`cd ${dirPath}`);
-
-    await this.cli.manager.waitForReturn();
-
-    assert.equal(this.cli.manager.exitCode, 0, `Could not change directory to ${dirPath}.`);
-}
-
-/**
- * Create an empty file at the given path.
- * If the file already exists, it will become empty.
- *
- * @param filePath - The path to the file
- */
-async function createEmptyFile(filePath: string): Promise<void> {
-    await writeFile(filePath, "");
-}
 
 /**
  * Create a new /tmp filepath and store it in QuickRef at the given address.
@@ -88,17 +54,6 @@ async function deleteFile(filePath: string): Promise<void> {
     await verifyFilePathExists.call(this, filePath);
 
     await unlink(filePath);
-}
-
-/**
- * Set the content of the file at the given path. Creates the file if it does not exist,
- * overwrites if it does.
- *
- * @param filepath - The path to the file to set content for
- * @param content  - The content to write to the file
- */
-async function setFileContent(filepath: string, content: string): Promise<void> {
-    await writeFile(filepath, content);
 }
 
 /**
@@ -156,4 +111,25 @@ async function verifyFilePathExists(filePath: string): Promise<void> {
         existsSync(filePath),
         new AssertionError({ "message": `The file path "${filePath}" does not exist` }),
     );
+}
+
+/**
+ * Create an empty file at the given path.
+ * If the file already exists, it will be overwritten as empty.
+ *
+ * @param filePath - The path to the file
+ */
+async function writeEmptyFileContent(filePath: string): Promise<void> {
+    await writeFileContent.call(this, filePath, "");
+}
+
+/**
+ * Set the content of the file at the given path. Creates the file if it does
+ * not exist, overwrites if it does.
+ *
+ * @param filePath - The path to the file to set content for
+ * @param content  - The content to write to the file
+ */
+async function writeFileContent(filePath: string, content: string): Promise<void> {
+    await writeFile(filePath, content);
 }

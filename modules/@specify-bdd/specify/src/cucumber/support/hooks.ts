@@ -45,6 +45,11 @@ Before({ "name": "Core before hook" }, async function (data) {
 
     // initialize an empty attempt object with a unique ID
     this.pickle.attempts[data.testCaseStartedId] = {};
+
+    // initialize the file system namespace
+    this.fs = {
+        "cwd": process.cwd(),
+    };
 });
 
 After({ "name": "Core after hook" }, async function (data) {

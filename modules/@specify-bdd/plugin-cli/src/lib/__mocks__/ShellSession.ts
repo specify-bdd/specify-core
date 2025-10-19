@@ -1,5 +1,6 @@
 import { vi } from "vitest";
 import assert from "node:assert/strict";
+import util   from "node:util";
 
 export class ShellSession {
     #curCommand: string;
@@ -11,12 +12,18 @@ export class ShellSession {
         this.#closeCallbacks.forEach((cb) => cb());
     });
 
-    emitDelimiter = vi.fn((statusCode: number, malformed?: boolean) => {
-        const match = this.#curCommand.match(/;echo\s"(.+)"$/);
+    emitDelimiter = vi.fn((statusCode: number, cwd?: string, malformed?: boolean) => {
+        const match = this.#curCommand.match(/;printf '([^']+)' "[^"]+" "[^"]+"$/);
+
+        let delimiter: string;
 
         assert.ok(match, "Delimiter not found in command!");
 
-        const delimiter = match[1].replace(/\$\?/, malformed ? "badvalue" : statusCode.toString());
+        if (malformed) {
+            delimiter = match[1].replace(/"%d"/, "%d"); // unquote the number format specifier to break the JSON
+        } else {
+            delimiter = util.format(match[1], statusCode.toString(), cwd);
+        }
 
         this.emitOutput(delimiter);
     });

@@ -49,7 +49,7 @@ describe("TestCommand", () => {
             });
 
             it("paths", async () => {
-                const featPath = "./assets/gherkin/binary/passing.feature";
+                const featPath = "./test/gherkin/binary/passing.feature";
                 const userArgs = { "paths": [featPath] };
                 const cmd      = new TestCommand();
 
@@ -234,7 +234,7 @@ describe("TestCommand", () => {
 
             describe("test results", () => {
                 it("passing", async () => {
-                    const userArgs = { "paths": ["./assets/gherkin/binary/passing.feature"] };
+                    const userArgs = { "paths": ["./test/gherkin/binary/passing.feature"] };
                     const cmd      = new TestCommand(userOpts);
 
                     mockRunCucumber.mockResolvedValueOnce({
@@ -248,7 +248,7 @@ describe("TestCommand", () => {
                 });
 
                 it("failing", async () => {
-                    const userArgs = { "paths": ["./assets/gherkin/binary/failing.feature"] };
+                    const userArgs = { "paths": ["./test/gherkin/binary/failing.feature"] };
                     const cmd      = new TestCommand(userOpts);
 
                     mockRunCucumber.mockResolvedValueOnce({
@@ -274,7 +274,7 @@ describe("TestCommand", () => {
 
                 it("no executed tests", async () => {
                     const error    = Error("No tests were executed.");
-                    const userArgs = { "paths": ["./assets/gherkin/empty"] };
+                    const userArgs = { "paths": ["./test/gherkin/empty"] };
 
                     mockRunCucumber.mockRejectedValueOnce(error);
 
@@ -288,7 +288,7 @@ describe("TestCommand", () => {
                     const userArgs = {
                         "rerun":     "true",
                         "rerunFile": "/test/rerun.txt",
-                        "paths":     ["./assets/gherkin/empty"],
+                        "paths":     ["./test/gherkin/empty"],
                     };
 
                     mockRunCucumber.mockRejectedValueOnce(error);

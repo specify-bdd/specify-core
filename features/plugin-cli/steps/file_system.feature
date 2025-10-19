@@ -11,5 +11,5 @@ Feature: File System Step Definitions
             And a CLI shell
 
         Scenario:
-            When the user changes the working directory to "./assets"
+            When the user changes the working directory to "./test"
             # Then the working directory will include "assets" 

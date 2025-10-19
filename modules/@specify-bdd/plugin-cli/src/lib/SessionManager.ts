@@ -32,7 +32,19 @@ export interface CommandMeta {
  */
 interface Delimiter {
     command: string;
+    prefix: string;
     regexp: RegExp;
+    suffix: string;
+    uuid: string;
+}
+
+/**
+ * Internal structure used to form the payload data encoded as JSON in a command
+ *  delimiter string.
+ */
+interface DelimiterPayload {
+    cwd: string;
+    exitCode: string; // this is initially set with a util.format placeholder (%d) so it must be a string type
     uuid: string;
 }
 
@@ -50,6 +62,7 @@ export interface OutputMeta {
  */
 export interface SessionMeta {
     commands: CommandMeta[];
+    cwd: string;
     name?: string;
     session: SystemIOSession;
 }
@@ -97,11 +110,6 @@ export class SessionManager {
     #sessions: SessionMeta[] = [];
 
     /**
-     * The exit code marker used in delimiter strings
-     */
-    static #exitCodeKey = "EXIT_CODE";
-
-    /**
      * The managed session which is currently active
      */
     get activeSession(): SessionMeta {
@@ -127,6 +135,13 @@ export class SessionManager {
      */
     get commandStartTime(): number {
         return this.#getLastCommand().timeStart;
+    }
+
+    /**
+     * The current working directory of the active session.
+     */
+    get cwd(): string {
+        return this.#activeSession?.cwd;
     }
 
     /**
@@ -165,10 +180,19 @@ export class SessionManager {
      *
      * @param session  - The session to manage
      * @param name     - The name of the session, for easy reference
+     * @param cwd      - The session's current working directory; defaults to
+     *                   the manager's CWD
      * @param activate - Activate the new session
      */
-    addSession(session: SystemIOSession, name?: string, activate: boolean = true): SessionMeta {
-        const sessionMeta: SessionMeta = { "commands": [], name, session };
+    addSession(
+        session: SystemIOSession,
+        name?: string,
+        cwd?: string,
+        activate: boolean = true,
+    ): SessionMeta {
+        cwd ??= this.cwd ?? process.cwd();
+
+        const sessionMeta: SessionMeta = { "commands": [], name, cwd, session };
 
         this.#sessions.push(sessionMeta);
 
@@ -365,31 +389,46 @@ export class SessionManager {
      * @returns the new delimiter
      */
     #createDelimiter(): Delimiter {
+        const prefix = "SPECIFY DELIM START";
+        const suffix = "SPECIFY DELIM END";
         const uuid   = randomUUID(); // used to prevent false delimits
-        const prefix = "SPECIFY";
+
+        const payload    = { "exitCode": "%d", "cwd": "%s", uuid } as DelimiterPayload;
+        const payloadStr = JSON.stringify(payload);
 
         return {
-            "command": `;echo "${prefix} ${SessionManager.#exitCodeKey}=$? UUID=${uuid}"`,
-            "regexp":  new RegExp(`${prefix} ${SessionManager.#exitCodeKey}=(\\d+) UUID=${uuid}`),
+            "command": `;printf '${prefix} ${payloadStr} ${suffix}' "$?" "$(pwd)"`, // Windows friendly?
+            "regexp":  new RegExp(`${prefix} (.+) ${suffix}`),
+            prefix,
+            suffix,
             uuid,
         };
     }
 
     /**
-     * Extracts the value of the key from the output.
+     * Extracts the payload data from output with a command delimiter.
      *
-     * @param output     - The session output to search
-     * @param key        - The key to find the value of
-     * @param parseAsInt - Whether the found value should be parsed as an int
+     * @param output    - The output to parse
+     * @param delimiter - The delimiter to search for
      *
-     * @throws If the key/value pair is not found
+     * @returns The extracted payload data
+     *
+     * @throws AssertionError
+     * If the output doesn't contain a delimiter.
+     *
+     * @throws
+     * If the output has a delimiter which doesn't include the correct UUID.
      */
-    #extractKeyedValue(output: string, key: string, parseAsInt?: boolean): string | number {
-        const match = output.match(new RegExp(`${key}=${parseAsInt ? "(\\d+)" : "(\\w+)"}`));
+    #extractDelimiterPayload(output: string, delimiter: Delimiter): DelimiterPayload {
+        const match = output.match(delimiter.regexp);
 
-        assert.ok(match, `Output does not contain a value for "${key}"`);
+        assert.ok(match, "Output does not contain a matching delimiter.");
 
-        return parseAsInt ? parseInt(match[1], 10) : match[1];
+        const payload: DelimiterPayload = JSON.parse(match[1]);
+
+        assert.equal(payload.uuid, delimiter.uuid, "Output delimiter is malformed.");
+
+        return payload;
     }
 
     /**
@@ -445,11 +484,10 @@ export class SessionManager {
             lastCmdMeta.timeEnd = timestamp;
 
             try {
-                lastCmdMeta.exitCode = this.#extractKeyedValue(
-                    output,
-                    SessionManager.#exitCodeKey,
-                    true,
-                ) as number;
+                const payload = this.#extractDelimiterPayload(output, lastCmdMeta.delimiter);
+
+                lastCmdMeta.exitCode = parseInt(payload.exitCode, 10);
+                sessionMeta.cwd = payload.cwd;
 
                 this.#resolveRun(lastCmdMeta);
             } catch (err) {
