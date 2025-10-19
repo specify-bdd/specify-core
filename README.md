@@ -147,7 +147,7 @@ annotating your work before marking the PR as ready for review.
 
 As reviewer feedback comes in, note action items in reply comments with the "task list" formatting, which provides a
 checkbox you can fill in later when the feedback is addressed.  Iterate on the work as needed, repeating the steps of
-the "Make Changes" and "Commit and Push" steps of thid workflow until you and your reviewers reach consensus that the
+the "Make Changes" and "Commit and Push" steps of this workflow until you and your reviewers reach consensus that the
 changes address the issue in question to everyone's satisfaction.
 
 When all relevant reviewers have approved the PR and all automated checks are passing, you may merge the PR.
