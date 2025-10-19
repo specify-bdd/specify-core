@@ -7,7 +7,6 @@
 
 import { Given, Then, When      } from "@cucumber/cucumber";
 import assert, { AssertionError } from "node:assert/strict";
-import path                       from "node:path";
 
 import { SessionManager, IOStream } from "@/lib/SessionManager";
 import { ShellSession             } from "@/lib/ShellSession";
@@ -123,15 +122,13 @@ Then(
 async function changeDirectory(dirPath: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
-    const resolvedPath = path.resolve(this.cli.cwd, dirPath);
-
-    this.cli.manager.run(`cd ${resolvedPath}`);
+    this.cli.manager.run(`cd ${dirPath}`);
 
     await this.cli.manager.waitForReturn();
 
-    assert.equal(this.cli.manager.exitCode, 0, `Could not change directory to ${resolvedPath}.`);
+    assert.equal(this.cli.manager.exitCode, 0, `Could not change directory to ${dirPath}.`);
 
-    this.cli.cwd = this.cli.manager.cwd;
+    this.fs.cwd = this.cli.manager.cwd;
 }
 
 /**
@@ -157,7 +154,7 @@ async function execCommandSync(command: string): Promise<void> {
     execCommand.call(this, command);
     await waitForCommandReturn.call(this);
 
-    this.cli.cwd = this.cli.manager.cwd;
+    this.fs.cwd = this.cli.manager.cwd;
 }
 
 /**
@@ -176,7 +173,7 @@ async function sendKillSignal(signal: string): Promise<void> {
  * @param name - The name of the shell
  */
 function startNamedDefaultShell(name?: string): void {
-    const options: SpawnOptions = { "cwd": this.cli.cwd, "env": { ...process.env } };
+    const options: SpawnOptions = { "cwd": this.fs.cwd, "env": { ...process.env } };
 
     // strip Cucumber env vars from the options object that will be passed to the child process
     // helps to ensure a Specify process run by Specify doesn't get confused by its parent's operating parameters
@@ -194,7 +191,7 @@ function startNamedDefaultShell(name?: string): void {
     const shell = new ShellSession(options);
 
     this.cli.manager ??= new SessionManager();
-    this.cli.manager.addSession(shell, name, this.cli.cwd);
+    this.cli.manager.addSession(shell, name, this.fs.cwd);
 }
 
 /**
@@ -215,7 +212,7 @@ function switchShell(): void {
 
     this.cli.manager.switchToNextSession();
 
-    this.cli.cwd = this.cli.manager.cwd;
+    this.fs.cwd = this.cli.manager.cwd;
 }
 
 /**
@@ -334,7 +331,7 @@ async function waitForCommandReturn(): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     await this.cli.manager.waitForReturn();
 
-    this.cli.cwd = this.cli.manager.cwd;
+    this.fs.cwd = this.cli.manager.cwd;
 }
 
 /**
@@ -350,7 +347,7 @@ async function waitForOutput(stream?: IOStream, pattern?: RegExp): Promise<void>
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     await this.cli.manager.waitForOutput({ pattern, stream });
 
-    this.cli.cwd = this.cli.manager.cwd;
+    this.fs.cwd = this.cli.manager.cwd;
 }
 
 /**

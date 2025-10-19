@@ -16,7 +16,6 @@ BeforeAll(async function () {
 Before({ "name": "CLI plugin before hook" }, async function () {
     // initialize the CLI namespace
     this.cli = {
-        "cwd":   process.cwd(),
         "files": {
             "created": cliFiles,
         },

@@ -9,7 +9,7 @@ import assert, { AssertionError               } from "node:assert/strict";
 import { existsSync                           } from "node:fs";
 import { mkdtemp, readFile, unlink, writeFile } from "node:fs/promises";
 import { tmpdir                               } from "node:os";
-import { join, resolve                        } from "node:path";
+import { join                                 } from "node:path";
 
 Given("a new temp file path referenced as {string}", createTempFileRef);
 
@@ -51,11 +51,9 @@ async function createTempFileRef(address: string): Promise<void> {
  * @param filePath - The path to the file
  */
 async function deleteFile(filePath: string): Promise<void> {
-    const resolvedPath = resolve(this.cli.cwd, filePath);
+    await verifyFilePathExists.call(this, filePath);
 
-    await verifyFilePathExists.call(this, resolvedPath);
-
-    await unlink(resolvedPath);
+    await unlink(filePath);
 }
 
 /**
@@ -71,11 +69,9 @@ async function deleteFile(filePath: string): Promise<void> {
  * If the file content doesn't match the pattern.
  */
 async function verifyFileContent(filePath: string, pattern: string): Promise<void> {
-    const resolvedPath = resolve(this.cli.cwd, filePath);
+    await verifyFilePathExists.call(this, filePath);
 
-    await verifyFilePathExists.call(this, resolvedPath);
-
-    const content = await readFile(resolvedPath, "utf8");
+    const content = await readFile(filePath, "utf8");
 
     assert.match(content, RegExp(pattern), "File content does not match the expected pattern.");
 }
@@ -92,11 +88,9 @@ async function verifyFileContent(filePath: string, pattern: string): Promise<voi
  * If the file is not empty.
  */
 async function verifyFileIsEmpty(filePath: string): Promise<void> {
-    const resolvedPath = resolve(this.cli.cwd, filePath);
+    await verifyFilePathExists.call(this, filePath);
 
-    await verifyFilePathExists.call(this, resolvedPath);
-
-    const content = await readFile(resolvedPath, "utf8");
+    const content = await readFile(filePath, "utf8");
 
     assert.ok(
         !content,
@@ -113,11 +107,9 @@ async function verifyFileIsEmpty(filePath: string): Promise<void> {
  * If the file does not exist.
  */
 async function verifyFilePathExists(filePath: string): Promise<void> {
-    const resolvedPath = resolve(this.cli.cwd, filePath);
-
     assert.ok(
-        existsSync(resolvedPath),
-        new AssertionError({ "message": `The file path "${resolvedPath}" does not exist` }),
+        existsSync(filePath),
+        new AssertionError({ "message": `The file path "${filePath}" does not exist` }),
     );
 }
 
@@ -139,7 +131,5 @@ async function writeEmptyFileContent(filePath: string): Promise<void> {
  * @param content  - The content to write to the file
  */
 async function writeFileContent(filePath: string, content: string): Promise<void> {
-    const resolvedPath = resolve(this.cli.cwd, filePath);
-
-    await writeFile(resolvedPath, content);
+    await writeFile(filePath, content);
 }

@@ -19,7 +19,8 @@ defineParameterType({
     "name":   "filePath",
     "regexp": quotedString,
     transformer(input: string): string {
-        return path.normalize(this.quickRef.parse(input.slice(1, -1)));
+        // resolve path input relative to the scenario's current working directory, which may differ from process.cwd()
+        return path.resolve(this.fs.cwd, this.quickRef.parse(input.slice(1, -1)));
     },
     "useForSnippets": false,
 });
