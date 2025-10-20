@@ -2,11 +2,11 @@
 
 ***
 
-[@specify-bdd/plugin-cli](../../README.md) / [SessionManager](../README.md) / OutputMeta
+[@specify-bdd/plugin-cli](../../modules.md) / [SessionManager](../README.md) / OutputMeta
 
 # Interface: OutputMeta
 
-Defined in: [SessionManager.ts:42](https://github.com/specify-bdd/specify-core/blob/a72967d5d7ff6946c1828988ad1d054ed520ad4a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L42)
+Defined in: [SessionManager.ts:54](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L54)
 
 A metadata object representing a single chunk of output from a command.
 
@@ -16,7 +16,7 @@ A metadata object representing a single chunk of output from a command.
 
 > **output**: `string`
 
-Defined in: [SessionManager.ts:43](https://github.com/specify-bdd/specify-core/blob/a72967d5d7ff6946c1828988ad1d054ed520ad4a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L43)
+Defined in: [SessionManager.ts:55](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L55)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [SessionManager.ts:43](https://github.com/specify-bdd/specify-core/b
 
 > **stream**: [`IOStream`](../enumerations/IOStream.md)
 
-Defined in: [SessionManager.ts:44](https://github.com/specify-bdd/specify-core/blob/a72967d5d7ff6946c1828988ad1d054ed520ad4a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L44)
+Defined in: [SessionManager.ts:56](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L56)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [SessionManager.ts:44](https://github.com/specify-bdd/specify-core/b
 
 > **timestamp**: `number`
 
-Defined in: [SessionManager.ts:45](https://github.com/specify-bdd/specify-core/blob/a72967d5d7ff6946c1828988ad1d054ed520ad4a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L45)
+Defined in: [SessionManager.ts:57](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L57)

@@ -2,7 +2,7 @@
 
 ***
 
-[@specify-bdd/plugin-cli](../README.md) / SessionManager
+[@specify-bdd/plugin-cli](../modules.md) / SessionManager
 
 # SessionManager
 

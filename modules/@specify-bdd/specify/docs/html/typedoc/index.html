@@ -1,88 +1,187 @@
-<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@specify-bdd/specify</title><meta name="description" content="Documentation for @specify-bdd/specify"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">@specify-bdd/specify</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>@specify-bdd/specify</h1></div><div class="tsd-panel tsd-typography"><h1 id="specify-core" class="tsd-anchor-link">Specify Core<a href="#specify-core" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><h3 id="prerequisites" class="tsd-anchor-link">Prerequisites<a href="#prerequisites" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>Node.js v22 or newer</li>
-<li>If browser testing locally:
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@specify-bdd/specify</title><meta name="description" content="Documentation for @specify-bdd/specify"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">@specify-bdd/specify</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>@specify-bdd/specify</h1></div><div class="tsd-panel tsd-typography"><h1 id="specify-bdd" class="tsd-anchor-link">Specify BDD<a href="#specify-bdd" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p><a href="https://www.npmjs.com/package/@specify-bdd/specify"><img src="https://img.shields.io/npm/v/%40specify-bdd%2Fspecify" alt="NPM Version"></a>
+<img src="https://img.shields.io/node/v-lts/%40specify-bdd%2Fspecify" alt="Node LTS">
+<img src="https://img.shields.io/npm/unpacked-size/%40specify-bdd%2Fspecify" alt="NPM Unpacked Size">
+<img src="https://img.shields.io/github/license/specify-bdd/specify-core" alt="GitHub License">
+<img src="https://img.shields.io/github/actions/workflow/status/specify-bdd/specify-core/release.yml" alt="GitHub Actions Workflow Status"></p>
+<p><img src="https://github.com/specify-bdd/specify-core/actions/workflows/github-code-scanning/codeql/badge.svg" alt="CodeQL">
+<img src="https://github.com/specify-bdd/specify-core/actions/workflows/dependabot/dependabot-updates/badge.svg" alt="Dependabot"></p>
+<p>Behavior-Driven Development (BDD) doesn't have to be a slog.  <strong>Specify</strong> makes it easy to turn requirements into
+actionable tests, streamlining your development process with clear acceptance criteria, rapid iteration, and confident
+deployments.</p>
+<p>Built on <a href="https://github.com/cucumber/cucumber-js">Cucumber.js</a> and enhanced with numerous convenience features and QOL
+improvements informed by over a decade of experience in automated testing, Specify was built using the same BDD
+principles it exists to support.  We use Specify to test itself end-to-end (E2E) in addition to our unit and
+integration tests.  Whether you want to embrace BDD fully or just experiment with automated testing, Specify can help.</p>
+<ol>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#installation">Installation</a>
 <ul>
-<li>Chrome, Edge, Firefox, or Safari browser install</li>
+<li><a href="#installing-plugins">Installing Plugins</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
 </ul>
 </li>
+<li><a href="#configuration">Configuration</a>
+<ul>
+<li><a href="#configuring-cucumber">Configuring Cucumber</a></li>
+<li><a href="#configuring-plugins">Configuring Plugins</a></li>
 </ul>
-<h2 id="project-structure" class="tsd-anchor-link">Project Structure<a href="#project-structure" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><pre><code><span class="hl-0">your</span><span class="hl-1">-</span><span class="hl-0">project</span><span class="hl-1">/</span><br/><span class="hl-1">├── </span><span class="hl-0">features</span><span class="hl-1">/</span><br/><span class="hl-1">│   ├── *.</span><span class="hl-0">feature</span><span class="hl-1">        # </span><span class="hl-0">Your</span><span class="hl-1"> </span><span class="hl-0">Gherkin</span><span class="hl-1"> </span><span class="hl-0">feature</span><span class="hl-1"> </span><span class="hl-0">files</span><br/><span class="hl-1">│   └── </span><span class="hl-0">steps</span><span class="hl-1">/           # </span><span class="hl-0">Custom</span><span class="hl-1"> </span><span class="hl-0">step</span><span class="hl-1"> </span><span class="hl-2">definitions</span><span class="hl-1"> (</span><span class="hl-0">optional</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-0">specify</span><span class="hl-1">.</span><span class="hl-0">config</span><span class="hl-1">.</span><span class="hl-0">json</span><span class="hl-1">  # </span><span class="hl-0">Specify</span><span class="hl-1"> </span><span class="hl-2">config</span><span class="hl-1"> (</span><span class="hl-0">optional</span><span class="hl-1">)</span><br/><span class="hl-1">└── ...</span>
-</code><button>Copy</button></pre>
-
-<h2 id="quick-start" class="tsd-anchor-link">Quick Start<a href="#quick-start" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ol>
-<li>
-<p>Installation</p>
-<pre><code class="bash"><span class="hl-2">npm</span><span class="hl-1"> </span><span class="hl-3">i</span><span class="hl-1"> </span><span class="hl-4">-D</span><span class="hl-1"> </span><span class="hl-3">@specify-bdd/specify</span>
-</code><button type="button">Copy</button></pre>
-
 </li>
-<li>
-<p>Execute the features</p>
-<pre><code class="bash"><span class="hl-2">npx</span><span class="hl-1"> </span><span class="hl-3">specify</span>
-</code><button type="button">Copy</button></pre>
-
-<p>or</p>
-<pre><code class="bash"><span class="hl-2">npx</span><span class="hl-1"> </span><span class="hl-3">specify</span><span class="hl-1"> </span><span class="hl-3">test</span>
-</code><button type="button">Copy</button></pre>
-
+<li><a href="#defining-behavior">Defining Behavior</a></li>
+<li><a href="#running-tests">Running Tests</a>
+<ul>
+<li><a href="#runtime-options">Runtime Options</a></li>
+</ul>
 </li>
+<li><a href="#extending-specify">Extending Specify</a>
+<ul>
+<li><a href="#cucumber-support-code">Cucumber Support Code</a>
+<ul>
+<li><a href="#step-definitions">Step Definitions</a></li>
+<li><a href="#hooks">Hooks</a></li>
+</ul>
+</li>
+<li><a href="#custom-plugins">Custom Plugins</a></li>
+</ul>
+</li>
+<li><a href="#get-help">Get Help</a></li>
 </ol>
-<h2 id="cli-usage" class="tsd-anchor-link">CLI Usage<a href="#cli-usage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><pre><code class="bash"><span class="hl-2">npx</span><span class="hl-1"> </span><span class="hl-3">specify</span><span class="hl-1"> [subcommand] [options] [argument]</span>
+<hr>
+<h2 id="quick-start" class="tsd-anchor-link">Quick Start<a href="#quick-start" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Create a behavior spec file:</p>
+<pre><code class="gherkin">Feature: Gherkin feature file that should pass
+    Scenario: Scenario that should pass
+        When this step passes
 </code><button type="button">Copy</button></pre>
 
-<h3 id="common-options" class="tsd-anchor-link">Common Options<a href="#common-options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--parallel &lt;n&gt;</code></td>
-<td>Run the tests using <code>n</code> cpu cores</td>
-</tr>
-<tr>
-<td><code>--rerun</code></td>
-<td>Rerun only previously failed tests</td>
-</tr>
-<tr>
-<td><code>--retry &lt;n&gt;</code></td>
-<td>Retry failed tests up to <code>n</code> times</td>
-</tr>
-<tr>
-<td><code>--retry-tag &lt;tag&gt;</code></td>
-<td>Retry only tests with a specific tag</td>
-</tr>
-</tbody>
-</table>
-<h3 id="browser-testing-options" class="tsd-anchor-link">Browser Testing Options<a href="#browser-testing-options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--headless</code></td>
-<td>Execute in headless mode (default)</td>
-</tr>
-<tr>
-<td><code>--visual</code></td>
-<td>Execute in non-headless mode</td>
-</tr>
-<tr>
-<td><code>--grid &lt;url&gt;</code></td>
-<td>Execute in a selenium grid located at <code>url</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="extending-specify" class="tsd-anchor-link">Extending Specify<a href="#extending-specify" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Specify is designed to be extensible:</p>
+<p>Run the behavior spec as a test:</p>
+<pre><code class="bash"><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">npx</span><span class="hl-1"> </span><span class="hl-2">specify</span><span class="hl-1"> </span><span class="hl-2">path/to/behavior.feature</span><br/><span class="hl-0">.....</span><br/><br/><span class="hl-0">1</span><span class="hl-1"> </span><span class="hl-2">scenario</span><span class="hl-1"> (1 </span><span class="hl-2">passed</span><span class="hl-1">)</span><br/><span class="hl-0">1</span><span class="hl-1"> </span><span class="hl-2">step</span><span class="hl-1"> (1 </span><span class="hl-2">passed</span><span class="hl-1">)</span><br/><span class="hl-0">0m00.697s</span><span class="hl-1"> (executing </span><span class="hl-2">steps:</span><span class="hl-1"> </span><span class="hl-2">0m00.009s</span><span class="hl-1">)</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="installation" class="tsd-anchor-link">Installation<a href="#installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Specify can be downloaded with NPM.  It's recommended that you save it as a dev dependency for your project:</p>
+<pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">i</span><span class="hl-1"> </span><span class="hl-3">-D</span><span class="hl-1"> </span><span class="hl-2">@specify-bdd/specify</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Alternatively, you can install the package globally:</p>
+<pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">i</span><span class="hl-1"> </span><span class="hl-3">-g</span><span class="hl-1"> </span><span class="hl-2">@specify-bdd/specify</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="installing-plugins" class="tsd-anchor-link">Installing Plugins<a href="#installing-plugins" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Specify ships with only a few demo step definitions, but many more are available for download as plugins.  Install these
+additional packages in the same manner (dev dependency or global) as the main Specify package.</p>
+<p>Official Specify plugin packages:</p>
 <ul>
-<li>Plug in custom step definitions</li>
-<li>Configure runtime behavior via <code>specify.config.json</code> in your project's <code>root</code> directory</li>
-<li>Integrate with any WebDriver-compatible browser</li>
+<li><a href="https://www.npmjs.com/package/@specify-bdd/plugin-cli">CLI</a> (<code>@specify-bdd/plugin-cli</code>): Command-line interface
+support</li>
 </ul>
-<h3 id="custom-step-definitions" class="tsd-anchor-link">Custom Step Definitions<a href="#custom-step-definitions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p><strong>I AM A STUB, FIX ME @adamlacoste</strong></p>
-</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#specify-core"><span>Specify <wbr/>Core</span></a><ul><li><ul><li><a href="#prerequisites"><span>Prerequisites</span></a></li></ul></li><li><a href="#project-structure"><span>Project <wbr/>Structure</span></a></li><li><a href="#quick-start"><span>Quick <wbr/>Start</span></a></li><li><a href="#cli-usage"><span>CLI <wbr/>Usage</span></a></li><li><ul><li><a href="#common-options"><span>Common <wbr/>Options</span></a></li><li><a href="#browser-testing-options"><span>Browser <wbr/>Testing <wbr/>Options</span></a></li></ul></li><li><a href="#extending-specify"><span>Extending <wbr/>Specify</span></a></li><li><ul><li><a href="#custom-step-definitions"><span>Custom <wbr/>Step <wbr/>Definitions</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">@specify-bdd/specify</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
+<p>Plugins must be added to the Specify configuration before they can be used.  See
+<a href="#configuring-plugins">Configuring Plugins</a> for more info.</p>
+<h3 id="prerequisites" class="tsd-anchor-link">Prerequisites<a href="#prerequisites" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Node.js v22.x (LTS Jod) or newer</li>
+</ul>
+<h2 id="configuration" class="tsd-anchor-link">Configuration<a href="#configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Specify's default settings can be overridden by creating a file in the current working directory named
+<code>specify.config.json</code>.  (This should be the directory that the user will be executing <code>specify</code> commands from.)  This
+JSON object should conform to structure of a
+<a href="https://github.com/specify-bdd/specify-core/blob/main/modules/%40specify-bdd/specify/types/index.d.ts">CoreConfig</a>.</p>
+<h3 id="configuring-cucumber" class="tsd-anchor-link">Configuring Cucumber<a href="#configuring-cucumber" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>It is possible to change the default settings that Specify's instance of Cucumber.js uses by modifying the <code>cucumber</code>
+property of <code>CoreConfig</code>.  In the following example, the output format of Cucumber is being set to JSON.</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;cucumber&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;format&quot;</span><span class="hl-1">: [ </span><span class="hl-2">&quot;json&quot;</span><span class="hl-1"> ],</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;import&quot;</span><span class="hl-1">: [ </span><span class="hl-2">&quot;path/to/cucumber/support/code&quot;</span><span class="hl-1"> ]</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="configuring-plugins" class="tsd-anchor-link">Configuring Plugins<a href="#configuring-plugins" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The <code>plugins</code> property of <code>CoreConfig</code> is an array of strings which identify Specify plugin packages by either their
+scoped package name (the same one used to install the package) or a file system path for the directory which contains
+the plugin's package.json file.  Only plugins included in this list are known to and usable by Specify.</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;plugins&quot;</span><span class="hl-1">: [ </span><span class="hl-2">&quot;@specify-bdd/plugin-cli&quot;</span><span class="hl-1"> ]</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="defining-behavior" class="tsd-anchor-link">Defining Behavior<a href="#defining-behavior" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Behavior specifications are written in <a href="https://cucumber.io/docs/gherkin/reference">Gherkin</a>, a domain-specific language
+which is easy for non-technical colleagues to read and understand, but structured enough to be machine-parsable.
+Behavior is described in <strong>feature</strong> documents (text files with a .feature extension) covering one discrete unit of
+user-facing functionality apiece.  Each feature is elaborated upon with <strong>scenarios</strong>, short narrative descriptions of
+how the feature ought to behave under various conditions.  These scenarios are made up of a series of <strong>steps</strong> which
+detail the exact sequence of user actions and system reactions that ought to take place.</p>
+<p>Gherkin uses a small number of keywords (e.g. &quot;Feature&quot;, &quot;Scenario&quot;, &quot;Given&quot;, &quot;When&quot;, and &quot;Then&quot;) to give the document
+structure and semantic meaning.  The rest of the language used to describe the desired behavior is freeform and up to
+the feature's author.  However, using consistent and repeatable language to describe common actions can save a lot of
+effort when it comes time to parse the Gherkin and take action.  See
+<a href="#step-definitions">Step Definitions</a> for more.</p>
+<h2 id="running-tests" class="tsd-anchor-link">Running Tests<a href="#running-tests" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>With the behavior specs and any necessary supporting code in place, you can execute tests with the following command:</p>
+<pre><code class="bash"><span class="hl-0">specify</span><span class="hl-1"> </span><span class="hl-2">test</span><span class="hl-1"> [options] [paths...]</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The <code>paths...</code> argument should be the path or paths of the behavior specs you want to execute.  If you put those specs
+in the directory <code>./features</code> (relative to the location you are running the command from), they will be detected
+automatically and no paths argument is required.</p>
+<h3 id="runtime-options" class="tsd-anchor-link">Runtime Options<a href="#runtime-options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The following options governing the runtime behavior of Specify are available:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-h, --help</td>
+<td>Display this help screen.</td>
+</tr>
+<tr>
+<td>-p, --parallel <workers></td>
+<td>Run in parallel with the given number of workers.</td>
+</tr>
+<tr>
+<td>--rerun</td>
+<td>Rerun the failed tests from the last test run.</td>
+</tr>
+<tr>
+<td>--rerun-file <path></td>
+<td>The location of the rerun log file.</td>
+</tr>
+<tr>
+<td>-r, --retry <retries></td>
+<td>Retry failed tests up to the given number of times before counting them as failed.</td>
+</tr>
+<tr>
+<td>--retry-tag <tags></td>
+<td>Only retry tests which satisfy this tag expression.</td>
+</tr>
+<tr>
+<td>-t, --tags <tags></td>
+<td>Run only the tests which satisfy this tag expression.</td>
+</tr>
+<tr>
+<td>-w, --watch</td>
+<td>Watch for changes and re-run tests.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="extending-specify" class="tsd-anchor-link">Extending Specify<a href="#extending-specify" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Specify's functionality is built to be modular and extensible by design because we knew there are too many corner cases
+and unique requirements in BDD and automated testing for us to ever cover the spread ourselves.  While Specify aims to
+provide for the most common use cases with our official plugins, we encourage others to build custom integrations to
+meet their own needs and to publish compatible plugin packages when that need is shared by others.</p>
+<h3 id="cucumber-support-code" class="tsd-anchor-link">Cucumber Support Code<a href="#cucumber-support-code" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The simplest way to extend Specify functionality is with Cucumber support code additions.  New step definitions, hooks,
+parameter types, etc. can be created within your project hierarchy and included by Cucumber using the <code>cucumber.import</code>
+config setting.  See <a href="#configuring-cucumber">Configuring Cucumber</a> for more details.</p>
+<h4 id="step-definitions" class="tsd-anchor-link">Step Definitions<a href="#step-definitions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>A <a href="https://cucumber.io/docs/cucumber/step-definitions?lang=javascript">step definition</a> is a piece of Cucumber support
+code which matches a predefined pattern (represented as a
+<a href="https://github.com/cucumber/cucumber-expressions#readme">Cucumber expression</a> or regexp) to a callback function.  The
+pattern can include parameters (or capturing groups for regexp) which will extract matched values and pass them on to
+the callback function.  Specify's plugins (see <a href="#installing-plugins">Installing Plugins</a>) provide prebuilt step
+definitions to help accelerate test automation, but you can also write your own step definitions to cover behaviors
+unique to your use cases or combine multiple basic actions into one step.</p>
+<h4 id="hooks" class="tsd-anchor-link">Hooks<a href="#hooks" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Cucumber <a href="https://github.com/cucumber/cucumber-js/blob/main/docs/support_files/hooks.md">hooks</a> allow you to execute
+custom code before and after steps, scenarios, and the entire test suite.  Setup/teardown, cleanup, and logging
+operations commonly use this feature to ensure their own timely execution.</p>
+<h3 id="custom-plugins" class="tsd-anchor-link">Custom Plugins<a href="#custom-plugins" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>While Cucumber support code can be stored in your project repo and imported via configuration, it may be useful to
+package certain utilities for portability, so that they are easier to share between different projects or even publish
+independently.  To this end, Specify is built on a plugin architecture which you can use to make your packages easy to
+share and use.</p>
+<p>To create a plugin, ensure that your utility's package.json file defines a <code>main</code> module which has, as its default
+export, a <code>CoreConfig</code> object.  This object will be merged with those of other plugins as well as Specify's base config
+and any user override JSON file which may exist.  If your package includes Cucumber support code which you want your
+users to auto-import, simply configure the <code>cucumber</code> property of the <code>CoreConfig</code> object to include the paths of those
+support files in its <code>import</code> sub-property as shown in the <a href="#configuring-cucumber">Configuring Cucumber</a> section.</p>
+<p>Additional plugin capabilities beyond adding Cucumber support code will be added in the future.</p>
+<h2 id="get-help" class="tsd-anchor-link">Get Help<a href="#get-help" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Having trouble with Specify?  We're here to help.</p>
+<ul>
+<li><a href="https://github.com/specify-bdd/specify-core/discussions/new?category=q-a">Ask a question</a></li>
+<li><a href="https://github.com/specify-bdd/specify-core/issues/new?type=bug">Report an issue</a></li>
+</ul>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#specify-bdd"><span>Specify <wbr/>BDD</span></a><ul><li><a href="#quick-start"><span>Quick <wbr/>Start</span></a></li><li><a href="#installation"><span>Installation</span></a></li><li><ul><li><a href="#installing-plugins"><span>Installing <wbr/>Plugins</span></a></li><li><a href="#prerequisites"><span>Prerequisites</span></a></li></ul></li><li><a href="#configuration"><span>Configuration</span></a></li><li><ul><li><a href="#configuring-cucumber"><span>Configuring <wbr/>Cucumber</span></a></li><li><a href="#configuring-plugins"><span>Configuring <wbr/>Plugins</span></a></li></ul></li><li><a href="#defining-behavior"><span>Defining <wbr/>Behavior</span></a></li><li><a href="#running-tests"><span>Running <wbr/>Tests</span></a></li><li><ul><li><a href="#runtime-options"><span>Runtime <wbr/>Options</span></a></li></ul></li><li><a href="#extending-specify"><span>Extending <wbr/>Specify</span></a></li><li><ul><li><a href="#cucumber-support-code"><span>Cucumber <wbr/>Support <wbr/>Code</span></a></li><li><ul><li><a href="#step-definitions"><span>Step <wbr/>Definitions</span></a></li><li><a href="#hooks"><span>Hooks</span></a></li></ul></li><li><a href="#custom-plugins"><span>Custom <wbr/>Plugins</span></a></li></ul></li><li><a href="#get-help"><span>Get <wbr/>Help</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">@specify-bdd/specify</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>

@@ -13,7 +13,3 @@
 ## Interfaces
 
 - [TestCommandWatcherOptions](interfaces/TestCommandWatcherOptions.md)
-
-## Variables
-
-- [DEBOUNCE\_MS](variables/DEBOUNCE_MS.md)

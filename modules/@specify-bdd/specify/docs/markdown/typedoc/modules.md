@@ -10,5 +10,6 @@
 - [Command](Command/README.md)
 - [CucumberTool](CucumberTool/README.md)
 - [Logger](Logger/README.md)
+- [RerunFile](RerunFile/README.md)
 - [TestCommand](TestCommand/README.md)
 - [TestCommandWatcher](TestCommandWatcher/README.md)

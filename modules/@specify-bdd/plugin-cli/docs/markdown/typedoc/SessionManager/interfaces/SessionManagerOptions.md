@@ -2,11 +2,11 @@
 
 ***
 
-[@specify-bdd/plugin-cli](../../README.md) / [SessionManager](../README.md) / SessionManagerOptions
+[@specify-bdd/plugin-cli](../../modules.md) / [SessionManager](../README.md) / SessionManagerOptions
 
 # Interface: SessionManagerOptions
 
-Defined in: [SessionManager.ts:60](https://github.com/specify-bdd/specify-core/blob/a72967d5d7ff6946c1828988ad1d054ed520ad4a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L60)
+Defined in: [SessionManager.ts:73](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L73)
 
 The basic option set common to all options-accepting SessionManager methods.
 
@@ -20,4 +20,4 @@ The basic option set common to all options-accepting SessionManager methods.
 
 > `optional` **sessionMeta**: [`SessionMeta`](SessionMeta.md)
 
-Defined in: [SessionManager.ts:61](https://github.com/specify-bdd/specify-core/blob/a72967d5d7ff6946c1828988ad1d054ed520ad4a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L61)
+Defined in: [SessionManager.ts:74](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L74)

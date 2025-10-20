@@ -2,11 +2,11 @@
 
 ***
 
-[@specify-bdd/plugin-cli](../../README.md) / [SessionManager](../README.md) / WaitForOutputOptions
+[@specify-bdd/plugin-cli](../../modules.md) / [SessionManager](../README.md) / WaitForOutputOptions
 
 # Interface: WaitForOutputOptions
 
-Defined in: [SessionManager.ts:67](https://github.com/specify-bdd/specify-core/blob/a72967d5d7ff6946c1828988ad1d054ed520ad4a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L67)
+Defined in: [SessionManager.ts:80](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L80)
 
 The option set for SessionManager.waitForOutputOptions().
 
@@ -20,7 +20,7 @@ The option set for SessionManager.waitForOutputOptions().
 
 > `optional` **pattern**: `string` \| `RegExp`
 
-Defined in: [SessionManager.ts:68](https://github.com/specify-bdd/specify-core/blob/a72967d5d7ff6946c1828988ad1d054ed520ad4a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L68)
+Defined in: [SessionManager.ts:81](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L81)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [SessionManager.ts:68](https://github.com/specify-bdd/specify-core/b
 
 > `optional` **sessionMeta**: [`SessionMeta`](SessionMeta.md)
 
-Defined in: [SessionManager.ts:61](https://github.com/specify-bdd/specify-core/blob/a72967d5d7ff6946c1828988ad1d054ed520ad4a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L61)
+Defined in: [SessionManager.ts:74](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L74)
 
 #### Inherited from
 
@@ -40,4 +40,4 @@ Defined in: [SessionManager.ts:61](https://github.com/specify-bdd/specify-core/b
 
 > `optional` **stream**: [`IOStream`](../enumerations/IOStream.md)
 
-Defined in: [SessionManager.ts:69](https://github.com/specify-bdd/specify-core/blob/a72967d5d7ff6946c1828988ad1d054ed520ad4a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L69)
+Defined in: [SessionManager.ts:82](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L82)

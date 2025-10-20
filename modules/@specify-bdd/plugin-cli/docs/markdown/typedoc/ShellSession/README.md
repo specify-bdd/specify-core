@@ -2,7 +2,7 @@
 
 ***
 
-[@specify-bdd/plugin-cli](../README.md) / ShellSession
+[@specify-bdd/plugin-cli](../modules.md) / ShellSession
 
 # ShellSession
 
