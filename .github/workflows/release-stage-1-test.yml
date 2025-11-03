@@ -18,6 +18,6 @@ jobs:
     uses: ./.github/workflows/release-stage-1a-test-node-version.yml
     strategy:
       matrix:
-        node_version: ${{ vars.NODE_LTS_MAINTENANCE_VERSIONS }}
+        node_version: ${{ fromJSON(vars.NODE_LTS_MAINTENANCE_VERSIONS) }}
     with:
       node_version: ${{ matrix.node_version }}
