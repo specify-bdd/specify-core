@@ -12,9 +12,13 @@ jobs:
   publish-github:
     name: Publish package to GitHub Packages
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    env:
+      GIT_BRANCH: main
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_BRANCH }}
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
         with:
@@ -31,6 +35,8 @@ jobs:
           name: artifact_build
       - name: Publish to GitHub
         run: pnpm publish --access=public -r
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   publish-npm:
     name: Publish package to NPM
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}

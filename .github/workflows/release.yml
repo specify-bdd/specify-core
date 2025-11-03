@@ -55,3 +55,4 @@ jobs:
     name: Stage 5 - Publish
     needs: announce
     uses: ./.github/workflows/release-stage-5-publish.yml
+    secrets: inherit
