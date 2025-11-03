@@ -10,6 +10,7 @@ concurrency:
   group: release-stages
 jobs:
   publish-github:
+    name: Publish package to GitHub Packages
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
     steps:
       - name: Check out repository code
