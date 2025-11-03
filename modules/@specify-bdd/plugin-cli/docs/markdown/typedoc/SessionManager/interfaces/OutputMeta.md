@@ -6,7 +6,7 @@
 
 # Interface: OutputMeta
 
-Defined in: [SessionManager.ts:54](https://github.com/specify-bdd/specify-core/blob/0c90578ce67d687c48df2aa878fcbe9598c24f51/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L54)
+Defined in: [SessionManager.ts:54](https://github.com/specify-bdd/specify-core/blob/60c9f5a0309bbf657b7fe9360722c340893828bc/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L54)
 
 A metadata object representing a single chunk of output from a command.
 
@@ -16,7 +16,7 @@ A metadata object representing a single chunk of output from a command.
 
 > **output**: `string`
 
-Defined in: [SessionManager.ts:55](https://github.com/specify-bdd/specify-core/blob/0c90578ce67d687c48df2aa878fcbe9598c24f51/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L55)
+Defined in: [SessionManager.ts:55](https://github.com/specify-bdd/specify-core/blob/60c9f5a0309bbf657b7fe9360722c340893828bc/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L55)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [SessionManager.ts:55](https://github.com/specify-bdd/specify-core/b
 
 > **stream**: [`IOStream`](../enumerations/IOStream.md)
 
-Defined in: [SessionManager.ts:56](https://github.com/specify-bdd/specify-core/blob/0c90578ce67d687c48df2aa878fcbe9598c24f51/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L56)
+Defined in: [SessionManager.ts:56](https://github.com/specify-bdd/specify-core/blob/60c9f5a0309bbf657b7fe9360722c340893828bc/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L56)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [SessionManager.ts:56](https://github.com/specify-bdd/specify-core/b
 
 > **timestamp**: `number`
 
-Defined in: [SessionManager.ts:57](https://github.com/specify-bdd/specify-core/blob/0c90578ce67d687c48df2aa878fcbe9598c24f51/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L57)
+Defined in: [SessionManager.ts:57](https://github.com/specify-bdd/specify-core/blob/60c9f5a0309bbf657b7fe9360722c340893828bc/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L57)
