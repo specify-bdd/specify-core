@@ -47,6 +47,7 @@ jobs:
       - name: Test
         run: pnpm test
       - name: Upload build artifacts
+        if: ${{ inputs.store_artifacts == true }}
         uses: actions/upload-artifacts@v4
         with:
           name: artifact_build
