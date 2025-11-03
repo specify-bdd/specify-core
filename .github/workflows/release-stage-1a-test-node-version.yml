@@ -51,6 +51,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: artifact_build
-          path: ./modes/@specify-bdd/*/dist
+          path: ./modules/@specify-bdd/*/dist
           include-hidden-files: true
 
