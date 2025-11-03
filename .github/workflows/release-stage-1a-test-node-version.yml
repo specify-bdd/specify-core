@@ -48,7 +48,7 @@ jobs:
         run: pnpm test
       - name: Upload build artifacts
         if: ${{ inputs.store_artifacts == true }}
-        uses: actions/upload-artifacts@v4
+        uses: actions/upload-artifact@v4
         with:
           name: artifact_build
           path: ./modes/@specify-bdd/*/dist
