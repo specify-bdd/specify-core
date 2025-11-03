@@ -1,0 +1,55 @@
+name: Release Stage 1A - Test Node Version
+on:
+  workflow_call:
+    inputs:
+      node_version:
+        description: "The Node.js version to test"
+        required: true
+        type: string
+      store_artifacts:
+        description: "Store the node_modules and dist directories for use later."
+        type: boolean
+        default: false
+  workflow_dispatch:
+      node_version:
+        description: "The Node.js version to test"
+        required: true
+        type: string
+      store_artifacts:
+        description: "Store the node_modules and dist directories for use later."
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  test-node:
+    name: Test Node.js version ${{ inputs.node_version }}
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    env:
+      GIT_BRANCH: develop
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_BRANCH }}
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - name: Setup Node.js ${{ inputs.node_version }}
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: ${{ inputs.node_version }}
+          registry-url: "https://registry.npmjs.org"
+      - name: Install dependencies and build
+        run: pnpm install
+      - name: Test
+        run: pnpm test
+      - name: Upload build artifacts
+        uses: actions/upload-artifacts@v4
+        with:
+          name: artifact_build
+          path: ./modes/@specify-bdd/*/dist
+          include-hidden-files: true
+

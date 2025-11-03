@@ -1,0 +1,58 @@
+name: Release Stage 5 - Publish
+on:
+  workflow_call:
+  workflow_dispatch:
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+  packages: write # Required to publish to GitHub
+concurrency:
+  group: release-stages
+jobs:
+  publish-github:
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: true
+      - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com'
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact_build
+      - name: Publish to GitHub
+        run: pnpm publish --access=public -r
+  publish-npm:
+    name: Publish package to NPM
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    env:
+      GIT_BRANCH: main
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_BRANCH }}
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: true
+      - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact_build
+      - name: Publish to NPM
+        run: pnpm publish --access=public -r

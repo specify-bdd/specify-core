@@ -1,4 +1,4 @@
-name: Release Stage 2 - Merge
+name: Release Stage 3 - Merge
 on:
   workflow_call:
     inputs:

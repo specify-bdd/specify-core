@@ -24,29 +24,33 @@ permissions:
 concurrency:
   group: release
 jobs:
+  test:
+    name: Stage 1 - Test
+    uses: ./.github/workflows/release-stage-1-test.yml
   tag:
-    name: Stage 1 - Tag
-    uses: ./.github/workflows/release-stage-1-tag.yml
+    name: Stage 2 - Tag
+    needs: test
+    uses: ./.github/workflows/release-stage-2-tag.yml
     with:
       version: ${{ inputs.version }}
       title: ${{ inputs.title }}
     secrets: inherit
   merge:
-    name: Stage 2 - Merge
+    name: Stage 3 - Merge
     needs: tag
-    uses: ./.github/workflows/release-stage-2-merge.yml
+    uses: ./.github/workflows/release-stage-3-merge.yml
     with:
       git_tag: ${{ needs.tag.outputs.git_tag }}
     secrets: inherit
   announce:
-    name: Stage 3 - Announce
+    name: Stage 4 - Announce
     needs: [ tag, merge ]
-    uses: ./.github/workflows/release-stage-3-announce.yml
+    uses: ./.github/workflows/release-stage-4-announce.yml
     with:
       git_tag: ${{ needs.tag.outputs.git_tag }}
       title: ${{ inputs.title }}
     secrets: inherit
   publish:
-    name: Stage 4 - Publish
-    needs: [ tag, merge, announce ]
-    uses: ./.github/workflows/release-stage-4-publish.yml
+    name: Stage 5 - Publish
+    needs: announce
+    uses: ./.github/workflows/release-stage-5-publish.yml
