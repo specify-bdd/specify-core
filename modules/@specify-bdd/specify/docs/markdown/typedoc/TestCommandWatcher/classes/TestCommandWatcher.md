@@ -6,7 +6,7 @@
 
 # Class: TestCommandWatcher
 
-Defined in: [TestCommandWatcher.ts:24](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L24)
+Defined in: [TestCommandWatcher.ts:24](https://github.com/specify-bdd/specify-core/blob/0c90578ce67d687c48df2aa878fcbe9598c24f51/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L24)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [TestCommandWatcher.ts:24](https://github.com/specify-bdd/specify-co
 
 > **new TestCommandWatcher**(`command`): `TestCommandWatcher`
 
-Defined in: [TestCommandWatcher.ts:81](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L81)
+Defined in: [TestCommandWatcher.ts:81](https://github.com/specify-bdd/specify-core/blob/0c90578ce67d687c48df2aa878fcbe9598c24f51/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L81)
 
 Initialize the TestCommandWatcher.
 
@@ -36,7 +36,7 @@ The TestCommand instance to watch and execute
 
 > **start**(`args`): `Promise`\<`void`\>
 
-Defined in: [TestCommandWatcher.ts:171](https://github.com/specify-bdd/specify-core/blob/95536ec0c83ec2676c210c37b110070e5897fa12/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L171)
+Defined in: [TestCommandWatcher.ts:171](https://github.com/specify-bdd/specify-core/blob/0c90578ce67d687c48df2aa878fcbe9598c24f51/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L171)
 
 Start watching for file changes and execute the command when changes occur.
 
