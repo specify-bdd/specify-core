@@ -26,15 +26,17 @@ jobs:
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
         with:
-          run_install: false
+          run_install: true
       - name: Setup Node.js ${{ inputs.node_version }}
         uses: actions/setup-node@v4
         with:
           cache: pnpm
           node-version: ${{ inputs.node_version }}
           registry-url: "https://registry.npmjs.org"
-      - name: Install dependencies and build
-        run: pnpm install
+      - name: Generate types
+        run: pnpm generate-types
+      - name: Build
+        run: pnpm build
       - name: Test
         run: pnpm test
       - name: Upload build artifacts
