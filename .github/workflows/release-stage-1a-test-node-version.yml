@@ -10,15 +10,6 @@ on:
         description: "Store the node_modules and dist directories for use later."
         type: boolean
         default: false
-  workflow_dispatch:
-      node_version:
-        description: "The Node.js version to test"
-        required: true
-        type: string
-      store_artifacts:
-        description: "Store the node_modules and dist directories for use later."
-        type: boolean
-        default: false
 permissions:
   contents: read
 jobs:
