@@ -1,0 +1,23 @@
+name: Release Stage 1 - Test
+on:
+  workflow_call:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: release-stages
+jobs:
+  test-active:
+    name: Test active Node.js LTS version
+    uses: ./.github/workflows/release-stage-1a-test-node-version.yml
+    with:
+      node_version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+      store_artifacts: true
+  test-maintenance:
+    name: Test maitenance Node.js LTS versions
+    uses: ./.github/workflows/release-stage-1a-test-node-version.yml
+    strategy:
+      matrix:
+        node_version: ${{ fromJSON(vars.NODE_LTS_MAINTENANCE_VERSIONS) }}
+    with:
+      node_version: ${{ matrix.node_version }}

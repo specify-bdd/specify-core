@@ -1,4 +1,4 @@
-name: Release Stage 3 - Announce
+name: Release Stage 4 - Announce
 on:
   workflow_call:
     inputs:
