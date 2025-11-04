@@ -11,9 +11,9 @@ on:
           - major
           - minor
           - patch
-          # - premajor
-          # - preminor
-          # - prepatch
+          - premajor
+          - preminor
+          - prepatch
       title:
         description: "The name of the release"
         required: false
