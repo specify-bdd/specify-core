@@ -1,5 +1,7 @@
 name: PR Checks
 on: pull_request
+permissions:
+  contents: read
 jobs:
   build:
     name: Build Typescript
@@ -21,7 +23,6 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Upload build artifacts
-        if: ${{ inputs.store_artifacts == true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifact_build_${{ github.run_id }}
