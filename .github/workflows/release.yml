@@ -38,6 +38,7 @@ jobs:
     secrets: inherit
   merge:
     name: Stage 3 - Merge
+    if: ${{ ! contains(inputs.version, "pre") }} # only run this stage for release tags
     needs: tag
     uses: ./.github/workflows/release-stage-3-merge.yml
     with:
@@ -45,6 +46,7 @@ jobs:
     secrets: inherit
   announce:
     name: Stage 4 - Announce
+    if: ${{ ! contains(inputs.version, "pre") }} # only run this stage for release tags
     needs: [ tag, merge ]
     uses: ./.github/workflows/release-stage-4-announce.yml
     with:
@@ -53,6 +55,7 @@ jobs:
     secrets: inherit
   publish:
     name: Stage 5 - Publish
+    if: ${{ ! contains(inputs.version, "pre") }} # only run this stage for release tags
     needs: announce
     uses: ./.github/workflows/release-stage-5-publish.yml
     secrets: inherit
