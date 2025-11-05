@@ -3,34 +3,8 @@ on: pull_request
 permissions:
   contents: read
 jobs:
-  build:
-    name: Build Typescript
-    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: true
-      - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
-        uses: actions/setup-node@v4
-        with:
-          cache: pnpm
-          node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
-      - name: Generate types
-        run: pnpm generate-types
-      - name: Build
-        run: pnpm build
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifact_build_${{ github.run_id }}
-          path: ./modules/@specify-bdd/*/dist
-          include-hidden-files: true
   lint:
     name: Lint code
-    needs: build
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
     steps:
       - name: Check out repository code
@@ -52,7 +26,6 @@ jobs:
         run: pnpm lint
   test-unit:
     name: Unit test code
-    needs: build
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
     steps:
       - name: Check out repository code
@@ -74,7 +47,6 @@ jobs:
         run: pnpm test:unit
   test-e2e:
     name: End-to-end test code
-    needs: build
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
     steps:
       - name: Check out repository code
@@ -88,9 +60,9 @@ jobs:
         with:
           cache: pnpm
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: artifact_build_${{ github.run_id }}
+      - name: Generate types
+        run: pnpm generate-types
+      - name: Build
+        run: pnpm build
       - name: Run Specify tests
         run: pnpm specify
