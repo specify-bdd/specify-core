@@ -6,7 +6,7 @@
 
 # Abstract Class: Command
 
-Defined in: [Command.ts:40](https://github.com/specify-bdd/specify-core/blob/d16f7535e9a422d29e16c0535b6c65660bae8f1d/modules/@specify-bdd/specify/src/lib/Command.ts#L40)
+Defined in: [Command.ts:40](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/specify/src/lib/Command.ts#L40)
 
 ## Extended by
 
@@ -18,7 +18,7 @@ Defined in: [Command.ts:40](https://github.com/specify-bdd/specify-core/blob/d16
 
 > **new Command**(`userOpts`): `Command`
 
-Defined in: [Command.ts:56](https://github.com/specify-bdd/specify-core/blob/d16f7535e9a422d29e16c0535b6c65660bae8f1d/modules/@specify-bdd/specify/src/lib/Command.ts#L56)
+Defined in: [Command.ts:56](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/specify/src/lib/Command.ts#L56)
 
 Store user args and options data.
 
@@ -40,7 +40,7 @@ User-supplied options
 
 > **debug**: `boolean`
 
-Defined in: [Command.ts:44](https://github.com/specify-bdd/specify-core/blob/d16f7535e9a422d29e16c0535b6c65660bae8f1d/modules/@specify-bdd/specify/src/lib/Command.ts#L44)
+Defined in: [Command.ts:44](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/specify/src/lib/Command.ts#L44)
 
 Output debug info for this command.
 
@@ -50,7 +50,7 @@ Output debug info for this command.
 
 > **logPath**: `string`
 
-Defined in: [Command.ts:49](https://github.com/specify-bdd/specify-core/blob/d16f7535e9a422d29e16c0535b6c65660bae8f1d/modules/@specify-bdd/specify/src/lib/Command.ts#L49)
+Defined in: [Command.ts:49](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/specify/src/lib/Command.ts#L49)
 
 The file system path to write log output to.
 
@@ -60,7 +60,7 @@ The file system path to write log output to.
 
 > **execute**(`userArgs`): `Promise`\<[`CommandResult`](../interfaces/CommandResult.md)\>
 
-Defined in: [Command.ts:72](https://github.com/specify-bdd/specify-core/blob/d16f7535e9a422d29e16c0535b6c65660bae8f1d/modules/@specify-bdd/specify/src/lib/Command.ts#L72)
+Defined in: [Command.ts:72](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/specify/src/lib/Command.ts#L72)
 
 Execute the Command.  This method should be overridden by child
 classes, or it will just return an error result.

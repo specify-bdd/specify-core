@@ -6,7 +6,7 @@
 
 # Interface: SessionMeta
 
-Defined in: [SessionManager.ts:63](https://github.com/specify-bdd/specify-core/blob/d16f7535e9a422d29e16c0535b6c65660bae8f1d/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L63)
+Defined in: [SessionManager.ts:63](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L63)
 
 A metadata object representing a managed session.
 
@@ -16,7 +16,7 @@ A metadata object representing a managed session.
 
 > **commands**: [`CommandMeta`](CommandMeta.md)[]
 
-Defined in: [SessionManager.ts:64](https://github.com/specify-bdd/specify-core/blob/d16f7535e9a422d29e16c0535b6c65660bae8f1d/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L64)
+Defined in: [SessionManager.ts:64](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L64)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [SessionManager.ts:64](https://github.com/specify-bdd/specify-core/b
 
 > **cwd**: `string`
 
-Defined in: [SessionManager.ts:65](https://github.com/specify-bdd/specify-core/blob/d16f7535e9a422d29e16c0535b6c65660bae8f1d/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L65)
+Defined in: [SessionManager.ts:65](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L65)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [SessionManager.ts:65](https://github.com/specify-bdd/specify-core/b
 
 > `optional` **name**: `string`
 
-Defined in: [SessionManager.ts:66](https://github.com/specify-bdd/specify-core/blob/d16f7535e9a422d29e16c0535b6c65660bae8f1d/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L66)
+Defined in: [SessionManager.ts:66](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L66)
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: [SessionManager.ts:66](https://github.com/specify-bdd/specify-core/b
 
 > **session**: `SystemIOSession`
 
-Defined in: [SessionManager.ts:67](https://github.com/specify-bdd/specify-core/blob/d16f7535e9a422d29e16c0535b6c65660bae8f1d/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L67)
+Defined in: [SessionManager.ts:67](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L67)

@@ -1,6 +1,6 @@
 {
   "name": "@specify-bdd/plugin-cli",
-  "version": "0.1.4-rc.0",
+  "version": "0.1.4",
   "description": "A plugin for Specify BDD adding CLI testing support.",
   "type": "module",
   "contributors": [
