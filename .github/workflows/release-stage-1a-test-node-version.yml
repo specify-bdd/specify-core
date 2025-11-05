@@ -43,7 +43,7 @@ jobs:
         if: ${{ inputs.store_artifacts == true }}
         uses: actions/upload-artifact@v4
         with:
-          name: artifact_build_${{ github.run.id }}
+          name: artifact_build_${{ github.run_id }}
           path: ./modules/@specify-bdd/*/dist
           include-hidden-files: true
 

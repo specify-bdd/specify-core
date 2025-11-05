@@ -24,7 +24,7 @@ jobs:
         if: ${{ inputs.store_artifacts == true }}
         uses: actions/upload-artifact@v4
         with:
-          name: artifact_build_${{ github.run.id }}
+          name: artifact_build_${{ github.run_id }}
           path: ./modules/@specify-bdd/*/dist
           include-hidden-files: true
   lint:
@@ -46,7 +46,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: artifact_build_${{ github.run.id }}
+          name: artifact_build_${{ github.run_id }}
       - name: Run lint check
         run: pnpm lint
   test-unit:
@@ -68,7 +68,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: artifact_build_${{ github.run.id }}
+          name: artifact_build_${{ github.run_id }}
       - name: Run unit tests
         run: pnpm test:unit
   test-e2e:
@@ -90,6 +90,6 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: artifact_build_${{ github.run.id }}
+          name: artifact_build_${{ github.run_id }}
       - name: Run Specify tests
         run: pnpm specify
