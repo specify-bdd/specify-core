@@ -57,7 +57,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: artifact_build
+          name: artifact_build_${{ github.run.id }}
       - name: Lint
         run: pnpm lint
       - name: Audit
