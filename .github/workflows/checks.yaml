@@ -1,21 +1,60 @@
 name: PR Checks
 on: pull_request
+permissions:
+  contents: read
 jobs:
-  build:
+  lint:
+    name: Lint
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
-      - name: Setup Node.js ${{ vars.NODE_VERSION }}
+        with:
+          run_install: true
+      - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
         uses: actions/setup-node@v4
         with:
           cache: pnpm
-          node-version: ${{ vars.NODE_VERSION }}
-      - name: Install dependencies and build
-        run: pnpm install
-      - name: Lint
+          node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+      - name: Run lint check
         run: pnpm lint
-      - name: Test
-        run: pnpm test
+  test-unit:
+    name: Unit tests
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: true
+      - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+      - name: Run unit tests
+        run: pnpm test:unit
+  test-e2e:
+    name: End-to-end tests
+    runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: true
+      - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+      - name: Generate types
+        run: pnpm generate-types
+      - name: Build
+        run: pnpm build
+      - name: Run Specify tests
+        run: pnpm specify

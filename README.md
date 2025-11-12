@@ -35,7 +35,7 @@ installation if you first install it globally.
 ```shell
 npm i -g pnpm
 cd <local repo path>
-pnpm i
+pnpm dev:install
 ```
 
 This will not only install all dependencies but perform a Typescript build for you.
@@ -46,7 +46,7 @@ which use a `pnpm` command, you will need to use `npx pnpm` instead to run the r
 ```shell
 cd <local repo path>
 npm ci
-npx pnpm i
+npx pnpm dev:install
 ```
 
 Finally, verify your setup by running unit and end-to-end tests.
