@@ -10,7 +10,7 @@ interface CucumberStepDefLike {
     (pattern: string, options?: object, fn: () => void): void;
 }
 
-let instance: CucumberManager | null = null;
+let instance: CucumberManager;
 
 /**
  * A wrapper for Cucumber which streamlines, enhances, and enforces consistency
@@ -37,10 +37,10 @@ export class CucumberManager {
      * @returns The CucumberManager instance
      */
     static getInstance(): CucumberManager {
-        if (instance) {
-            return instance;
+        if (!instance) {
+            instance = new CucumberManager(Cucumber);
         }
 
-        return (instance = new CucumberManager(Cucumber));
+        return instance;
     }
 }
