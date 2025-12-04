@@ -7,7 +7,7 @@ export interface CucumberLike {
 }
 
 interface CucumberStepDefLike {
-    (pattern: string, options?: object, fn: () => void): void;
+    (pattern: string, options: object, fn: () => void): void;
 }
 
 let instance: CucumberManager;
