@@ -29,7 +29,8 @@ Feature: Shell Step Definitions
 
         Scenario: Create alternative shell type
             Given a "bash" shell
-            Then the shell type should be "bash"
+            When the user runs the command "echo $0"
+            Then the last command's terminal output should match "^bash$"
 
     Rule: I can execute commands and verify results
 
