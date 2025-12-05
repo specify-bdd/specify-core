@@ -24,12 +24,13 @@ export class ShellSession implements SystemIOSession {
      * If `userPath` is provided, it will override the default PATH
      * environment variable for this session.
      *
+     * @param type    - The type of shell to spawn (`sh`, `bash`, etc.)
      * @param options - The options to use with ChildProcess.spawn
      */
-    constructor(options: SpawnOptions = {}) {
+    constructor(type: string = "sh", options: SpawnOptions = {}) {
         options.shell ??= true;
 
-        this.#childProcess = spawn("sh", options);
+        this.#childProcess = spawn(type, options);
     }
 
     /**

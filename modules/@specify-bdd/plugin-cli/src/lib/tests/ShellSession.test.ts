@@ -32,16 +32,22 @@ describe("ShellSession", () => {
         vi.clearAllMocks();
     });
 
-    it("spawns a shell process on creation", () => {
+    it("spawns a shell process on creation using `sh` by default", () => {
         new ShellSession();
 
         expect(spawn).toHaveBeenCalledWith("sh", { "shell": true });
     });
 
+    it("spawns a shell process on creation using `bash` when provided as an argument", () => {
+        new ShellSession("bash");
+
+        expect(spawn).toHaveBeenCalledWith("bash", { "shell": true });
+    });
+
     it("overrides spawn options if provided", () => {
         const options = { "env": { "foo": "bar" } };
 
-        new ShellSession(options);
+        new ShellSession("sh", options);
 
         expect(spawn).toHaveBeenCalledWith("sh", { ...options, "shell": true });
     });

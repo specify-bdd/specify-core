@@ -15,6 +15,8 @@ import type { SpawnOptions } from "node:child_process";
 
 Given("a/another CLI shell", startDefaultShell);
 
+Given("a {string} shell", startAltShell);
+
 Given("(that )the working directory is {filePath}", changeDirectory);
 
 When("a/the user changes the working directory to {filePath}", changeDirectory);
@@ -168,11 +170,28 @@ async function sendKillSignal(signal: string): Promise<void> {
 }
 
 /**
- * Start a default shell.
+ * Start a user-specified shell.
+ * 
+ * @param type - The type of shell to spawn (`sh`, `bash`, etc.)
+ */
+function startAltShell(type: string): void {
+    startShell.call(this, type);
+}
+
+/**
+ * Start a default shell without a name.
+ */
+function startDefaultShell(): void {
+    startShell.call(this);
+}
+
+/**
+ * Start a shell. Defaults to "sh" and no name.
  *
+ * @param type - The type of shell to spawn (`sh`, `bash`, etc.)
  * @param name - The name of the shell
  */
-function startNamedDefaultShell(name?: string): void {
+function startShell(type: string = "sh", name?: string): void {
     const options: SpawnOptions = { "cwd": this.fs.cwd, "env": { ...process.env } };
 
     // strip Cucumber env vars from the options object that will be passed to the child process
@@ -188,17 +207,10 @@ function startNamedDefaultShell(name?: string): void {
         options.env.PATH = this.parameters.userPath;
     }
 
-    const shell = new ShellSession(options);
+    const shell = new ShellSession(type, options);
 
     this.cli.manager ??= new SessionManager();
     this.cli.manager.addSession(shell, name, this.fs.cwd);
-}
-
-/**
- * Start a default shell without a name.
- */
-function startDefaultShell(): void {
-    startNamedDefaultShell.call(this);
 }
 
 /**

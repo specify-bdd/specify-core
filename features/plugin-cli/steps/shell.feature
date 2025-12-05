@@ -27,6 +27,10 @@ Feature: Shell Step Definitions
         #     When the user kills another CLI shell
         #     Then there should be 0 active CLI shells
 
+        Scenario: Create alternative shell type
+            Given a "bash" shell
+            Then the shell type should be "bash"
+
     Rule: I can execute commands and verify results
 
         Background:
@@ -103,3 +107,4 @@ Feature: Shell Step Definitions
         # Scenario: Swap between shells by name
 
         # Scenario: Execute commands in parallel
+
