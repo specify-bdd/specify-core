@@ -29,6 +29,8 @@ When("a/the user starts a/another CLI shell", startDefaultShell);
 
 When("a/the user starts a/an/the (async )command/process {refstr}", execCommand);
 
+When("a/the user starts a {string} shell", startAltShell);
+
 When("a/the user switches shells", switchShell);
 
 When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
