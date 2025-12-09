@@ -214,7 +214,7 @@ async function startShell(shellType: string = "sh", name?: string): Promise<void
     this.cli.manager ??= new SessionManager();
     this.cli.manager.addSession(shell, name, this.fs.cwd);
 
-    assert.ok(await this.cli.manager.validateShell(shellType), new AssertionError({ "message": "Shell validation failed." }));
+    assert.ok(await this.cli.manager.validateShell(shellType), new AssertionError({ "message": `Failed to start ${shellType} CLI shell.` }));
 }
 
 /**
