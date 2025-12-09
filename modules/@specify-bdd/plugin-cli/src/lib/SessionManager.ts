@@ -330,6 +330,23 @@ export class SessionManager {
     }
 
     /**
+     * Validate the shell type of the active session.
+     * 
+     * @param type - The expected shell type
+     * 
+     * @returns Whether its the correct type or not
+     */
+    async validateShell(type: string): Promise<boolean> {
+        const phrase = "Current shell is: ";
+
+        this.run(`echo ${phrase}$0`);
+
+        await this.waitForReturn();
+
+        return this.output === phrase + type;
+    }
+
+    /**
      * Wait for the last command in a managed session to produce output.
      *
      * @param opts - Options to modify the behavior of waitForOutput()

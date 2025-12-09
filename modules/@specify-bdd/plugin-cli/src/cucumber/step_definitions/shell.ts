@@ -174,15 +174,15 @@ async function sendKillSignal(signal: string): Promise<void> {
  * 
  * @param type - The type of shell to spawn (`sh`, `bash`, etc.)
  */
-function startAltShell(type: string): void {
-    startShell.call(this, type);
+async function startAltShell(type: string): Promise<void> {
+    return startShell.call(this, type);
 }
 
 /**
  * Start a default shell without a name.
  */
-function startDefaultShell(): void {
-    startShell.call(this);
+async function startDefaultShell(): Promise<void> {
+    return startShell.call(this);
 }
 
 /**
@@ -191,7 +191,7 @@ function startDefaultShell(): void {
  * @param type - The type of shell to spawn (`sh`, `bash`, etc.)
  * @param name - The name of the shell
  */
-function startShell(type: string = "sh", name?: string): void {
+async function startShell(type: string = "sh", name?: string): Promise<void> {
     const options: SpawnOptions = { "cwd": this.fs.cwd, "env": { ...process.env } };
 
     // strip Cucumber env vars from the options object that will be passed to the child process
@@ -211,6 +211,8 @@ function startShell(type: string = "sh", name?: string): void {
 
     this.cli.manager ??= new SessionManager();
     this.cli.manager.addSession(shell, name, this.fs.cwd);
+
+    assert.ok(await this.cli.manager.validateShell(type), new AssertionError({ "message": "Shell validation failed." }));
 }
 
 /**
