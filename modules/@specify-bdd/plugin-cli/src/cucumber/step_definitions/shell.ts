@@ -15,7 +15,7 @@ import type { SpawnOptions } from "node:child_process";
 
 Given("a/another CLI shell", startDefaultShell);
 
-Given("a {string} shell", startAltShell);
+Given("a {string} CLI shell", startAltShell);
 
 Given("(that )the working directory is {filePath}", changeDirectory);
 
@@ -29,7 +29,7 @@ When("a/the user starts a/another CLI shell", startDefaultShell);
 
 When("a/the user starts a/an/the (async )command/process {refstr}", execCommand);
 
-When("a/the user starts a {string} shell", startAltShell);
+When("a/the user starts a {string} CLI shell", startAltShell);
 
 When("a/the user switches shells", switchShell);
 

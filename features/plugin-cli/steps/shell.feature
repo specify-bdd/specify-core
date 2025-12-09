@@ -28,7 +28,7 @@ Feature: Shell Step Definitions
         #     Then there should be 0 active CLI shells
 
         Scenario: Create alternative shell type
-            Given a "bash" shell
+            Given a "bash" CLI shell
             When the user runs the command "echo $0"
             Then the last command's terminal output should match "^bash$"
 
