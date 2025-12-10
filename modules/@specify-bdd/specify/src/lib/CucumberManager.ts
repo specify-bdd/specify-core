@@ -2,18 +2,14 @@ import assert   from "node:assert";
 import Cucumber from "@cucumber/cucumber";
 
 export interface CucumberLike {
-    defineStep: StepDefRegisterFunction;
-    Given: StepDefRegisterFunction;
-    Then: StepDefRegisterFunction;
-    When: StepDefRegisterFunction;
+    defineStep: typeof Cucumber.defineStep;
+    Given: typeof Cucumber.Given;
+    When: typeof Cucumber.When;
+    Then: typeof Cucumber.Then;
 }
 
 interface StepDefHandlerFunction {
     (): void;
-}
-
-interface StepDefRegisterFunction {
-    (pattern: StepDefPattern, options: StepDefOptions | StepDefHandlerFunction, fn?: StepDefHandlerFunction): void;
 }
 
 interface StepDefOptions {
