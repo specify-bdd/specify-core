@@ -1,13 +1,9 @@
 import Cucumber from "@cucumber/cucumber";
 
 export interface CucumberLike {
-    Given: CucumberStepDefLike;
-    Then: CucumberStepDefLike;
-    When: CucumberStepDefLike;
-}
-
-interface CucumberStepDefLike {
-    (pattern: string, options: object, fn: () => void): void;
+    Given: typeof Cucumber.Given;
+    When: typeof Cucumber.When;
+    Then: typeof Cucumber.Then;
 }
 
 let instance: CucumberManager;
