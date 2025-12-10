@@ -3,19 +3,8 @@ import { CucumberManager } from "../CucumberManager";
 import type { CucumberLike } from "../CucumberManager";
 
 const cucumber: CucumberLike = {};
-// const notCucumber            = null;
 
 describe("CucumberManager", () => {
-    // describe("constructor", () => {
-    //     it("accepts a Cucumber-like object", () => {
-    //         let cm = new CucumberManager(cucumber);
-    //     });
-
-    //     it("rejects an object unlike Cucumber", () => {
-    //         expect(() => new CucumberManager(notCucumber)).toThrow("Invalid input.");
-    //     });
-    // });
-
     describe("cucumber property", () => {
         it("returns a Cucumber-like object", () => {
             const cm = new CucumberManager(cucumber);
