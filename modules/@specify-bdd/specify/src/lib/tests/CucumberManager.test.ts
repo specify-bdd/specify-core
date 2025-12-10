@@ -34,7 +34,6 @@ describe("CucumberManager", () => {
             cm = new CucumberManager(cucumber);
 
             vi.spyOn(cm.cucumber, "When");
-            // vi.resetAllMocks();
         });
 
         describe("registers step def patterns with Cucumber using...", () => {
