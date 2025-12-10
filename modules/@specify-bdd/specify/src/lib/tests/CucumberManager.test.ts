@@ -2,10 +2,20 @@ import { CucumberManager } from "../CucumberManager";
 
 import type { CucumberLike } from "../CucumberManager";
 
+function fakeDefineStep(pattern, options = {}, handler = () => {}) {
+    if (pattern && options) {
+        handler();
+    }
+}
+
+function fakeHandler(param) {
+    return param;
+}
+
 const cucumber: CucumberLike = {
-    Given(pattern, options = {}, handler = () => {}) {},
-    Then(pattern, options = {}, handler = () => {}) {},
-    When(pattern, options = {}, handler = () => {}) {},
+    "Given": fakeDefineStep,
+    "Then":  fakeDefineStep,
+    "When":  fakeDefineStep,
 };
 
 describe("CucumberManager", () => {
@@ -18,8 +28,6 @@ describe("CucumberManager", () => {
     });
 
     describe("defineStep method", () => {
-        const handler = (param): void => {};
-
         let cm;
 
         beforeEach(() => {
@@ -34,44 +42,86 @@ describe("CucumberManager", () => {
                 const noKeyPat = "I do something with {param}";
                 const keyPat   = `When ${noKeyPat}`;
 
-                cm.defineStep(keyPat, handler);
+                cm.defineStep(keyPat, fakeHandler);
 
                 expect(cm.cucumber.When).toHaveBeenCalledTimes(1);
-                expect(cm.cucumber.When).toHaveBeenCalledWith(noKeyPat, {}, handler);
+                expect(cm.cucumber.When).toHaveBeenCalledWith(noKeyPat, {}, fakeHandler);
             });
 
             it("a single regular expression", () => {
-                const noKeyPatStr    = "I do something with {param}";
-                const noKeyPatRegExp = new RegExp(noKeyPatStr, "i");
-                const keyPatStr      = `When ${noKeyPatStr}`;
-                const keyPatRegExp   = new RegExp(keyPatStr, "i");
+                const noKeyPatStr = "I do something with .*";
+                const noKeyPatReg = new RegExp(noKeyPatStr, "i");
+                const keyPatStr   = `When ${noKeyPatStr}`;
+                const keyPatReg   = new RegExp(keyPatStr, "i");
 
-                cm.defineStep(keyPatRegExp, handler);
+                cm.defineStep(keyPatReg, fakeHandler);
 
                 expect(cm.cucumber.When).toHaveBeenCalledTimes(1);
-                expect(cm.cucumber.When).toHaveBeenCalledWith(noKeyPatRegExp, {}, handler);
+                expect(cm.cucumber.When).toHaveBeenCalledWith(noKeyPatReg, {}, fakeHandler);
             });
 
             it("multiple mixed expressions", () => {
-                const noKeyPat  = "I do something with {param}";
-                const noKeyPats = [noKeyPat, new RegExp(noKeyPat, "i")];
-                const keyPat    = `When ${noKeyPat}`;
-                const keyPats   = [keyPat, new RegExp(keyPat, "i")];
+                const noKeyPatStr = "I do something with {param}";
+                const noKeyPatReg = new RegExp(noKeyPatStr.replace("{param}", ".*"));
+                const noKeyPats   = [noKeyPatStr, noKeyPatReg];
+                const keyPatStr   = `When ${noKeyPatStr}`;
+                const keyPatReg   = new RegExp(keyPatStr.replace("{param}", ".*"));
+                const keyPats     = [keyPatStr, keyPatReg];
 
-                cm.defineStep(keyPats, handler);
+                cm.defineStep(keyPats, fakeHandler);
 
                 expect(cm.cucumber.When).toHaveBeenCalledTimes(noKeyPats.length);
                 for (let i = 0; i < noKeyPats.length; i++) {
-                    expect(cm.cucumber.When).toHaveBeenCalledWith(noKeyPats[i], {}, handler);
+                    expect(cm.cucumber.When).toHaveBeenCalledWith(noKeyPats[i], {}, fakeHandler);
                 }
             });
         });
 
-        // it("accepts an optional third param for Cucumber step def options", () => {});
+        it("accepts an optional third param for Cucumber step def options", () => {
+            const noKeyPat = "I do something with {param}";
+            const keyPat   = `When ${noKeyPat}`;
+            const opts     = { "timeout": 100 };
 
-        // describe("throws for malformed patterns like...", () => {
-        //     it("Invalid initial keywords", () => {});
-        // });
+            cm.defineStep(keyPat, fakeHandler, opts);
+
+            expect(cm.cucumber.When).toHaveBeenCalledWith(noKeyPat, opts, fakeHandler);
+        });
+
+        describe("throws for malformed patterns like...", () => {
+            describe("string expressions with...", () => {
+                it("invalid keywords", () => {
+                    const pat = "Ghen I do something with {param}";
+
+                    expect(() => cm.defineStep(pat, fakeHandler)).toThrow(
+                        `Invalid pattern expression: ${pat}`,
+                    );
+                });
+
+                it("improper formatting", () => {
+                    const pat = " When I do something with {param}";
+
+                    expect(() => cm.defineStep(pat, fakeHandler));
+                });
+            });
+
+            describe("regular expressions with...", () => {
+                it("invalid keywords", () => {
+                    const pat = /Ghen I do something with .*/;
+
+                    expect(() => cm.defineStep(pat, fakeHandler)).toThrow(
+                        `Invalid pattern expression: ${pat.toString()}`,
+                    );
+                });
+
+                it("improper formatting", () => {
+                    const pat = /^ When I do something with .*/;
+
+                    expect(() => cm.defineStep(pat, fakeHandler)).toThrow(
+                        `Invalid pattern expression: ${pat.toString()}`,
+                    );
+                });
+            });
+        });
     });
 
     describe("getInstance() static method", () => {
