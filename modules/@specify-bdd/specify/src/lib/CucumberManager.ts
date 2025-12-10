@@ -13,7 +13,7 @@ interface StepDefHandlerFunction {
 }
 
 interface StepDefRegisterFunction {
-    (pattern: StepDefPattern, options?: StepDefOptions, fn?: StepDefHandlerFunction): void;
+    (pattern: StepDefPattern, options: StepDefOptions | StepDefHandlerFunction, fn?: StepDefHandlerFunction): void;
 }
 
 interface StepDefOptions {
