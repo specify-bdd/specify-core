@@ -497,6 +497,30 @@ describe("SessionManager", () => {
             });
         });
 
+        describe("validateShell()", () => {
+            it("returns true if the active session is the expected type", async () => {
+                sessionManager.addSession(session);
+
+                const promise = sessionManager.validateShell("bash");
+
+                session.emitOutput("Current shell is: bash");
+                session.emitDelimiter(0)
+
+                await expect(promise).resolves.toBe(true);
+            });
+
+            it("returns false if the active session is an unexpected type", async () => {
+                sessionManager.addSession(session);
+
+                const promise = sessionManager.validateShell("bash");
+
+                session.emitOutput("Current shell is: sh");
+                session.emitDelimiter(0)
+
+                await expect(promise).resolves.toBe(false);
+            });
+        })
+
         describe("waitForReturn()", () => {
             beforeEach(() => {
                 sessionManager.addSession(session);

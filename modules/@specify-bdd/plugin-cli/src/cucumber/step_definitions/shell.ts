@@ -15,6 +15,8 @@ import type { SpawnOptions } from "node:child_process";
 
 Given("a/another CLI shell", startDefaultShell);
 
+Given("a/an {string} CLI shell", startAltShell);
+
 Given("(that )the working directory is {filePath}", changeDirectory);
 
 When("a/the user changes the working directory to {filePath}", changeDirectory);
@@ -26,6 +28,8 @@ When("a/the user sends a {cliSignal} signal to the last command", sendKillSignal
 When("a/the user starts a/another CLI shell", startDefaultShell);
 
 When("a/the user starts a/an/the (async )command/process {refstr}", execCommand);
+
+When("a/the user starts a/an {string} CLI shell", startAltShell);
 
 When("a/the user switches shells", switchShell);
 
@@ -168,11 +172,28 @@ async function sendKillSignal(signal: string): Promise<void> {
 }
 
 /**
- * Start a default shell.
- *
- * @param name - The name of the shell
+ * Start a user-specified shell.
+ * 
+ * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
  */
-function startNamedDefaultShell(name?: string): void {
+async function startAltShell(shellType: string): Promise<void> {
+    return startShell.call(this, shellType);
+}
+
+/**
+ * Start a default shell without a name.
+ */
+async function startDefaultShell(): Promise<void> {
+    return startShell.call(this);
+}
+
+/**
+ * Start a shell. Defaults to "sh" and no name.
+ *
+ * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
+ * @param name      - The name of the shell
+ */
+async function startShell(shellType: string = "sh", name?: string): Promise<void> {
     const options: SpawnOptions = { "cwd": this.fs.cwd, "env": { ...process.env } };
 
     // strip Cucumber env vars from the options object that will be passed to the child process
@@ -188,17 +209,12 @@ function startNamedDefaultShell(name?: string): void {
         options.env.PATH = this.parameters.userPath;
     }
 
-    const shell = new ShellSession(options);
+    const shell = new ShellSession(shellType, options);
 
     this.cli.manager ??= new SessionManager();
     this.cli.manager.addSession(shell, name, this.fs.cwd);
-}
 
-/**
- * Start a default shell without a name.
- */
-function startDefaultShell(): void {
-    startNamedDefaultShell.call(this);
+    assert.ok(await this.cli.manager.validateShell(shellType), new AssertionError({ "message": `Failed to start ${shellType} CLI shell.` }));
 }
 
 /**

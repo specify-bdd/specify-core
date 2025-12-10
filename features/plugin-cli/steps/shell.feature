@@ -27,6 +27,11 @@ Feature: Shell Step Definitions
         #     When the user kills another CLI shell
         #     Then there should be 0 active CLI shells
 
+        Scenario: Create alternative shell type
+            Given a "bash" CLI shell
+            When the user runs the command "echo $0"
+            Then the last command's terminal output should match "^bash$"
+
     Rule: I can execute commands and verify results
 
         Background:
@@ -103,3 +108,4 @@ Feature: Shell Step Definitions
         # Scenario: Swap between shells by name
 
         # Scenario: Execute commands in parallel
+
