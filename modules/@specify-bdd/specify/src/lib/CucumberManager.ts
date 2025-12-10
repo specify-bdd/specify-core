@@ -2,7 +2,6 @@ import assert   from "node:assert";
 import Cucumber from "@cucumber/cucumber";
 
 export interface CucumberLike {
-    defineStep: typeof Cucumber.defineStep;
     Given: typeof Cucumber.Given;
     When: typeof Cucumber.When;
     Then: typeof Cucumber.Then;
