@@ -524,9 +524,25 @@ describe("SessionManager", () => {
                 expect(sessionManager.activeSession.session).toBe(altSession3);
             });
 
-            it("throws if the named session does not exist", () => {
+            it("switches to the indexed session", () => {
+                expect(sessionManager.activeSession.session).toBe(altSession2);
+
+                sessionManager.switchToSession(0);
+
+                expect(sessionManager.activeSession.session).toBe(altSession1);
+
+                sessionManager.switchToSession(2);
+
+                expect(sessionManager.activeSession.session).toBe(altSession3);
+            });
+
+            it("throws if the session does not exist", () => {
                 expect(() => sessionManager.switchToSession("bad-name")).toThrow(
-                    "No session found with name: bad-name",
+                    "No session found with selector: bad-name",
+                );
+
+                expect(() => sessionManager.switchToSession(-1)).toThrow(
+                    "No session found with selector: -1",
                 );
             });
         });

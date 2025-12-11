@@ -103,7 +103,14 @@ Feature: Shell Step Definitions
             When a user switches shells
             Then the last command's terminal output should match "First shell"
 
-        # Scenario: Swap between shells by index
+        Scenario: Swap between shells by index
+            When a user runs the command "echo 'Third shell'"
+            And a user switches shells
+            And a user runs the command "echo 'First shell'"
+            And a user switches shells
+            And a user runs the command "echo 'Second shell'"
+            And a user switches to CLI shell 0
+            Then the last command's terminal output should match "First shell"
 
         Scenario: Swap between shells by name
             Given another CLI shell named "Test Shell"

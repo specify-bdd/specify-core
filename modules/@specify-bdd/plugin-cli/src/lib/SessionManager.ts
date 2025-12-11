@@ -330,18 +330,20 @@ export class SessionManager {
     }
 
     /**
-     * Switch to the next session in the list.
+     * Switch to the session that matches the given selector.
      * 
-     * @param name - The name of the session to switch to
+     * @param selector - The index or name of the session to switch to
      *
-     * @remarks
-     * If there is no next session, the first session in the list is activated.
+     * @throws AssertionError
+     * If there is no matching session
      */
-    switchToSession(name: string): void {
-        const session = this.#sessions.find((session) => session.name === name);
+    switchToSession(selector: number | string): void {
+        const session = typeof selector === "string"
+            ? this.#sessions.find((session) => session.name === selector)
+            : this.#sessions[selector];
         
         if (!session) {
-            throw new Error(`No session found with name: ${name}`);
+            throw new Error(`No session found with selector: ${selector}`);
         }
 
         this.#activeSession = session;

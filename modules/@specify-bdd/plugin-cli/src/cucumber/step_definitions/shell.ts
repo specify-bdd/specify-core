@@ -37,6 +37,8 @@ When("a/the user starts a/an {string} CLI shell", startAltShell);
 
 When("a/the user switches shells", cycleShell);
 
+When("a/the user switches to CLI shell {int}", selectShellByIndex);
+
 When("a/the user switches to the CLI shell named {string}", selectShellByName);
 
 When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
@@ -242,6 +244,22 @@ function cycleShell(): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     this.cli.manager.switchToNextSession();
+
+    this.fs.cwd = this.cli.manager.cwd;
+}
+
+/**
+ * Switch to the shell matching the index.
+ * 
+ * @param index - The index of the shell to switch to
+ *
+ * @throws AssertionError
+ * If there is no SessionManager initialized.
+ */
+function selectShellByIndex(index: number): void {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    this.cli.manager.switchToSession(index);
 
     this.fs.cwd = this.cli.manager.cwd;
 }
