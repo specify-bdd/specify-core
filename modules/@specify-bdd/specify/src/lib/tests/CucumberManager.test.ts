@@ -106,7 +106,9 @@ describe("CucumberManager", () => {
                     it("improper formatting", () => {
                         const pat = " When I do something with {param}";
 
-                        expect(() => cm.defineStep(pat, fakeHandler));
+                        expect(() => cm.defineStep(pat, fakeHandler)).toThrow(
+                            `Invalid pattern expression: ${pat}`,
+                        );
                     });
                 });
 
