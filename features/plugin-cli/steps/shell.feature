@@ -96,12 +96,12 @@ Feature: Shell Step Definitions
             And another CLI shell
 
         Scenario: Swap between shells in sequence
-            When a user runs the command "echo 'First shell!'"
+            When a user runs the command "echo 'First shell'"
             And a user switches shells
-            And a user runs the command "echo 'Second shell!'"
-            Then the last command's terminal output should match "Second shell!"
+            And a user runs the command "echo 'Second shell'"
+            Then the last command's terminal output should match "Second shell"
             When a user switches shells
-            Then the last command's terminal output should match "First shell!"
+            Then the last command's terminal output should match "First shell"
 
         # Scenario: Swap between shells by index
 
