@@ -97,29 +97,37 @@ describe("CucumberManager", () => {
             describe("throws for malformed patterns like...", () => {
                 describe("string expressions with...", () => {
                     it("invalid keywords", () => {
-                        expect(() =>
-                            cm.defineStep("Ghen I do something with {param}", fakeHandler),
-                        ).toThrow(`Invalid pattern expression: ${pat}`);
+                        const pat = "Ghen I do something with {param}";
+
+                        expect(() => cm.defineStep(pat, fakeHandler)).toThrow(
+                            `Invalid pattern expression: ${pat}`,
+                        );
                     });
 
                     it("improper formatting", () => {
-                        expect(() =>
-                            cm.defineStep(" When I do something with {param}", fakeHandler),
-                        ).toThrow(`Invalid pattern expression: ${pat}`);
+                        const pat = " When I do something with {param}";
+
+                        expect(() => cm.defineStep(pat, fakeHandler)).toThrow(
+                            `Invalid pattern expression: ${pat}`,
+                        );
                     });
                 });
 
                 describe("regular expressions with...", () => {
                     it("invalid keywords", () => {
-                        expect(() =>
-                            cm.defineStep(/Ghen I do something with .*/, fakeHandler),
-                        ).toThrow(`Invalid pattern expression: ${pat.toString()}`);
+                        const pat = /Ghen I do something with .*/;
+
+                        expect(() => cm.defineStep(pat, fakeHandler)).toThrow(
+                            `Invalid pattern expression: ${pat.toString()}`,
+                        );
                     });
 
                     it("improper formatting", () => {
-                        expect(() =>
-                            cm.defineStep(/^ When I do something with .*/, fakeHandler),
-                        ).toThrow(`Invalid pattern expression: ${pat.toString()}`);
+                        const pat = /^ When I do something with .*/;
+
+                        expect(() => cm.defineStep(pat, fakeHandler)).toThrow(
+                            `Invalid pattern expression: ${pat.toString()}`,
+                        );
                     });
                 });
             });
