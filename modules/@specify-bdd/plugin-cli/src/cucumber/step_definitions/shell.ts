@@ -19,6 +19,8 @@ Given("a/another CLI shell named {string}", startDefaultNamedShell)
 
 Given("a/an {string} CLI shell", startAltShell);
 
+Given("a/an {string} CLI shell named {string}", startAltNamedShell);
+
 Given("(that )the working directory is {filePath}", changeDirectory);
 
 When("a/the user changes the working directory to {filePath}", changeDirectory);
@@ -34,6 +36,8 @@ When("a/the user starts a/another CLI shell named {string}", startDefaultNamedSh
 When("a/the user starts a/an/the (async )command/process {refstr}", execCommand);
 
 When("a/the user starts a/an {string} CLI shell", startAltShell);
+
+When("a/the user starts a/an {string} CLI shell named {string}", startAltNamedShell);
 
 When("a/the user switches shells", cycleShell);
 
@@ -186,6 +190,16 @@ async function sendKillSignal(signal: string): Promise<void> {
  */
 async function startAltShell(shellType: string): Promise<void> {
     return startShell.call(this, shellType);
+}
+
+/**
+ * Start a user-specified shell with a name.
+ * 
+ * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
+ * @param name      - The name of the shell
+ */
+async function startAltNamedShell(shellType: string, name: string): Promise<void> {
+    return startShell.call(this, shellType, name);
 }
 
 /**

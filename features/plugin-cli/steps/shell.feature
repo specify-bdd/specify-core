@@ -31,6 +31,13 @@ Feature: Shell Step Definitions
             Given a "bash" CLI shell
             When the user runs the command "echo $0"
             Then the last command's terminal output should match "^bash$"
+        
+        Scenario: Create alternative shell type with a name
+            Given a "bash" CLI shell named "test-shell"
+            And another CLI shell
+            When a user switches to the CLI shell named "test-shell"
+            And the user runs the command "echo $0"
+            Then the last command's terminal output should match "^bash$"
 
     Rule: I can execute commands and verify results
 
