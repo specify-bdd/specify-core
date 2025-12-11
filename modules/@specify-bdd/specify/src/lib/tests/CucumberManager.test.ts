@@ -21,7 +21,7 @@ const cucumber: CucumberLike = {
 describe("CucumberManager", () => {
     describe("properties", () => {
         describe("cucumber", () => {
-            it("returns a Cucumber-like object", () => {
+            it("returns the Cucumber object", () => {
                 const cm = new CucumberManager(cucumber);
 
                 expect(cm.cucumber).toBe(cucumber);
