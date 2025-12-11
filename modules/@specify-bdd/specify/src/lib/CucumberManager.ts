@@ -46,7 +46,7 @@ export class CucumberManager {
      */
     defineStep(
         pattern: Array<StepDefPattern> | StepDefPattern,
-        handler: Function,
+        handler: () => void,
         options: StepDefOptions = {},
     ): CucumberManager {
         const patternList = Array.isArray(pattern) ? pattern : [pattern];
