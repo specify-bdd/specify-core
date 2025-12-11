@@ -7,10 +7,6 @@ export interface CucumberLike {
     Then: typeof Cucumber.Then;
 }
 
-interface StepDefHandlerFunction {
-    (): void;
-}
-
 interface StepDefOptions {
     timeout?: number;
 }
@@ -50,7 +46,7 @@ export class CucumberManager {
      */
     defineStep(
         pattern: Array<StepDefPattern> | StepDefPattern,
-        handler: StepDefHandlerFunction,
+        handler: Function,
         options: StepDefOptions = {},
     ): CucumberManager {
         const patternList = Array.isArray(pattern) ? pattern : [pattern];
