@@ -330,6 +330,24 @@ export class SessionManager {
     }
 
     /**
+     * Switch to the next session in the list.
+     * 
+     * @param name - The name of the session to switch to
+     *
+     * @remarks
+     * If there is no next session, the first session in the list is activated.
+     */
+    switchToSession(name: string): void {
+        const session = this.#sessions.find((session) => session.name === name);
+        
+        if (!session) {
+            throw new Error(`No session found with name: ${name}`);
+        }
+
+        this.#activeSession = session;
+    }
+
+    /**
      * Validate the shell type of the active session.
      * 
      * @param shellType - The expected shell type

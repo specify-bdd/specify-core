@@ -105,7 +105,13 @@ Feature: Shell Step Definitions
 
         # Scenario: Swap between shells by index
 
-        # Scenario: Swap between shells by name
+        Scenario: Swap between shells by name
+            Given another CLI shell named "Test Shell"
+            When a user runs the command "echo Named Shell"
+            And a user switches shells
+            Then the last command's terminal output should match "^Current shell is: sh$"
+            When a user switches to the CLI shell named "Test Shell"
+            Then the last command's terminal output should match "Named Shell"
 
         # Scenario: Execute commands in parallel
 

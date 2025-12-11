@@ -15,6 +15,8 @@ import type { SpawnOptions } from "node:child_process";
 
 Given("a/another CLI shell", startDefaultShell);
 
+Given("a/another CLI shell named {string}", startDefaultNamedShell)
+
 Given("a/an {string} CLI shell", startAltShell);
 
 Given("(that )the working directory is {filePath}", changeDirectory);
@@ -27,11 +29,15 @@ When("a/the user sends a {cliSignal} signal to the last command", sendKillSignal
 
 When("a/the user starts a/another CLI shell", startDefaultShell);
 
+When("a/the user starts a/another CLI shell named {string}", startDefaultNamedShell);
+
 When("a/the user starts a/an/the (async )command/process {refstr}", execCommand);
 
 When("a/the user starts a/an {string} CLI shell", startAltShell);
 
-When("a/the user switches shells", switchShell);
+When("a/the user switches shells", cycleShell);
+
+When("a/the user switches to the CLI shell named {string}", selectShellByName);
 
 When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
 
@@ -188,6 +194,15 @@ async function startDefaultShell(): Promise<void> {
 }
 
 /**
+ * Start a default shell with a name.
+ * 
+ * @param name - The name of the shell
+ */
+async function startDefaultNamedShell(name: string): Promise<void> {
+    return startShell.call(this, "sh", name);
+}
+
+/**
  * Start a shell. Defaults to "sh" and no name.
  *
  * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
@@ -223,10 +238,26 @@ async function startShell(shellType: string = "sh", name?: string): Promise<void
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function switchShell(): void {
+function cycleShell(): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     this.cli.manager.switchToNextSession();
+
+    this.fs.cwd = this.cli.manager.cwd;
+}
+
+/**
+ * Switch to a named shell.
+ * 
+ * @param name - The name of the shell to switch to
+ *
+ * @throws AssertionError
+ * If there is no SessionManager initialized.
+ */
+function selectShellByName(name): void {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    this.cli.manager.switchToSession(name);
 
     this.fs.cwd = this.cli.manager.cwd;
 }
