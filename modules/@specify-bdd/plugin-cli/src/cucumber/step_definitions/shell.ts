@@ -39,7 +39,7 @@ When("a/the user starts a/an {string} CLI shell", startAltShell);
 
 When("a/the user starts a/an {string} CLI shell named {string}", startAltNamedShell);
 
-When("a/the user switches CLI shells", cycleShell);
+When("a/the user switches CLI shells", switchShell);
 
 When("a/the user switches to CLI shell {int}", selectShellByIndex);
 
@@ -254,7 +254,7 @@ async function startShell(shellType: string = "sh", name?: string): Promise<void
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function cycleShell(): void {
+function switchShell(): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     this.cli.manager.switchToNextSession();
