@@ -39,11 +39,11 @@ When("a/the user starts a/an {string} CLI shell", startAltShell);
 
 When("a/the user starts a/an {string} CLI shell named {string}", startAltNamedShell);
 
-When("a/the user switches CLI shells", switchShell);
+When("a/the user switches CLI shells", switchToNextShell);
 
-When("a/the user switches to CLI shell {int}", selectShellByIndex);
+When("a/the user switches to CLI shell {int}", switchShellByIndex);
 
-When("a/the user switches to the CLI shell named {string}", selectShellByName);
+When("a/the user switches to the CLI shell named {string}", switchShellByName);
 
 When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
 
@@ -254,12 +254,8 @@ async function startShell(shellType: string = "sh", name?: string): Promise<void
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function switchShell(): void {
-    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
-
-    this.cli.manager.switchToNextSession();
-
-    this.fs.cwd = this.cli.manager.cwd;
+function switchToNextShell(): void {
+    switchShell.call(this);
 }
 
 /**
@@ -270,12 +266,8 @@ function switchShell(): void {
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function selectShellByIndex(index: number): void {
-    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
-
-    this.cli.manager.switchToSession(index);
-
-    this.fs.cwd = this.cli.manager.cwd;
+function switchShellByIndex(index: number): void {
+    switchShell.call(this, index);
 }
 
 /**
@@ -286,10 +278,28 @@ function selectShellByIndex(index: number): void {
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function selectShellByName(name): void {
+function switchShellByName(name): void {
+    switchShell.call(this, name);
+}
+
+/**
+ * Switch to the shell matching the selector, or to the next shell
+ * in the managed shell list if there is no selector.
+ * 
+ * @param selector - The index or name of the shell to switch to
+ *
+ * @throws AssertionError
+ * If there is no SessionManager initialized.
+ */
+function switchShell(selector?: number | string): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
-    this.cli.manager.switchToSession(name);
+    if (!selector) {
+        this.cli.manager.switchToNextSession();
+    }
+    else {
+        this.cli.manager.switchToSession(selector);
+    }
 
     this.fs.cwd = this.cli.manager.cwd;
 }
