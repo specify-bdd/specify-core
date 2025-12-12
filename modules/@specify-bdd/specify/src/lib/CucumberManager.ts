@@ -7,11 +7,11 @@ export interface CucumberLike {
     Then: typeof Cucumber.Then;
 }
 
-interface StepDefOptions {
+export interface StepDefOptions {
     timeout?: number;
 }
 
-type StepDefPattern = RegExp | string;
+export type StepDefPattern = RegExp | string;
 
 let instance: CucumberManager;
 

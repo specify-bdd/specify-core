@@ -9,9 +9,11 @@
     "Wild Love"
   ],
   "license": "MIT",
-  "main": "dist/main.js",
   "bin": {
     "specify": "bin/specify.js"
+  },
+  "exports": {
+    ".": "dist/index.js"
   },
   "files": [
     "dist"
