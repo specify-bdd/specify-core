@@ -497,6 +497,56 @@ describe("SessionManager", () => {
             });
         });
 
+        describe("switchToSession()", () => {
+            let altSession1: MockShellSession;
+            let altSession2: MockShellSession;
+            let altSession3: MockShellSession;
+
+            beforeEach(() => {
+                altSession1 = new ShellSession() as unknown as MockShellSession;
+                altSession2 = new ShellSession() as unknown as MockShellSession;
+                altSession3 = new ShellSession() as unknown as MockShellSession;
+
+                sessionManager.addSession(altSession1, "test-session-1", "/test1", false);
+                sessionManager.addSession(altSession2, "test-session-2", "/test2");
+                sessionManager.addSession(altSession3, "test-session-3", "/test3", false);
+            });
+
+            it("switches to the named session", () => {
+                expect(sessionManager.activeSession.session).toBe(altSession2);
+
+                sessionManager.switchToSession("test-session-1");
+
+                expect(sessionManager.activeSession.session).toBe(altSession1);
+
+                sessionManager.switchToSession("test-session-3");
+
+                expect(sessionManager.activeSession.session).toBe(altSession3);
+            });
+
+            it("switches to the indexed session", () => {
+                expect(sessionManager.activeSession.session).toBe(altSession2);
+
+                sessionManager.switchToSession(0);
+
+                expect(sessionManager.activeSession.session).toBe(altSession1);
+
+                sessionManager.switchToSession(2);
+
+                expect(sessionManager.activeSession.session).toBe(altSession3);
+            });
+
+            it("throws if the session does not exist", () => {
+                expect(() => sessionManager.switchToSession("bad-name")).toThrow(
+                    "No session found with name: bad-name",
+                );
+
+                expect(() => sessionManager.switchToSession(-1)).toThrow(
+                    "No session found with index: -1",
+                );
+            });
+        });
+
         describe("validateShell()", () => {
             it("returns true if the active session is the expected type", async () => {
                 sessionManager.addSession(session);

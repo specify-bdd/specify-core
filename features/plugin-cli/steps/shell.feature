@@ -31,6 +31,20 @@ Feature: Shell Step Definitions
             Given a "bash" CLI shell
             When the user runs the command "echo $0"
             Then the last command's terminal output should match "^bash$"
+        
+        Scenario: Create alternative shell type with a name
+            Given a "bash" CLI shell named "test-shell"
+            And another CLI shell
+            When a user switches to the CLI shell named "test-shell"
+            And the user runs the command "echo $0"
+            Then the last command's terminal output should match "^bash$"
+
+        Scenario: Create default shell with a name
+            Given a CLI shell named "test-shell"
+            And a "bash" CLI shell
+            When a user switches to the CLI shell named "test-shell"
+            And the user runs the command "echo $0"
+            Then the last command's terminal output should match "^sh$"
 
     Rule: I can execute commands and verify results
 
@@ -96,16 +110,29 @@ Feature: Shell Step Definitions
             And another CLI shell
 
         Scenario: Swap between shells in sequence
-            When a user runs the command "echo 'First shell!'"
-            And a user switches shells
-            And a user runs the command "echo 'Second shell!'"
-            Then the last command's terminal output should match "Second shell!"
-            When a user switches shells
-            Then the last command's terminal output should match "First shell!"
+            When a user runs the command "echo 'First shell'"
+            And a user switches CLI shells
+            And a user runs the command "echo 'Second shell'"
+            Then the last command's terminal output should match "Second shell"
+            When a user switches CLI shells
+            Then the last command's terminal output should match "First shell"
 
-        # Scenario: Swap between shells by index
+        Scenario: Swap between shells by index
+            When a user runs the command "echo 'Third shell'"
+            And a user switches CLI shells
+            And a user runs the command "echo 'First shell'"
+            And a user switches CLI shells
+            And a user runs the command "echo 'Second shell'"
+            And a user switches to CLI shell 0
+            Then the last command's terminal output should match "First shell"
 
-        # Scenario: Swap between shells by name
+        Scenario: Swap between shells by name
+            Given another CLI shell named "Test Shell"
+            When a user runs the command "echo Named Shell"
+            And a user switches CLI shells
+            Then the last command's terminal output should match "^Current shell is: sh$"
+            When a user switches to the CLI shell named "Test Shell"
+            Then the last command's terminal output should match "Named Shell"
 
         # Scenario: Execute commands in parallel
 
