@@ -538,11 +538,11 @@ describe("SessionManager", () => {
 
             it("throws if the session does not exist", () => {
                 expect(() => sessionManager.switchToSession("bad-name")).toThrow(
-                    "No session found with selector: bad-name",
+                    "No session found with name: bad-name",
                 );
 
                 expect(() => sessionManager.switchToSession(-1)).toThrow(
-                    "No session found with selector: -1",
+                    "No session found with index: -1",
                 );
             });
         });

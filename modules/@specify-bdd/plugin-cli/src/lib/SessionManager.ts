@@ -343,7 +343,9 @@ export class SessionManager {
             : this.#sessions[selector];
         
         if (!session) {
-            throw new Error(`No session found with selector: ${selector}`);
+            const selectorType = typeof selector === "string" ? "name" : "index";
+            
+            throw new Error(`No session found with ${selectorType}: ${selector}`);
         }
 
         this.#activeSession = session;
