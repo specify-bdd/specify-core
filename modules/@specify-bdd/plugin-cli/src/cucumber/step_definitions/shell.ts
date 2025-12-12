@@ -39,7 +39,7 @@ When("a/the user starts a/an {string} CLI shell", startAltShell);
 
 When("a/the user starts a/an {string} CLI shell named {string}", startAltNamedShell);
 
-When("a/the user switches shells", cycleShell);
+When("a/the user switches CLI shells", cycleShell);
 
 When("a/the user switches to CLI shell {int}", selectShellByIndex);
 
