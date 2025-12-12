@@ -39,6 +39,13 @@ Feature: Shell Step Definitions
             And the user runs the command "echo $0"
             Then the last command's terminal output should match "^bash$"
 
+        Scenario: Create default shell with a name
+            Given a CLI shell named "test-shell"
+            And a "bash" CLI shell
+            When a user switches to the CLI shell named "test-shell"
+            And the user runs the command "echo $0"
+            Then the last command's terminal output should match "^sh$"
+
     Rule: I can execute commands and verify results
 
         Background:
