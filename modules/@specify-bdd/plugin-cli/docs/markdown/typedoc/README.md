@@ -52,7 +52,7 @@ instructions on installation and configuration.
 * When a/the user sends a {cliSignal} signal to the last command
 * When a/the user starts a/another CLI shell
 * When a/the user starts the (async )command/process {refstr}
-* When a/the user switches shells
+* When a/the user switches CLI shells
 * When a/the user waits for the last command to return
 * When a/the user waits for terminal output
 * When a/the user waits for terminal output matching (the regular expression ){ref}
