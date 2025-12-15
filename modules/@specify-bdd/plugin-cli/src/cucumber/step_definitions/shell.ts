@@ -296,8 +296,7 @@ function switchShell(selector?: number | string): void {
 
     if (!selector) {
         this.cli.manager.switchToNextSession();
-    }
-    else {
+    } else {
         this.cli.manager.switchToSession(selector);
     }
 
