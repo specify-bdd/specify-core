@@ -1,10 +1,11 @@
-import assert   from "node:assert";
-import Cucumber from "@cucumber/cucumber";
+import assert from "node:assert";
+
+import type { Given, When, Then } from "@cucumber/cucumber";
 
 export interface CucumberLike {
-    Given: typeof Cucumber.Given;
-    When: typeof Cucumber.When;
-    Then: typeof Cucumber.Then;
+    Given: typeof Given;
+    When: typeof When;
+    Then: typeof Then;
 }
 
 export interface StepDefOptions {
@@ -92,11 +93,13 @@ export class CucumberManager {
     /**
      * Get the singleton instance of CucumberManager.
      *
+     * @param cucumber - The Cucumber object to manage
+     *
      * @returns The CucumberManager instance
      */
-    static getInstance(): CucumberManager {
+    static getInstance(cucumber: CucumberLike): CucumberManager {
         if (!instance) {
-            instance = new CucumberManager(Cucumber);
+            instance = new CucumberManager(cucumber);
         }
 
         return instance;

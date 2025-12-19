@@ -1,8 +1,10 @@
+import Cucumber from "@cucumber/cucumber";
+
 import { CucumberManager } from "./lib/CucumberManager";
 
 import type { StepDefOptions, StepDefPattern } from "./lib/CucumberManager";
 
-const cm = CucumberManager.getInstance();
+const cm = CucumberManager.getInstance(Cucumber);
 
 /**
  * Register a new step definition with Specify.
