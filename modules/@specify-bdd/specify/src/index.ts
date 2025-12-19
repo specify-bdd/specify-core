@@ -19,3 +19,5 @@ export function defineStep(
 ): void {
     cm.defineStep(pattern, handler, options);
 }
+
+export default { defineStep };
