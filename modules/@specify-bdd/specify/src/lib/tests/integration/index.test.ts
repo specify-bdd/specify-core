@@ -5,7 +5,7 @@ const { mockGiven } = vi.hoisted(() => {
 });
 
 vi.mock("@cucumber/cucumber", () => {
-    let cucumber = { "Given": mockGiven };
+    const cucumber = { "Given": mockGiven };
 
     return { "default": cucumber, ...cucumber };
 });
