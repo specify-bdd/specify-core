@@ -13,7 +13,7 @@
     "specify": "bin/specify.js"
   },
   "exports": {
-    ".": "dist/index.js"
+    ".": "./dist/index.js"
   },
   "files": [
     "dist"
