@@ -191,9 +191,9 @@ export class CucumberManager {
      *
      * @returns The CucumberManager instance
      */
-    static getInstance(cucumber: CucumberLike): CucumberManager {
+    static getInstance(cucumber: CucumberLike, options: ManagerOptions): CucumberManager {
         if (!instance) {
-            instance = new CucumberManager(cucumber);
+            instance = new CucumberManager(cucumber, options);
         }
 
         return instance;
