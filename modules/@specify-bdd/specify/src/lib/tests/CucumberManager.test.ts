@@ -1,8 +1,10 @@
-import { CucumberManager } from "../CucumberManager";
+import { CucumberManager } from "@/lib/CucumberManager";
 
-import type { StepDefOptions, StepDefPattern } from "../CucumberManager";
-
-import type { CucumberLike } from "../CucumberManager";
+import type {
+    CucumberLike,
+    StepDefOptions,
+    StepDefPattern,
+} from "@/lib/CucumberManager";
 
 function fakeDefineStep(pattern: StepDefPattern, options: StepDefOptions = {}, handler = () => {}) {
     // the following logic only exists to prevent our linter from complaining
@@ -22,6 +24,10 @@ const cucumber: CucumberLike = {
     "When":  fakeDefineStep,
 };
 
+const cmOpts = {
+    "subjects": ["I", "the user"]
+};
+
 describe("CucumberManager", () => {
     describe("properties", () => {
         describe("cucumber", () => {
@@ -38,7 +44,7 @@ describe("CucumberManager", () => {
             let cm;
 
             beforeEach(() => {
-                cm = new CucumberManager(cucumber);
+                cm = new CucumberManager(cucumber, cmOpts);
 
                 vi.spyOn(cm.cucumber, "When");
             });

@@ -1,11 +1,13 @@
 import Cucumber from "@cucumber/cucumber";
 
 import { config          } from "@/config/all";
-import { CucumberManager } from "./lib/CucumberManager";
+import { CucumberManager } from "@/lib/CucumberManager";
 
-import type { StepDefOptions, StepDefPattern } from "./lib/CucumberManager";
+import type { StepDefOptions, StepDefPattern } from "@/lib/CucumberManager";
 
-const cm = CucumberManager.getInstance(Cucumber, { "subjects": config.content.specifications.subjects });
+const cm = CucumberManager.getInstance(Cucumber, {
+    "subjects": config.content.specifications.subjects,
+});
 
 /**
  * Register a new step definition with Specify.

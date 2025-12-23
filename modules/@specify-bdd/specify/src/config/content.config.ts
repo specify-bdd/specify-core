@@ -32,7 +32,7 @@ const contentObj = {
         },
     },
     "specifications": {
-        "subjects": [ "I", "the user" ],
+        "subjects": ["I", "the user"],
     },
 };
 
