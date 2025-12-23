@@ -12,6 +12,10 @@ interface ExpressionVariant {
     pattern: RegExp | string;
 }
 
+interface ManagerOptions {
+    subjects?: string[];
+}
+
 interface StepDefOptions {
     timeout?: number;
 }
@@ -31,12 +35,18 @@ export class CucumberManager {
     cucumber: CucumberLike;
 
     /**
+     * A list of step definition subjects which may be used.
+     */
+    subjects: string[];
+
+    /**
      * Accept a Cucumber object and store it for easy access.
      *
      * @param cucumber - The Cucumber object to manage
      */
-    constructor(cucumber: CucumberLike) {
+    constructor(cucumber: CucumberLike, options: ManagerOptions = {}) {
         this.cucumber = cucumber;
+        this.subjects = options.subjects ?? [];
     }
 
     /**
@@ -101,7 +111,6 @@ export class CucumberManager {
         const trimmed = expression.slice(match[0].length);
 
         return this.#parseEnhancedNotation(trimmed).map((variant) => {
-            // console.log(variant);
             return { keyword, "pattern": variant };
         });
     }
@@ -138,7 +147,7 @@ export class CucumberManager {
         // then, look for known subjects and make them optional
         variants = variants.flatMap((variant) => {
             // TODO: what should we do to make these subjects more manageable/configurable?
-            for (const subject of ["I", "the user"]) {
+            for (const subject of this.subjects) {
                 variant = variant.replace(`${subject} `, `(${subject} )`);
             }
 

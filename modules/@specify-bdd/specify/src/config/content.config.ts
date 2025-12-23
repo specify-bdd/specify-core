@@ -31,6 +31,9 @@ const contentObj = {
             },
         },
     },
+    "specifications": {
+        "subjects": [ "I", "the user" ],
+    },
 };
 
 export type ContentConfig = typeof contentObj;
