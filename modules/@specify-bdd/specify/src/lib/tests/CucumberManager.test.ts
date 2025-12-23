@@ -1,10 +1,6 @@
 import { CucumberManager } from "@/lib/CucumberManager";
 
-import type {
-    CucumberLike,
-    StepDefOptions,
-    StepDefPattern,
-} from "@/lib/CucumberManager";
+import type { CucumberLike, StepDefOptions, StepDefPattern } from "@/lib/CucumberManager";
 
 function fakeDefineStep(pattern: StepDefPattern, options: StepDefOptions = {}, handler = () => {}) {
     // the following logic only exists to prevent our linter from complaining
@@ -25,7 +21,7 @@ const cucumber: CucumberLike = {
 };
 
 const cmOpts = {
-    "subjects": ["I", "the user"]
+    "subjects": ["I", "the user"],
 };
 
 describe("CucumberManager", () => {
