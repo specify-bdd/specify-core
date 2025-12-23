@@ -5,7 +5,7 @@
 import process from "node:process";
 import { error } from "node:console";
 
-import("../dist/main.js").catch((err) => {
+import("../dist/exec.js").catch((err) => {
     switch (err.code) {
         case "ERR_MODULE_NOT_FOUND":
             error("Module not found. Have you built the project? Run `npm run build`.");
