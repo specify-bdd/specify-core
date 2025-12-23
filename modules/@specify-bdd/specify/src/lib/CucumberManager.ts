@@ -7,6 +7,11 @@ export interface CucumberLike {
     Then: typeof Cucumber.Then;
 }
 
+interface ExpressionVariant {
+    keyword: string;
+    pattern: RegExp | string;
+}
+
 interface StepDefOptions {
     timeout?: number;
 }
@@ -52,41 +57,121 @@ export class CucumberManager {
         const patternList = Array.isArray(pattern) ? pattern : [pattern];
 
         for (let i = 0; i < patternList.length; i++) {
-            let patternKey, patternParsed;
+            const variants = [];
 
             if (typeof patternList[i] === "string") {
-                const raw   = patternList[i] as string;
-                const match = raw.match(/^(Given|When|Then) /);
-                assert(match, `Invalid pattern expression: ${raw}`);
-
-                patternKey = match[1];
-                patternParsed = raw.slice(match[0].length);
+                variants.push(...this.#parseEnhancedExpressionVariants(patternList[i] as string));
             } else {
-                const raw   = patternList[i].toString();
-                const match = raw.match(/^\/\^?(Given|When|Then) /);
-                assert(match, `Invalid pattern expression: ${raw}`);
-
-                const endIndex = raw.lastIndexOf("/");
-                const trimmed  = raw.slice(match[0].length, endIndex);
-
-                patternKey = match[1];
-                patternParsed = new RegExp(trimmed, raw.slice(endIndex + 1));
+                variants.push(...this.#parseRegularExpressionVariants(patternList[i] as RegExp));
             }
 
-            switch (patternKey) {
-                case "Given":
-                    this.cucumber.Given(patternParsed, options, handler);
-                    break;
-                case "When":
-                    this.cucumber.When(patternParsed, options, handler);
-                    break;
-                case "Then":
-                    this.cucumber.Then(patternParsed, options, handler);
-                    break;
+            for (const variant of variants) {
+                switch (variant.keyword) {
+                    case "Given":
+                        this.cucumber.Given(variant.pattern, options, handler);
+                        break;
+                    case "When":
+                        this.cucumber.When(variant.pattern, options, handler);
+                        break;
+                    case "Then":
+                        this.cucumber.Then(variant.pattern, options, handler);
+                        break;
+                    default:
+                        assert.fail(`Invalid pattern keyword: ${variant.keyword}.`);
+                }
             }
         }
 
         return this;
+    }
+
+    /**
+     * Parse a string as an enhanced expression and return a list of pattern
+     * variants to feed into Cucumber.
+     *
+     * @param expression - The enhanced expression to parse.
+     *
+     * @returns The list of parsed pattern variants.
+     */
+    #parseEnhancedExpressionVariants(expression: string): ExpressionVariant[] {
+        const match = expression.match(/^(Given|When|Then) /);
+        assert(match, `Invalid pattern expression: ${expression}`);
+
+        const keyword = match[1];
+        const trimmed = expression.slice(match[0].length);
+
+        return this.#parseEnhancedNotation(trimmed).map((variant) => {
+            // console.log(variant);
+            return { keyword, "pattern": variant };
+        });
+    }
+
+    /**
+     * Recursively process enhanced expression notation denoted by brackets.
+     *
+     * @param phrase - The phrase to parse for enhanced notation
+     *
+     * @returns A list of variants derived from the parsed phrase.
+     */
+    #parseEnhancedNotation(phrase: string): string[] {
+        const match = phrase.match(/\[(.*)\]/);
+
+        // if no enhanced notation is found, just return the phrase
+        if (!match) {
+            return [phrase];
+        }
+
+        // enhanced notation was found, now we need to parse it
+        const enhanced  = match[0];
+        const subphrase = match[1];
+
+        // first, ensure that the enhanced syntax isn't being nested
+        if (subphrase.match(/\[(.*)\]/)) {
+            assert.fail("Enhanced expression brackets can't be nested.");
+        }
+
+        let variants = [subphrase];
+
+        // next, process alternates (/)
+        variants = variants.flatMap((variant) => variant.split("/"));
+
+        // then, look for known subjects and make them optional
+        variants = variants.flatMap((variant) => {
+            // TODO: what should we do to make these subjects more manageable/configurable?
+            for (const subject of ["I", "the user"]) {
+                variant = variant.replace(`${subject} `, `(${subject} )`);
+            }
+
+            return variant;
+        });
+
+        // finally, substitute every variant back into the original phrase
+        return variants.map((variant) => phrase.replace(enhanced, variant));
+    }
+
+    /**
+     * Parse a regular expression and return a list of pattern variants to feed
+     * into Cucumber.  (This will always be a list with one item, but doing this
+     * keeps consistency with the enhanced expression parser.)
+     *
+     * @param expression - The regular expression to parse.
+     *
+     * @returns The list of parsed pattern variants.
+     */
+    #parseRegularExpressionVariants(expression: RegExp): ExpressionVariant[] {
+        const raw   = expression.toString();
+        const match = raw.match(/^\/\^?(Given|When|Then) /);
+        assert(match, `Invalid pattern expression: ${raw}`);
+
+        const endIndex = raw.lastIndexOf("/");
+        const trimmed  = raw.slice(match[0].length, endIndex);
+
+        return [
+            {
+                "keyword": match[1],
+                "pattern": new RegExp(trimmed, raw.slice(endIndex + 1)),
+            },
+        ];
     }
 
     /**
