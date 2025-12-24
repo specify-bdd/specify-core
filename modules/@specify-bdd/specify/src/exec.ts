@@ -17,7 +17,7 @@ import { config                            } from "@/config/all";
 import { CommandResult                     } from "@/lib/Command";
 import { TestCommand, TestCommandArguments } from "@/lib/TestCommand";
 import { TestCommandWatcher                } from "@/lib/TestCommandWatcher";
-import npmPackage                            from "~/package.json" with { "type": "json" };
+import npmPackage                            from "../package.json" with { "type": "json" };
 
 import { parseParallelOption, parseRerunFileOption, parseRetryOption } from "@/lib/cli-parsers";
 
