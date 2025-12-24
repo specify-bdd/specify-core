@@ -1,8 +1,6 @@
-import { CucumberManager } from "../CucumberManager";
+import { CucumberManager } from "@/lib/CucumberManager";
 
-import type { StepDefOptions, StepDefPattern } from "../CucumberManager";
-
-import type { CucumberLike } from "../CucumberManager";
+import type { CucumberLike, StepDefOptions, StepDefPattern } from "@/lib/CucumberManager";
 
 function fakeDefineStep(pattern: StepDefPattern, options: StepDefOptions = {}, handler = () => {}) {
     // the following logic only exists to prevent our linter from complaining
@@ -22,6 +20,10 @@ const cucumber: CucumberLike = {
     "When":  fakeDefineStep,
 };
 
+const cmOpts = {
+    "subjects": ["I", "the user"],
+};
+
 describe("CucumberManager", () => {
     describe("properties", () => {
         describe("cucumber", () => {
@@ -38,13 +40,13 @@ describe("CucumberManager", () => {
             let cm;
 
             beforeEach(() => {
-                cm = new CucumberManager(cucumber);
+                cm = new CucumberManager(cucumber, cmOpts);
 
                 vi.spyOn(cm.cucumber, "When");
             });
 
             describe("registers step def patterns with Cucumber using...", () => {
-                it("a single string expression", () => {
+                it("a single basic string expression", () => {
                     cm.defineStep("When I do something with {param}", fakeHandler);
 
                     expect(cm.cucumber.When).toHaveBeenCalledTimes(1);
@@ -53,6 +55,59 @@ describe("CucumberManager", () => {
                         {},
                         fakeHandler,
                     );
+                });
+
+                describe("a single enhanced string expression with...", () => {
+                    it("multi-word alternate syntax", () => {
+                        cm.defineStep("When I [laugh at/dance with] {param}", fakeHandler);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledTimes(2);
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I laugh at {param}",
+                            {},
+                            fakeHandler,
+                        );
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I dance with {param}",
+                            {},
+                            fakeHandler,
+                        );
+                    });
+
+                    it("mixed alternate and optional syntax", () => {
+                        cm.defineStep("When I have [a(n)/the] {param}", fakeHandler);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledTimes(2);
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I have a(n) {param}",
+                            {},
+                            fakeHandler,
+                        );
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I have the {param}",
+                            {},
+                            fakeHandler,
+                        );
+                    });
+
+                    it("implicit subject variants", () => {
+                        cm.defineStep(
+                            "When [I do/the user does] something with {param}",
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.When).toHaveBeenCalledTimes(2);
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "(I )do something with {param}",
+                            {},
+                            fakeHandler,
+                        );
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "(the user )does something with {param}",
+                            {},
+                            fakeHandler,
+                        );
+                    });
                 });
 
                 it("a single regular expression", () => {
@@ -68,13 +123,27 @@ describe("CucumberManager", () => {
 
                 it("multiple mixed expressions", () => {
                     cm.defineStep(
-                        ["When I do something with {param}", /When I do something with .*/],
+                        [
+                            "When I do something with {param}",
+                            "When I [laugh at/dance with] {param}",
+                            /When I do something with .*/,
+                        ],
                         fakeHandler,
                     );
 
-                    expect(cm.cucumber.When).toHaveBeenCalledTimes(2);
+                    expect(cm.cucumber.When).toHaveBeenCalledTimes(4);
                     expect(cm.cucumber.When).toHaveBeenCalledWith(
                         "I do something with {param}",
+                        {},
+                        fakeHandler,
+                    );
+                    expect(cm.cucumber.When).toHaveBeenCalledWith(
+                        "I laugh at {param}",
+                        {},
+                        fakeHandler,
+                    );
+                    expect(cm.cucumber.When).toHaveBeenCalledWith(
+                        "I dance with {param}",
                         {},
                         fakeHandler,
                     );
@@ -113,6 +182,14 @@ describe("CucumberManager", () => {
 
                         expect(() => cm.defineStep(pat, fakeHandler)).toThrow(
                             `Invalid pattern expression: ${pat}`,
+                        );
+                    });
+
+                    it("nested enhanced syntax brackets", () => {
+                        const pat = "When [I [go/stay]/the user [goes/stays]] home";
+
+                        expect(() => cm.defineStep(pat, fakeHandler)).toThrow(
+                            "Enhanced expression brackets can't be nested.",
                         );
                     });
                 });

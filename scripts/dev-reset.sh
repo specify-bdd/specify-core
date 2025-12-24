@@ -8,5 +8,5 @@ echo "Removing tsbuildinfo files..."
 find . -type f -name tsconfig*.tsbuildinfo -exec rm -f {} +
 
 echo ""
-echo "Reset complete. Don't forget to run 'pnpm install' to restore dependencies."
+echo "Reset complete. Don't forget to run 'pnpm dev:install' to restore dependencies."
 echo ""
