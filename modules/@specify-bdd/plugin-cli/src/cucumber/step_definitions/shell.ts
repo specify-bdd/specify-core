@@ -15,6 +15,12 @@ import type { SpawnOptions } from "node:child_process";
 
 Given("a/another CLI shell", startDefaultShell);
 
+Given("a/another CLI shell named {string}", startDefaultNamedShell)
+
+Given("a/an {string} CLI shell", startAltShell);
+
+Given("a/an {string} CLI shell named {string}", startAltNamedShell);
+
 Given("(that )the working directory is {filePath}", changeDirectory);
 
 When("a/the user changes the working directory to {filePath}", changeDirectory);
@@ -25,9 +31,19 @@ When("a/the user sends a {cliSignal} signal to the last command", sendKillSignal
 
 When("a/the user starts a/another CLI shell", startDefaultShell);
 
+When("a/the user starts a/another CLI shell named {string}", startDefaultNamedShell);
+
 When("a/the user starts a/an/the (async )command/process {refstr}", execCommand);
 
-When("a/the user switches shells", switchShell);
+When("a/the user starts a/an {string} CLI shell", startAltShell);
+
+When("a/the user starts a/an {string} CLI shell named {string}", startAltNamedShell);
+
+When("a/the user switches CLI shells", switchToNextShell);
+
+When("a/the user switches to CLI shell {int}", switchShellByIndex);
+
+When("a/the user switches to the CLI shell named {string}", switchShellByName);
 
 When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
 
@@ -168,11 +184,47 @@ async function sendKillSignal(signal: string): Promise<void> {
 }
 
 /**
- * Start a default shell.
- *
+ * Start a user-specified shell.
+ * 
+ * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
+ */
+async function startAltShell(shellType: string): Promise<void> {
+    return startShell.call(this, shellType);
+}
+
+/**
+ * Start a user-specified shell with a name.
+ * 
+ * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
+ * @param name      - The name of the shell
+ */
+async function startAltNamedShell(shellType: string, name: string): Promise<void> {
+    return startShell.call(this, shellType, name);
+}
+
+/**
+ * Start a default shell without a name.
+ */
+async function startDefaultShell(): Promise<void> {
+    return startShell.call(this);
+}
+
+/**
+ * Start a default shell with a name.
+ * 
  * @param name - The name of the shell
  */
-function startNamedDefaultShell(name?: string): void {
+async function startDefaultNamedShell(name: string): Promise<void> {
+    return startShell.call(this, "sh", name);
+}
+
+/**
+ * Start a shell. Defaults to "sh" and no name.
+ *
+ * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
+ * @param name      - The name of the shell
+ */
+async function startShell(shellType: string = "sh", name?: string): Promise<void> {
     const options: SpawnOptions = { "cwd": this.fs.cwd, "env": { ...process.env } };
 
     // strip Cucumber env vars from the options object that will be passed to the child process
@@ -188,17 +240,12 @@ function startNamedDefaultShell(name?: string): void {
         options.env.PATH = this.parameters.userPath;
     }
 
-    const shell = new ShellSession(options);
+    const shell = new ShellSession(shellType, options);
 
     this.cli.manager ??= new SessionManager();
     this.cli.manager.addSession(shell, name, this.fs.cwd);
-}
 
-/**
- * Start a default shell without a name.
- */
-function startDefaultShell(): void {
-    startNamedDefaultShell.call(this);
+    assert.ok(await this.cli.manager.validateShell(shellType), new AssertionError({ "message": `Failed to start ${shellType} CLI shell.` }));
 }
 
 /**
@@ -207,10 +254,51 @@ function startDefaultShell(): void {
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function switchShell(): void {
+function switchToNextShell(): void {
+    switchShell.call(this);
+}
+
+/**
+ * Switch to the shell matching the index.
+ * 
+ * @param index - The index of the shell to switch to
+ *
+ * @throws AssertionError
+ * If there is no SessionManager initialized.
+ */
+function switchShellByIndex(index: number): void {
+    switchShell.call(this, index);
+}
+
+/**
+ * Switch to a named shell.
+ * 
+ * @param name - The name of the shell to switch to
+ *
+ * @throws AssertionError
+ * If there is no SessionManager initialized.
+ */
+function switchShellByName(name): void {
+    switchShell.call(this, name);
+}
+
+/**
+ * Switch to the shell matching the selector, or to the next shell
+ * in the managed shell list if there is no selector.
+ * 
+ * @param selector - The index or name of the shell to switch to
+ *
+ * @throws AssertionError
+ * If there is no SessionManager initialized.
+ */
+function switchShell(selector?: number | string): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
-    this.cli.manager.switchToNextSession();
+    if (!selector) {
+        this.cli.manager.switchToNextSession();
+    } else {
+        this.cli.manager.switchToSession(selector);
+    }
 
     this.fs.cwd = this.cli.manager.cwd;
 }
