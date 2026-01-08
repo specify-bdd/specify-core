@@ -554,7 +554,7 @@ describe("SessionManager", () => {
                 const promise = sessionManager.validateShell("bash");
 
                 session.emitOutput("Current shell is: bash");
-                session.emitDelimiter(0)
+                session.emitDelimiter(0);
 
                 await expect(promise).resolves.toBe(true);
             });
@@ -565,11 +565,11 @@ describe("SessionManager", () => {
                 const promise = sessionManager.validateShell("bash");
 
                 session.emitOutput("Current shell is: sh");
-                session.emitDelimiter(0)
+                session.emitDelimiter(0);
 
                 await expect(promise).resolves.toBe(false);
             });
-        })
+        });
 
         describe("waitForReturn()", () => {
             beforeEach(() => {

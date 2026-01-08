@@ -331,20 +331,21 @@ export class SessionManager {
 
     /**
      * Switch to the session that matches the given selector.
-     * 
+     *
      * @param selector - The index or name of the session to switch to
      *
      * @throws AssertionError
      * If there is no matching session
      */
     switchToSession(selector: number | string): void {
-        const session = typeof selector === "string"
-            ? this.#sessions.find((session) => session.name === selector)
-            : this.#sessions[selector];
-        
+        const session =
+            typeof selector === "string"
+                ? this.#sessions.find((session) => session.name === selector)
+                : this.#sessions[selector];
+
         if (!session) {
             const selectorType = typeof selector === "string" ? "name" : "index";
-            
+
             throw new Error(`No session found with ${selectorType}: ${selector}`);
         }
 
@@ -353,9 +354,9 @@ export class SessionManager {
 
     /**
      * Validate the shell type of the active session.
-     * 
+     *
      * @param shellType - The expected shell type
-     * 
+     *
      * @returns Whether its the correct type or not
      */
     async validateShell(shellType: string): Promise<boolean> {
