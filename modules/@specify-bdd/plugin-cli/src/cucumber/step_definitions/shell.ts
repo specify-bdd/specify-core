@@ -15,7 +15,7 @@ import type { SpawnOptions } from "node:child_process";
 
 Given("a/another CLI shell", startDefaultShell);
 
-Given("a/another CLI shell named {string}", startDefaultNamedShell)
+Given("a/another CLI shell named {string}", startDefaultNamedShell);
 
 Given("a/an {string} CLI shell", startAltShell);
 
@@ -185,7 +185,7 @@ async function sendKillSignal(signal: string): Promise<void> {
 
 /**
  * Start a user-specified shell.
- * 
+ *
  * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
  */
 async function startAltShell(shellType: string): Promise<void> {
@@ -194,7 +194,7 @@ async function startAltShell(shellType: string): Promise<void> {
 
 /**
  * Start a user-specified shell with a name.
- * 
+ *
  * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
  * @param name      - The name of the shell
  */
@@ -211,7 +211,7 @@ async function startDefaultShell(): Promise<void> {
 
 /**
  * Start a default shell with a name.
- * 
+ *
  * @param name - The name of the shell
  */
 async function startDefaultNamedShell(name: string): Promise<void> {
@@ -245,7 +245,10 @@ async function startShell(shellType: string = "sh", name?: string): Promise<void
     this.cli.manager ??= new SessionManager();
     this.cli.manager.addSession(shell, name, this.fs.cwd);
 
-    assert.ok(await this.cli.manager.validateShell(shellType), new AssertionError({ "message": `Failed to start ${shellType} CLI shell.` }));
+    assert.ok(
+        await this.cli.manager.validateShell(shellType),
+        new AssertionError({ "message": `Failed to start ${shellType} CLI shell.` }),
+    );
 }
 
 /**
@@ -260,7 +263,7 @@ function switchToNextShell(): void {
 
 /**
  * Switch to the shell matching the index.
- * 
+ *
  * @param index - The index of the shell to switch to
  *
  * @throws AssertionError
@@ -272,7 +275,7 @@ function switchShellByIndex(index: number): void {
 
 /**
  * Switch to a named shell.
- * 
+ *
  * @param name - The name of the shell to switch to
  *
  * @throws AssertionError
@@ -285,7 +288,7 @@ function switchShellByName(name): void {
 /**
  * Switch to the shell matching the selector, or to the next shell
  * in the managed shell list if there is no selector.
- * 
+ *
  * @param selector - The index or name of the shell to switch to
  *
  * @throws AssertionError
