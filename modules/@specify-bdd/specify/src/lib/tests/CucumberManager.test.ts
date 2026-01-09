@@ -207,6 +207,14 @@ describe("CucumberManager", () => {
                     });
                 });
             });
+
+            it("throws for duplicate patterns", () => {
+                const pats = ["When I go [left/right]", "When I go left"];
+
+                expect(() => cm.defineStep(pats, fakeHandler)).toThrow(
+                    `Invalid pattern expression: 'I go left' was registered 2 times.`,
+                );
+            });
         });
     });
 
