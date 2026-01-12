@@ -2,17 +2,12 @@ import { CucumberManager } from "@/lib/CucumberManager";
 
 import type { CucumberLike, StepDefOptions, StepDefPattern } from "@/lib/CucumberManager";
 
-function fakeDefineStep(pattern: StepDefPattern, options: StepDefOptions = {}, handler = () => {}) {
-    // the following logic only exists to prevent our linter from complaining
-    // that the params above are defined but not used
-    if (pattern && options) {
-        handler();
-    }
-}
+// prettier-ignore
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function fakeDefineStep(pattern: StepDefPattern, options: StepDefOptions = {}, handler = () => {}) {}
 
-function fakeHandler(param) {
-    return param;
-}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function fakeHandler(param) {}
 
 const cucumber: CucumberLike = {
     "Given": fakeDefineStep,
