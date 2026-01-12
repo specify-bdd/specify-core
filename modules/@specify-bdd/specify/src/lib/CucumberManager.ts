@@ -147,7 +147,6 @@ export class CucumberManager {
 
         // then, look for known subjects and make them optional
         variants = variants.flatMap((variant) => {
-            // TODO: what should we do to make these subjects more manageable/configurable?
             for (const subject of this.subjects) {
                 variant = variant.replace(`${subject} `, `(${subject} )`);
             }
@@ -163,6 +162,11 @@ export class CucumberManager {
      * Parse a regular expression and return a list of pattern variants to feed
      * into Cucumber.  (This will always be a list with one item, but doing this
      * keeps consistency with the enhanced expression parser.)
+     *
+     * @remarks
+     * This method will always produce an array with just one element, but
+     * returning data in this format helps maintain consistency with its
+     * sibling, #parseEnhancedExpressionVariants.
      *
      * @param expression - The regular expression to parse.
      *
@@ -191,7 +195,7 @@ export class CucumberManager {
      *
      * @returns The CucumberManager instance
      */
-    static getInstance(cucumber: CucumberLike, options: ManagerOptions): CucumberManager {
+    static getInstance(cucumber?: CucumberLike, options?: ManagerOptions): CucumberManager {
         if (!instance) {
             instance = new CucumberManager(cucumber, options);
         }
