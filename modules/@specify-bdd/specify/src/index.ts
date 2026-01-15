@@ -1,4 +1,4 @@
-import Cucumber from "@cucumber/cucumber";
+import * as Cucumber from "@cucumber/cucumber";
 
 import { config          } from "@/config/all";
 import { CucumberManager } from "@/lib/CucumberManager";

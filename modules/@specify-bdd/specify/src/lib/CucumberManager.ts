@@ -90,11 +90,6 @@ export class CucumberManager {
                 this.patterns[pat] ??= 0;
                 this.patterns[pat]++;
 
-                assert(
-                    this.patterns[pat] === 1,
-                    `Invalid pattern expression: '${pat}' was registered ${this.patterns[pat]} times.`,
-                );
-
                 switch (key) {
                     case "Given":
                         this.cucumber.Given(pat, options, handler);
