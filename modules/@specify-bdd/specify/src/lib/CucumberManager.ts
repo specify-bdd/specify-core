@@ -1,13 +1,6 @@
 import assert from "node:assert";
 
-import type { defineParameterType, Given, When, Then } from "@cucumber/cucumber";
-
-export interface CucumberLike {
-    defineParameterType: typeof defineParameterType;
-    Given: typeof Given;
-    When: typeof When;
-    Then: typeof Then;
-}
+import * as Cucumber from "@cucumber/cucumber";
 
 interface ExpressionVariant {
     keyword: string;
@@ -30,7 +23,11 @@ export interface StepDefOptions {
     timeout?: number;
 }
 
+export type CucumberLike = typeof Cucumber;
+
 export type StepDefPattern = RegExp | string;
+
+export type WorldLike = typeof Cucumber.World;
 
 let instance: CucumberManager;
 
@@ -64,7 +61,7 @@ export class CucumberManager {
      *
      * @param options - Options governing the parameter type being defined
      *
-     * @returns This cucumber manager
+     * @returns This Cucumber manager
      */
     defineParamType(options: ParamTypeOptions): CucumberManager {
         this.cucumber.defineParameterType(options);
@@ -80,7 +77,7 @@ export class CucumberManager {
      *                  pattern matches a step
      * @param options - Options for Cucumber
      *
-     * @returns This cucumber manager
+     * @returns This Cucumber manager
      */
     defineStep(
         pattern: Array<StepDefPattern> | StepDefPattern,
@@ -114,6 +111,19 @@ export class CucumberManager {
                 }
             }
         }
+
+        return this;
+    }
+
+    /**
+     * Register a custom World constructor with the managed Cucumber instance.
+     *
+     * @param world - A custom World constructor
+     *
+     * @returns This Cucumber manager
+     */
+    defineWorld(world: WorldLike): CucumberManager {
+        this.cucumber.setWorldConstructor(world);
 
         return this;
     }

@@ -1,9 +1,10 @@
-import { defineParamType, defineStep } from "../../../index";
+import { defineParamType, defineStep, defineWorld } from "../../../index";
 
-const { mockDefineParameterType, mockGiven } = vi.hoisted(() => {
+const { mockDefineParameterType, mockGiven, mockSetWorldConstructor } = vi.hoisted(() => {
     return {
         "mockDefineParameterType": vi.fn(),
         "mockGiven":               vi.fn(),
+        "mockSetWorldConstructor": vi.fn(),
     };
 });
 
@@ -11,6 +12,7 @@ vi.mock("@cucumber/cucumber", () => {
     const cucumber = {
         "defineParameterType": mockDefineParameterType,
         "Given":               mockGiven,
+        "setWorldConstructor": mockSetWorldConstructor,
     };
 
     return { "default": cucumber, ...cucumber };
@@ -31,6 +33,14 @@ describe("entrypoint module (integration)", () => {
                 defineStep("Given a step definition", () => true);
 
                 expect(mockGiven).toHaveBeenCalled();
+            });
+        });
+
+        describe("defineWorld()", () => {
+            it("registers a world constructor with Cucumber", () => {
+                defineWorld({});
+
+                expect(mockSetWorldConstructor).toHaveBeenCalled();
             });
         });
     });

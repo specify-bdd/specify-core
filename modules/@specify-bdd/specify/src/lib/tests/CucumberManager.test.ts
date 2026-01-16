@@ -5,23 +5,27 @@ import type {
     ParamTypeOptions,
     StepDefOptions,
     StepDefPattern,
+    WorldLike,
 } from "@/lib/CucumberManager";
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 function fakeDefineParam(options: ParamTypeOptions) {}
 
 function fakeDefineStep(
     pattern: StepDefPattern,
     options: StepDefOptions = {},
-    handler = () => {},
+    handler: () => any,
 ) {}
 
 function fakeHandler(param) {}
-/* eslint-enable @typescript-eslint/no-unused-vars */
+
+function fakeSetWorld(world: WorldLike) {}
+/* eslint-enable */
 
 const cucumber: CucumberLike = {
     "defineParameterType": fakeDefineParam,
     "Given":               fakeDefineStep,
+    "setWorldConstructor": fakeSetWorld,
     "Then":                fakeDefineStep,
     "When":                fakeDefineStep,
 };
@@ -239,7 +243,24 @@ describe("CucumberManager", () => {
             });
         });
 
-        // describe("defineWorld()", () => {});
+        describe("defineWorld()", () => {
+            let cm;
+
+            beforeEach(() => {
+                cm = new CucumberManager(cucumber, cmOpts);
+
+                vi.spyOn(cm.cucumber, "setWorldConstructor");
+            });
+
+            it("passes a World object to Cucumber's setWorldConstructor method", () => {
+                const world = {};
+
+                cm.defineWorld(world);
+
+                expect(cm.cucumber.setWorldConstructor).toHaveBeenCalledTimes(1);
+                expect(cm.cucumber.setWorldConstructor).toHaveBeenCalledWith(world);
+            });
+        });
     });
 
     describe("static methods", () => {
