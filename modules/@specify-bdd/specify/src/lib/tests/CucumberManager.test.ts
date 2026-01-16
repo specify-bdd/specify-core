@@ -1,18 +1,29 @@
 import { CucumberManager } from "@/lib/CucumberManager";
 
-import type { CucumberLike, StepDefOptions, StepDefPattern } from "@/lib/CucumberManager";
+import type {
+    CucumberLike,
+    ParamTypeOptions,
+    StepDefOptions,
+    StepDefPattern,
+} from "@/lib/CucumberManager";
 
-// prettier-ignore
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function fakeDefineStep(pattern: StepDefPattern, options: StepDefOptions = {}, handler = () => {}) {}
+/* eslint-disable @typescript-eslint/no-unused-vars */
+function fakeDefineParam(options: ParamTypeOptions) {}
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function fakeDefineStep(
+    pattern: StepDefPattern,
+    options: StepDefOptions = {},
+    handler = () => {},
+) {}
+
 function fakeHandler(param) {}
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 const cucumber: CucumberLike = {
-    "Given": fakeDefineStep,
-    "Then":  fakeDefineStep,
-    "When":  fakeDefineStep,
+    "defineParameterType": fakeDefineParam,
+    "Given":               fakeDefineStep,
+    "Then":                fakeDefineStep,
+    "When":                fakeDefineStep,
 };
 
 const cmOpts = {
@@ -31,6 +42,25 @@ describe("CucumberManager", () => {
     });
 
     describe("methods", () => {
+        describe("defineParamType()", () => {
+            let cm;
+
+            beforeEach(() => {
+                cm = new CucumberManager(cucumber, cmOpts);
+
+                vi.spyOn(cm.cucumber, "defineParameterType");
+            });
+
+            it("passes param options on to Cucumber's defineParameterType method", () => {
+                const opts: ParamTypeOptions = { "name": "foo" };
+
+                cm.defineParamType(opts);
+
+                expect(cm.cucumber.defineParameterType).toHaveBeenCalledTimes(1);
+                expect(cm.cucumber.defineParameterType).toHaveBeenCalledWith(opts);
+            });
+        });
+
         describe("defineStep()", () => {
             let cm;
 
@@ -208,6 +238,8 @@ describe("CucumberManager", () => {
                 });
             });
         });
+
+        // describe("defineWorld()", () => {});
     });
 
     describe("static methods", () => {

@@ -1,8 +1,9 @@
 import assert from "node:assert";
 
-import type { Given, When, Then } from "@cucumber/cucumber";
+import type { defineParameterType, Given, When, Then } from "@cucumber/cucumber";
 
 export interface CucumberLike {
+    defineParameterType: typeof defineParameterType;
     Given: typeof Given;
     When: typeof When;
     Then: typeof Then;
@@ -15,6 +16,14 @@ interface ExpressionVariant {
 
 interface ManagerOptions {
     subjects?: string[];
+}
+
+export interface ParamTypeOptions {
+    name: string;
+    preferForRegexpMatch?: boolean;
+    regexp: RegExp;
+    transformer?: (arg: string) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    useForSnippets?: boolean;
 }
 
 export interface StepDefOptions {
@@ -48,6 +57,19 @@ export class CucumberManager {
     constructor(cucumber: CucumberLike, options: ManagerOptions = {}) {
         this.cucumber = cucumber;
         this.subjects = options.subjects ?? [];
+    }
+
+    /**
+     * Register a new parameter type with the managed Cucumber instance.
+     *
+     * @param options - Options governing the parameter type being defined
+     *
+     * @returns This cucumber manager
+     */
+    defineParamType(options: ParamTypeOptions): CucumberManager {
+        this.cucumber.defineParameterType(options);
+
+        return this;
     }
 
     /**

@@ -3,11 +3,15 @@ import Cucumber from "@cucumber/cucumber";
 import { config          } from "@/config/all";
 import { CucumberManager } from "@/lib/CucumberManager";
 
-import type { StepDefOptions, StepDefPattern } from "@/lib/CucumberManager";
+import type { ParamTypeOptions, StepDefOptions, StepDefPattern } from "@/lib/CucumberManager";
 
 const cm = CucumberManager.getInstance(Cucumber, {
     "subjects": config.content.specifications.subjects,
 });
+
+export function defineParamType(options: ParamTypeOptions): void {
+    cm.defineParamType(options);
+}
 
 /**
  * Register a new step definition with Specify.
@@ -25,4 +29,4 @@ export function defineStep(
     cm.defineStep(pattern, handler, options);
 }
 
-export default { defineStep };
+export default { defineParamType, defineStep };
