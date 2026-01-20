@@ -1,7 +1,8 @@
-import { CucumberManager } from "@/lib/CucumberManager";
+import { CucumberManager, Hook } from "@/lib/CucumberManager";
 
 import type {
     CucumberLike,
+    HookOptions,
     ParamTypeOptions,
     StepDefOptions,
     StepDefPattern,
@@ -17,12 +18,18 @@ function fakeDefineStep(
     handler: () => any,
 ) {}
 
+function fakeHook(options: HookOptions, handler: () => any) {}
+
 function fakeHandler(param) {}
 
 function fakeSetWorld(world: WorldLike) {}
 /* eslint-enable */
 
 const cucumber: CucumberLike = {
+    "After":               fakeHook,
+    "AfterAll":            fakeHook,
+    "Before":              fakeHook,
+    "BeforeAll":           fakeHook,
     "defineParameterType": fakeDefineParam,
     "Given":               fakeDefineStep,
     "setWorldConstructor": fakeSetWorld,
@@ -46,6 +53,38 @@ describe("CucumberManager", () => {
     });
 
     describe("methods", () => {
+        describe("defineHook()", () => {
+            let cm;
+
+            beforeEach(() => {
+                cm = new CucumberManager(cucumber, cmOpts);
+
+                vi.spyOn(cm.cucumber, "After");
+                vi.spyOn(cm.cucumber, "AfterAll");
+                vi.spyOn(cm.cucumber, "Before");
+                vi.spyOn(cm.cucumber, "BeforeAll");
+            });
+
+            it("passes hook options and callback on to the correct Cucumber hook method", () => {
+                const opts = { "name": "foo" };
+
+                cm.defineHook(Hook.After, fakeHandler, opts)
+                    .defineHook(Hook.AfterAll, fakeHandler, opts)
+                    .defineHook(Hook.Before, fakeHandler, opts)
+                    .defineHook(Hook.BeforeAll, fakeHandler, opts);
+
+                expect(cm.cucumber.After).toHaveBeenCalledTimes(1);
+                expect(cm.cucumber.AfterAll).toHaveBeenCalledTimes(1);
+                expect(cm.cucumber.Before).toHaveBeenCalledTimes(1);
+                expect(cm.cucumber.BeforeAll).toHaveBeenCalledTimes(1);
+
+                expect(cm.cucumber.After).toHaveBeenCalledWith(opts, fakeHandler);
+                expect(cm.cucumber.AfterAll).toHaveBeenCalledWith(opts, fakeHandler);
+                expect(cm.cucumber.Before).toHaveBeenCalledWith(opts, fakeHandler);
+                expect(cm.cucumber.BeforeAll).toHaveBeenCalledWith(opts, fakeHandler);
+            });
+        });
+
         describe("defineParamType()", () => {
             let cm;
 

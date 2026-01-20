@@ -2,9 +2,22 @@ import assert from "node:assert";
 
 import * as Cucumber from "@cucumber/cucumber";
 
+export enum Hook {
+    BeforeAll,
+    Before,
+    After,
+    AfterAll,
+}
+
 interface ExpressionVariant {
     keyword: string;
     pattern: RegExp | string;
+}
+
+export interface HookOptions {
+    name?: string;
+    tags?: string;
+    timeout?: number;
 }
 
 interface ManagerOptions {
@@ -54,6 +67,38 @@ export class CucumberManager {
     constructor(cucumber: CucumberLike, options: ManagerOptions = {}) {
         this.cucumber = cucumber;
         this.subjects = options.subjects ?? [];
+    }
+
+    /**
+     * Register a new hook triggering a handler function at a specific stage of
+     * test execution with the managed Cucumber instance.
+     *
+     * @param stage   - The stage to hook into
+     * @param handler - The handler function containing code to execute when the
+     *                  hook triggers
+     * @param options - Options for Cucumber
+     *
+     * @returns This Cucumber manager
+     */
+    defineHook(stage: Hook, handler: () => void, options: HookOptions = {}): CucumberManager {
+        switch (stage) {
+            case Hook.After:
+                this.cucumber.After(options, handler);
+                break;
+            case Hook.AfterAll:
+                this.cucumber.AfterAll(options, handler);
+                break;
+            case Hook.Before:
+                this.cucumber.Before(options, handler);
+                break;
+            case Hook.BeforeAll:
+                this.cucumber.BeforeAll(options, handler);
+                break;
+            default:
+                assert.fail(`Invalid hook stage: ${stage}.`);
+        }
+
+        return this;
     }
 
     /**
