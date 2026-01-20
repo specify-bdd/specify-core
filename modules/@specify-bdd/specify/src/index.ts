@@ -1,18 +1,33 @@
 import Cucumber from "@cucumber/cucumber";
 
-import { config          } from "@/config/all";
-import { CucumberManager } from "@/lib/CucumberManager";
+import { config                } from "@/config/all";
+import { CucumberManager, Hook } from "@/lib/CucumberManager";
 
 import type {
+    HookOptions,
     ParamTypeOptions,
     StepDefOptions,
     StepDefPattern,
     WorldLike,
 } from "@/lib/CucumberManager";
 
+export { Hook } from "@/lib/CucumberManager";
+
 const cm = CucumberManager.getInstance(Cucumber, {
     "subjects": config.content.specifications.subjects,
 });
+
+/**
+ * Register a hook script with Specify.
+ *
+ * @param stage   - The stage to hook into
+ * @param handler - The handler function containing code to execute when the
+ *                  hook triggers
+ * @param options - Options for Cucumber
+ */
+export function defineHook(stage: Hook, handler: () => void, options: HookOptions = {}): void {
+    cm.defineHook(stage, handler, options);
+}
 
 /**
  * Register a new parameter type with Specify.
@@ -50,4 +65,4 @@ export function defineWorld(world: WorldLike): void {
     cm.defineWorld(world);
 }
 
-export default { defineParamType, defineStep, defineWorld };
+export default { defineParamType, defineStep, defineWorld, Hook };

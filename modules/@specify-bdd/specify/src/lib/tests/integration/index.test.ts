@@ -1,15 +1,19 @@
-import { defineParamType, defineStep, defineWorld } from "../../../index";
+import { defineHook, defineParamType, defineStep, defineWorld, Hook } from "../../../index";
 
-const { mockDefineParameterType, mockGiven, mockSetWorldConstructor } = vi.hoisted(() => {
-    return {
-        "mockDefineParameterType": vi.fn(),
-        "mockGiven":               vi.fn(),
-        "mockSetWorldConstructor": vi.fn(),
-    };
-});
+const { mockAfter, mockDefineParameterType, mockGiven, mockSetWorldConstructor } = vi.hoisted(
+    () => {
+        return {
+            "mockAfter":               vi.fn(),
+            "mockDefineParameterType": vi.fn(),
+            "mockGiven":               vi.fn(),
+            "mockSetWorldConstructor": vi.fn(),
+        };
+    },
+);
 
 vi.mock("@cucumber/cucumber", () => {
     const cucumber = {
+        "After":               mockAfter,
         "defineParameterType": mockDefineParameterType,
         "Given":               mockGiven,
         "setWorldConstructor": mockSetWorldConstructor,
@@ -20,6 +24,14 @@ vi.mock("@cucumber/cucumber", () => {
 
 describe("entrypoint module (integration)", () => {
     describe("exports", () => {
+        describe("defineHook()", () => {
+            it("registers a hook script with Cucumber", () => {
+                defineHook(Hook.After, () => true, {});
+
+                expect(mockAfter).toHaveBeenCalled();
+            });
+        });
+
         describe("defineParamType()", () => {
             it("registers a param type definition with Cucumber", () => {
                 defineParamType({});
