@@ -8,8 +8,10 @@ import { After, Before, BeforeAll } from "@cucumber/cucumber";
 import { globby                   } from "globby";
 import path                         from "node:path";
 import { pathToFileURL            } from "node:url";
+import { error                    } from "node:console";
 
-import { config } from "@/config/all";
+import { config          } from "@/config/all";
+import { CucumberManager } from "@/lib/CucumberManager";
 
 import type { JsonObject } from "type-fest";
 
@@ -31,6 +33,16 @@ BeforeAll(async function () {
             }).then((mod) => ({ "ref": mod.default }) as JsonObject),
         ),
     );
+
+    // warn if CucumberManager registered any duplicate step patterns
+    // but only do it once per run (even if running multiple parallel workers)
+    if (!process.env.CUCUMBER_WORKER_ID || process.env.CUCUMBER_WORKER_ID === "0") {
+        Object.entries(CucumberManager.getInstance().patterns)
+            .filter((entry) => entry[1] > 1)
+            .forEach((entry) =>
+                error("WARNING: pattern '%s' was registered %d times.", entry[0], entry[1]),
+            );
+    }
 });
 
 Before({ "name": "Core before hook" }, async function (data) {

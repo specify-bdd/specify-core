@@ -1,4 +1,4 @@
-import Cucumber from "@cucumber/cucumber";
+import * as Cucumber from "@cucumber/cucumber";
 
 import { config                } from "@/config/all";
 import { CucumberManager, Hook } from "@/lib/CucumberManager";
@@ -55,9 +55,11 @@ export function defineStep(
 }
 
 /**
- * Register a custom world constructor with Specify.  It is STRONGLY recommended
- * that your custom world extends the default Specify world and calls super() in
- * its constructor.
+ * Register a custom world constructor with Specify.
+ *
+ * @remarks
+ * It is STRONGLY recommended that your custom world extends the default Specify
+ * world and calls super() in its constructor.
  *
  * @param world - A custom world
  */
