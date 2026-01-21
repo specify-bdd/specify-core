@@ -20,7 +20,7 @@ function fakeDefineStep(
 function fakeHandler(param) {}
 
 function fakeSetWorld(world: WorldLike) {}
-/* eslint-enable */
+/* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 
 const cucumber: CucumberLike = {
     "defineParameterType": fakeDefineParam,

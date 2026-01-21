@@ -40,9 +40,11 @@ export function defineStep(
 }
 
 /**
- * Register a custom world constructor with Specify.  It is STRONGLY recommended
- * that your custom world extends the default Specify world and calls super() in
- * its constructor.
+ * Register a custom world constructor with Specify.
+ *
+ * @remarks
+ * It is STRONGLY recommended that your custom world extends the default Specify
+ * world and calls super() in its constructor.
  *
  * @param world - A custom world
  */
