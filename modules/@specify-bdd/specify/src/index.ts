@@ -1,11 +1,14 @@
-import Cucumber from "@cucumber/cucumber";
+import * as Cucumber from "@cucumber/cucumber";
 
-import { config                } from "@/config/all";
+import { config } from "@/config/all";
+
 import { CucumberManager, Hook } from "@/lib/CucumberManager";
 
 import type {
+    HookHandler,
     HookOptions,
     ParamTypeOptions,
+    StepDefHandler,
     StepDefOptions,
     StepDefPattern,
     WorldLike,
@@ -25,7 +28,7 @@ const cm = CucumberManager.getInstance(Cucumber, {
  *                  hook triggers
  * @param options - Options for Cucumber
  */
-export function defineHook(stage: Hook, handler: () => void, options: HookOptions = {}): void {
+export function defineHook(stage: Hook, handler: HookHandler, options: HookOptions = {}): void {
     cm.defineHook(stage, handler, options);
 }
 
@@ -48,7 +51,7 @@ export function defineParamType(options: ParamTypeOptions): void {
  */
 export function defineStep(
     pattern: Array<StepDefPattern> | StepDefPattern,
-    handler: () => void,
+    handler: StepDefHandler,
     options: StepDefOptions = {},
 ): void {
     cm.defineStep(pattern, handler, options);

@@ -14,6 +14,10 @@ interface ExpressionVariant {
     pattern: RegExp | string;
 }
 
+export interface HookHandler {
+    (...args: any[]): Promise<void> | void; // eslint-disable-line @typescript-eslint/no-explicit-any
+}
+
 export interface HookOptions {
     name?: string;
     tags?: string;
@@ -30,6 +34,10 @@ export interface ParamTypeOptions {
     regexp: RegExp;
     transformer?: (arg: string) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
     useForSnippets?: boolean;
+}
+
+export interface StepDefHandler {
+    (...args: any[]): Promise<void> | void; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 export interface StepDefOptions {
@@ -80,7 +88,7 @@ export class CucumberManager {
      *
      * @returns This Cucumber manager
      */
-    defineHook(stage: Hook, handler: () => void, options: HookOptions = {}): CucumberManager {
+    defineHook(stage: Hook, handler: HookHandler, options: HookOptions = {}): CucumberManager {
         switch (stage) {
             case Hook.After:
                 this.cucumber.After(options, handler);
@@ -126,7 +134,7 @@ export class CucumberManager {
      */
     defineStep(
         pattern: Array<StepDefPattern> | StepDefPattern,
-        handler: () => void,
+        handler: StepDefHandler,
         options: StepDefOptions = {},
     ): CucumberManager {
         const patternList = Array.isArray(pattern) ? pattern : [pattern];
