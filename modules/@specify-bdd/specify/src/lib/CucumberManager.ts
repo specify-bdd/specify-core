@@ -42,6 +42,11 @@ export class CucumberManager {
     cucumber: CucumberLike;
 
     /**
+     * A record store of every step pattern registered with the managed Cucumber instance.
+     */
+    patterns: Record<string, number>;
+
+    /**
      * A list of step definition subjects which may be used.
      */
     subjects: string[];
@@ -53,6 +58,7 @@ export class CucumberManager {
      */
     constructor(cucumber: CucumberLike, options: ManagerOptions = {}) {
         this.cucumber = cucumber;
+        this.patterns = {};
         this.subjects = options.subjects ?? [];
     }
 
@@ -96,18 +102,25 @@ export class CucumberManager {
             }
 
             for (const variant of variants) {
-                switch (variant.keyword) {
+                const key = variant.keyword;
+                const pat = variant.pattern;
+
+                // initialize (if necessary) then increment the counter for each variant pattern
+                this.patterns[pat] ??= 0;
+                this.patterns[pat]++;
+
+                switch (key) {
                     case "Given":
-                        this.cucumber.Given(variant.pattern, options, handler);
+                        this.cucumber.Given(pat, options, handler);
                         break;
                     case "When":
-                        this.cucumber.When(variant.pattern, options, handler);
+                        this.cucumber.When(pat, options, handler);
                         break;
                     case "Then":
-                        this.cucumber.Then(variant.pattern, options, handler);
+                        this.cucumber.Then(pat, options, handler);
                         break;
                     default:
-                        assert.fail(`Invalid pattern keyword: ${variant.keyword}.`);
+                        assert.fail(`Invalid pattern keyword: ${key}.`);
                 }
             }
         }
