@@ -1,12 +1,6 @@
 import assert from "node:assert";
 
-import type { Given, When, Then } from "@cucumber/cucumber";
-
-export interface CucumberLike {
-    Given: typeof Given;
-    When: typeof When;
-    Then: typeof Then;
-}
+import * as Cucumber from "@cucumber/cucumber";
 
 interface ExpressionVariant {
     keyword: string;
@@ -17,11 +11,23 @@ interface ManagerOptions {
     subjects?: string[];
 }
 
+export interface ParamTypeOptions {
+    name: string;
+    preferForRegexpMatch?: boolean;
+    regexp: RegExp;
+    transformer?: (arg: string) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    useForSnippets?: boolean;
+}
+
 export interface StepDefOptions {
     timeout?: number;
 }
 
+export type CucumberLike = typeof Cucumber;
+
 export type StepDefPattern = RegExp | string;
+
+export type WorldLike = typeof Cucumber.World;
 
 let instance: CucumberManager;
 
@@ -57,6 +63,19 @@ export class CucumberManager {
     }
 
     /**
+     * Register a new parameter type with the managed Cucumber instance.
+     *
+     * @param options - Options governing the parameter type being defined
+     *
+     * @returns This Cucumber manager
+     */
+    defineParamType(options: ParamTypeOptions): CucumberManager {
+        this.cucumber.defineParameterType(options);
+
+        return this;
+    }
+
+    /**
      * Register a new step definition with the managed Cucumber instance.
      *
      * @param pattern - The pattern(s) to match steps against
@@ -64,7 +83,7 @@ export class CucumberManager {
      *                  pattern matches a step
      * @param options - Options for Cucumber
      *
-     * @returns This cucumber manager
+     * @returns This Cucumber manager
      */
     defineStep(
         pattern: Array<StepDefPattern> | StepDefPattern,
@@ -105,6 +124,19 @@ export class CucumberManager {
                 }
             }
         }
+
+        return this;
+    }
+
+    /**
+     * Register a custom World constructor with the managed Cucumber instance.
+     *
+     * @param world - A custom World constructor
+     *
+     * @returns This Cucumber manager
+     */
+    defineWorld(world: WorldLike): CucumberManager {
+        this.cucumber.setWorldConstructor(world);
 
         return this;
     }

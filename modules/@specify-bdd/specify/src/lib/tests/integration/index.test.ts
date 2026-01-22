@@ -1,22 +1,46 @@
-import { defineStep } from "../../../index";
+import { defineParamType, defineStep, defineWorld } from "../../../index";
 
-const { mockGiven } = vi.hoisted(() => {
-    return { "mockGiven": vi.fn() };
+const { mockDefineParameterType, mockGiven, mockSetWorldConstructor } = vi.hoisted(() => {
+    return {
+        "mockDefineParameterType": vi.fn(),
+        "mockGiven":               vi.fn(),
+        "mockSetWorldConstructor": vi.fn(),
+    };
 });
 
 vi.mock("@cucumber/cucumber", () => {
-    const cucumber = { "Given": mockGiven };
+    const cucumber = {
+        "defineParameterType": mockDefineParameterType,
+        "Given":               mockGiven,
+        "setWorldConstructor": mockSetWorldConstructor,
+    };
 
     return { "default": cucumber, ...cucumber };
 });
 
 describe("entrypoint module (integration)", () => {
     describe("exports", () => {
+        describe("defineParamType()", () => {
+            it("registers a param type definition with Cucumber", () => {
+                defineParamType({});
+
+                expect(mockDefineParameterType).toHaveBeenCalled();
+            });
+        });
+
         describe("defineStep()", () => {
             it("registers a step definition with Cucumber", () => {
                 defineStep("Given a step definition", () => true);
 
                 expect(mockGiven).toHaveBeenCalled();
+            });
+        });
+
+        describe("defineWorld()", () => {
+            it("registers a world constructor with Cucumber", () => {
+                defineWorld({});
+
+                expect(mockSetWorldConstructor).toHaveBeenCalled();
             });
         });
     });
