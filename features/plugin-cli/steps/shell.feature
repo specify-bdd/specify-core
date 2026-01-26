@@ -14,10 +14,22 @@ Feature: Shell Step Definitions
             When the user starts another CLI shell
             # Then there should be 2 active CLI shells
 
-        # Scenario: Create and destroy a single shell
-        #     Given a CLI shell
-        #     When the user kills a CLI shell
-        #     Then there should be 0 active CLI shells
+        Scenario: Destroy the active shell
+            Given a CLI shell
+            When the user kills the CLI shell
+            # Then there should be 0 active CLI shells
+        
+        Scenario: Destroy a shell by index
+            Given a CLI shell
+            When the user starts another CLI shell
+            And the user kills CLI shell 0
+            # Then there should be 1 active CLI shell
+        
+        Scenario: Destroy a shell by name
+            Given a CLI shell named "test-shell"
+            When the user starts another CLI shell
+            And the user kills the CLI shell named "test-shell"
+            # Then there should be 1 active CLI shell
 
         # Scenario: Create and destroy multiple shells
         #     Given a CLI shell

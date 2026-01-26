@@ -239,6 +239,40 @@ describe("SessionManager", () => {
             });
         });
 
+        describe("findSession()", () => {
+            beforeEach(() => {
+                sessionManager.addSession(session);
+            });
+
+            it("returns a session by index", () => {
+                const altSession = new ShellSession() as unknown as MockShellSession;
+
+                sessionManager.addSession(altSession);
+
+                expect(sessionManager.findSession(0).session).toBe(session);
+            });
+
+            it("returns a session by name", () => {
+                const altSession1 = new ShellSession() as unknown as MockShellSession;
+                const altSession2 = new ShellSession() as unknown as MockShellSession;
+
+                sessionManager.addSession(altSession1, "target");
+                sessionManager.addSession(altSession2);
+
+                expect(sessionManager.findSession("target").session).toBe(altSession1);
+            });
+
+            it("throws if the session does not exist", () => {
+                expect(() => sessionManager.findSession("bad-name")).toThrow(
+                    "No session found with name: bad-name",
+                );
+
+                expect(() => sessionManager.findSession(-1)).toThrow(
+                    "No session found with index: -1",
+                );
+            });
+        });
+
         describe("killCommand()", () => {
             beforeEach(() => {
                 sessionManager.addSession(session);
@@ -512,38 +546,20 @@ describe("SessionManager", () => {
                 sessionManager.addSession(altSession3, "test-session-3", "/test3", false);
             });
 
-            it("switches to the named session", () => {
+            it("switches to the given session", () => {
                 expect(sessionManager.activeSession.session).toBe(altSession2);
 
-                sessionManager.switchToSession("test-session-1");
+                let nextSession = sessionManager.findSession("test-session-1");
+
+                sessionManager.switchToSession({ "sessionMeta": nextSession });
 
                 expect(sessionManager.activeSession.session).toBe(altSession1);
 
-                sessionManager.switchToSession("test-session-3");
+                nextSession = sessionManager.findSession("test-session-3");
+
+                sessionManager.switchToSession({ "sessionMeta": nextSession });
 
                 expect(sessionManager.activeSession.session).toBe(altSession3);
-            });
-
-            it("switches to the indexed session", () => {
-                expect(sessionManager.activeSession.session).toBe(altSession2);
-
-                sessionManager.switchToSession(0);
-
-                expect(sessionManager.activeSession.session).toBe(altSession1);
-
-                sessionManager.switchToSession(2);
-
-                expect(sessionManager.activeSession.session).toBe(altSession3);
-            });
-
-            it("throws if the session does not exist", () => {
-                expect(() => sessionManager.switchToSession("bad-name")).toThrow(
-                    "No session found with name: bad-name",
-                );
-
-                expect(() => sessionManager.switchToSession(-1)).toThrow(
-                    "No session found with index: -1",
-                );
             });
         });
 
