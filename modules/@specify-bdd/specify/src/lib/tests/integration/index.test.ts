@@ -5,7 +5,6 @@ import {
     addBeforeAllHook,
     addBeforeScenarioHook,
     addBeforeStepHook,
-    addHook,
     defineParamType,
     defineStep,
     setWorld,
@@ -21,7 +20,7 @@ const {
     mockDefineParameterType,
     mockGiven,
     mockSetWorldConstructor,
-    MockWorld,
+    mockWorld,
 } = vi.hoisted(() => {
     return {
         "mockAfter":               vi.fn(),
@@ -33,7 +32,7 @@ const {
         "mockDefineParameterType": vi.fn(),
         "mockGiven":               vi.fn(),
         "mockSetWorldConstructor": vi.fn(),
-        "MockWorld":               vi.fn(),
+        "mockWorld":               vi.fn(),
     };
 });
 
@@ -48,7 +47,7 @@ vi.mock("@cucumber/cucumber", () => {
         "defineParameterType": mockDefineParameterType,
         "Given":               mockGiven,
         "setWorldConstructor": mockSetWorldConstructor,
-        "World":               MockWorld,
+        "World":               mockWorld,
     };
 
     return { "default": cucumber, ...cucumber };
