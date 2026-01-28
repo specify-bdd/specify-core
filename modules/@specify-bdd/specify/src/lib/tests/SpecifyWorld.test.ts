@@ -3,13 +3,13 @@ import { QuickRef } from "@specify-bdd/quick-ref";
 
 import { SpecifyWorld } from "@/lib/SpecifyWorld";
 
-const { MockWorld } = vi.hoisted(() => {
-    return { "MockWorld": vi.fn() };
+const { mockWorld } = vi.hoisted(() => {
+    return { "mockWorld": vi.fn() };
 });
 
 vi.mock("@cucumber/cucumber", () => {
     const cucumber = {
-        "World": MockWorld,
+        "World": mockWorld,
     };
 
     return { "default": cucumber, ...cucumber };
@@ -47,9 +47,10 @@ describe("Specify World", () => {
             });
 
             it("is read-only", () => {
-                expect(() => world.quickRef = new QuickRef())
-                    .toThrow("Cannot set property quickRef");
+                expect(() => (world.quickRef = new QuickRef())).toThrow(
+                    "Cannot set property quickRef",
+                );
             });
         });
-    })
+    });
 });
