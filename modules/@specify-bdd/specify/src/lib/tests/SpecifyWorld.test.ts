@@ -3,13 +3,13 @@ import { QuickRef } from "@specify-bdd/quick-ref";
 
 import { SpecifyWorld } from "@/lib/SpecifyWorld";
 
-const { FakeWorld } = vi.hoisted(() => {
-    return { "FakeWorld": vi.fn() };
+const { MockWorld } = vi.hoisted(() => {
+    return { "MockWorld": vi.fn() };
 });
 
 vi.mock("@cucumber/cucumber", () => {
     const cucumber = {
-        "World": FakeWorld,
+        "World": MockWorld,
     };
 
     return { "default": cucumber, ...cucumber };
