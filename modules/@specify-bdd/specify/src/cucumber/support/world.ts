@@ -1,5 +1,4 @@
-import { setWorldConstructor } from "@cucumber/cucumber";
-
+import { setWorld     } from "@/index";
 import { SpecifyWorld } from "@/lib/SpecifyWorld";
 
-setWorldConstructor(SpecifyWorld);
+setWorld(SpecifyWorld);

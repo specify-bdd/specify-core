@@ -4,31 +4,36 @@
  * Custom Cucumber hooks enabling core testing.
  */
 
-import { After, Before, BeforeAll } from "@cucumber/cucumber";
-import { globby                   } from "globby";
-import path                         from "node:path";
-import { pathToFileURL            } from "node:url";
-import { error                    } from "node:console";
+import { globby        } from "globby";
+import path              from "node:path";
+import { pathToFileURL } from "node:url";
+import { error         } from "node:console";
 
 import { config          } from "@/config/all";
 import { CucumberManager } from "@/lib/CucumberManager";
+
+import {
+    addAfterScenarioHook,
+    addBeforeAllHook,
+    addBeforeScenarioHook,
+} from "@/index";
 
 import type { JsonObject } from "type-fest";
 
 const cwd = process.cwd(),
     pickleJar = {}; // keep a store of pickles in the module scope so we can track test case attempts
 
-let refsMods = [];
+let refsModules = [];
 
-BeforeAll(async function () {
-    const modPaths = await globby(path.join(cwd, "*.refs.json"), {
+addBeforeAllHook(async function () {
+    const modulePaths = await globby(path.join(cwd, "*.refs.json"), {
         "absolute":  true,
         "onlyFiles": true,
     });
 
-    refsMods = await Promise.all(
-        modPaths.map((modPath) =>
-            import(pathToFileURL(modPath).href, {
+    refsModules = await Promise.all(
+        modulePaths.map((modulePath) =>
+            import(pathToFileURL(modulePath).href, {
                 "with": { "type": "json" },
             }).then((mod) => ({ "ref": mod.default }) as JsonObject),
         ),
@@ -43,10 +48,10 @@ BeforeAll(async function () {
                 error("WARNING: pattern '%s' was registered %d times.", entry[0], entry[1]),
             );
     }
-});
+}, { "name": "Core before all hook" });
 
-Before({ "name": "Core before hook" }, async function (data) {
-    this.quickRef.add(...refsMods, { config });
+addBeforeScenarioHook(async function (data) {
+    this.quickRef.add(...refsModules, { config });
 
     // attaching this pickle (test case) to the scenario World allows us to reference its data later
     // we'll use the existing pickle data if it exists in the store, but if not, we'll initialize a new entry
@@ -62,9 +67,9 @@ Before({ "name": "Core before hook" }, async function (data) {
     this.fs = {
         "cwd": process.cwd(),
     };
-});
+}, { "name": "Core before scenario hook" });
 
-After({ "name": "Core after hook" }, async function (data) {
+addAfterScenarioHook(async function (data) {
     // update the attempt data with results
     this.pickle.attempts[data.testCaseStartedId] = data.result;
-});
+}, { "name": "Core after scenario hook" });
