@@ -1,4 +1,4 @@
-import { defineParamType, defineStep, defineWorld } from "../../../index";
+import { defineParamType, defineStep, setWorld } from "../../../index";
 
 const { mockDefineParameterType, mockGiven, mockSetWorldConstructor } = vi.hoisted(() => {
     return {
@@ -36,9 +36,9 @@ describe("entrypoint module (integration)", () => {
             });
         });
 
-        describe("defineWorld()", () => {
+        describe("setWorld()", () => {
             it("registers a world constructor with Cucumber", () => {
-                defineWorld({});
+                setWorld({});
 
                 expect(mockSetWorldConstructor).toHaveBeenCalled();
             });

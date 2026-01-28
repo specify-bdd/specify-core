@@ -48,8 +48,8 @@ export function defineStep(
  *
  * @param world - A custom world
  */
-export function defineWorld(world: WorldLike): void {
-    cm.defineWorld(world);
+export function setWorld(world: WorldLike): void {
+    cm.setWorld(world);
 }
 
-export default { defineParamType, defineStep, defineWorld };
+export default { defineParamType, defineStep, setWorld };

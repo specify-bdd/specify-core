@@ -243,7 +243,7 @@ describe("CucumberManager", () => {
             });
         });
 
-        describe("defineWorld()", () => {
+        describe("setWorld()", () => {
             let cm;
 
             beforeEach(() => {
@@ -255,7 +255,7 @@ describe("CucumberManager", () => {
             it("passes a World object to Cucumber's setWorldConstructor method", () => {
                 const world = {};
 
-                cm.defineWorld(world);
+                cm.setWorld(world);
 
                 expect(cm.cucumber.setWorldConstructor).toHaveBeenCalledTimes(1);
                 expect(cm.cucumber.setWorldConstructor).toHaveBeenCalledWith(world);
