@@ -5,7 +5,9 @@
   "type": "module",
   "author": "Adam Lacoste",
   "license": "MIT",
-  "main": "dist/main.js",
+  "exports": {
+    ".": "./dist/main.js"
+  },
   "files": [
     "dist"
   ],
