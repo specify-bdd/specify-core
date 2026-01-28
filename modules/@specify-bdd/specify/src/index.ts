@@ -13,6 +13,8 @@ import type {
     WorldLike,
 } from "@/lib/CucumberManager";
 
+export { SpecifyWorld } from "@/lib/SpecifyWorld";
+
 const cm = CucumberManager.getInstance(Cucumber, {
     "subjects": config.content.specifications.subjects,
 });
