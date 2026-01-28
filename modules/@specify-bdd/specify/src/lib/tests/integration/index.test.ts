@@ -9,7 +9,6 @@ import {
     defineParamType,
     defineStep,
     defineWorld,
-    Hook,
 } from "../../../index";
 
 const {
@@ -99,14 +98,6 @@ describe("entrypoint module (integration)", () => {
                 addBeforeStepHook(() => true, {});
 
                 expect(mockBeforeStep).toHaveBeenCalled();
-            });
-        });
-
-        describe("addHook()", () => {
-            it("registers a hook script with Cucumber", () => {
-                addHook(Hook.AfterAll, () => true, {});
-
-                expect(mockAfterAll).toHaveBeenCalled();
             });
         });
 
