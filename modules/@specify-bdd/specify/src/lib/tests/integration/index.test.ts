@@ -5,7 +5,6 @@ import {
     addBeforeAllHook,
     addBeforeScenarioHook,
     addBeforeStepHook,
-    addHook,
     defineParamType,
     defineStep,
     defineWorld,
