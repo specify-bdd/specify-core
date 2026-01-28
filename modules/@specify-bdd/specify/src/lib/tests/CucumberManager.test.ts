@@ -1,4 +1,4 @@
-import { CucumberManager, Hook } from "@/lib/CucumberManager";
+import { CucumberManager } from "@/lib/CucumberManager";
 
 import type {
     CucumberLike,
@@ -69,15 +69,11 @@ describe("CucumberManager", () => {
                 vi.spyOn(cm.cucumber, "Before");
                 vi.spyOn(cm.cucumber, "BeforeAll");
                 vi.spyOn(cm.cucumber, "BeforeStep");
-
-                vi.spyOn(cm, "addHook");
             });
 
             describe("addAfterAllHook()", () => {
                 it("calls addHook() and uses the correct Cucumber hook method", () => {
                     cm.addAfterAllHook(fakeHandler, opts);
-
-                    expect(cm.addHook).toHaveBeenCalledTimes(1);
 
                     expect(cm.cucumber.AfterAll).toHaveBeenCalledTimes(1);
                     expect(cm.cucumber.AfterAll).toHaveBeenCalledWith(opts, fakeHandler);
@@ -88,8 +84,6 @@ describe("CucumberManager", () => {
                 it("calls addHook() and uses the correct Cucumber hook method", () => {
                     cm.addAfterScenarioHook(fakeHandler, opts);
 
-                    expect(cm.addHook).toHaveBeenCalledTimes(1);
-
                     expect(cm.cucumber.After).toHaveBeenCalledTimes(1);
                     expect(cm.cucumber.After).toHaveBeenCalledWith(opts, fakeHandler);
                 });
@@ -98,8 +92,6 @@ describe("CucumberManager", () => {
             describe("addAfterStepHook()", () => {
                 it("calls addHook() and uses the correct Cucumber hook method", () => {
                     cm.addAfterStepHook(fakeHandler, opts);
-
-                    expect(cm.addHook).toHaveBeenCalledTimes(1);
 
                     expect(cm.cucumber.AfterStep).toHaveBeenCalledTimes(1);
                     expect(cm.cucumber.AfterStep).toHaveBeenCalledWith(opts, fakeHandler);
@@ -110,8 +102,6 @@ describe("CucumberManager", () => {
                 it("calls addHook() and uses the correct Cucumber hook method", () => {
                     cm.addBeforeAllHook(fakeHandler, opts);
 
-                    expect(cm.addHook).toHaveBeenCalledTimes(1);
-
                     expect(cm.cucumber.BeforeAll).toHaveBeenCalledTimes(1);
                     expect(cm.cucumber.BeforeAll).toHaveBeenCalledWith(opts, fakeHandler);
                 });
@@ -120,8 +110,6 @@ describe("CucumberManager", () => {
             describe("addBeforeScenarioHook()", () => {
                 it("calls addHook() and uses the correct Cucumber hook method", () => {
                     cm.addBeforeScenarioHook(fakeHandler, opts);
-
-                    expect(cm.addHook).toHaveBeenCalledTimes(1);
 
                     expect(cm.cucumber.Before).toHaveBeenCalledTimes(1);
                     expect(cm.cucumber.Before).toHaveBeenCalledWith(opts, fakeHandler);
@@ -132,34 +120,7 @@ describe("CucumberManager", () => {
                 it("calls addHook() and uses the correct Cucumber hook method", () => {
                     cm.addBeforeStepHook(fakeHandler, opts);
 
-                    expect(cm.addHook).toHaveBeenCalledTimes(1);
-
                     expect(cm.cucumber.BeforeStep).toHaveBeenCalledTimes(1);
-                    expect(cm.cucumber.BeforeStep).toHaveBeenCalledWith(opts, fakeHandler);
-                });
-            });
-
-            describe("addHook()", () => {
-                it("passes hook options and callback on to the correct Cucumber hook method", () => {
-                    cm.addHook(Hook.AfterAll, fakeHandler, opts)
-                        .addHook(Hook.AfterScenario, fakeHandler, opts)
-                        .addHook(Hook.AfterStep, fakeHandler, opts)
-                        .addHook(Hook.BeforeAll, fakeHandler, opts)
-                        .addHook(Hook.BeforeScenario, fakeHandler, opts)
-                        .addHook(Hook.BeforeStep, fakeHandler, opts);
-
-                    expect(cm.cucumber.After).toHaveBeenCalledTimes(1);
-                    expect(cm.cucumber.AfterAll).toHaveBeenCalledTimes(1);
-                    expect(cm.cucumber.AfterStep).toHaveBeenCalledTimes(1);
-                    expect(cm.cucumber.Before).toHaveBeenCalledTimes(1);
-                    expect(cm.cucumber.BeforeAll).toHaveBeenCalledTimes(1);
-                    expect(cm.cucumber.BeforeStep).toHaveBeenCalledTimes(1);
-
-                    expect(cm.cucumber.After).toHaveBeenCalledWith(opts, fakeHandler);
-                    expect(cm.cucumber.AfterAll).toHaveBeenCalledWith(opts, fakeHandler);
-                    expect(cm.cucumber.AfterStep).toHaveBeenCalledWith(opts, fakeHandler);
-                    expect(cm.cucumber.Before).toHaveBeenCalledWith(opts, fakeHandler);
-                    expect(cm.cucumber.BeforeAll).toHaveBeenCalledWith(opts, fakeHandler);
                     expect(cm.cucumber.BeforeStep).toHaveBeenCalledWith(opts, fakeHandler);
                 });
             });
