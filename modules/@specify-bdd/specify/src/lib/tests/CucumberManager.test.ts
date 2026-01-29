@@ -2,6 +2,7 @@ import { CucumberManager } from "@/lib/CucumberManager";
 
 import type {
     CucumberLike,
+    HookOptions,
     ParamTypeOptions,
     StepDefOptions,
     StepDefPattern,
@@ -19,10 +20,18 @@ function fakeDefineStep(
 
 function fakeHandler(param) {}
 
+function fakeHook(options: HookOptions, handler: () => any) {}
+
 function fakeSetWorld(world: WorldLike) {}
 /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 
 const cucumber: CucumberLike = {
+    "After":               fakeHook,
+    "AfterAll":            fakeHook,
+    "AfterStep":           fakeHook,
+    "Before":              fakeHook,
+    "BeforeAll":           fakeHook,
+    "BeforeStep":          fakeHook,
     "defineParameterType": fakeDefineParam,
     "Given":               fakeDefineStep,
     "setWorldConstructor": fakeSetWorld,
@@ -46,6 +55,77 @@ describe("CucumberManager", () => {
     });
 
     describe("methods", () => {
+        describe("hooks", () => {
+            const opts = { "name": "foo" };
+
+            let cm;
+
+            beforeEach(() => {
+                cm = new CucumberManager(cucumber, cmOpts);
+
+                vi.spyOn(cm.cucumber, "After");
+                vi.spyOn(cm.cucumber, "AfterAll");
+                vi.spyOn(cm.cucumber, "AfterStep");
+                vi.spyOn(cm.cucumber, "Before");
+                vi.spyOn(cm.cucumber, "BeforeAll");
+                vi.spyOn(cm.cucumber, "BeforeStep");
+            });
+
+            describe("addAfterAllHook()", () => {
+                it("calls addHook() and uses the correct Cucumber hook method", () => {
+                    cm.addAfterAllHook(fakeHandler, opts);
+
+                    expect(cm.cucumber.AfterAll).toHaveBeenCalledTimes(1);
+                    expect(cm.cucumber.AfterAll).toHaveBeenCalledWith(opts, fakeHandler);
+                });
+            });
+
+            describe("addAfterScenarioHook()", () => {
+                it("calls addHook() and uses the correct Cucumber hook method", () => {
+                    cm.addAfterScenarioHook(fakeHandler, opts);
+
+                    expect(cm.cucumber.After).toHaveBeenCalledTimes(1);
+                    expect(cm.cucumber.After).toHaveBeenCalledWith(opts, fakeHandler);
+                });
+            });
+
+            describe("addAfterStepHook()", () => {
+                it("calls addHook() and uses the correct Cucumber hook method", () => {
+                    cm.addAfterStepHook(fakeHandler, opts);
+
+                    expect(cm.cucumber.AfterStep).toHaveBeenCalledTimes(1);
+                    expect(cm.cucumber.AfterStep).toHaveBeenCalledWith(opts, fakeHandler);
+                });
+            });
+
+            describe("addBeforeAllHook()", () => {
+                it("calls addHook() and uses the correct Cucumber hook method", () => {
+                    cm.addBeforeAllHook(fakeHandler, opts);
+
+                    expect(cm.cucumber.BeforeAll).toHaveBeenCalledTimes(1);
+                    expect(cm.cucumber.BeforeAll).toHaveBeenCalledWith(opts, fakeHandler);
+                });
+            });
+
+            describe("addBeforeScenarioHook()", () => {
+                it("calls addHook() and uses the correct Cucumber hook method", () => {
+                    cm.addBeforeScenarioHook(fakeHandler, opts);
+
+                    expect(cm.cucumber.Before).toHaveBeenCalledTimes(1);
+                    expect(cm.cucumber.Before).toHaveBeenCalledWith(opts, fakeHandler);
+                });
+            });
+
+            describe("addBeforeStepHook()", () => {
+                it("calls addHook() and uses the correct Cucumber hook method", () => {
+                    cm.addBeforeStepHook(fakeHandler, opts);
+
+                    expect(cm.cucumber.BeforeStep).toHaveBeenCalledTimes(1);
+                    expect(cm.cucumber.BeforeStep).toHaveBeenCalledWith(opts, fakeHandler);
+                });
+            });
+        });
+
         describe("defineParamType()", () => {
             let cm;
 

@@ -1,7 +1,33 @@
-import { defineParamType, defineStep, setWorld } from "../../../index";
+import {
+    addAfterAllHook,
+    addAfterScenarioHook,
+    addAfterStepHook,
+    addBeforeAllHook,
+    addBeforeScenarioHook,
+    addBeforeStepHook,
+    defineParamType,
+    defineStep,
+    setWorld,
+} from "../../../index";
 
-const { mockDefineParameterType, mockGiven, mockSetWorldConstructor } = vi.hoisted(() => {
+const {
+    mockAfter,
+    mockAfterAll,
+    mockAfterStep,
+    mockBefore,
+    mockBeforeAll,
+    mockBeforeStep,
+    mockDefineParameterType,
+    mockGiven,
+    mockSetWorldConstructor,
+} = vi.hoisted(() => {
     return {
+        "mockAfter":               vi.fn(),
+        "mockAfterAll":            vi.fn(),
+        "mockAfterStep":           vi.fn(),
+        "mockBefore":              vi.fn(),
+        "mockBeforeAll":           vi.fn(),
+        "mockBeforeStep":          vi.fn(),
         "mockDefineParameterType": vi.fn(),
         "mockGiven":               vi.fn(),
         "mockSetWorldConstructor": vi.fn(),
@@ -10,6 +36,12 @@ const { mockDefineParameterType, mockGiven, mockSetWorldConstructor } = vi.hoist
 
 vi.mock("@cucumber/cucumber", () => {
     const cucumber = {
+        "After":               mockAfter,
+        "AfterAll":            mockAfterAll,
+        "AfterStep":           mockAfterStep,
+        "Before":              mockBefore,
+        "BeforeAll":           mockBeforeAll,
+        "BeforeStep":          mockBeforeStep,
         "defineParameterType": mockDefineParameterType,
         "Given":               mockGiven,
         "setWorldConstructor": mockSetWorldConstructor,
@@ -20,6 +52,54 @@ vi.mock("@cucumber/cucumber", () => {
 
 describe("entrypoint module (integration)", () => {
     describe("exports", () => {
+        describe("addAfterAllHook()", () => {
+            it("registers a hook script with Cucumber", () => {
+                addAfterAllHook(() => true, {});
+
+                expect(mockAfterAll).toHaveBeenCalled();
+            });
+        });
+
+        describe("addAfterScenarioHook()", () => {
+            it("registers a hook script with Cucumber", () => {
+                addAfterScenarioHook(() => true, {});
+
+                expect(mockAfter).toHaveBeenCalled();
+            });
+        });
+
+        describe("addAfterStepHook()", () => {
+            it("registers a hook script with Cucumber", () => {
+                addAfterStepHook(() => true, {});
+
+                expect(mockAfterStep).toHaveBeenCalled();
+            });
+        });
+
+        describe("addBeforeAllHook()", () => {
+            it("registers a hook script with Cucumber", () => {
+                addBeforeAllHook(() => true, {});
+
+                expect(mockBeforeAll).toHaveBeenCalled();
+            });
+        });
+
+        describe("addBeforeScenarioHook()", () => {
+            it("registers a hook script with Cucumber", () => {
+                addBeforeScenarioHook(() => true, {});
+
+                expect(mockBefore).toHaveBeenCalled();
+            });
+        });
+
+        describe("addBeforeStepHook()", () => {
+            it("registers a hook script with Cucumber", () => {
+                addBeforeStepHook(() => true, {});
+
+                expect(mockBeforeStep).toHaveBeenCalled();
+            });
+        });
+
         describe("defineParamType()", () => {
             it("registers a param type definition with Cucumber", () => {
                 defineParamType({});
