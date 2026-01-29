@@ -175,6 +175,18 @@ describe("SessionManager", () => {
             it("returns an empty array when there are no managed sessions", () => {
                 expect(sessionManager.sessions).toEqual([]);
             });
+
+            it("returns an array of managed sessions", () => {
+                const altSession = new ShellSession() as unknown as MockShellSession;
+
+                sessionManager.addSession(session);
+                sessionManager.addSession(altSession);
+
+                expect(sessionManager.sessions).toEqual([
+                    expect.objectContaining({ session }),
+                    expect.objectContaining({ "session": altSession }),
+                ]);
+            });
         });
     });
 
@@ -561,6 +573,22 @@ describe("SessionManager", () => {
 
                 expect(sessionManager.activeSession.session).toBe(altSession3);
             });
+
+            it("throws if the given session is not a SessionMeta", () => {
+                expect(() => sessionManager.switchToSession({ "sessionMeta": undefined })).toThrow(
+                    "Invalid SessionMeta provided",
+                );
+            });
+
+            it("throws if the given session is not managed", () => {
+                const sessionMeta = sessionManager.activeSession;
+
+                sessionManager.removeSession({ "sessionMeta": sessionMeta });
+
+                expect(() => sessionManager.switchToSession({ sessionMeta })).toThrow(
+                    "Invalid SessionMeta provided",
+                );
+            });
         });
 
         describe("validateShell()", () => {
@@ -570,7 +598,7 @@ describe("SessionManager", () => {
                 const promise = sessionManager.validateShell("bash");
 
                 session.emitOutput("Current shell is: bash");
-                session.emitDelimiter(0)
+                session.emitDelimiter(0);
 
                 await expect(promise).resolves.toBe(true);
             });
@@ -581,11 +609,11 @@ describe("SessionManager", () => {
                 const promise = sessionManager.validateShell("bash");
 
                 session.emitOutput("Current shell is: sh");
-                session.emitDelimiter(0)
+                session.emitDelimiter(0);
 
                 await expect(promise).resolves.toBe(false);
             });
-        })
+        });
 
         describe("waitForReturn()", () => {
             beforeEach(() => {

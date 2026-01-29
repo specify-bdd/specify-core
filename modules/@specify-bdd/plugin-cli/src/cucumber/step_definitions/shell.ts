@@ -15,7 +15,7 @@ import type { SpawnOptions } from "node:child_process";
 
 Given("a/another CLI shell", startDefaultShell);
 
-Given("a/another CLI shell named {string}", startDefaultNamedShell)
+Given("a/another CLI shell named {string}", startDefaultNamedShell);
 
 Given("a/an {string} CLI shell", startAltShell);
 
@@ -129,6 +129,8 @@ Then(
     "the last command's terminal output should not match (the regular expression ){regexp}",
     verifyNoMatchingOutput,
 );
+
+Then("there should be {int} active CLI shell(s)", verifyShellCount);
 
 /**
  * Change the current working directory in the active shell.
@@ -293,7 +295,10 @@ async function startShell(shellType: string = "sh", name?: string): Promise<void
     this.cli.manager ??= new SessionManager();
     this.cli.manager.addSession(shell, name, this.fs.cwd);
 
-    assert.ok(await this.cli.manager.validateShell(shellType), new AssertionError({ "message": `Failed to start ${shellType} CLI shell.` }));
+    assert.ok(
+        await this.cli.manager.validateShell(shellType),
+        new AssertionError({ "message": `Failed to start ${shellType} CLI shell.` }),
+    );
 }
 
 /**
@@ -449,6 +454,22 @@ function verifyMinimumElapsedTime(minTime: number): void {
             "message": `The last command's total execution time ${elapsed}s was less than ${minTime}s.`,
         }),
     );
+}
+
+/**
+ * Verify the number of shell sessions.
+ *
+ * @param count - The expected number of shell sessions
+ *
+ * @throws AssertionError
+ * If there is no SessionManager initialized.
+ *
+ * @throws AssertionError
+ * If the actual number of shell sessions is not equal to the expected count
+ */
+function verifyShellCount(count: number): void {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+    assert.equal(this.cli.manager.sessions.length, count);
 }
 
 /**
