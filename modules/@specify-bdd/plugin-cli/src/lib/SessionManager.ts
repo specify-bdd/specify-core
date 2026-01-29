@@ -358,7 +358,7 @@ export class SessionManager {
      * Switch to the given session.
      *
      * @param opts - Options to modify the behavior of switchToSession()
-     * 
+     *
      * @throws Error
      * If the given session is invalid
      */

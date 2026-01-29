@@ -135,9 +135,8 @@ describe("TestCommandWatcher", () => {
             // clear modules to force reimport with new mock
             vi.resetModules();
 
-            const { "TestCommandWatcher": emptyPathWatcher } = await import(
-                "../TestCommandWatcher"
-            );
+            const { "TestCommandWatcher": emptyPathWatcher } =
+                await import("../TestCommandWatcher");
 
             const emptyWatcher = new emptyPathWatcher(mockCommand);
 
