@@ -208,6 +208,31 @@ export class SessionManager {
     }
 
     /**
+     * Find the SessionMeta that matches the given selector.
+     *
+     * @param selector - The index or name of the session to find
+     *
+     * @returns The matching SessionMeta
+     *
+     * @throws Error
+     * If there is no matching session
+     **/
+    findSession(selector: number | string): SessionMeta {
+        const session =
+            typeof selector === "string"
+                ? this.#sessions.find((session) => session.name === selector)
+                : this.#sessions[selector];
+
+        if (!session) {
+            const selectorType = typeof selector === "string" ? "name" : "index";
+
+            throw new Error(`No session found with ${selectorType}: ${selector}`);
+        }
+
+        return session;
+    }
+
+    /**
      * Gracefully terminates the command in a managed session. Resolves once the command is killed.
      *
      * @param opts - Options to modify the behavior of killSession()
@@ -330,32 +355,26 @@ export class SessionManager {
     }
 
     /**
-     * Switch to the session that matches the given selector.
-     * 
-     * @param selector - The index or name of the session to switch to
+     * Switch to the given session.
      *
-     * @throws AssertionError
-     * If there is no matching session
+     * @param opts - Options to modify the behavior of switchToSession()
+     * 
+     * @throws Error
+     * If the given session is invalid
      */
-    switchToSession(selector: number | string): void {
-        const session = typeof selector === "string"
-            ? this.#sessions.find((session) => session.name === selector)
-            : this.#sessions[selector];
-        
-        if (!session) {
-            const selectorType = typeof selector === "string" ? "name" : "index";
-            
-            throw new Error(`No session found with ${selectorType}: ${selector}`);
+    switchToSession(opts: SessionManagerOptions): void {
+        if (!this.#sessions.includes(opts.sessionMeta)) {
+            throw new Error("Invalid SessionMeta provided.");
         }
 
-        this.#activeSession = session;
+        this.#activeSession = opts.sessionMeta;
     }
 
     /**
      * Validate the shell type of the active session.
-     * 
+     *
      * @param shellType - The expected shell type
-     * 
+     *
      * @returns Whether its the correct type or not
      */
     async validateShell(shellType: string): Promise<boolean> {
