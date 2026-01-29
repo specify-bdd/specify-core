@@ -151,16 +151,35 @@ describe("CucumberManager", () => {
             beforeEach(() => {
                 cm = new CucumberManager(cucumber, cmOpts);
 
+                vi.spyOn(cm.cucumber, "Given");
                 vi.spyOn(cm.cucumber, "When");
+                vi.spyOn(cm.cucumber, "Then");
             });
 
             describe("registers step def patterns with Cucumber using...", () => {
                 it("a single basic string expression", () => {
+                    cm.defineStep("Given that I have done something with {param}", fakeHandler);
                     cm.defineStep("When I do something with {param}", fakeHandler);
+                    cm.defineStep("Then something should have been done with {param}", fakeHandler);
 
+                    expect(cm.cucumber.Given).toHaveBeenCalledTimes(1);
                     expect(cm.cucumber.When).toHaveBeenCalledTimes(1);
+                    expect(cm.cucumber.Then).toHaveBeenCalledTimes(1);
+
+                    expect(cm.cucumber.Given).toHaveBeenCalledWith(
+                        "that I have done something with {param}",
+                        {},
+                        fakeHandler,
+                    );
+
                     expect(cm.cucumber.When).toHaveBeenCalledWith(
                         "I do something with {param}",
+                        {},
+                        fakeHandler,
+                    );
+
+                    expect(cm.cucumber.Then).toHaveBeenCalledWith(
+                        "something should have been done with {param}",
                         {},
                         fakeHandler,
                     );
@@ -168,32 +187,92 @@ describe("CucumberManager", () => {
 
                 describe("a single enhanced string expression with...", () => {
                     it("multi-word alternate syntax", () => {
+                        cm.defineStep("Given that I have [laughed at/danced with] {param}", fakeHandler);
                         cm.defineStep("When I [laugh at/dance with] {param}", fakeHandler);
+                        cm.defineStep("Then {param} should have been [laughed at/danced with]", fakeHandler);
 
+                        expect(cm.cucumber.Given).toHaveBeenCalledTimes(2);
                         expect(cm.cucumber.When).toHaveBeenCalledTimes(2);
+                        expect(cm.cucumber.Then).toHaveBeenCalledTimes(2);
+
+                        expect(cm.cucumber.Given).toHaveBeenCalledWith(
+                            "that I have laughed at {param}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.Given).toHaveBeenCalledWith(
+                            "that I have danced with {param}",
+                            {},
+                            fakeHandler,
+                        );
+
                         expect(cm.cucumber.When).toHaveBeenCalledWith(
                             "I laugh at {param}",
                             {},
                             fakeHandler,
                         );
+
                         expect(cm.cucumber.When).toHaveBeenCalledWith(
                             "I dance with {param}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.Then).toHaveBeenCalledWith(
+                            "{param} should have been laughed at",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.Then).toHaveBeenCalledWith(
+                            "{param} should have been danced with",
                             {},
                             fakeHandler,
                         );
                     });
 
                     it("mixed alternate and optional syntax", () => {
-                        cm.defineStep("When I have [a(n)/the] {param}", fakeHandler);
+                        cm.defineStep("Given that I have [a(n)/the] {param}", fakeHandler);
+                        cm.defineStep("When I get [a(n)/the] {param}", fakeHandler);
+                        cm.defineStep("Then I should have [a(n)/the] {param}", fakeHandler);
 
+                        expect(cm.cucumber.Given).toHaveBeenCalledTimes(2);
                         expect(cm.cucumber.When).toHaveBeenCalledTimes(2);
-                        expect(cm.cucumber.When).toHaveBeenCalledWith(
-                            "I have a(n) {param}",
+                        expect(cm.cucumber.Then).toHaveBeenCalledTimes(2);
+
+                        expect(cm.cucumber.Given).toHaveBeenCalledWith(
+                            "that I have a(n) {param}",
                             {},
                             fakeHandler,
                         );
+
+                        expect(cm.cucumber.Given).toHaveBeenCalledWith(
+                            "that I have the {param}",
+                            {},
+                            fakeHandler,
+                        );
+
                         expect(cm.cucumber.When).toHaveBeenCalledWith(
-                            "I have the {param}",
+                            "I get a(n) {param}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I get the {param}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.Then).toHaveBeenCalledWith(
+                            "I should have a(n) {param}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.Then).toHaveBeenCalledWith(
+                            "I should have the {param}",
                             {},
                             fakeHandler,
                         );
@@ -201,18 +280,56 @@ describe("CucumberManager", () => {
 
                     it("implicit subject variants", () => {
                         cm.defineStep(
+                            "Given that [I did/the user did] something with {param}",
+                            fakeHandler,
+                        );
+
+                        cm.defineStep(
                             "When [I do/the user does] something with {param}",
                             fakeHandler,
                         );
 
+                        cm.defineStep(
+                            "Then [I should have done/the user should have done] something with {param}",
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.Given).toHaveBeenCalledTimes(2);
                         expect(cm.cucumber.When).toHaveBeenCalledTimes(2);
+                        expect(cm.cucumber.Then).toHaveBeenCalledTimes(2);
+
+                        expect(cm.cucumber.Given).toHaveBeenCalledWith(
+                            "that (I )did something with {param}", // TODO: this phrasing is weird
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.Given).toHaveBeenCalledWith(
+                            "that (the user )did something with {param}", // TODO: this phrasing is weird
+                            {},
+                            fakeHandler,
+                        );
+
                         expect(cm.cucumber.When).toHaveBeenCalledWith(
                             "(I )do something with {param}",
                             {},
                             fakeHandler,
                         );
+
                         expect(cm.cucumber.When).toHaveBeenCalledWith(
                             "(the user )does something with {param}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.Then).toHaveBeenCalledWith(
+                            "(I )should have done something with {param}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.Then).toHaveBeenCalledWith(
+                            "(the user )should have done something with {param}",
                             {},
                             fakeHandler,
                         );
@@ -220,11 +337,28 @@ describe("CucumberManager", () => {
                 });
 
                 it("a single regular expression", () => {
+                    cm.defineStep(/Given that I have done something with .*/i, fakeHandler);
                     cm.defineStep(/When I do something with .*/i, fakeHandler);
+                    cm.defineStep(/Then something should have been done with .*/i, fakeHandler);
 
+                    expect(cm.cucumber.Given).toHaveBeenCalledTimes(1);
                     expect(cm.cucumber.When).toHaveBeenCalledTimes(1);
+                    expect(cm.cucumber.Then).toHaveBeenCalledTimes(1);
+
+                    expect(cm.cucumber.Given).toHaveBeenCalledWith(
+                        /that I have done something with .*/i,
+                        {},
+                        fakeHandler,
+                    );
+
                     expect(cm.cucumber.When).toHaveBeenCalledWith(
                         /I do something with .*/i,
+                        {},
+                        fakeHandler,
+                    );
+
+                    expect(cm.cucumber.Then).toHaveBeenCalledWith(
+                        /something should have been done with .*/i,
                         {},
                         fakeHandler,
                     );
