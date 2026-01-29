@@ -2,10 +2,12 @@ import assert from "node:assert";
 
 import * as Cucumber from "@cucumber/cucumber";
 
-export enum Hook {
+enum Hook {
     BeforeAll,
-    Before,
-    After,
+    BeforeScenario,
+    BeforeStep,
+    AfterStep,
+    AfterScenario,
     AfterAll,
 }
 
@@ -63,6 +65,11 @@ export class CucumberManager {
     cucumber: CucumberLike;
 
     /**
+     * A record store of every step pattern registered with the managed Cucumber instance.
+     */
+    patterns: Record<string, number>;
+
+    /**
      * A list of step definition subjects which may be used.
      */
     subjects: string[];
@@ -74,39 +81,92 @@ export class CucumberManager {
      */
     constructor(cucumber: CucumberLike, options: ManagerOptions = {}) {
         this.cucumber = cucumber;
+        this.patterns = {};
         this.subjects = options.subjects ?? [];
     }
 
     /**
-     * Register a new hook triggering a handler function at a specific stage of
-     * test execution with the managed Cucumber instance.
+     * Register a new hook triggering a handler function after all tests have
+     * been executed with the managed Cucumber instance.
      *
-     * @param stage   - The stage to hook into
      * @param handler - The handler function containing code to execute when the
      *                  hook triggers
      * @param options - Options for Cucumber
      *
      * @returns This Cucumber manager
      */
-    defineHook(stage: Hook, handler: HookHandler, options: HookOptions = {}): CucumberManager {
-        switch (stage) {
-            case Hook.After:
-                this.cucumber.After(options, handler);
-                break;
-            case Hook.AfterAll:
-                this.cucumber.AfterAll(options, handler);
-                break;
-            case Hook.Before:
-                this.cucumber.Before(options, handler);
-                break;
-            case Hook.BeforeAll:
-                this.cucumber.BeforeAll(options, handler);
-                break;
-            default:
-                assert.fail(`Invalid hook stage: ${stage}.`);
-        }
+    addAfterAllHook(handler: HookHandler, options: HookOptions = {}): CucumberManager {
+        return this.#addHook(Hook.AfterAll, handler, options);
+    }
 
-        return this;
+    /**
+     * Register a new hook triggering a handler function after each test case
+     * execution with the managed Cucumber instance.
+     *
+     * @param handler - The handler function containing code to execute when the
+     *                  hook triggers
+     * @param options - Options for Cucumber
+     *
+     * @returns This Cucumber manager
+     */
+    addAfterScenarioHook(handler: HookHandler, options: HookOptions = {}): CucumberManager {
+        return this.#addHook(Hook.AfterScenario, handler, options);
+    }
+
+    /**
+     * Register a new hook triggering a handler function after each step
+     * execution with the managed Cucumber instance.
+     *
+     * @param handler - The handler function containing code to execute when the
+     *                  hook triggers
+     * @param options - Options for Cucumber
+     *
+     * @returns This Cucumber manager
+     */
+    addAfterStepHook(handler: HookHandler, options: HookOptions = {}): CucumberManager {
+        return this.#addHook(Hook.AfterStep, handler, options);
+    }
+
+    /**
+     * Register a new hook triggering a handler function before any tests have
+     * been executed with the managed Cucumber instance.
+     *
+     * @param handler - The handler function containing code to execute when the
+     *                  hook triggers
+     * @param options - Options for Cucumber
+     *
+     * @returns This Cucumber manager
+     */
+    addBeforeAllHook(handler: HookHandler, options: HookOptions = {}): CucumberManager {
+        return this.#addHook(Hook.BeforeAll, handler, options);
+    }
+
+    /**
+     * Register a new hook triggering a handler function before each test case
+     * execution with the managed Cucumber instance.
+     *
+     * @param handler - The handler function containing code to execute when the
+     *                  hook triggers
+     * @param options - Options for Cucumber
+     *
+     * @returns This Cucumber manager
+     */
+    addBeforeScenarioHook(handler: HookHandler, options: HookOptions = {}): CucumberManager {
+        return this.#addHook(Hook.BeforeScenario, handler, options);
+    }
+
+    /**
+     * Register a new hook triggering a handler function before each step
+     * execution with the managed Cucumber instance.
+     *
+     * @param handler - The handler function containing code to execute when the
+     *                  hook triggers
+     * @param options - Options for Cucumber
+     *
+     * @returns This Cucumber manager
+     */
+    addBeforeStepHook(handler: HookHandler, options: HookOptions = {}): CucumberManager {
+        return this.#addHook(Hook.BeforeStep, handler, options);
     }
 
     /**
@@ -149,18 +209,25 @@ export class CucumberManager {
             }
 
             for (const variant of variants) {
-                switch (variant.keyword) {
+                const key = variant.keyword;
+                const pat = variant.pattern;
+
+                // initialize (if necessary) then increment the counter for each variant pattern
+                this.patterns[pat] ??= 0;
+                this.patterns[pat]++;
+
+                switch (key) {
                     case "Given":
-                        this.cucumber.Given(variant.pattern, options, handler);
+                        this.cucumber.Given(pat, options, handler);
                         break;
                     case "When":
-                        this.cucumber.When(variant.pattern, options, handler);
+                        this.cucumber.When(pat, options, handler);
                         break;
                     case "Then":
-                        this.cucumber.Then(variant.pattern, options, handler);
+                        this.cucumber.Then(pat, options, handler);
                         break;
                     default:
-                        assert.fail(`Invalid pattern keyword: ${variant.keyword}.`);
+                        assert.fail(`Invalid pattern keyword: ${key}.`);
                 }
             }
         }
@@ -177,6 +244,44 @@ export class CucumberManager {
      */
     defineWorld(world: WorldLike): CucumberManager {
         this.cucumber.setWorldConstructor(world);
+
+        return this;
+    }
+
+    /**
+     * Register a new hook triggering a handler function at a specific stage of
+     * test execution with the managed Cucumber instance.
+     *
+     * @param stage   - The stage to hook into
+     * @param handler - The handler function containing code to execute when the
+     *                  hook triggers
+     * @param options - Options for Cucumber
+     *
+     * @returns This Cucumber manager
+     */
+    #addHook(stage: Hook, handler: HookHandler, options: HookOptions = {}): CucumberManager {
+        switch (stage) {
+            case Hook.AfterAll:
+                this.cucumber.AfterAll(options, handler);
+                break;
+            case Hook.AfterScenario:
+                this.cucumber.After(options, handler);
+                break;
+            case Hook.AfterStep:
+                this.cucumber.AfterStep(options, handler);
+                break;
+            case Hook.BeforeAll:
+                this.cucumber.BeforeAll(options, handler);
+                break;
+            case Hook.BeforeScenario:
+                this.cucumber.Before(options, handler);
+                break;
+            case Hook.BeforeStep:
+                this.cucumber.BeforeStep(options, handler);
+                break;
+            default:
+                assert.fail(`Invalid hook stage: ${stage}.`);
+        }
 
         return this;
     }
