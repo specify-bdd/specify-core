@@ -7,7 +7,7 @@ import {
     addBeforeStepHook,
     defineParamType,
     defineStep,
-    defineWorld,
+    setWorld,
 } from "../../../index";
 
 const {
@@ -119,9 +119,9 @@ describe("entrypoint module (integration)", () => {
             });
         });
 
-        describe("defineWorld()", () => {
+        describe("setWorld()", () => {
             it("registers a world constructor with Cucumber", () => {
-                defineWorld({});
+                setWorld({});
 
                 expect(mockSetWorldConstructor).toHaveBeenCalled();
             });

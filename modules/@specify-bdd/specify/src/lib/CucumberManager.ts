@@ -242,7 +242,7 @@ export class CucumberManager {
      *
      * @returns This Cucumber manager
      */
-    defineWorld(world: WorldLike): CucumberManager {
+    setWorld(world: WorldLike): CucumberManager {
         this.cucumber.setWorldConstructor(world);
 
         return this;
