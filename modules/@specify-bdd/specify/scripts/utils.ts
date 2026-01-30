@@ -2,9 +2,8 @@
  * Utils script for generic utility functions.
  */
 
-import { Project } from "ts-morph";
-import path        from "node:path";
-import ts          from "typescript";
+import { Project, SyntaxKind } from "ts-morph";
+import path                    from "node:path";
 
 import type { SourceFile } from "ts-morph";
 
@@ -55,7 +54,7 @@ export const generateInterfaceTypeExport = (
             });
 
             for (const declaration of varDeclarations) {
-                const varDeclaration = declaration.asKindOrThrow(ts.SyntaxKind.VariableDeclaration);
+                const varDeclaration = declaration.asKindOrThrow(SyntaxKind.VariableDeclaration);
 
                 const typeNode = varDeclaration.getTypeNode();
 
