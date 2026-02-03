@@ -33,6 +33,7 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: artifact_build
+          path: modules/@specify-bdd/
       - name: Publish to GitHub
         run: pnpm publish --access=public -r
         env:
@@ -61,5 +62,6 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: artifact_build
+          path: modules/@specify-bdd/
       - name: Publish to NPM
         run: pnpm publish --access=public -r
