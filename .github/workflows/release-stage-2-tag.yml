@@ -58,6 +58,7 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: artifact_build
+          path: modules/@specify-bdd/
       - name: Configure Git
         run: |
           git config user.name "${{ vars.GIT_USER_NAME }}"
