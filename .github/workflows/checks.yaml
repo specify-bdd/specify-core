@@ -35,6 +35,8 @@ jobs:
         with:
           cache: pnpm
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+      - name: Build
+        run: pnpm build
       - name: Run unit tests
         run: pnpm test:unit
   test-e2e:
