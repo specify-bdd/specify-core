@@ -6,7 +6,7 @@
 
 # Enumeration: CommandResultStatus
 
-Defined in: [Command.ts:34](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/specify/src/lib/Command.ts#L34)
+Defined in: [Command.ts:34](https://github.com/specify-bdd/specify-core/blob/c0ed49dda90def2d3259c0eb137d395434b356e2/modules/@specify-bdd/specify/src/lib/Command.ts#L34)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: [Command.ts:34](https://github.com/specify-bdd/specify-core/blob/16f
 
 > **error**: `2`
 
-Defined in: [Command.ts:37](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/specify/src/lib/Command.ts#L37)
+Defined in: [Command.ts:37](https://github.com/specify-bdd/specify-core/blob/c0ed49dda90def2d3259c0eb137d395434b356e2/modules/@specify-bdd/specify/src/lib/Command.ts#L37)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [Command.ts:37](https://github.com/specify-bdd/specify-core/blob/16f
 
 > **failure**: `1`
 
-Defined in: [Command.ts:36](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/specify/src/lib/Command.ts#L36)
+Defined in: [Command.ts:36](https://github.com/specify-bdd/specify-core/blob/c0ed49dda90def2d3259c0eb137d395434b356e2/modules/@specify-bdd/specify/src/lib/Command.ts#L36)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [Command.ts:36](https://github.com/specify-bdd/specify-core/blob/16f
 
 > **success**: `0`
 
-Defined in: [Command.ts:35](https://github.com/specify-bdd/specify-core/blob/16f585e2e39f7cf81f64c29459e0d22241ece5b2/modules/@specify-bdd/specify/src/lib/Command.ts#L35)
+Defined in: [Command.ts:35](https://github.com/specify-bdd/specify-core/blob/c0ed49dda90def2d3259c0eb137d395434b356e2/modules/@specify-bdd/specify/src/lib/Command.ts#L35)
