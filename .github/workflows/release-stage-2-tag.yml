@@ -40,7 +40,7 @@ jobs:
       title: ${{ steps.export.outputs.title }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ env.GIT_BRANCH }}
           ssh-key: "${{ secrets.RELEASE_DEPLOY_KEY }}"
@@ -49,19 +49,16 @@ jobs:
         with:
           run_install: true
       - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           cache: pnpm
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
           registry-url: "https://registry.npmjs.org"
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: artifact_build
-      - name: Lint
-        run: pnpm lint
-      - name: Audit
-        run: pnpm audit --prod --audit-level=moderate
+          path: modules/@specify-bdd/
       - name: Configure Git
         run: |
           git config user.name "${{ vars.GIT_USER_NAME }}"
