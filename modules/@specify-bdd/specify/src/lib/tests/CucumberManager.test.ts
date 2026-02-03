@@ -187,9 +187,15 @@ describe("CucumberManager", () => {
 
                 describe("a single enhanced string expression with...", () => {
                     it("multi-word alternate syntax", () => {
-                        cm.defineStep("Given that I have [laughed at/danced with] {param}", fakeHandler);
+                        cm.defineStep(
+                            "Given that I have [laughed at/danced with] {param}",
+                            fakeHandler,
+                        );
                         cm.defineStep("When I [laugh at/dance with] {param}", fakeHandler);
-                        cm.defineStep("Then {param} should have been [laughed at/danced with]", fakeHandler);
+                        cm.defineStep(
+                            "Then {param} should have been [laughed at/danced with]",
+                            fakeHandler,
+                        );
 
                         expect(cm.cucumber.Given).toHaveBeenCalledTimes(2);
                         expect(cm.cucumber.When).toHaveBeenCalledTimes(2);
