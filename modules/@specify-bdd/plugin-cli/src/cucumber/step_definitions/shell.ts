@@ -25,6 +25,12 @@ Given("(that )the working directory is {filePath}", changeDirectory);
 
 When("a/the user changes the working directory to {filePath}", changeDirectory);
 
+When("a/the user kills CLI shell {int}", killCLIShellByIndex);
+
+When("a/the user kills the CLI shell", killCLIShell);
+
+When("a/the user kills the CLI shell named {string}", killCLIShellByName);
+
 When("a/the user runs the command/process {refstr}", { "timeout": 60000 }, execCommandSync);
 
 When("a/the user sends a {cliSignal} signal to the last command", sendKillSignal);
@@ -124,6 +130,8 @@ Then(
     verifyNoMatchingOutput,
 );
 
+Then("there should be {int} active CLI shell(s)", verifyShellCount);
+
 /**
  * Change the current working directory in the active shell.
  *
@@ -171,6 +179,48 @@ async function execCommandSync(command: string): Promise<void> {
     await waitForCommandReturn.call(this);
 
     this.fs.cwd = this.cli.manager.cwd;
+}
+
+/**
+ * Kill the active CLI shell.
+ */
+async function killCLIShell(): Promise<void> {
+    killCLIShellBySelector.call(this);
+}
+
+/**
+ * Kill a CLI shell by its index.
+ *
+ * @param index - The index of the CLI shell to kill
+ */
+async function killCLIShellByIndex(index: number): Promise<void> {
+    killCLIShellBySelector.call(this, index);
+}
+
+/**
+ * Kill a CLI shell by its name.
+ *
+ * @param name - The name of the CLI shell to kill
+ */
+async function killCLIShellByName(name: string): Promise<void> {
+    killCLIShellBySelector.call(this, name);
+}
+
+/**
+ * Kill the given CLI shell by its selector, or the active shell if no selector.
+ *
+ * @param selector - The selector of the CLI shell to kill
+ */
+async function killCLIShellBySelector(selector?: number | string): Promise<void> {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    if (!selector) {
+        await this.cli.manager.killSession();
+    } else {
+        await this.cli.manager.killSession({
+            "sessionMeta": this.cli.manager.findSession(selector),
+        });
+    }
 }
 
 /**
@@ -300,7 +350,8 @@ function switchShell(selector?: number | string): void {
     if (!selector) {
         this.cli.manager.switchToNextSession();
     } else {
-        this.cli.manager.switchToSession(selector);
+        const session = this.cli.manager.findSession(selector);
+        this.cli.manager.switchToSession({ "sessionMeta": session });
     }
 
     this.fs.cwd = this.cli.manager.cwd;
@@ -403,6 +454,22 @@ function verifyMinimumElapsedTime(minTime: number): void {
             "message": `The last command's total execution time ${elapsed}s was less than ${minTime}s.`,
         }),
     );
+}
+
+/**
+ * Verify the number of shell sessions.
+ *
+ * @param count - The expected number of shell sessions
+ *
+ * @throws AssertionError
+ * If there is no SessionManager initialized.
+ *
+ * @throws AssertionError
+ * If the actual number of shell sessions is not equal to the expected count
+ */
+function verifyShellCount(count: number): void {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+    assert.equal(this.cli.manager.sessions.length, count);
 }
 
 /**

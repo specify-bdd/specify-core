@@ -16,7 +16,7 @@ jobs:
       GIT_BRANCH: main
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ env.GIT_BRANCH }}
       - name: Setup PNPM
@@ -24,15 +24,16 @@ jobs:
         with:
           run_install: true
       - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           cache: pnpm
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
           registry-url: 'https://npm.pkg.github.com'
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: artifact_build
+          path: modules/@specify-bdd/
       - name: Publish to GitHub
         run: pnpm publish --access=public -r
         env:
@@ -44,7 +45,7 @@ jobs:
       GIT_BRANCH: main
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ env.GIT_BRANCH }}
       - name: Setup PNPM
@@ -52,14 +53,15 @@ jobs:
         with:
           run_install: true
       - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           cache: pnpm
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
           registry-url: 'https://registry.npmjs.org'
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: artifact_build
+          path: modules/@specify-bdd/
       - name: Publish to NPM
         run: pnpm publish --access=public -r
