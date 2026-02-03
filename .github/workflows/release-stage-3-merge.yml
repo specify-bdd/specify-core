@@ -25,7 +25,7 @@ jobs:
       GIT_TAG: ${{ inputs.git_tag }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ env.GIT_BRANCH }}
           ssh-key: "${{ secrets.RELEASE_DEPLOY_KEY }}"
