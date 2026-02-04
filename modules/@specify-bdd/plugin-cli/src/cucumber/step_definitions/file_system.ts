@@ -50,10 +50,7 @@ defineStep(
 );
 
 defineStep(
-    [
-        "Then the {filePath} file path should exist",
-        "Then the {ref} file path should exist",
-    ],
+    ["Then the {filePath} file path should exist", "Then the {ref} file path should exist"],
     verifyFilePathExists,
 );
 

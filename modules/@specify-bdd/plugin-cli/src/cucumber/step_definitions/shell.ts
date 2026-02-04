@@ -16,25 +16,34 @@ import type { SpawnOptions } from "node:child_process";
 defineStep("When a/the user kills CLI shell {int}", killCLIShellByIndex);
 defineStep("When a/the user kills the CLI shell", killCLIShell);
 defineStep("When a/the user kills the CLI shell named {string}", killCLIShellByName);
-defineStep("When a/the user runs the command/process {refstr}", execCommandSync, { "timeout": 60000 });
 defineStep("When a/the user sends a {cliSignal} signal to the last command", sendKillSignal);
 defineStep("When a/the user starts a/an/the (async )command/process {refstr}", execCommand);
 defineStep("When a/the user switches CLI shells", switchToNextShell);
 defineStep("When a/the user switches to CLI shell {int}", switchShellByIndex);
 defineStep("When a/the user switches to the CLI shell named {string}", switchShellByName);
-defineStep("When a/the user waits for the last command to return", waitForCommandReturn, { "timeout": 60000 });
 defineStep("When a/the user waits for terminal output", waitForAnyOutput, { "timeout": 60000 });
-defineStep("When a/the user waits for terminal output on STDERR", waitForOutputOnSTDERR, { "timeout": 60000 });
-defineStep("When a/the user waits for terminal output on STDOUT", waitForOutputOnSTDOUT, { "timeout": 60000 });
 defineStep("Then there should be {int} active CLI shell(s)", verifyShellCount);
 
 defineStep(
-    [
-        "Given a/another CLI shell",
-        "When a/the user starts a/another CLI shell",
-    ],
+    ["Given a/another CLI shell", "When a/the user starts a/another CLI shell"],
     startDefaultShell,
 );
+
+defineStep("When a/the user runs the command/process {refstr}", execCommandSync, {
+    "timeout": 60000,
+});
+
+defineStep("When a/the user waits for the last command to return", waitForCommandReturn, {
+    "timeout": 60000,
+});
+
+defineStep("When a/the user waits for terminal output on STDERR", waitForOutputOnSTDERR, {
+    "timeout": 60000,
+});
+
+defineStep("When a/the user waits for terminal output on STDOUT", waitForOutputOnSTDOUT, {
+    "timeout": 60000,
+});
 
 defineStep(
     [
@@ -45,10 +54,7 @@ defineStep(
 );
 
 defineStep(
-    [
-        "Given a/an {string} CLI shell",
-        "When a/the user starts a/an {string} CLI shell",
-    ],
+    ["Given a/an {string} CLI shell", "When a/the user starts a/an {string} CLI shell"],
     startAltShell,
 );
 

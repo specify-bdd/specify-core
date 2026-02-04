@@ -6,36 +6,41 @@
 
 import * as fs from "node:fs/promises";
 
-import {
-    addAfterAllHook,
-    addAfterScenarioHook,
-    addBeforeScenarioHook,
-} from "@specify-bdd/specify";
+import { addAfterAllHook, addAfterScenarioHook, addBeforeScenarioHook } from "@specify-bdd/specify";
 
 const cliFiles: Array<string> = [];
 
-addBeforeScenarioHook(async function (): Promise<void> {
-    // initialize the CLI namespace
-    this.cli = {
-        "files": {
-            "created": cliFiles,
-        },
-    };
-}, { "name": "CLI plugin before hook" });
+addBeforeScenarioHook(
+    async function (): Promise<void> {
+        // initialize the CLI namespace
+        this.cli = {
+            "files": {
+                "created": cliFiles,
+            },
+        };
+    },
+    { "name": "CLI plugin before scenario hook" },
+);
 
-addAfterScenarioHook(async function (): Promise<void> {
-    // terminate any remaining shell sessions
-    await this.cli.manager?.killAllSessions();
-}, { "name": "CLI plugin after hook" });
+addAfterScenarioHook(
+    async function (): Promise<void> {
+        // terminate any remaining shell sessions
+        await this.cli.manager?.killAllSessions();
+    },
+    { "name": "CLI plugin after scenario hook" },
+);
 
-addAfterAllHook(async function (): Promise<void> {
-    const promises = [];
+addAfterAllHook(
+    async function (): Promise<void> {
+        const promises = [];
 
-    if (this.parameters.cliCleanup) {
-        for (const file of cliFiles) {
-            promises.push(fs.unlink(file));
+        if (this.parameters.cliCleanup) {
+            for (const file of cliFiles) {
+                promises.push(fs.unlink(file));
+            }
         }
-    }
 
-    await Promise.all(promises);
-});
+        await Promise.all(promises);
+    },
+    { "name": "CLI plugin after all hook" },
+);
