@@ -4,30 +4,31 @@
  * Custom Cucumber hooks enabling CLI testing.
  */
 
-import { After, AfterAll, Before, BeforeAll } from "@cucumber/cucumber";
-import * as fs                                from "node:fs/promises";
+import * as fs from "node:fs/promises";
+
+import {
+    addAfterAllHook,
+    addAfterScenarioHook,
+    addBeforeScenarioHook,
+} from "@specify-bdd/specify";
 
 const cliFiles: Array<string> = [];
 
-BeforeAll(async function () {
-    // beforeall actions
-});
-
-Before({ "name": "CLI plugin before hook" }, async function () {
+addBeforeScenarioHook(async function () {
     // initialize the CLI namespace
     this.cli = {
         "files": {
             "created": cliFiles,
         },
     };
-});
+}, { "name": "CLI plugin before hook" });
 
-After({ "name": "CLI plugin after hook" }, async function () {
+addAfterScenarioHook(async function () {
     // terminate any remaining shell sessions
     await this.cli.manager?.killAllSessions();
-});
+}, { "name": "CLI plugin after hook" };
 
-AfterAll(async function () {
+addAfterAllHook(async function () {
     const promises = [];
 
     if (this.parameters.cliCleanup) {
