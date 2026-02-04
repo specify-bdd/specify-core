@@ -3,8 +3,8 @@
  *
  * Cucumber step definitions covering Node.js package management.
  */
-// import { Given   } from "@cucumber/cucumber";
-import { defineStep } from "#specify-bdd/specify";
+
+import { defineStep } from "@specify-bdd/specify";
 import assert         from "node:assert/strict";
 import npmValidate    from "validate-npm-package-name";
 
