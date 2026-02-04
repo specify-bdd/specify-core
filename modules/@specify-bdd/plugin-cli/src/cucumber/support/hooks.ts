@@ -26,7 +26,7 @@ addBeforeScenarioHook(async function () {
 addAfterScenarioHook(async function () {
     // terminate any remaining shell sessions
     await this.cli.manager?.killAllSessions();
-}, { "name": "CLI plugin after hook" };
+}, { "name": "CLI plugin after hook" });
 
 addAfterAllHook(async function () {
     const promises = [];
