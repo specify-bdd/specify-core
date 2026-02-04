@@ -14,7 +14,7 @@ import {
 
 const cliFiles: Array<string> = [];
 
-addBeforeScenarioHook(async function () {
+addBeforeScenarioHook(async function (): Promise<void> {
     // initialize the CLI namespace
     this.cli = {
         "files": {
@@ -23,12 +23,12 @@ addBeforeScenarioHook(async function () {
     };
 }, { "name": "CLI plugin before hook" });
 
-addAfterScenarioHook(async function () {
+addAfterScenarioHook(async function (): Promise<void> {
     // terminate any remaining shell sessions
     await this.cli.manager?.killAllSessions();
 }, { "name": "CLI plugin after hook" });
 
-addAfterAllHook(async function () {
+addAfterAllHook(async function (): Promise<void> {
     const promises = [];
 
     if (this.parameters.cliCleanup) {
@@ -37,5 +37,5 @@ addAfterAllHook(async function () {
         }
     }
 
-    return Promise.all(promises);
+    await Promise.all(promises);
 });
