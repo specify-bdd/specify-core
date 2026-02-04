@@ -4,9 +4,8 @@
  * Custom Cucumber hooks enabling CLI testing.
  */
 
-import * as fs from "node:fs/promises";
-
 import { addAfterAllHook, addAfterScenarioHook, addBeforeScenarioHook } from "@specify-bdd/specify";
+import * as fs                                                          from "node:fs/promises";
 
 const cliFiles: Array<string> = [];
 
