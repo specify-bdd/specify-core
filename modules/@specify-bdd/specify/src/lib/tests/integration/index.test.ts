@@ -20,6 +20,7 @@ const {
     mockDefineParameterType,
     mockGiven,
     mockSetWorldConstructor,
+    mockWorld,
 } = vi.hoisted(() => {
     return {
         "mockAfter":               vi.fn(),
@@ -31,6 +32,7 @@ const {
         "mockDefineParameterType": vi.fn(),
         "mockGiven":               vi.fn(),
         "mockSetWorldConstructor": vi.fn(),
+        "mockWorld":               vi.fn(),
     };
 });
 
@@ -45,6 +47,7 @@ vi.mock("@cucumber/cucumber", () => {
         "defineParameterType": mockDefineParameterType,
         "Given":               mockGiven,
         "setWorldConstructor": mockSetWorldConstructor,
+        "World":               mockWorld,
     };
 
     return { "default": cucumber, ...cucumber };

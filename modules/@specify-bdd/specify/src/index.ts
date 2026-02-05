@@ -13,6 +13,8 @@ import type {
     WorldLike,
 } from "@/lib/CucumberManager";
 
+export { SpecifyWorld } from "@/lib/SpecifyWorld";
+
 const cm = CucumberManager.getInstance(Cucumber, {
     "subjects": config.content.specifications.subjects,
 });
@@ -132,6 +134,7 @@ export function defineStep(
  * world and calls super() in its constructor.
  *
  * @see {@link CucumberManager.defineWorld}
+ * @see {@link SpecifyWorld}
  *
  * @param world - A custom world
  */
