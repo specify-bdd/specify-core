@@ -5,10 +5,9 @@
  * package's step definitions or those of any Specify plugin.
  */
 
-import { refNotation } from "@specify-bdd/quick-ref";
-import path            from "node:path";
-
-import { defineParamType } from "@/index";
+import { refNotation     } from "@specify-bdd/quick-ref";
+import { defineParamType } from "@specify-bdd/specify";
+import path                from "node:path";
 
 import type { JsonValue } from "type-fest";
 

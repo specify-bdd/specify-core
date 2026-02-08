@@ -4,6 +4,12 @@
  * Custom Cucumber hooks enabling core testing.
  */
 
+import {
+    addAfterScenarioHook,
+    addBeforeAllHook,
+    addBeforeScenarioHook,
+} from "@specify-bdd/specify";
+
 import { globby        } from "globby";
 import path              from "node:path";
 import { pathToFileURL } from "node:url";
@@ -11,8 +17,6 @@ import { error         } from "node:console";
 
 import { config          } from "@/config/all";
 import { CucumberManager } from "@/lib/CucumberManager";
-
-import { addAfterScenarioHook, addBeforeAllHook, addBeforeScenarioHook } from "@/index";
 
 import type { JsonObject } from "type-fest";
 

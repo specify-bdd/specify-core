@@ -4,9 +4,8 @@
  * Cucumber step definitions that demonstrate basic Specify functionality.
  */
 
-import assert from "node:assert/strict";
-
-import { defineStep } from "@/index";
+import { defineStep } from "@specify-bdd/specify";
+import assert         from "node:assert/strict";
 
 defineStep(
     ["Given that this step passes", "When this step passes", "Then this step should pass"],

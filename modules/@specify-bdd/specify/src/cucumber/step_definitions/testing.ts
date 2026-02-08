@@ -4,9 +4,8 @@
  * Cucumber step definitions that facilitate Specify testing itself.
  */
 
-import assert from "node:assert/strict";
-
-import { defineStep } from "@/index";
+import { defineStep } from "@specify-bdd/specify";
+import assert         from "node:assert/strict";
 
 defineStep("Given that this step passes after {float} seconds", passAfterDelay);
 defineStep("When the user waits for {float} second(s)", waitForTime, { "timeout": 60000 });
