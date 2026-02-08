@@ -5,17 +5,16 @@
  * package's step definitions or those of any Specify plugin.
  */
 
-import { defineParameterType } from "@cucumber/cucumber";
-import path                    from "node:path";
-
-import { refNotation } from "@specify-bdd/quick-ref";
+import { refNotation     } from "@specify-bdd/quick-ref";
+import { defineParamType } from "@specify-bdd/specify";
+import path                from "node:path";
 
 import type { JsonValue } from "type-fest";
 
 const ordinal      = /[0-9]*(?:1st|2nd|3rd|[4-90]th)/;
 const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;
 
-defineParameterType({
+defineParamType({
     "name":   "filePath",
     "regexp": quotedString,
     transformer(input: string): string {
@@ -25,7 +24,7 @@ defineParameterType({
     "useForSnippets": false,
 });
 
-defineParameterType({
+defineParamType({
     "name":   "ordinal",
     "regexp": ordinal,
     transformer(input: string): number {
@@ -34,7 +33,7 @@ defineParameterType({
     "useForSnippets": false,
 });
 
-defineParameterType({
+defineParamType({
     "name":   "ref",
     "regexp": refNotation,
     transformer(input: string): JsonValue {
@@ -43,7 +42,7 @@ defineParameterType({
     "useForSnippets": false,
 });
 
-defineParameterType({
+defineParamType({
     "name":   "refstr",
     "regexp": quotedString,
     transformer(input: string): string {
@@ -52,7 +51,7 @@ defineParameterType({
     "useForSnippets": false,
 });
 
-defineParameterType({
+defineParamType({
     "name":   "regexp",
     "regexp": quotedString,
     transformer(input: string): RegExp {

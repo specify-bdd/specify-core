@@ -3,17 +3,22 @@
  *
  * Cucumber step definitions that facilitate Specify testing itself.
  */
-import { Given, When, Then } from "@cucumber/cucumber";
-import assert                from "node:assert/strict";
 
-Given("that this step passes after {float} seconds", passAfterDelay);
-Given("that this step passes on the {ordinal} attempt", passOnNthAttempt);
+import { defineStep } from "@specify-bdd/specify";
+import assert         from "node:assert/strict";
 
-When("this step passes if there are/is {int} parallel worker(s)", passIfNWorkers);
-When("this step passes on the {ordinal} attempt", passOnNthAttempt);
-When("a/the user waits for {float} second(s)", { "timeout": 60000 }, waitForTime);
+defineStep("Given that this step passes after {float} seconds", passAfterDelay);
+defineStep("When the user waits for {float} second(s)", waitForTime, { "timeout": 60000 });
+defineStep("Then there should be (only ){int} parallel worker(s)", passIfNWorkers);
 
-Then("this step should pass on the {ordinal} attempt", passOnNthAttempt);
+defineStep(
+    [
+        "Given that this step passes on the {ordinal} attempt",
+        "When this step passes on the {ordinal} attempt",
+        "Then this step should pass on the {ordinal} attempt",
+    ],
+    passOnNthAttempt,
+);
 
 /**
  * Always passes after delay.
@@ -35,7 +40,7 @@ async function passAfterDelay(delay: number): Promise<void> {
  *
  * @param workers - The expected number of parallel workers
  */
-async function passIfNWorkers(workers: number): Promise<void> {
+function passIfNWorkers(workers: number): void {
     assert.equal(
         parseInt(process.env.CUCUMBER_TOTAL_WORKERS, 10) || 1,
         workers,
@@ -49,7 +54,7 @@ async function passIfNWorkers(workers: number): Promise<void> {
  *
  * @param attempt - The attempt number to pass
  */
-async function passOnNthAttempt(attempt: number): Promise<void> {
+function passOnNthAttempt(attempt: number): void {
     assert.equal(
         Object.keys(this.pickle.attempts).length,
         attempt,

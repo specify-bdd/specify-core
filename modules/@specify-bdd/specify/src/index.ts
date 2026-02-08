@@ -133,7 +133,7 @@ export function defineStep(
  * It is STRONGLY recommended that your custom world extends the default Specify
  * world and calls super() in its constructor.
  *
- * @see {@link CucumberManager.defineWorld}
+ * @see {@link CucumberManager.setWorld}
  * @see {@link SpecifyWorld}
  *
  * @param world - A custom world
