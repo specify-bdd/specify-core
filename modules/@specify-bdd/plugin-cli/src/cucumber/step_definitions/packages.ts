@@ -3,11 +3,12 @@
  *
  * Cucumber step definitions covering Node.js package management.
  */
-import { Given   } from "@cucumber/cucumber";
-import assert      from "node:assert/strict";
-import npmValidate from "validate-npm-package-name";
 
-Given("(that )the {refstr} NPM package is installed", verifyNPMPackage);
+import { defineStep } from "@specify-bdd/specify";
+import assert         from "node:assert/strict";
+import npmValidate    from "validate-npm-package-name";
+
+defineStep("Given (that )the {refstr} NPM package is installed", verifyNPMPackage);
 
 /**
  * Verify that an NPM package is installed

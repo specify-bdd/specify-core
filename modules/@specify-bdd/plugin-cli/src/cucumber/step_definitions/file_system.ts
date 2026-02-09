@@ -4,34 +4,55 @@
  * Cucumber step definitions covering interactions with a file system.
  */
 
-import { Given, Then, When                    } from "@cucumber/cucumber";
+import { defineStep                           } from "@specify-bdd/specify";
 import assert, { AssertionError               } from "node:assert/strict";
 import { existsSync                           } from "node:fs";
 import { mkdtemp, readFile, unlink, writeFile } from "node:fs/promises";
 import { tmpdir                               } from "node:os";
 import { join                                 } from "node:path";
 
-Given("a new temp file path referenced as {string}", createTempFileRef);
+defineStep("Given a new temp file path referenced as {string}", createTempFileRef);
 
-Given("(that )the {filePath} file content is {string}", writeFileContent);
-Given("(that )the {ref} file content is {string}", writeFileContent);
+defineStep("When a/the user deletes the {filePath} file", deleteFile);
 
-Given("(that )the {filePath} file content is empty", writeEmptyFileContent);
-Given("(that )the {ref} file content is empty", writeEmptyFileContent);
+defineStep(
+    [
+        "Given (that )the {filePath} file content is {string}",
+        "Given (that )the {ref} file content is {string}",
+        "When a/the user changes the {filePath} file content to {string}",
+    ],
+    writeFileContent,
+);
 
-When("a/the user changes the {filePath} file content to {string}", writeFileContent);
+defineStep(
+    [
+        "Given (that )the {filePath} file content is empty",
+        "Given (that )the {ref} file content is empty",
+        "When a/the user creates the {filePath} file",
+    ],
+    writeEmptyFileContent,
+);
 
-When("a/the user creates the {filePath} file", writeEmptyFileContent);
-When("a/the user deletes the {filePath} file", deleteFile);
+defineStep(
+    [
+        "Then the {filePath} file content should be empty",
+        "Then the {ref} file content should be empty",
+    ],
+    verifyFileIsEmpty,
+);
 
-Then("the {filePath} file content should be empty", verifyFileIsEmpty);
-Then("the {ref} file content should be empty", verifyFileIsEmpty);
+defineStep(
+    [
+        "Then the {filePath} file content should match {ref}",
+        "Then the {ref} file content should match {ref}",
+    ],
+    verifyFileContent,
+);
 
-Then("the {filePath} file content should match {ref}", verifyFileContent);
-Then("the {ref} file content should match {ref}", verifyFileContent);
-
-Then("the {filePath} file path should exist", verifyFilePathExists);
-Then("the {ref} file path should exist", verifyFilePathExists);
+defineStep(
+    ["Then the {filePath} file path should exist", "Then the {ref} file path should exist"],
+    verifyFilePathExists,
+);
 
 /**
  * Create a new /tmp filepath and store it in QuickRef at the given address.

@@ -5,13 +5,13 @@
  * package's step definitions or those of any Specify plugin.
  */
 
-import { defineParameterType    } from "@cucumber/cucumber";
+import { defineParamType        } from "@specify-bdd/specify";
 import assert, { AssertionError } from "node:assert/strict";
 import { constants              } from "node:os";
 
 const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;
 
-defineParameterType({
+defineParamType({
     "name":   "cliSignal",
     "regexp": quotedString,
     transformer(input: string): string {
