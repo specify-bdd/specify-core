@@ -1,7 +1,7 @@
 Feature: Gherkin feature file that should pass
     @pass
     Scenario: Scenario that should pass
-        Given that this step passes
+        Given that this step has passed
 
     @pass
     Scenario: Another scenario that should pass

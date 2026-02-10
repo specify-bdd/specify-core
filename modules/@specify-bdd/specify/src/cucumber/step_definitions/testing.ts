@@ -11,7 +11,7 @@ defineStep("Then there should be (only ){int} parallel worker(s)", passIfNWorker
 
 defineStep(
     [
-        "Given (that )this step passes after {float} seconds",
+        "Given (that )this step has passed after {float} seconds",
         "When the user waits for {float} second(s)",
     ],
     waitForTime,
@@ -20,7 +20,7 @@ defineStep(
 
 defineStep(
     [
-        "Given (that )this step passes on the {ordinal} attempt",
+        "Given (that )this step has passed on the {ordinal} attempt",
         "When this step passes on the {ordinal} attempt",
         "Then this step should pass on the {ordinal} attempt",
     ],
