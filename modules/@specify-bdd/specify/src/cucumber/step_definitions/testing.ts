@@ -12,7 +12,7 @@ defineStep("Then there should be (only ){int} parallel worker(s)", passIfNWorker
 defineStep(
     [
         "Given (that )this step has passed after {float} seconds",
-        "When the user waits for {float} second(s)",
+        "When [I wait/the user waits] for {float} second(s)",
     ],
     waitForTime,
     { "timeout": 60000 },
