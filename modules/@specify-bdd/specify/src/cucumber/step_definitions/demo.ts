@@ -8,12 +8,12 @@ import { defineStep } from "@specify-bdd/specify";
 import assert         from "node:assert/strict";
 
 defineStep(
-    ["Given that this step passes", "When this step passes", "Then this step should pass"],
+    ["Given (that )this step passes", "When this step passes", "Then this step should pass"],
     pass,
 );
 
 defineStep(
-    ["Given that this step fails", "When this step fails", "Then this step should fail"],
+    ["Given (that )this step fails", "When this step fails", "Then this step should fail"],
     fail,
 );
 
