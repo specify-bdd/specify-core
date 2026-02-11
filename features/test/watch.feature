@@ -13,31 +13,31 @@ Feature: Watch Mode
 
         Scenario: Watch mode starts and monitors for changes
             When the user starts the async command "npx specify test --watch ./gherkin/binary/passing.feature"
-            And the user waits for terminal output matching "Watching for changes"
+            And waits for terminal output matching "Watching for changes"
             Then the last command's terminal output should match "3 scenarios \(3 passed\)"
 
         Scenario: Tests rerun automatically when file changes are detected
             Given that the "./watch-test-file.txt" file content is empty
             When the user starts the async command "npx specify test --watch ./gherkin/binary/passing.feature"
-            And the user waits for terminal output matching "Watching for changes"
-            And the user waits for 0.1 seconds
-            And the user changes the "./watch-test-file.txt" file content to "new change"
-            And the user waits for terminal output matching "Watching[\s\S]+Watching"
+            And waits for terminal output matching "Watching for changes"
+            And waits for 0.1 seconds
+            And changes the "./watch-test-file.txt" file content to "new change"
+            And waits for terminal output matching "Watching[\s\S]+Watching"
 
     Rule: Watch mode can be combined with other options
 
         Scenario: Watch mode with retry option
             When the user starts the async command "npx specify test --watch --retry 2 ./gherkin/retry/attempt3.feature"
-            And the user waits for terminal output matching "Watching for changes"
+            And waits for terminal output matching "Watching for changes"
             Then the last command's terminal output should match "(attempt 2)"
 
         Scenario: Watch mode with parallel execution
             When the user starts the async command "npx specify test --watch --parallel 2 ./gherkin/parallel/workers2.feature"
-            And the user waits for terminal output matching "Watching for changes"
+            And waits for terminal output matching "Watching for changes"
 
         Scenario: Watch mode with tag filtering
             When the user starts the async command "npx specify test --watch --tags '@pass' ./gherkin/binary/"
-            And the user waits for terminal output matching "Watching for changes"
+            And waits for terminal output matching "Watching for changes"
             Then the last command's terminal output should match "3 scenarios \(3 passed\)"
 
     Rule: Watch mode handles file system events appropriately
@@ -45,33 +45,33 @@ Feature: Watch Mode
         Scenario: Watch mode handles file deletion
             Given that the "./deleteme.txt" file content is empty
             When the user starts the async command "npx specify test --watch ./gherkin/binary/passing.feature"
-            And the user waits for terminal output matching "Watching for changes"
-            And the user waits for 0.1 seconds
-            And the user deletes the "./deleteme.txt" file
-            And the user waits for terminal output matching "Watching[\s\S]+Watching"
+            And waits for terminal output matching "Watching for changes"
+            And waits for 0.1 seconds
+            And deletes the "./deleteme.txt" file
+            And waits for terminal output matching "Watching[\s\S]+Watching"
 
         Scenario: Watch mode handles file creation
             When the user starts the async command "npx specify test --watch ./gherkin/binary/passing.feature"
-            And the user waits for terminal output matching "Watching for changes"
-            And the user waits for 0.1 seconds
-            And the user creates the "./createthendeleteme.txt" file
-            And the user waits for terminal output matching "Watching[\s\S]+Watching"
-            And the user deletes the "./createthendeleteme.txt" file
+            And waits for terminal output matching "Watching for changes"
+            And waits for 0.1 seconds
+            And creates the "./createthendeleteme.txt" file
+            And waits for terminal output matching "Watching[\s\S]+Watching"
+            And deletes the "./createthendeleteme.txt" file
 
     Rule: Watch mode can be stopped gracefully
 
         Scenario: Watch mode stops on user interrupt
             When the user starts the async command "npx specify test --watch ./gherkin/binary/passing.feature"
-            And the user waits for terminal output matching "Watching for changes"
-            And the user sends a "SIGINT" signal to the last command
-            And the user waits for the last command to return
+            And waits for terminal output matching "Watching for changes"
+            And sends a "SIGINT" signal to the last command
+            And waits for the last command to return
             Then the last command's exit code should be 130
 
         Scenario: Watch mode exits with error status when interrupted during test run
             When the user starts the async command "npx specify test --watch ./gherkin/slow.feature"
-            And the user waits for 1 second
-            And the user sends a "SIGINT" signal to the last command
-            And the user waits for the last command to return
+            And waits for 1 second
+            And sends a "SIGINT" signal to the last command
+            And waits for the last command to return
             Then the last command's terminal output should not match "Watching"
             And the last command's exit code should be 130
 
