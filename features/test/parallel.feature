@@ -12,28 +12,28 @@ Feature: Parallel Execution
     Rule: Tests run serially by default
 
         Scenario: Serial execution starts only one worker
-            When a user runs the command "npx specify test ./gherkin/parallel/workers1.feature"
+            When the user runs the command "npx specify test ./gherkin/parallel/workers1.feature"
             Then the last command's exit code should be a ${ref.exitCode.success}
 
     Rule: Tests can be run in parallel
 
         Scenario: Parallel execution runs multiple workers
-            When a user runs the command "npx specify test --parallel 2 ./gherkin/parallel/workers2.feature"
+            When the user runs the command "npx specify test --parallel 2 ./gherkin/parallel/workers2.feature"
             Then the last command's exit code should be a ${ref.exitCode.success}
 
     Rule: Parallel option only accepts a single integer argument
 
         Scenario: Floats are rejected
-            When a user runs the command "npx specify test --parallel 0.5"
+            When the user runs the command "npx specify test --parallel 0.5"
             Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidParallelError}
 
         Scenario: Non-numeric values are rejected
-            When a user runs the command "npx specify test --parallel 'bad-value'"
+            When the user runs the command "npx specify test --parallel 'bad-value'"
             Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidParallelError}
 
         Scenario: A value of 0 is rejected
-            When a user runs the command "npx specify test --parallel 0"
+            When the user runs the command "npx specify test --parallel 0"
             Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidParallelError}

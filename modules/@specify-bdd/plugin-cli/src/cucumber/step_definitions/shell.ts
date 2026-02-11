@@ -13,55 +13,57 @@ import { ShellSession             } from "@/lib/ShellSession";
 
 import type { SpawnOptions } from "node:child_process";
 
-defineStep("When a/the user kills CLI shell {int}", killCLIShellByIndex);
-defineStep("When a/the user kills the CLI shell", killCLIShell);
-defineStep("When a/the user kills the CLI shell named {string}", killCLIShellByName);
-defineStep("When a/the user sends a {cliSignal} signal to the last command", sendKillSignal);
-defineStep("When a/the user starts a/an/the (async )command/process {refstr}", execCommand);
-defineStep("When a/the user switches CLI shells", switchToNextShell);
-defineStep("When a/the user switches to CLI shell {int}", switchShellByIndex);
-defineStep("When a/the user switches to the CLI shell named {string}", switchShellByName);
-defineStep("When a/the user waits for terminal output", waitForAnyOutput, { "timeout": 60000 });
+defineStep("When [I kill/the user kills] CLI shell {int}", killCLIShellByIndex);
+defineStep("When [I kill/the user kills] the CLI shell", killCLIShell);
+defineStep("When [I kill/the user kills] the CLI shell named {string}", killCLIShellByName);
+defineStep("When [I send/the user sends] a {cliSignal} signal to the last command", sendKillSignal);
+defineStep("When [I start/the user starts] a/an/the (async )command/process {refstr}", execCommand);
+defineStep("When [I switch/the user switches] CLI shells", switchToNextShell);
+defineStep("When [I switch/the user switches] to CLI shell {int}", switchShellByIndex);
+defineStep("When [I switch/the user switches] to the CLI shell named {string}", switchShellByName);
+defineStep("When [I wait/the user waits] for terminal output", waitForAnyOutput, {
+    "timeout": 60000,
+});
 defineStep("Then there should be {int} active CLI shell(s)", verifyShellCount);
 
 defineStep(
-    ["Given a/another CLI shell", "When a/the user starts a/another CLI shell"],
+    ["Given a/another CLI shell", "When [I start/the user starts] a/another CLI shell"],
     startDefaultShell,
 );
 
-defineStep("When a/the user runs the command/process {refstr}", execCommandSync, {
+defineStep("When [I run/the user runs] the command/process {refstr}", execCommandSync, {
     "timeout": 60000,
 });
 
-defineStep("When a/the user waits for the last command to return", waitForCommandReturn, {
+defineStep("When [I wait/the user waits] for the last command to return", waitForCommandReturn, {
     "timeout": 60000,
 });
 
-defineStep("When a/the user waits for terminal output on STDERR", waitForOutputOnSTDERR, {
+defineStep("When [I wait/the user waits] for terminal output on STDERR", waitForOutputOnSTDERR, {
     "timeout": 60000,
 });
 
-defineStep("When a/the user waits for terminal output on STDOUT", waitForOutputOnSTDOUT, {
+defineStep("When [I wait/the user waits] for terminal output on STDOUT", waitForOutputOnSTDOUT, {
     "timeout": 60000,
 });
 
 defineStep(
     [
         "Given a/another CLI shell named {string}",
-        "When a/the user starts a/another CLI shell named {string}",
+        "When [I start/the user starts] a/another CLI shell named {string}",
     ],
     startDefaultNamedShell,
 );
 
 defineStep(
-    ["Given a/an {string} CLI shell", "When a/the user starts a/an {string} CLI shell"],
+    ["Given a/an {string} CLI shell", "When [I start/the user starts] a/an {string} CLI shell"],
     startAltShell,
 );
 
 defineStep(
     [
         "Given a/an {string} CLI shell named {string}",
-        "When a/the user starts a/an {string} CLI shell named {string}",
+        "When [I start/the user starts] a/an {string} CLI shell named {string}",
     ],
     startAltNamedShell,
 );
@@ -69,7 +71,7 @@ defineStep(
 defineStep(
     [
         "Given (that )the working directory is {filePath}",
-        "When a/the user changes the working directory to {filePath}",
+        "When [I change/the user changes] the working directory to {filePath}",
     ],
     changeDirectory,
 );
@@ -86,8 +88,8 @@ defineStep(
 
 defineStep(
     [
-        "When a/the user waits for terminal output on STDERR matching (the regular expression ){ref}",
-        "When a/the user waits for terminal output on STDERR matching (the regular expression ){regexp}",
+        "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){ref}",
+        "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){regexp}",
     ],
     waitForMatchingOutputOnSTDERR,
     { "timeout": 60000 },
@@ -95,8 +97,8 @@ defineStep(
 
 defineStep(
     [
-        "When a/the user waits for terminal output on STDOUT matching (the regular expression ){ref}",
-        "When a/the user waits for terminal output on STDOUT matching (the regular expression ){regexp}",
+        "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){ref}",
+        "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){regexp}",
     ],
     waitForMatchingOutputOnSTDOUT,
     { "timeout": 60000 },
@@ -104,8 +106,8 @@ defineStep(
 
 defineStep(
     [
-        "When a/the user waits for terminal output matching (the regular expression ){ref}",
-        "When a/the user waits for terminal output matching (the regular expression ){regexp}",
+        "When [I wait/the user waits] for terminal output matching (the regular expression ){ref}",
+        "When [I wait/the user waits] for terminal output matching (the regular expression ){regexp}",
     ],
     waitForMatchingOutput,
     { "timeout": 60000 },
