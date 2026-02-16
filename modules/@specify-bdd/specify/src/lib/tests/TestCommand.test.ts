@@ -2,7 +2,7 @@ import path                 from "node:path";
 import { deserializeError } from "serialize-error";
 
 import { TestCommand, TestCommandOptions } from "../TestCommand";
-import { CucumberTool                    } from "../CucumberTool";
+import { CucumberAPI                     } from "../CucumberAPI";
 import { RerunFile                       } from "../RerunFile";
 
 const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted(() => {
@@ -15,8 +15,8 @@ const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted((
     };
 });
 
-vi.mock("../CucumberTool", () => ({
-    "CucumberTool": {
+vi.mock("../CucumberAPI", () => ({
+    "CucumberAPI": {
         "loadConfiguration": mockLoadConfiguration,
         "loadSupport":       mockLoadSupport,
         "runCucumber":       mockRunCucumber,
@@ -41,7 +41,7 @@ describe("TestCommand", () => {
 
                 await cmd.execute(userArgs);
 
-                expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                expect(CucumberAPI.loadConfiguration).toHaveBeenCalledWith(
                     expect.objectContaining({
                         "parallel": 2,
                     }),
@@ -55,7 +55,7 @@ describe("TestCommand", () => {
 
                 await cmd.execute(userArgs);
 
-                expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                expect(CucumberAPI.loadConfiguration).toHaveBeenCalledWith(
                     expect.objectContaining({
                         "paths": [path.resolve(featPath)],
                     }),
@@ -72,7 +72,7 @@ describe("TestCommand", () => {
                     await cmd.execute(userArgs);
 
                     expect(RerunFile.read).toHaveBeenCalledWith("/test/rerun.txt");
-                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                    expect(CucumberAPI.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
                             "paths": ["test.feature:123"],
                         }),
@@ -99,7 +99,7 @@ describe("TestCommand", () => {
 
                     await cmd.execute(userArgs);
 
-                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                    expect(CucumberAPI.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
                             "format": expect.arrayContaining(["rerun:/cli/rerun.txt"]),
                         }),
@@ -113,7 +113,7 @@ describe("TestCommand", () => {
 
                     await cmd.execute({});
 
-                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                    expect(CucumberAPI.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
                             "format": expect.arrayContaining(["rerun:/config/rerun.txt"]),
                         }),
@@ -128,7 +128,7 @@ describe("TestCommand", () => {
 
                     await cmd.execute(userArgs);
 
-                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                    expect(CucumberAPI.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
                             "format": expect.arrayContaining([
                                 "rerun:/config/rerun.txt",
@@ -157,7 +157,7 @@ describe("TestCommand", () => {
 
                     await cmd.execute(userArgs);
 
-                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                    expect(CucumberAPI.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
                             "paths": ["test.feature:123"],
                         }),
@@ -172,7 +172,7 @@ describe("TestCommand", () => {
 
                     await cmd.execute(userArgs);
 
-                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                    expect(CucumberAPI.loadConfiguration).toHaveBeenCalledWith(
                         expect.objectContaining({
                             "retry": 2,
                         }),
@@ -185,7 +185,7 @@ describe("TestCommand", () => {
 
                     await cmd.execute(userArgs);
 
-                    expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                    expect(CucumberAPI.loadConfiguration).toHaveBeenCalledWith(
                         expect.not.objectContaining({
                             "retryTagFilter": "@test",
                         }),
@@ -201,7 +201,7 @@ describe("TestCommand", () => {
 
                 await cmd.execute(userArgs);
 
-                expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                expect(CucumberAPI.loadConfiguration).toHaveBeenCalledWith(
                     expect.objectContaining({
                         "retryTagFilter": "@test",
                     }),
@@ -215,7 +215,7 @@ describe("TestCommand", () => {
 
                 await cmd.execute(userArgs);
 
-                expect(CucumberTool.loadConfiguration).toHaveBeenCalledWith(
+                expect(CucumberAPI.loadConfiguration).toHaveBeenCalledWith(
                     expect.objectContaining({
                         "tags": "(@foo) and (not @bar)",
                     }),
