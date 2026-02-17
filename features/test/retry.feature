@@ -12,41 +12,41 @@ Feature: Retry Flaky Tests
     Rule: Tests can be run without retrying
 
         Scenario: A test with the retry tag that fails if retries are disabled
-            When a user runs the command "npx specify test --retry 0 ./gherkin/retry/attempt2.feature"
+            When the user runs the command "npx specify test --retry 0 ./gherkin/retry/attempt2.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
 
         Scenario: A test with no retry tag fails if retries are enabled
-            When a user runs the command "npx specify test --retry 1 ./gherkin/binary/failing.feature"
+            When the user runs the command "npx specify test --retry 1 ./gherkin/binary/failing.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
 
     Rule: Tests run with any number of retries count as passing if any attempt succeeds
 
         Scenario: A test which passes on the 3rd attempt fails if given only 1 retry
-            When a user runs the command "npx specify test --retry 1 ./gherkin/retry/attempt3.feature"
+            When the user runs the command "npx specify test --retry 1 ./gherkin/retry/attempt3.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
 
         Scenario: A test which passes on the 3rd attempt succeeds if given 2 retries
-            When a user runs the command "npx specify test --retry 2 ./gherkin/retry/attempt3.feature"
+            When the user runs the command "npx specify test --retry 2 ./gherkin/retry/attempt3.feature"
             Then the last command's exit code should be a ${ref.exitCode.success}
 
     Rule: By default, tests are run with just one retry
 
         Scenario: A test with the retry tag makes two attempts
-            When a user runs the command "npx specify test ./gherkin/retry/attempt3.feature"
+            When the user runs the command "npx specify test ./gherkin/retry/attempt3.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
             And the last command's terminal output should match "(attempt 2)"
 
     Rule: Tests with no retry tag fail after first attempt
 
         Scenario: A test with no retry tag makes just one attempt even if given 1 retry
-            When a user runs the command "npx specify test --retry 1 ./gherkin/binary/failing.feature"
+            When the user runs the command "npx specify test --retry 1 ./gherkin/binary/failing.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
             And the last command's terminal output should not match "retried"
 
     Rule: Tests with retry tag fail only after retries
 
         Scenario: A test with the retry tag makes two attempts if given 1 retry
-            When a user runs the command "npx specify test --retry 1 ./gherkin/retry/attempt3.feature"
+            When the user runs the command "npx specify test --retry 1 ./gherkin/retry/attempt3.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
             And the last command's terminal output should match "(attempt 1, retried)"
             And the last command's terminal output should match "(attempt 2)"
@@ -54,24 +54,24 @@ Feature: Retry Flaky Tests
     Rule: Retry tag can be overridden
 
         Scenario: A test with the standard retry tag won't retry if the tag has been overridden
-            When a user runs the command "npx specify test --retry 1 --retry-tag '@custom-retry' ./gherkin/retry/attempt2.feature"
+            When the user runs the command "npx specify test --retry 1 --retry-tag '@custom-retry' ./gherkin/retry/attempt2.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
             And the last command's terminal output should not match "retried"
 
         Scenario: A test with a custom retry tag will retry if the tag has been overridden
-            When a user runs the command "npx specify test --retry 1 --retry-tag '@custom-retry' ./gherkin/retry/custom.feature"
+            When the user runs the command "npx specify test --retry 1 --retry-tag '@custom-retry' ./gherkin/retry/custom.feature"
             Then the last command's exit code should be a ${ref.exitCode.success}
             And the last command's terminal output should match "(attempt 1, retried)"
 
     Rule: Retry option only accepts a single integer argument
 
         Scenario: Floats are rejected
-            When a user runs the command "npx specify test --retry 0.5 ./gherkin/binary/passing.feature"
+            When the user runs the command "npx specify test --retry 0.5 ./gherkin/binary/passing.feature"
             Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidRetryError}
 
         Scenario: Non-numeric values are rejected
-            When a user runs the command "npx specify test --retry 'bad-value' ./gherkin/binary/passing.feature"
+            When the user runs the command "npx specify test --retry 'bad-value' ./gherkin/binary/passing.feature"
             Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidRetryError}
 

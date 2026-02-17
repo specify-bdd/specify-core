@@ -12,88 +12,88 @@ Feature: Basic Test Execution
     Rule: The run should succeed only if all tests pass
 
         Scenario: All tests pass
-            When a user runs the command "npx specify test ./gherkin/binary/passing.feature"
+            When the user runs the command "npx specify test ./gherkin/binary/passing.feature"
             Then the last command's exit code should be a ${ref.exitCode.success}
             And the last command's terminal output should match ${ref.terminalOutput.passingTestResult}
 
         Scenario: All tests fail
-            When a user runs the command "npx specify test ./gherkin/binary/failing.feature"
+            When the user runs the command "npx specify test ./gherkin/binary/failing.feature"
             Then the last command's exit code should be a ${ref.exitCode.failure}
             And the last command's terminal output should match ${ref.terminalOutput.failingTestResult}
 
         Scenario: Mixed pass/fail tests
-            When a user runs the command "npx specify test ./gherkin/binary/"
+            When the user runs the command "npx specify test ./gherkin/binary/"
             Then the last command's exit code should be a ${ref.exitCode.failure}
 
     Rule: The run should allow verification of string values in terminal output
 
         Scenario: Verify string in terminal output
-            When a user runs the command "echo foobar"
+            When the user runs the command "echo foobar"
             Then the last command's terminal output should match "foobar"
 
     Rule: The run should error if there are invalid features
 
         @dependency
         Scenario: Feature has a Gherkin syntax error
-            When a user runs the command "npx specify test ./gherkin/invalid.feature"
+            When the user runs the command "npx specify test ./gherkin/invalid.feature"
             Then the last command's exit code should be an ${ref.exitCode.error}
 
         @dependency
         Scenario: Feature contains undefined step definitions
-            When a user runs the command "npx specify test ./gherkin/undefined.feature"
+            When the user runs the command "npx specify test ./gherkin/undefined.feature"
             Then the last command's exit code should be an ${ref.exitCode.error}
 
     Rule: The run should error if there are no available tests
 
         Scenario: User-specified path does not exist
-            When a user runs the command "npx specify test ./gherkin/nonexistent/path/"
+            When the user runs the command "npx specify test ./gherkin/nonexistent/path/"
             Then the last command's exit code should be an ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.pathNotFoundError}
 
         Scenario: User-specified path is empty
-            When a user runs the command "npx specify test ./gherkin/empty/"
+            When the user runs the command "npx specify test ./gherkin/empty/"
             Then the last command's exit code should be an ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.noTestCasesError}
 
         Scenario: User-specified path contains no features
-            When a user runs the command "npx specify test ./gherkin/no-features/test.md"
+            When the user runs the command "npx specify test ./gherkin/no-features/test.md"
             Then the last command's exit code should be an ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.noTestCasesError}
 
         Scenario: User-specified path contains no scenarios
-            When a user runs the command "npx specify test ./gherkin/empty.feature"
+            When the user runs the command "npx specify test ./gherkin/empty.feature"
             Then the last command's exit code should be an ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.noTestCasesError}
 
     Rule: Execution without a subcommand should default to testing
 
         Scenario: Passing test without subcommand
-            When a user runs the command "npx specify ./gherkin/binary/passing.feature"
+            When the user runs the command "npx specify ./gherkin/binary/passing.feature"
             Then the last command's exit code should be a ${ref.exitCode.success}
 
     Rule: Users can run subsets of tests by path or tag
 
         Scenario: Only run tests with the specified tag
-            When a user runs the command "npx specify test --tags '@pass' ./gherkin/binary/"
+            When the user runs the command "npx specify test --tags '@pass' ./gherkin/binary/"
             Then the last command's exit code should be a ${ref.exitCode.success}
 
         Scenario: Do not run tests with the specified inverted tag
-            When a user runs the command "npx specify test --tags 'not @fail' ./gherkin/binary/"
+            When the user runs the command "npx specify test --tags 'not @fail' ./gherkin/binary/"
             Then the last command's exit code should be a ${ref.exitCode.success}
 
         Scenario: Unmatched tags cause an error
-            When a user runs the command "npx specify test --tags '@nevermatch'"
+            When the user runs the command "npx specify test --tags '@nevermatch'"
             Then the last command's exit code should be an ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.noTestCasesError}
 
     Rule: Invalid commands display usage help
 
         Scenario: Unsupported option
-            When a user runs the command "npx specify --bad-option"
+            When the user runs the command "npx specify --bad-option"
             Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidOptionMessage}
 
         Scenario: Mix of supported and unsupported options
-            When a user runs the command "npx specify --tags '@pass' --bad-option"
+            When the user runs the command "npx specify --tags '@pass' --bad-option"
             Then the last command's exit code should be a ${ref.exitCode.error}
             And the last command's terminal output should match ${ref.terminalOutput.invalidOptionMessage}

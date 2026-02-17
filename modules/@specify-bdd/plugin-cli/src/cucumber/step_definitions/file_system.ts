@@ -13,13 +13,13 @@ import { join                                 } from "node:path";
 
 defineStep("Given a new temp file path referenced as {string}", createTempFileRef);
 
-defineStep("When a/the user deletes the {filePath} file", deleteFile);
+defineStep("When [I delete/the user deletes] the {filePath} file", deleteFile);
 
 defineStep(
     [
         "Given (that )the {filePath} file content is {string}",
         "Given (that )the {ref} file content is {string}",
-        "When a/the user changes the {filePath} file content to {string}",
+        "When [I change/the user changes] the {filePath} file content to {string}",
     ],
     writeFileContent,
 );
@@ -28,7 +28,7 @@ defineStep(
     [
         "Given (that )the {filePath} file content is empty",
         "Given (that )the {ref} file content is empty",
-        "When a/the user creates the {filePath} file",
+        "When [I create/the user creates] the {filePath} file",
     ],
     writeEmptyFileContent,
 );
