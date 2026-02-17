@@ -7,27 +7,25 @@
 import { defineStep } from "@specify-bdd/specify";
 import assert         from "node:assert/strict";
 
-defineStep("Given that this step passes after {float} seconds", passAfterDelay);
-defineStep("When the user waits for {float} second(s)", waitForTime, { "timeout": 60000 });
 defineStep("Then there should be (only ){int} parallel worker(s)", passIfNWorkers);
 
 defineStep(
     [
-        "Given that this step passes on the {ordinal} attempt",
+        "Given (that )this step has passed after {float} seconds",
+        "When [I wait/the user waits] for {float} second(s)",
+    ],
+    waitForTime,
+    { "timeout": 60000 },
+);
+
+defineStep(
+    [
+        "Given (that )this step has passed on the {ordinal} attempt",
         "When this step passes on the {ordinal} attempt",
         "Then this step should pass on the {ordinal} attempt",
     ],
     passOnNthAttempt,
 );
-
-/**
- * Always passes after delay.
- *
- * @param delay - The number of seconds to wait before passing
- */
-async function passAfterDelay(delay: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, delay * 1000));
-}
 
 /**
  * Only passes if the expected number of parallel workers are currently active.
