@@ -34,7 +34,7 @@ interface ScenarioResult {
  * Handles caching of support code to work around Node.js module caching,
  * and manages temporary log files to record and validate test execution output.
  */
-export class CucumberTool {
+export class CucumberAPI {
     /**
      * Path to the temporary JSON log file that stores Cucumber test run results.
      */
@@ -75,7 +75,7 @@ export class CucumberTool {
      * @returns A fully resolved and prepared Cucumber run configuration object
      */
     static async loadConfiguration(config: Partial<IConfiguration>): Promise<IRunConfiguration> {
-        CucumberTool.#logPath = await this.#logger.generateTmpLogPath("specify-test");
+        CucumberAPI.#logPath = await this.#logger.generateTmpLogPath("specify-test");
 
         // Append JSON output formatter for Cucumber run results
         config.format.push(["json", this.#logPath]);
