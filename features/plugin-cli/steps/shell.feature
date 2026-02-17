@@ -22,13 +22,13 @@ Feature: Shell Step Definitions
         Scenario: Destroy a shell by index
             Given a CLI shell
             When the user starts another CLI shell
-            And the user kills CLI shell 0
+            And kills CLI shell 0
             Then there should be 1 active CLI shell
         
         Scenario: Destroy a shell by name
             Given a CLI shell named "test-shell"
             When the user starts another CLI shell
-            And the user kills the CLI shell named "test-shell"
+            And kills the CLI shell named "test-shell"
             Then there should be 1 active CLI shell
 
         # Scenario: Create and destroy multiple shells
@@ -48,14 +48,14 @@ Feature: Shell Step Definitions
             Given a "bash" CLI shell named "test-shell"
             And another CLI shell
             When the user switches to the CLI shell named "test-shell"
-            And the user runs the command "echo $0"
+            And runs the command "echo $0"
             Then the last command's terminal output should match "^bash$"
 
         Scenario: Create default shell with a name
             Given a CLI shell named "test-shell"
             And a "bash" CLI shell
             When the user switches to the CLI shell named "test-shell"
-            And the user runs the command "echo $0"
+            And runs the command "echo $0"
             Then the last command's terminal output should match "^sh$"
 
     Rule: I can execute commands and verify results
@@ -67,12 +67,12 @@ Feature: Shell Step Definitions
 
         Scenario: Execute an asynchronous command and verify exit status
             When the user starts the async command "for num in $(seq 1 3); do sleep 1; echo $num; done"
-            And the user waits for the last command to return
+            And waits for the last command to return
             Then the last command's exit code should be 0
 
         Scenario: Execute an asynchronous command and verify terminal output
             When the user starts the async command "for num in $(seq 1 3); do sleep 1; echo $num; done"
-            And the user waits for the last command to return
+            And waits for the last command to return
             Then the last command's terminal output should match "^1\n2\n3$"
 
         Scenario: Execute a synchronous command and verify exit status
@@ -85,32 +85,32 @@ Feature: Shell Step Definitions
 
         Scenario: Start a persistent process and wait for any terminal output
             When the user starts the async command "echo foo; sleep 2; echo bar"
-            And the user waits for terminal output
+            And waits for terminal output
             Then the last command's terminal output should match "^foo$"
 
         Scenario: Start a persistent process and wait for any terminal output on STDOUT
             When the user starts the async command "echo foo >&2; sleep 2; echo bar"
-            And the user waits for terminal output on STDOUT
+            And waits for terminal output on STDOUT
             Then the last command's terminal output should match "^foo\nbar$"
 
         Scenario: Start a persistent process and wait for any terminal output on STDERR
             When the user starts the async command "echo foo; sleep 2; echo bar >&2"
-            And the user waits for terminal output on STDERR
+            And waits for terminal output on STDERR
             Then the last command's terminal output should match "^foo\nbar$"
 
         Scenario: Start a persistent process and wait for specific terminal output
             When the user starts the async command "echo foo; sleep 2; echo bar"
-            And the user waits for terminal output matching "bar"
+            And waits for terminal output matching "bar"
             Then the last command's terminal output should match "^foo\nbar$"
 
         Scenario: Start a persistent process and wait for specific terminal output on STDOUT
             When the user starts the async command "echo foo; echo bar >&2; sleep 2; echo baz"
-            And the user waits for terminal output on STDOUT matching "baz"
+            And waits for terminal output on STDOUT matching "baz"
             Then the last command's terminal output should match "^foo\nbar\nbaz$"
 
         Scenario: Start a persistent process and wait for specific terminal output on STDERR
             When the user starts the async command "echo foo; echo bar >&2; sleep 2; echo baz >&2"
-            And the user waits for terminal output on STDERR matching "baz"
+            And waits for terminal output on STDERR matching "baz"
             Then the last command's terminal output should match "^foo\nbar\nbaz$"
 
     Rule: I can swap between shells and run commands in parallel
@@ -123,25 +123,25 @@ Feature: Shell Step Definitions
 
         Scenario: Swap between shells in sequence
             When the user runs the command "echo 'First shell'"
-            And the user switches CLI shells
-            And the user runs the command "echo 'Second shell'"
+            And switches CLI shells
+            And runs the command "echo 'Second shell'"
             Then the last command's terminal output should match "Second shell"
             When the user switches CLI shells
             Then the last command's terminal output should match "First shell"
 
         Scenario: Swap between shells by index
             When the user runs the command "echo 'Third shell'"
-            And the user switches CLI shells
-            And the user runs the command "echo 'First shell'"
-            And the user switches CLI shells
-            And the user runs the command "echo 'Second shell'"
-            And the user switches to CLI shell 0
+            And switches CLI shells
+            And runs the command "echo 'First shell'"
+            And switches CLI shells
+            And runs the command "echo 'Second shell'"
+            And switches to CLI shell 0
             Then the last command's terminal output should match "First shell"
 
         Scenario: Swap between shells by name
             Given another CLI shell named "Test Shell"
             When the user runs the command "echo Named Shell"
-            And the user switches CLI shells
+            And switches CLI shells
             Then the last command's terminal output should match "^Current shell is: sh$"
             When the user switches to the CLI shell named "Test Shell"
             Then the last command's terminal output should match "Named Shell"
