@@ -6,7 +6,7 @@
 
 # Interface: CommandResultDebugInfo
 
-Defined in: [Command.ts:30](https://github.com/specify-bdd/specify-core/blob/757bc198012e6b49e3c9a8802a95b728349e8b41/modules/@specify-bdd/specify/src/lib/Command.ts#L30)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:30](https://github.com/specify-bdd/specify-core/blob/c9322d807b886cb2e7c4b4bebf04f243379d0e8b/modules/@specify-bdd/specify/src/lib/Command.ts#L30)
 
 ## Extended by
 
@@ -18,4 +18,4 @@ Defined in: [Command.ts:30](https://github.com/specify-bdd/specify-core/blob/757
 
 > `optional` **args**: `object`
 
-Defined in: [Command.ts:31](https://github.com/specify-bdd/specify-core/blob/757bc198012e6b49e3c9a8802a95b728349e8b41/modules/@specify-bdd/specify/src/lib/Command.ts#L31)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:31](https://github.com/specify-bdd/specify-core/blob/c9322d807b886cb2e7c4b4bebf04f243379d0e8b/modules/@specify-bdd/specify/src/lib/Command.ts#L31)
