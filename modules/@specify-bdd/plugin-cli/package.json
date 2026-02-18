@@ -9,7 +9,9 @@
     "Wild Love"
   ],
   "license": "MIT",
-  "main": "dist/main.js",
+  "exports": {
+    ".": "./dist/main.js"
+  },
   "files": [
     "dist"
   ],
@@ -19,6 +21,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@specify-bdd/specify": "workspace:*",
     "ps-list": "^9.0.0",
     "tree-kill": "^1.2.2",
     "validate-npm-package-name": "^6.0.2"
@@ -27,9 +30,6 @@
     "@types/validate-npm-package-name": "^4.0.2",
     "tsc-alias": "^1.8.16",
     "typescript": "^5.9.3"
-  },
-  "peerDependencies": {
-    "@cucumber/cucumber": "^11.3.0"
   },
   "repository": {
     "type": "git",

@@ -4,37 +4,42 @@
  * Custom Cucumber hooks enabling CLI testing.
  */
 
-import { After, AfterAll, Before, BeforeAll } from "@cucumber/cucumber";
-import * as fs                                from "node:fs/promises";
+import { addAfterAllHook, addAfterScenarioHook, addBeforeScenarioHook } from "@specify-bdd/specify";
+import * as fs                                                          from "node:fs/promises";
 
 const cliFiles: Array<string> = [];
 
-BeforeAll(async function () {
-    // beforeall actions
-});
+addBeforeScenarioHook(
+    async function (): Promise<void> {
+        // initialize the CLI namespace
+        this.cli = {
+            "files": {
+                "created": cliFiles,
+            },
+        };
+    },
+    { "name": "CLI plugin before scenario hook" },
+);
 
-Before({ "name": "CLI plugin before hook" }, async function () {
-    // initialize the CLI namespace
-    this.cli = {
-        "files": {
-            "created": cliFiles,
-        },
-    };
-});
+addAfterScenarioHook(
+    async function (): Promise<void> {
+        // terminate any remaining shell sessions
+        await this.cli.manager?.killAllSessions();
+    },
+    { "name": "CLI plugin after scenario hook" },
+);
 
-After({ "name": "CLI plugin after hook" }, async function () {
-    // terminate any remaining shell sessions
-    await this.cli.manager?.killAllSessions();
-});
+addAfterAllHook(
+    async function (): Promise<void> {
+        const promises = [];
 
-AfterAll(async function () {
-    const promises = [];
-
-    if (this.parameters.cliCleanup) {
-        for (const file of cliFiles) {
-            promises.push(fs.unlink(file));
+        if (this.parameters.cliCleanup) {
+            for (const file of cliFiles) {
+                promises.push(fs.unlink(file));
+            }
         }
-    }
 
-    return Promise.all(promises);
-});
+        await Promise.all(promises);
+    },
+    { "name": "CLI plugin after all hook" },
+);

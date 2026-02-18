@@ -1,7 +1,9 @@
 Feature: One Worker
 
     Scenario: Pass if there is just one worker running (A)
-        When this step passes if there is 1 parallel worker
+        # When this scenario runs in serial mode
+        Then there should be only 1 parallel worker
 
     Scenario: Pass if there is just one worker running (B)
-        When this step passes if there is 1 parallel worker
+        # When this scenario runs in serial mode
+        Then there should be only 1 parallel worker

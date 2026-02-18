@@ -3,17 +3,19 @@
  *
  * Cucumber step definitions that demonstrate basic Specify functionality.
  */
-import { Given, When, Then } from "@cucumber/cucumber";
-import assert                from "node:assert/strict";
 
-Given("that this step fails", fail);
-Given("that this step passes", pass);
+import { defineStep } from "@specify-bdd/specify";
+import assert         from "node:assert/strict";
 
-When("this step fails", fail);
-When("this step passes", pass);
+defineStep(
+    ["Given (that )this step has passed", "When this step passes", "Then this step should pass"],
+    pass,
+);
 
-Then("this step should fail", fail);
-Then("this step should pass", pass);
+defineStep(
+    ["Given (that )this step has failed", "When this step fails", "Then this step should fail"],
+    fail,
+);
 
 /**
  * Always throws, causing a scenario failure.

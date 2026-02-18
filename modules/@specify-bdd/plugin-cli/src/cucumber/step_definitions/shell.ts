@@ -5,7 +5,7 @@
  * testing purposes.
  */
 
-import { Given, Then, When      } from "@cucumber/cucumber";
+import { defineStep             } from "@specify-bdd/specify";
 import assert, { AssertionError } from "node:assert/strict";
 
 import { SessionManager, IOStream } from "@/lib/SessionManager";
@@ -13,124 +13,131 @@ import { ShellSession             } from "@/lib/ShellSession";
 
 import type { SpawnOptions } from "node:child_process";
 
-Given("a/another CLI shell", startDefaultShell);
+defineStep("When [I kill/the user kills] CLI shell {int}", killCLIShellByIndex);
+defineStep("When [I kill/the user kills] the CLI shell", killCLIShell);
+defineStep("When [I kill/the user kills] the CLI shell named {string}", killCLIShellByName);
+defineStep("When [I send/the user sends] a {cliSignal} signal to the last command", sendKillSignal);
+defineStep("When [I start/the user starts] a/an/the (async )command/process {refstr}", execCommand);
+defineStep("When [I switch/the user switches] CLI shells", switchToNextShell);
+defineStep("When [I switch/the user switches] to CLI shell {int}", switchShellByIndex);
+defineStep("When [I switch/the user switches] to the CLI shell named {string}", switchShellByName);
+defineStep("When [I wait/the user waits] for terminal output", waitForAnyOutput, {
+    "timeout": 60000,
+});
+defineStep("Then there should be {int} active CLI shell(s)", verifyShellCount);
 
-Given("a/another CLI shell named {string}", startDefaultNamedShell);
+defineStep(
+    ["Given a/another CLI shell", "When [I start/the user starts] a/another CLI shell"],
+    startDefaultShell,
+);
 
-Given("a/an {string} CLI shell", startAltShell);
+defineStep("When [I run/the user runs] the command/process {refstr}", execCommandSync, {
+    "timeout": 60000,
+});
 
-Given("a/an {string} CLI shell named {string}", startAltNamedShell);
+defineStep("When [I wait/the user waits] for the last command to return", waitForCommandReturn, {
+    "timeout": 60000,
+});
 
-Given("(that )the working directory is {filePath}", changeDirectory);
+defineStep("When [I wait/the user waits] for terminal output on STDERR", waitForOutputOnSTDERR, {
+    "timeout": 60000,
+});
 
-When("a/the user changes the working directory to {filePath}", changeDirectory);
+defineStep("When [I wait/the user waits] for terminal output on STDOUT", waitForOutputOnSTDOUT, {
+    "timeout": 60000,
+});
 
-When("a/the user kills CLI shell {int}", killCLIShellByIndex);
+defineStep(
+    [
+        "Given a/another CLI shell named {string}",
+        "When [I start/the user starts] a/another CLI shell named {string}",
+    ],
+    startDefaultNamedShell,
+);
 
-When("a/the user kills the CLI shell", killCLIShell);
+defineStep(
+    ["Given a/an {string} CLI shell", "When [I start/the user starts] a/an {string} CLI shell"],
+    startAltShell,
+);
 
-When("a/the user kills the CLI shell named {string}", killCLIShellByName);
+defineStep(
+    [
+        "Given a/an {string} CLI shell named {string}",
+        "When [I start/the user starts] a/an {string} CLI shell named {string}",
+    ],
+    startAltNamedShell,
+);
 
-When("a/the user runs the command/process {refstr}", { "timeout": 60000 }, execCommandSync);
+defineStep(
+    [
+        "Given (that )the working directory is {filePath}",
+        "When [I change/the user changes] the working directory to {filePath}",
+    ],
+    changeDirectory,
+);
 
-When("a/the user sends a {cliSignal} signal to the last command", sendKillSignal);
+defineStep(
+    [
+        "Then the last command's exit code/status should be {int}",
+        "Then the last command's exit code/status should be {ref}",
+        "Then the last command's exit code/status should be a/an {int}",
+        "Then the last command's exit code/status should be a/an {ref}",
+    ],
+    verifyExitCode,
+);
 
-When("a/the user starts a/another CLI shell", startDefaultShell);
-
-When("a/the user starts a/another CLI shell named {string}", startDefaultNamedShell);
-
-When("a/the user starts a/an/the (async )command/process {refstr}", execCommand);
-
-When("a/the user starts a/an {string} CLI shell", startAltShell);
-
-When("a/the user starts a/an {string} CLI shell named {string}", startAltNamedShell);
-
-When("a/the user switches CLI shells", switchToNextShell);
-
-When("a/the user switches to CLI shell {int}", switchShellByIndex);
-
-When("a/the user switches to the CLI shell named {string}", switchShellByName);
-
-When("a/the user waits for the last command to return", { "timeout": 60000 }, waitForCommandReturn);
-
-When("a/the user waits for terminal output", { "timeout": 60000 }, waitForAnyOutput);
-
-When("a/the user waits for terminal output on STDERR", { "timeout": 60000 }, waitForOutputOnSTDERR);
-
-When("a/the user waits for terminal output on STDOUT", { "timeout": 60000 }, waitForOutputOnSTDOUT);
-
-When(
-    "a/the user waits for terminal output on STDERR matching (the regular expression ){ref}",
-    { "timeout": 60000 },
+defineStep(
+    [
+        "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){ref}",
+        "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){regexp}",
+    ],
     waitForMatchingOutputOnSTDERR,
+    { "timeout": 60000 },
 );
 
-When(
-    "a/the user waits for terminal output on STDERR matching (the regular expression ){regexp}",
-    { "timeout": 60000 },
-    waitForMatchingOutputOnSTDERR,
-);
-
-When(
-    "a/the user waits for terminal output on STDOUT matching (the regular expression ){ref}",
-    { "timeout": 60000 },
+defineStep(
+    [
+        "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){ref}",
+        "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){regexp}",
+    ],
     waitForMatchingOutputOnSTDOUT,
+    { "timeout": 60000 },
 );
 
-When(
-    "a/the user waits for terminal output on STDOUT matching (the regular expression ){regexp}",
-    { "timeout": 60000 },
-    waitForMatchingOutputOnSTDOUT,
-);
-
-When(
-    "a/the user waits for terminal output matching (the regular expression ){ref}",
-    { "timeout": 60000 },
+defineStep(
+    [
+        "When [I wait/the user waits] for terminal output matching (the regular expression ){ref}",
+        "When [I wait/the user waits] for terminal output matching (the regular expression ){regexp}",
+    ],
     waitForMatchingOutput,
-);
-
-When(
-    "a/the user waits for terminal output matching (the regular expression ){regexp}",
     { "timeout": 60000 },
-    waitForMatchingOutput,
 );
 
-Then(
-    "the last command's execution time should be at least {float} seconds",
+defineStep(
+    "Then the last command's execution time should be at least {float} seconds",
     verifyMinimumElapsedTime,
 );
 
-Then(
-    "the last command's execution time should be at most {float} seconds",
+defineStep(
+    "Then the last command's execution time should be at most {float} seconds",
     verifyMaximumElapsedTime,
 );
 
-Then("the last command's exit code/status should be {int}", verifyExitCode);
-Then("the last command's exit code/status should be {ref}", verifyExitCode);
-Then("the last command's exit code/status should be a/an {int}", verifyExitCode);
-Then("the last command's exit code/status should be a/an {ref}", verifyExitCode);
-
-Then(
-    "the last command's terminal output should match (the regular expression ){ref}",
+defineStep(
+    [
+        "Then the last command's terminal output should match (the regular expression ){ref}",
+        "Then the last command's terminal output should match (the regular expression ){regexp}",
+    ],
     verifyMatchingOutput,
 );
 
-Then(
-    "the last command's terminal output should match (the regular expression ){regexp}",
-    verifyMatchingOutput,
-);
-
-Then(
-    "the last command's terminal output should not match (the regular expression ){ref}",
+defineStep(
+    [
+        "Then the last command's terminal output should not match (the regular expression ){ref}",
+        "Then the last command's terminal output should not match (the regular expression ){regexp}",
+    ],
     verifyNoMatchingOutput,
 );
-
-Then(
-    "the last command's terminal output should not match (the regular expression ){regexp}",
-    verifyNoMatchingOutput,
-);
-
-Then("there should be {int} active CLI shell(s)", verifyShellCount);
 
 /**
  * Change the current working directory in the active shell.

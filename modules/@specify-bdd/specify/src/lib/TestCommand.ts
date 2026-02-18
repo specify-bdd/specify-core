@@ -12,7 +12,7 @@ import path               from "node:path";
 import { serializeError } from "serialize-error";
 
 import { Command, CommandResultStatus } from "./Command";
-import { CucumberTool                 } from "./CucumberTool";
+import { CucumberAPI                  } from "./CucumberAPI";
 import { RerunFile                    } from "./RerunFile";
 
 import type {
@@ -132,7 +132,7 @@ export class TestCommand extends Command {
 
         try {
             const cucumberConfig    = await this.#buildCucumberConfig(userArgs);
-            const cucumberRunConfig = await CucumberTool.loadConfiguration(cucumberConfig);
+            const cucumberRunConfig = await CucumberAPI.loadConfiguration(cucumberConfig);
             const cucumberEnv       = { "debug": this.debug };
 
             if (this.debug) {
@@ -142,7 +142,7 @@ export class TestCommand extends Command {
                 };
             }
 
-            const cucumberRes = await CucumberTool.runCucumber(cucumberRunConfig, cucumberEnv);
+            const cucumberRes = await CucumberAPI.runCucumber(cucumberRunConfig, cucumberEnv);
 
             await RerunFile.makeAbsolute(this.#rerunFilePath, process.cwd());
 

@@ -1,5 +1,5 @@
 import { IConfiguration, IRunEnvironment, IRunOptions } from "@cucumber/cucumber/api";
-import { CucumberTool                                 } from "../CucumberTool";
+import { CucumberAPI                                  } from "../CucumberAPI";
 import { Logger                                       } from "../Logger";
 
 const { mockRunCucumber, mockLoadConfiguration, mockLoadSupport } = vi.hoisted(() => {
@@ -18,7 +18,7 @@ vi.mock("@cucumber/cucumber/api", () => {
     };
 });
 
-describe("CucumberTool", () => {
+describe("CucumberAPI", () => {
     const fakeTmpLogPath = "/fake/path.json";
     const fakeLogger     = {
         "generateTmpLogPath": vi.fn(() => fakeTmpLogPath),
@@ -29,7 +29,7 @@ describe("CucumberTool", () => {
             ]),
     };
 
-    CucumberTool.logger = fakeLogger as unknown as Logger;
+    CucumberAPI.logger = fakeLogger as unknown as Logger;
 
     afterEach(() => {
         vi.clearAllMocks();
@@ -39,7 +39,7 @@ describe("CucumberTool", () => {
         it("calls Cucumber API with given config", async () => {
             const config: Partial<IConfiguration> = { "tags": "test", "format": [] };
 
-            await CucumberTool.loadConfiguration(config);
+            await CucumberAPI.loadConfiguration(config);
 
             expect(mockLoadConfiguration).toBeCalledWith({ "provided": config });
         });
@@ -47,7 +47,7 @@ describe("CucumberTool", () => {
         it("mutates the given config by adding a temp log format", async () => {
             const config: Partial<IConfiguration> = { "format": [] };
 
-            await CucumberTool.loadConfiguration(config);
+            await CucumberAPI.loadConfiguration(config);
 
             expect(config.format[0][0]).toBe("json");
             expect(config.format[0][1]).toBe(fakeTmpLogPath);
@@ -60,7 +60,7 @@ describe("CucumberTool", () => {
 
             mockLoadConfiguration.mockResolvedValueOnce(mockResolvedConfig);
 
-            const runConfig = await CucumberTool.loadConfiguration(config);
+            const runConfig = await CucumberAPI.loadConfiguration(config);
 
             expect(runConfig).toBe(mockRunConfig);
         });
@@ -72,14 +72,14 @@ describe("CucumberTool", () => {
 
             mockLoadSupport.mockResolvedValueOnce(supportCode);
 
-            await CucumberTool.loadConfiguration({ "format": [] });
+            await CucumberAPI.loadConfiguration({ "format": [] });
 
-            await CucumberTool.runCucumber(
+            await CucumberAPI.runCucumber(
                 options as unknown as IRunOptions,
                 environment as unknown as IRunEnvironment,
             );
 
-            await CucumberTool.runCucumber(
+            await CucumberAPI.runCucumber(
                 options as unknown as IRunOptions,
                 environment as unknown as IRunEnvironment,
             );
@@ -93,7 +93,7 @@ describe("CucumberTool", () => {
             const environment = { "environment": "test" };
             const options     = { "option": "test" };
 
-            await CucumberTool.runCucumber(
+            await CucumberAPI.runCucumber(
                 options as unknown as IRunOptions,
                 environment as unknown as IRunEnvironment,
             );
@@ -104,8 +104,8 @@ describe("CucumberTool", () => {
         it("consumes the correct log file after execution", async () => {
             const config: Partial<IConfiguration> = { "format": [] };
 
-            await CucumberTool.loadConfiguration(config);
-            await CucumberTool.runCucumber({} as IRunOptions);
+            await CucumberAPI.loadConfiguration(config);
+            await CucumberAPI.runCucumber({} as IRunOptions);
 
             expect(fakeLogger.consumeTmpLog).toHaveBeenCalledWith(fakeTmpLogPath);
         });
@@ -113,9 +113,9 @@ describe("CucumberTool", () => {
         it("throws if the temp log file is missing or empty", async () => {
             fakeLogger.consumeTmpLog.mockImplementationOnce(() => []);
 
-            await CucumberTool.loadConfiguration({ "format": [] });
+            await CucumberAPI.loadConfiguration({ "format": [] });
 
-            await expect(CucumberTool.runCucumber({} as IRunOptions)).rejects.toThrow(
+            await expect(CucumberAPI.runCucumber({} as IRunOptions)).rejects.toThrow(
                 "No tests were executed.",
             );
         });
@@ -127,9 +127,9 @@ describe("CucumberTool", () => {
 
             fakeLogger.consumeTmpLog.mockImplementationOnce(() => fakeLog);
 
-            await CucumberTool.loadConfiguration({ "format": [] });
+            await CucumberAPI.loadConfiguration({ "format": [] });
 
-            await expect(CucumberTool.runCucumber({} as IRunOptions)).rejects.toThrow(
+            await expect(CucumberAPI.runCucumber({} as IRunOptions)).rejects.toThrow(
                 "Found undefined step definition(s).",
             );
         });
