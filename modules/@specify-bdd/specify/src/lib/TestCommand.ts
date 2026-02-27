@@ -34,6 +34,7 @@ export const TEST_COMMAND_DEFAULT_OPTS: TestCommandOptions = {
     "debug":        false,
     "gherkinPaths": [],
     "logPath":      `./specify-test-log-${Date.now()}.json`,
+    "workingPath":  ".",
 };
 
 export interface TestCommandArguments {

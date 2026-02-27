@@ -12,4 +12,5 @@ export const paths: PathsConfig = {
     "logs":    "./logs/specify",
     "refs":    "./specify.refs.json",
     "rerun":   `${os.tmpdir()}/specify/rerun.txt`,
+    "working": ".",
 };

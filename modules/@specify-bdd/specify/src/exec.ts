@@ -109,6 +109,7 @@ async function runTests(paths: string[], opts: TestCommandArguments = {}): Promi
         "debug":        config.debug,
         "gherkinPaths": [path.resolve(config.paths.gherkin)],
         "logPath":      path.resolve(config.paths.logs, `specify-test-log-${Date.now()}.json`),
+        "workingPath":  path.resolve(config.paths.working),
     });
 
     const args = merge({ paths }, opts) as TestCommandArguments;
