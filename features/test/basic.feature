@@ -7,7 +7,6 @@ Feature: Basic Test Execution
         Given that the "@specify-bdd/specify" NPM package is installed
         And that the "@specify-bdd/plugin-cli" NPM package is installed
         And a CLI shell
-        And that the working directory is "./test"
 
     Rule: The run should succeed only if all tests pass
 
