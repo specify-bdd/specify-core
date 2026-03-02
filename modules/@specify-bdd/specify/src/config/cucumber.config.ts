@@ -10,7 +10,7 @@ export const cucumber: CucumberConfig = {
     "tags":            "not @skip",
     "worldParameters": {
         // The path of the refs file relative to the project root
-        "refsPath": path.resolve("./specify.refs.json"),
+        "refsPath": path.resolve("./*.refs.json"),
         // similar value as to what you'd see if you ran $PATH in your terminal,
         // but there is also some node-specific path info added to it.
         "userPath": process.env.PATH,

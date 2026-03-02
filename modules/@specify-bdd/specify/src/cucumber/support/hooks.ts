@@ -27,7 +27,7 @@ let refsModules = [];
 
 addBeforeAllHook(
     async function () {
-        const modulePaths = await globby(path.join(cwd, "*.refs.json"), {
+        const modulePaths = await globby(this.parameters.refsPath, {
             "absolute":  true,
             "onlyFiles": true,
         });
@@ -67,10 +67,13 @@ addBeforeScenarioHook(
         // initialize an empty attempt object with a unique ID
         this.pickle.attempts[data.testCaseStartedId] = {};
 
+        // reset to the working directory we started with, if necessary
+        if (process.cwd() !== cwd) {
+            process.chdir(cwd);
+        }
+
         // initialize the file system namespace
-        this.fs = {
-            "cwd": process.cwd(),
-        };
+        this.fs = { cwd };
     },
     { "name": "Core before scenario hook" },
 );
