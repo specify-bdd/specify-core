@@ -101,8 +101,9 @@ export class TestCommand extends Command {
         ]) as TestCommandOptions;
 
         super({
-            "debug":   mergedOpts.debug,
-            "logPath": mergedOpts.logPath,
+            "debug":       mergedOpts.debug,
+            "logPath":     mergedOpts.logPath,
+            "workingPath": mergedOpts.workingPath,
         });
 
         this.cucumber = mergedOpts.cucumber;
@@ -134,7 +135,7 @@ export class TestCommand extends Command {
         try {
             const cucumberConfig    = await this.#buildCucumberConfig(userArgs);
             const cucumberRunConfig = await CucumberAPI.loadConfiguration(cucumberConfig);
-            const cucumberEnv       = { "debug": this.debug };
+            const cucumberEnv       = { "cwd": this.workingPath, "debug": this.debug };
 
             if (this.debug) {
                 testRes.debug.cucumber = {

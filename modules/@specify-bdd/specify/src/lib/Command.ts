@@ -89,10 +89,6 @@ export abstract class Command {
             res.debug = { "args": userArgs };
         }
 
-        if (path.resolve(this.workingPath) !== process.cwd()) {
-            process.chdir(this.workingPath);
-        }
-
         return res;
     }
 }
