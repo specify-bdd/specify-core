@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import { Command, COMMAND_DEFAULT_OPTS } from "../Command";
 
 class ConcreteCommand extends Command {}
