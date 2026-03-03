@@ -260,6 +260,19 @@ describe("TestCommand", () => {
                     expect(res.ok).toBe(false);
                     expect(res.status).toBe(1);
                 });
+
+                it("debug", async () => {
+                    const userArgs  = { "paths": ["./test/gherkin/binary/passing.feature"] };
+                    const debugOpts = { ...userOpts, "debug": true, "workingPath": "./test" };
+                    const cmd       = new TestCommand(debugOpts);
+
+                    mockRunCucumber.mockResolvedValueOnce({ "success": true });
+
+                    const res = await cmd.execute(userArgs);
+
+                    expect(res.debug.args).toBe(userArgs);
+                    expect(res.debug.cucumber.runEnvironment).toEqual({ "cwd": debugOpts.workingPath, "debug": debugOpts.debug });
+                });
             });
 
             describe("errors", () => {

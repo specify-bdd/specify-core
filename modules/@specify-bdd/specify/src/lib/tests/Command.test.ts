@@ -36,20 +36,5 @@ describe("Command", () => {
             expect(res.error).toBeTruthy();
             expect(res.result).toBeUndefined();
         });
-
-        it("changes the working directory if appropriate", async () => {
-            const cmd1 = new ConcreteCommand(emptyOpts);
-            const cmd2 = new ConcreteCommand({ "workingPath": ".." });
-
-            let cwd = process.cwd();
-
-            await cmd1.execute(emptyArgs);
-
-            expect(process.cwd()).toBe(cwd);
-
-            await cmd2.execute(emptyArgs);
-
-            expect(process.cwd()).toBe(path.resolve(cwd, ".."));
-        });
     });
 });
