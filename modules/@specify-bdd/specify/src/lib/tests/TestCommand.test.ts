@@ -271,7 +271,10 @@ describe("TestCommand", () => {
                     const res = await cmd.execute(userArgs);
 
                     expect(res.debug.args).toBe(userArgs);
-                    expect(res.debug.cucumber.runEnvironment).toEqual({ "cwd": debugOpts.workingPath, "debug": debugOpts.debug });
+                    expect(res.debug.cucumber.runEnvironment).toEqual({
+                        "cwd":   debugOpts.workingPath,
+                        "debug": debugOpts.debug,
+                    });
                 });
             });
 

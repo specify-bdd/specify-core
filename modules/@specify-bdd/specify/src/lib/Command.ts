@@ -5,7 +5,6 @@
  */
 
 import merge              from "deepmerge";
-import path               from "node:path";
 import { serializeError } from "serialize-error";
 
 import type { JsonObject, JsonValue } from "type-fest";

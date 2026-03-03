@@ -5,7 +5,6 @@
  */
 
 import { globby        } from "globby";
-import path              from "node:path";
 import { pathToFileURL } from "node:url";
 import { error         } from "node:console";
 
