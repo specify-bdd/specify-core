@@ -3,6 +3,10 @@ Feature: Shell Step Definitions
     I want to be able to manage and interact with OS shells
     So that I can issue commands and validate the expected responses
 
+    Background:
+        Given that the "@specify-bdd/specify" NPM package is installed
+        And that the "@specify-bdd/plugin-cli" NPM package is installed
+
     Rule: I can create and destroy shells
 
         Scenario: Create a single shell
@@ -61,9 +65,7 @@ Feature: Shell Step Definitions
     Rule: I can execute commands and verify results
 
         Background:
-            Given that the "@specify-bdd/specify" NPM package is installed
-            And that the "@specify-bdd/plugin-cli" NPM package is installed
-            And a CLI shell
+            Given a CLI shell
 
         Scenario: Execute an asynchronous command and verify exit status
             When the user starts the async command "for num in $(seq 1 3); do sleep 1; echo $num; done"
@@ -116,9 +118,7 @@ Feature: Shell Step Definitions
     Rule: I can enter non-command input
 
         Background:
-            Given that the "@specify-bdd/specify" NPM package is installed
-            And that the "@specify-bdd/plugin-cli" NPM package is installed
-            And a CLI shell
+            Given a CLI shell
 
         Scenario: Press a key to respond to a prompt
             When the user starts the async command "./test/scripts/sh-prompt-key.sh"
@@ -137,9 +137,7 @@ Feature: Shell Step Definitions
     Rule: I can swap between shells and run commands in parallel
 
         Background:
-            Given that the "@specify-bdd/specify" NPM package is installed
-            And that the "@specify-bdd/plugin-cli" NPM package is installed
-            And a CLI shell
+            Given a CLI shell
             And another CLI shell
 
         Scenario: Swap between shells in sequence
