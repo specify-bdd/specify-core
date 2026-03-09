@@ -5,7 +5,8 @@
     },
     "debug": false,
     "paths": {
-        "logs": "./logs"
+        "logs": "./logs",
+        "testExecutionContext": "./test"
     },
     "watch": {
         "paths": [

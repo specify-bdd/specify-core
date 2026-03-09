@@ -5,7 +5,6 @@
  */
 
 import { globby        } from "globby";
-import path              from "node:path";
 import { pathToFileURL } from "node:url";
 import { error         } from "node:console";
 
@@ -27,7 +26,7 @@ let refsModules = [];
 
 addBeforeAllHook(
     async function () {
-        const modulePaths = await globby(path.join(cwd, "*.refs.json"), {
+        const modulePaths = await globby(this.parameters.refsPath, {
             "absolute":  true,
             "onlyFiles": true,
         });
@@ -68,9 +67,7 @@ addBeforeScenarioHook(
         this.pickle.attempts[data.testCaseStartedId] = {};
 
         // initialize the file system namespace
-        this.fs = {
-            "cwd": process.cwd(),
-        };
+        this.fs = { cwd };
     },
     { "name": "Core before scenario hook" },
 );
