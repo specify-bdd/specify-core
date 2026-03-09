@@ -512,7 +512,7 @@ describe("SessionManager", () => {
             });
         });
 
-        describe.only("sendInput()", () => {
+        describe("sendInput()", () => {
             beforeEach(() => {
                 sessionManager.addSession(session);
             });
