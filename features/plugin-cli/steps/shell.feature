@@ -3,6 +3,10 @@ Feature: Shell Step Definitions
     I want to be able to manage and interact with OS shells
     So that I can issue commands and validate the expected responses
 
+    Background:
+        Given that the "@specify-bdd/specify" NPM package is installed
+        And that the "@specify-bdd/plugin-cli" NPM package is installed
+
     Rule: I can create and destroy shells
 
         Scenario: Create a single shell
@@ -61,9 +65,7 @@ Feature: Shell Step Definitions
     Rule: I can execute commands and verify results
 
         Background:
-            Given that the "@specify-bdd/specify" NPM package is installed
-            And that the "@specify-bdd/plugin-cli" NPM package is installed
-            And a CLI shell
+            Given a CLI shell
 
         Scenario: Execute an asynchronous command and verify exit status
             When the user starts the async command "for num in $(seq 1 3); do sleep 1; echo $num; done"
@@ -112,13 +114,42 @@ Feature: Shell Step Definitions
             When the user starts the async command "echo foo; echo bar >&2; sleep 2; echo baz >&2"
             And waits for terminal output on STDERR matching "baz"
             Then the last command's terminal output should match "^foo\nbar\nbaz$"
+    
+    Rule: I can enter non-command input
 
+        Background:
+            Given a CLI shell
+
+        Scenario: Press a key to respond to a prompt
+            When the user starts the async command "./test/scripts/sh-prompt-key.sh"
+            And waits for the prompt "Press test key"
+            And presses the "Space" key
+            And waits for terminal output matching "Key pressed"
+            Then the last command's terminal output should match "Key pressed: Space"
+
+        Scenario: Press a key to respond to a prompt as a single step
+            When the user starts the async command "./test/scripts/sh-prompt-key.sh"
+            And responds to the prompt "Press test key" by pressing the "Space" key
+            And waits for terminal output matching "Key pressed"
+            Then the last command's terminal output should match "Key pressed: Space"
+        
+        Scenario: Enter a line of input to respond to a prompt
+            When the user starts the async command "./test/scripts/sh-prompt-line.sh"
+            And waits for the prompt "Enter test input"
+            And enters "Test Line"
+            And waits for terminal output matching "Input:"
+            Then the last command's terminal output should match "Input: Test Line"
+        
+        Scenario: Enter a line of input to respond to a prompt as a single step
+            When the user starts the async command "./test/scripts/sh-prompt-line.sh"
+            And responds to the prompt "Enter test input" by entering "Test Line"
+            And waits for terminal output matching "Input:"
+            Then the last command's terminal output should match "Input: Test Line"
+    
     Rule: I can swap between shells and run commands in parallel
 
         Background:
-            Given that the "@specify-bdd/specify" NPM package is installed
-            And that the "@specify-bdd/plugin-cli" NPM package is installed
-            And a CLI shell
+            Given a CLI shell
             And another CLI shell
 
         Scenario: Swap between shells in sequence

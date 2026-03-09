@@ -108,6 +108,7 @@ defineStep(
     [
         "When [I wait/the user waits] for terminal output matching (the regular expression ){ref}",
         "When [I wait/the user waits] for terminal output matching (the regular expression ){regexp}",
+        "When [I wait/the user waits] for the prompt {regexp}",
     ],
     waitForMatchingOutput,
     { "timeout": 60000 },
@@ -137,6 +138,23 @@ defineStep(
         "Then the last command's terminal output should not match (the regular expression ){regexp}",
     ],
     verifyNoMatchingOutput,
+);
+
+defineStep(["When [I press/the user presses] the {string} key"], sendKeyPressToCLI);
+
+defineStep(
+    ["When [I respond/the user responds] to the prompt {regexp} by pressing the {string} key"],
+    respondToPromptByPressingKey,
+);
+
+defineStep(
+    ["When [I enter/the user enters] {string}", "When [I input/the user inputs] {string}"],
+    sendLineToCLI,
+);
+
+defineStep(
+    ["When [I respond/the user responds] to the prompt {string} by entering/inputting {string}"],
+    respondToPromptByEnteringLine,
 );
 
 /**
@@ -228,6 +246,84 @@ async function killCLIShellBySelector(selector?: number | string): Promise<void>
             "sessionMeta": this.cli.manager.findSession(selector),
         });
     }
+}
+
+/**
+ * Wait for a prompt matching the given pattern, then respond by entering the given line.
+ *
+ * @param prompt - the prompt to wait for before responding
+ * @param line   - the line to enter in response to the prompt
+ */
+async function respondToPromptByEnteringLine(prompt: RegExp, line: string): Promise<void> {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    await waitForMatchingOutput.call(this, prompt);
+
+    sendLineToCLI.call(this, line);
+}
+
+/**
+ * Wait for a prompt matching the given pattern, then respond by sending the given key
+ *
+ * @param prompt - the prompt to wait for before responding
+ * @param key    - the key to send in response to the prompt
+ */
+async function respondToPromptByPressingKey(prompt: RegExp, key: string): Promise<void> {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    await waitForMatchingOutput.call(this, prompt);
+
+    sendKeyPressToCLI.call(this, key);
+}
+
+/**
+ * Send the character value of a key press to the CLI
+ *
+ * @remarks
+ * Special keys like "enter", "tab", and "space" are supported, in addition to
+ * regular single-character keys. No other special keys are currently supported.
+ *
+ * @param key - The character or name of the key to send to the CLI
+ *
+ * @throws AssertionError
+ * If the key is not a single character or a recognized special key name.
+ */
+function sendKeyPressToCLI(key: string): void {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    const specialKeyMap = {
+        "enter": "\n",
+        "tab":   "\t",
+        "space": " ",
+    };
+
+    let keyToSend: string;
+
+    if (key.length === 1) {
+        keyToSend = key;
+    } else if (key.toLowerCase() in specialKeyMap) {
+        keyToSend = specialKeyMap[key.toLowerCase()];
+    } else {
+        assert.fail(`Unrecognized key: ${key}`);
+    }
+
+    this.cli.manager.sendInput(keyToSend);
+}
+
+/**
+ * Send a line of input to the CLI, followed by a newline character to execute it.
+ *
+ * @remarks
+ * One character at a time is sent to simulate real user input
+ *
+ * @param line - the line of input to enter
+ */
+function sendLineToCLI(line: string): void {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    line.split("").forEach((char) => sendKeyPressToCLI.call(this, char));
+
+    sendKeyPressToCLI.call(this, "\n");
 }
 
 /**

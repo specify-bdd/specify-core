@@ -4,5 +4,5 @@ export interface SystemIOSession {
     onClose(callback: () => void): void;
     onError(callback: (data: string) => void): void;
     onOutput(callback: (data: string) => void): void;
-    write(command: string): void;
+    write(input: string, appendNewline?: boolean): void;
 }
