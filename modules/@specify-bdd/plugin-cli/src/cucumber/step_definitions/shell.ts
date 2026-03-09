@@ -142,7 +142,10 @@ defineStep(
 
 defineStep(["When [I press/the user presses] the {string} key"], sendKeyPressToCLI);
 
-defineStep(["When [I input/I enter/the user inputs/the user enters] {string}"], sendLineToCLI);
+defineStep(
+    ["When [I enter/the user enters] {string}", "When [I input/the user inputs] {string}"],
+    sendLineToCLI,
+);
 
 /**
  * Change the current working directory in the active shell.
