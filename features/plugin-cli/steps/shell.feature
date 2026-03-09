@@ -126,6 +126,13 @@ Feature: Shell Step Definitions
             And presses the "Space" key
             And waits for terminal output matching "Key pressed"
             Then the last command's terminal output should match "Key pressed: Space"
+        
+        Scenario: Enter a line of input to respond to a prompt
+            When the user starts the async command "./test/scripts/sh-prompt-line.sh"
+            And waits for the prompt "Enter test input"
+            And enters "Test Line"
+            And waits for terminal output matching "Input:"
+            Then the last command's terminal output should match "Input: Test Line"
     
     Rule: I can swap between shells and run commands in parallel
 

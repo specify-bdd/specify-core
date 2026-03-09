@@ -142,6 +142,8 @@ defineStep(
 
 defineStep(["When [I press/the user presses] the {string} key"], sendKeyPressToCLI);
 
+defineStep(["When [I input/I enter/the user inputs/the user enters] {string}"], sendLineToCLI);
+
 /**
  * Change the current working directory in the active shell.
  *
@@ -253,6 +255,22 @@ function sendKeyPressToCLI(key: string): void {
     }
 
     this.cli.manager.sendInput(keyToSend);
+}
+
+/**
+ * Send a line of input to the CLI, followed by a newline character to execute it.
+ *
+ * @remarks
+ * One character at a time is sent to simulate real user input
+ *
+ * @param line - the line of input to enter
+ */
+function sendLineToCLI(line: string): void {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    line.split("").forEach((char) => sendKeyPressToCLI.call(this, char));
+
+    sendKeyPressToCLI.call(this, "\n");
 }
 
 /**
