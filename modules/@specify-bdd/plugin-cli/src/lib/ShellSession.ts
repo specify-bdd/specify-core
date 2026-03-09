@@ -90,6 +90,8 @@ export class ShellSession implements SystemIOSession {
      * @param appendNewline - simulate a user pressing the "enter" key on their keyboard
      */
     write(input: string, appendNewline: boolean = true): void {
-        this.#childProcess.stdin.write(`${input}${appendNewline ? "\n" : ""}`);
+        const endOfLine = appendNewline ? "\n" : "";
+        
+        this.#childProcess.stdin.write(`${input}${endOfLine}`);
     }
 }
