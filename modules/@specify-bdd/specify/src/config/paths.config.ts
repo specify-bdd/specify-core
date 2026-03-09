@@ -7,8 +7,8 @@ export type PathsConfig = {
 };
 
 export const paths: PathsConfig = {
-    "gherkin": "./features/**/*.feature",
-    "logs":    "./logs/specify",
-    "rerun":   `${os.tmpdir()}/specify/rerun.txt`,
-    "working": ".",
+    "gherkin":              "./features/**/*.feature",
+    "logs":                 "./logs/specify",
+    "rerun":                `${os.tmpdir()}/specify/rerun.txt`,
+    "testExecutionContext": ".",
 };

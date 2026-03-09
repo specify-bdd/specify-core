@@ -10,15 +10,13 @@ import { serializeError } from "serialize-error";
 import type { JsonObject, JsonValue } from "type-fest";
 
 export const COMMAND_DEFAULT_OPTS: CommandOptions = {
-    "debug":       false,
-    "logPath":     `./specify-log-${Date.now()}.json`,
-    "workingPath": ".",
+    "debug":   false,
+    "logPath": `./specify-log-${Date.now()}.json`,
 };
 
 export interface CommandOptions {
     debug?: boolean;
     logPath?: string;
-    workingPath?: string;
 }
 
 export interface CommandResult {
@@ -51,11 +49,6 @@ export abstract class Command {
     logPath: string;
 
     /**
-     * The working directory from which to execute this command.
-     */
-    workingPath: string;
-
-    /**
      * Store user args and options data.
      *
      * @param userOpts - User-supplied options
@@ -65,7 +58,6 @@ export abstract class Command {
 
         this.debug = mergedOpts.debug;
         this.logPath = mergedOpts.logPath;
-        this.workingPath = mergedOpts.workingPath;
     }
 
     /**

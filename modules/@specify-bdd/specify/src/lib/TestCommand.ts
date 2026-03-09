@@ -31,10 +31,10 @@ export const TEST_COMMAND_DEFAULT_OPTS: TestCommandOptions = {
         "paths":  [],
         "tags":   "",
     },
-    "debug":        false,
-    "gherkinPaths": [],
-    "logPath":      `./specify-test-log-${Date.now()}.json`,
-    "workingPath":  ".",
+    "debug":                    false,
+    "gherkinPaths":             [],
+    "logPath":                  `./specify-test-log-${Date.now()}.json`,
+    "testExecutionContextPath": ".",
 };
 
 export interface TestCommandArguments {
@@ -52,6 +52,7 @@ export interface TestCommandOptions extends CommandOptions {
     cucumber?: Partial<IConfiguration>;
     gherkinPaths?: string[];
     plugins?: string[];
+    testExecutionContextPath?: string;
 }
 
 export interface TestCommandResult extends CommandResult {
@@ -89,6 +90,11 @@ export class TestCommand extends Command {
     #rerunFilePath: string;
 
     /**
+     * The context in which this command's test execution will take place.
+     */
+    testExecutionContextPath: string;
+
+    /**
      * Parse user arguments and options data to prepare operational parameters
      *
      * @param userOpts - User-supplied options
@@ -101,13 +107,13 @@ export class TestCommand extends Command {
         ]) as TestCommandOptions;
 
         super({
-            "debug":       mergedOpts.debug,
-            "logPath":     mergedOpts.logPath,
-            "workingPath": mergedOpts.workingPath,
+            "debug":   mergedOpts.debug,
+            "logPath": mergedOpts.logPath,
         });
 
         this.cucumber = mergedOpts.cucumber;
         this.gherkinPaths = mergedOpts.gherkinPaths;
+        this.testExecutionContextPath = mergedOpts.testExecutionContextPath;
 
         // Cucumber formatters ensure that user's test result details are logged
         // in some permanent form
@@ -135,7 +141,7 @@ export class TestCommand extends Command {
         try {
             const cucumberConfig    = await this.#buildCucumberConfig(userArgs);
             const cucumberRunConfig = await CucumberAPI.loadConfiguration(cucumberConfig);
-            const cucumberEnv       = { "cwd": this.workingPath, "debug": this.debug };
+            const cucumberEnv       = { "cwd": this.testExecutionContextPath, "debug": this.debug };
 
             if (this.debug) {
                 testRes.debug.cucumber = {

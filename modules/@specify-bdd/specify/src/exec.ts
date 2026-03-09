@@ -105,11 +105,11 @@ function reportAndExit(res: CommandResult): void {
  */
 async function runTests(paths: string[], opts: TestCommandArguments = {}): Promise<void> {
     const cmd = new TestCommand({
-        "cucumber":     cucumberCfg,
-        "debug":        config.debug,
-        "gherkinPaths": [path.resolve(config.paths.gherkin)],
-        "logPath":      path.resolve(config.paths.logs, `specify-test-log-${Date.now()}.json`),
-        "workingPath":  path.resolve(config.paths.working),
+        "cucumber":                 cucumberCfg,
+        "debug":                    config.debug,
+        "gherkinPaths":             [path.resolve(config.paths.gherkin)],
+        "logPath":                  path.resolve(config.paths.logs, `specify-test-log-${Date.now()}.json`),
+        "testExecutionContextPath": path.resolve(config.paths.testExecutionContext),
     });
 
     const args = merge({ paths }, opts) as TestCommandArguments;
