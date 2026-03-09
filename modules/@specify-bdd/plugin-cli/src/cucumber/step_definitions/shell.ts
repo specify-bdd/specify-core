@@ -152,6 +152,11 @@ defineStep(
     sendLineToCLI,
 );
 
+defineStep(
+    ["When [I respond/the user responds] to the prompt {string} by entering/inputting {string}"],
+    respondToPromptByEnteringLine,
+);
+
 /**
  * Change the current working directory in the active shell.
  *
@@ -244,12 +249,26 @@ async function killCLIShellBySelector(selector?: number | string): Promise<void>
 }
 
 /**
+ * Wait for a prompt matching the given pattern, then respond by entering the given line.
+ *
+ * @param prompt - the prompt to wait for before responding
+ * @param line   - the line to enter in response to the prompt
+ */
+async function respondToPromptByEnteringLine(prompt: RegExp, line: string): Promise<void> {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    await waitForMatchingOutput.call(this, prompt);
+
+    sendLineToCLI.call(this, line);
+}
+
+/**
  * Wait for a prompt matching the given pattern, then respond by sending the given key
  *
  * @param prompt - the prompt to wait for before responding
  * @param key    - the key to send in response to the prompt
  */
-async function respondToPromptByPressingKey(prompt: string, key: string): Promise<void> {
+async function respondToPromptByPressingKey(prompt: RegExp, key: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     await waitForMatchingOutput.call(this, prompt);
