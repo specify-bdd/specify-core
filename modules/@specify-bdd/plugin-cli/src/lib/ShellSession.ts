@@ -91,7 +91,7 @@ export class ShellSession implements SystemIOSession {
      */
     write(input: string, appendNewline: boolean = true): void {
         const endOfLine = appendNewline ? "\n" : "";
-        
+
         this.#childProcess.stdin.write(`${input}${endOfLine}`);
     }
 }

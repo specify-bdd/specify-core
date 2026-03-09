@@ -126,6 +126,12 @@ Feature: Shell Step Definitions
             And presses the "Space" key
             And waits for terminal output matching "Key pressed"
             Then the last command's terminal output should match "Key pressed: Space"
+
+        Scenario: Press a key to respond to a prompt as a single step
+            When the user starts the async command "./test/scripts/sh-prompt-key.sh"
+            And responds to the prompt "Press test key" by pressing the "Space" key
+            And waits for terminal output matching "Key pressed"
+            Then the last command's terminal output should match "Key pressed: Space"
         
         Scenario: Enter a line of input to respond to a prompt
             When the user starts the async command "./test/scripts/sh-prompt-line.sh"
