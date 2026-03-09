@@ -52,14 +52,6 @@ describe("ShellSession", () => {
         expect(spawn).toHaveBeenCalledWith("sh", { ...options, "shell": true });
     });
 
-    it("writes a command to stdin with an appended newline", () => {
-        const command = "echo test";
-
-        new ShellSession().write(command);
-
-        expect(mockChildProcess.stdin.write).toHaveBeenCalledWith(`${command}\n`);
-    });
-
     describe("killCommand()", () => {
         vi.mocked(psList).mockResolvedValue([
             { "pid": 123, "ppid": 1, "name": "session" },
@@ -121,5 +113,23 @@ describe("ShellSession", () => {
         mockChildProcess.stderr.emit("data", mockData);
 
         expect(callback).toHaveBeenCalledWith(mockData.toString());
+    });
+
+    describe("write()", () => {
+        it("writes the input to stdin with a newline by default", () => {
+            const input = "echo test";
+
+            new ShellSession().write(input);
+
+            expect(mockChildProcess.stdin.write).toHaveBeenCalledWith(`${input}\n`);
+        });
+
+        it("writes the input to stdin without a newline when specified", () => {
+            const input = "test input";
+
+            new ShellSession().write(input, false);
+
+            expect(mockChildProcess.stdin.write).toHaveBeenCalledWith(input);
+        });
     });
 });

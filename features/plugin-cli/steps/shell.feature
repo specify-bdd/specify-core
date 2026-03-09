@@ -112,7 +112,21 @@ Feature: Shell Step Definitions
             When the user starts the async command "echo foo; echo bar >&2; sleep 2; echo baz >&2"
             And waits for terminal output on STDERR matching "baz"
             Then the last command's terminal output should match "^foo\nbar\nbaz$"
+    
+    Rule: I can enter non-command input
 
+        Background:
+            Given that the "@specify-bdd/specify" NPM package is installed
+            And that the "@specify-bdd/plugin-cli" NPM package is installed
+            And a CLI shell
+
+        Scenario: Press a key to respond to a prompt
+            When the user starts the async command "./test/scripts/sh-prompt-key.sh"
+            And waits for the prompt "Press test key"
+            And presses the "Space" key
+            And waits for terminal output matching "Key pressed"
+            Then the last command's terminal output should match "Key pressed: Space"
+    
     Rule: I can swap between shells and run commands in parallel
 
         Background:

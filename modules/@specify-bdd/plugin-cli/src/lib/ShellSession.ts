@@ -83,12 +83,13 @@ export class ShellSession implements SystemIOSession {
     }
 
     /**
-     * Writes (runs) a command to the shell session's stdin.
+     * Writes input to the shell session's stdin. Also appends a newline
+     * to immediately run the input as a command by default.
      *
-     * @param command - the command to execute. `\n` is appended to simulate a
-     *                  user pressing the "enter" key on their keyboard
+     * @param input         - the input to write.
+     * @param appendNewline - simulate a user pressing the "enter" key on their keyboard
      */
-    write(command: string): void {
-        this.#childProcess.stdin.write(`${command}\n`);
+    write(input: string, appendNewline: boolean = true): void {
+        this.#childProcess.stdin.write(`${input}${appendNewline ? "\n" : ""}`);
     }
 }

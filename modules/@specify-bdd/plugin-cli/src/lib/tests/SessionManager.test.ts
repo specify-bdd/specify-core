@@ -512,6 +512,20 @@ describe("SessionManager", () => {
             });
         });
 
+        describe.only("sendInput()", () => {
+            beforeEach(() => {
+                sessionManager.addSession(session);
+            });
+
+            it("writes input to the active session", () => {
+                const input = "test input";
+
+                sessionManager.sendInput(input);
+
+                expect(session.write).toHaveBeenCalledWith(input, false);
+            });
+        });
+
         describe("switchToNextSession()", () => {
             let altSession: MockShellSession;
 

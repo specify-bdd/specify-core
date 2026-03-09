@@ -108,6 +108,7 @@ defineStep(
     [
         "When [I wait/the user waits] for terminal output matching (the regular expression ){ref}",
         "When [I wait/the user waits] for terminal output matching (the regular expression ){regexp}",
+        "When [I wait/the user waits] for the prompt {regexp}",
     ],
     waitForMatchingOutput,
     { "timeout": 60000 },
@@ -138,6 +139,8 @@ defineStep(
     ],
     verifyNoMatchingOutput,
 );
+
+defineStep(["When [I press/the user presses] the {string} key"], sendKeyPressToCLI);
 
 /**
  * Change the current working directory in the active shell.
@@ -228,6 +231,28 @@ async function killCLIShellBySelector(selector?: number | string): Promise<void>
             "sessionMeta": this.cli.manager.findSession(selector),
         });
     }
+}
+
+function sendKeyPressToCLI(key: string): void {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    const specialKeyMap = {
+        "enter": "\n",
+        "tab":   "\t",
+        "space": " ",
+    };
+
+    let keyToSend: string;
+
+    if (key.length === 1) {
+        keyToSend = key;
+    } else if (key.toLowerCase() in specialKeyMap) {
+        keyToSend = specialKeyMap[key.toLowerCase()];
+    } else {
+        assert.fail(`Unrecognized key: ${key}`);
+    }
+
+    this.cli.manager.sendInput(keyToSend);
 }
 
 /**
