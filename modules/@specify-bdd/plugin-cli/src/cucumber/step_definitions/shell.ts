@@ -235,6 +235,18 @@ async function killCLIShellBySelector(selector?: number | string): Promise<void>
     }
 }
 
+/**
+ * Send the character value of a key press to the CLI
+ *
+ * @remarks
+ * Special keys like "enter", "tab", and "space" are supported, in addition to
+ * regular single-character keys. No other special keys are currently supported.
+ *
+ * @param key - The character or name of the key to send to the CLI
+ *
+ * @throws AssertionError
+ * If the key is not a single character or a recognized special key name.
+ */
 function sendKeyPressToCLI(key: string): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
