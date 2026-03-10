@@ -8,7 +8,6 @@ Feature: Rerun Failed Tests
         And that the "@specify-bdd/plugin-cli" NPM package is installed
         And a CLI shell
         And a new temp file path referenced as "rerun.path"
-        And that the working directory is "./test"
 
     Rule: Every test run creates a rerun file
 

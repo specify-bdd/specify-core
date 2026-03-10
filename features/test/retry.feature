@@ -7,7 +7,6 @@ Feature: Retry Flaky Tests
         Given that the "@specify-bdd/specify" NPM package is installed
         And that the "@specify-bdd/plugin-cli" NPM package is installed
         And a CLI shell
-        And that the working directory is "./test"
 
     Rule: Tests can be run without retrying
 

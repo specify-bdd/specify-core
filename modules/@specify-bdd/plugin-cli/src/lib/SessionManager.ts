@@ -342,6 +342,19 @@ export class SessionManager {
     }
 
     /**
+     * Send input to the active (or specified) session. Will not automatically
+     * append a newline, so this can be used for interactive input.
+     *
+     * @param input - The input to send
+     * @param opts  - Options to modify the behavior of sendInput()
+     */
+    sendInput(input: string, opts: SessionManagerOptions = {}): void {
+        const sessionMeta = opts.sessionMeta ?? this.#activeSession;
+
+        sessionMeta.session.write(input, false);
+    }
+
+    /**
      * Switch to the next session in the list.
      *
      * @remarks
