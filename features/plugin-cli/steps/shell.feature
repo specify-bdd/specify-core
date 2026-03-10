@@ -121,27 +121,27 @@ Feature: Shell Step Definitions
             Given a CLI shell
 
         Scenario: Press a key to respond to a prompt
-            When the user starts the async command "./test/scripts/sh-prompt-key.sh"
+            When the user starts the async command "./scripts/sh-prompt-key.sh"
             And waits for the prompt "Press test key"
             And presses the "Space" key
             And waits for terminal output matching "Key pressed"
             Then the last command's terminal output should match "Key pressed: Space"
 
         Scenario: Press a key to respond to a prompt as a single step
-            When the user starts the async command "./test/scripts/sh-prompt-key.sh"
+            When the user starts the async command "./scripts/sh-prompt-key.sh"
             And responds to the prompt "Press test key" by pressing the "Space" key
             And waits for terminal output matching "Key pressed"
             Then the last command's terminal output should match "Key pressed: Space"
         
         Scenario: Enter a line of input to respond to a prompt
-            When the user starts the async command "./test/scripts/sh-prompt-line.sh"
+            When the user starts the async command "./scripts/sh-prompt-line.sh"
             And waits for the prompt "Enter test input"
             And enters "Test Line"
             And waits for terminal output matching "Input:"
             Then the last command's terminal output should match "Input: Test Line"
         
         Scenario: Enter a line of input to respond to a prompt as a single step
-            When the user starts the async command "./test/scripts/sh-prompt-line.sh"
+            When the user starts the async command "./scripts/sh-prompt-line.sh"
             And responds to the prompt "Enter test input" by entering "Test Line"
             And waits for terminal output matching "Input:"
             Then the last command's terminal output should match "Input: Test Line"
