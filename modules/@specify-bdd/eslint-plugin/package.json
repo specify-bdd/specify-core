@@ -1,6 +1,6 @@
 {
   "name": "@specify-bdd/eslint-plugin",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Miscellaneous linting rules for Specify.",
   "type": "module",
   "private": true,
