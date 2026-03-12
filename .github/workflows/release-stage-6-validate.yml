@@ -36,10 +36,14 @@ jobs:
           repository: specify-bdd/validate
       - name: Change to validate directory
         run: cd ./validate
+      - name: DEBUG Confirm validate directory
+        run: pwd
       - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
         uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+      - name: DEBUG Confirm update script
+        run: ls -al scripts
       - name: Install latest package versions
         run: ./scripts/update.sh ${{ inputs.git_tag }}
       - name: Run test suite
