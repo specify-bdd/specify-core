@@ -1,4 +1,4 @@
-name: Release Stage 5 - Publish
+name: Release Stage 6 - Validate
 on:
   workflow_call:
     inputs:
@@ -32,6 +32,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           path: ./validate
+          ref: ${{ env.GIT_BRANCH }}
       - name: Change to validate directory
         run: cd ./validate
       - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
@@ -39,6 +40,6 @@ jobs:
         with:
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
       - name: Install latest package versions
-        run: ./update.sh ${{ inputs.git_tag }}
+        run: ./scripts/update.sh ${{ inputs.git_tag }}
       - name: Run test suite
         run: npx specify test ../source/features
