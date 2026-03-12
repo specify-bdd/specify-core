@@ -59,3 +59,10 @@ jobs:
     needs: announce
     uses: ./.github/workflows/release-stage-5-publish.yml
     secrets: inherit
+  validate:
+    name: Stage 6 - Validate
+    if: ${{ ! contains(inputs.version, 'pre') }} # only run this stage for release tags
+    needs: [ tag, publish ]
+    uses: ./.github/workflows/release-stage-6-validate.yml
+    with:
+      git_tag: ${{ needs.tag.outputs.git_tag }}
