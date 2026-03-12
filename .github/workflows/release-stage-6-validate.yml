@@ -33,6 +33,7 @@ jobs:
         with:
           path: ./validate
           ref: ${{ env.GIT_BRANCH }}
+          repository: specify-bdd/validate
       - name: Change to validate directory
         run: cd ./validate
       - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
