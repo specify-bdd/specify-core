@@ -39,7 +39,7 @@ jobs:
         with:
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
       - name: Install latest package versions
-        run: ./scripts/update.sh ${{ inputs.git_tag }}
+        run: npm run update-specify -- ${{ inputs.git_tag }}
         working-directory: ./validate
       - name: Run test suite
         run: npx specify test ../source/features
