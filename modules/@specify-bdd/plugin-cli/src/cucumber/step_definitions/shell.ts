@@ -465,15 +465,15 @@ function switchShell(selector?: number | string): void {
  *
  * @param exitCode - The exit code expected from the last command
  *
- * @throws AssertionError
+ * @throws Error
  * If the actual exit code is different
  */
-function verifyExitCode(exitCode: number): void {
-    assert.equal(
-        this.cli.manager.exitCode,
-        exitCode,
-        "The command's exit code did not match expectations.",
-    );
+async function verifyExitCode(exitCode: number): Promise<void> {
+    await this.waitFor(() => exitCode === this.cli.manager.exitCode, {
+        "error": Error(
+            `The command's exit code was not the expected value.\nExpected: ${exitCode}\nActual: ${this.cli.manager.exitCode}`,
+        ),
+    });
 }
 
 /**
@@ -481,18 +481,17 @@ function verifyExitCode(exitCode: number): void {
  *
  * @param pattern - The pattern to match output against
  *
- * @throws AssertionError
+ * @throws Error
  * If no matches for the regexp pattern were found
  */
-function verifyMatchingOutput(pattern: RegExp | string): void {
+async function verifyMatchingOutput(pattern: RegExp | string): Promise<void> {
     const regexp = new RegExp(pattern);
 
-    assert.ok(
-        regexp.test(this.cli.manager.output),
-        new AssertionError({
-            "message": `Command output did not match the specified pattern. Output:\n${this.cli.manager.output}`,
-        }),
-    );
+    await this.waitFor(() => regexp.test(this.cli.manager.output), {
+        "error": Error(
+            `Command output did not match the specified pattern. Output:\n${this.cli.manager.output}`,
+        ),
+    });
 }
 
 /**
@@ -501,18 +500,17 @@ function verifyMatchingOutput(pattern: RegExp | string): void {
  *
  * @param pattern - The pattern to match output against
  *
- * @throws AssertionError
+ * @throws Error
  * If no matches for the regexp pattern were found
  */
-function verifyNoMatchingOutput(pattern: RegExp | string): void {
+async function verifyNoMatchingOutput(pattern: RegExp | string): Promise<void> {
     const regexp = new RegExp(pattern);
 
-    assert.ok(
-        !regexp.test(this.cli.manager.output),
-        new AssertionError({
-            "message": `Command output matched the specified pattern. Output:\n${this.cli.manager.output}`,
-        }),
-    );
+    await this.waitFor(() => !regexp.test(this.cli.manager.output), {
+        "error": Error(
+            `Command output matched the specified pattern. Output:\n${this.cli.manager.output}`,
+        ),
+    });
 }
 
 /**
@@ -522,19 +520,18 @@ function verifyNoMatchingOutput(pattern: RegExp | string): void {
  * @param maxTime - The maximum amount of time, in seconds, that should have
  *                  elapsed
  *
- * @throws AssertionError
+ * @throws Error
  * If the last command's execution time is more than the specified number of
  * seconds.
  */
-function verifyMaximumElapsedTime(maxTime: number): void {
+async function verifyMaximumElapsedTime(maxTime: number): Promise<void> {
     const elapsed = this.cli.manager.commandElapsedTime / 1000;
 
-    assert.ok(
-        elapsed < maxTime,
-        new AssertionError({
-            "message": `The last command's total execution time ${elapsed}s was more than ${maxTime}s.`,
-        }),
-    );
+    await this.waitFor(() => elapsed < maxTime, {
+        "error": Error(
+            `The last command's total execution time ${elapsed}s was more than ${maxTime}s.`,
+        ),
+    });
 }
 
 /**
@@ -544,19 +541,18 @@ function verifyMaximumElapsedTime(maxTime: number): void {
  * @param minTime - The minimum amount of time, in seconds, that should have
  *                  elapsed
  *
- * @throws AssertionError
+ * @throws Error
  * If the last command's execution time is less than the specified number of
  * seconds.
  */
-function verifyMinimumElapsedTime(minTime: number): void {
+async function verifyMinimumElapsedTime(minTime: number): Promise<void> {
     const elapsed = this.cli.manager.commandElapsedTime / 1000;
 
-    assert.ok(
-        elapsed > minTime,
-        new AssertionError({
-            "message": `The last command's total execution time ${elapsed}s was less than ${minTime}s.`,
-        }),
-    );
+    await this.waitFor(() => elapsed > minTime, {
+        "error": Error(
+            `The last command's total execution time ${elapsed}s was less than ${minTime}s.`,
+        ),
+    });
 }
 
 /**
