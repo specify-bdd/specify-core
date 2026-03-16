@@ -23,15 +23,9 @@ jobs:
     env:
       GIT_BRANCH: main
     steps:
-      # - name: Check out source repository code
-      #   uses: actions/checkout@v6
-      #   with:
-      #     path: ./source
-      #     ref: ${{ env.GIT_BRANCH }}
       - name: Check out validate repository code
         uses: actions/checkout@v6
         with:
-          # path: ./validate
           ref: ${{ env.GIT_BRANCH }}
           repository: specify-bdd/validate
           submodules: true
@@ -41,7 +35,8 @@ jobs:
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
       - name: Install latest package versions
         run: npm run update-specify -- ${{ inputs.git_tag }}
-        # working-directory: ./validate
+      - name: Update submodule code
+        run: git switch -d ${{ inputs.git_tag }}
+        working-directory: ./specify
       - name: Run test suite
         run: npx specify test specify/features
-        # working-directory: ./validate
