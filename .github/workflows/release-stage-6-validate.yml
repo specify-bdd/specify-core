@@ -26,7 +26,6 @@ jobs:
       - name: Check out validate repository code
         uses: actions/checkout@v6
         with:
-          fetch-tags: true
           ref: ${{ env.GIT_BRANCH }}
           repository: specify-bdd/validate
           submodules: true
@@ -37,7 +36,7 @@ jobs:
       - name: Install latest package versions
         run: npm run update-specify -- ${{ inputs.git_tag }}
       - name: Update submodule code
-        run: git switch -d ${{ inputs.git_tag }}
+        run: git fetch origin --tags && git switch -d ${{ inputs.git_tag }}
         working-directory: ./specify
       - name: Run test suite
         run: npx specify test specify/features
