@@ -2,11 +2,8 @@
  * Waits for a predicate function to return true, retrying at specified intervals
  * until the timeout is reached.
  *
- * @param predicate        - the function to poll against
- * @param options          - configuration options for waitFor behavior
- * @param options.error    - the error that will be thrown on timeout
- * @param options.interval - time to wait between predicate calls
- * @param options.timeout  - maximum time to wait for the predicate to return true
+ * @param predicate - the function to poll against
+ * @param options   - {@link WaitForOptions}
  *
  * @throws Error
  * If the interval or timeout parameters are invalid (non-positive numbers)
@@ -63,8 +60,29 @@ export default async function waitFor(
     }
 }
 
-export type WaitForOptions = {
+/**
+ * Options for `waitFor(...)` that control polling and timeout behavior,
+ * as well as the error thrown on timeout.
+ */
+export interface WaitForOptions {
+    /**
+     * The error thrown on timeout.
+     *
+     * @defaultValue Error("waitFor timed out")
+     */
     error?: Error;
+    
+    /**
+     * Time to wait after a predicate returns before calling it again, in milliseconds.
+     *
+     * @defaultValue 25
+     */
     interval?: number;
+
+    /**
+     * Maximum time to wait before giving up, in milliseconds.
+     *
+     * @defaultValue 1000
+     */
     timeout?: number;
 };
