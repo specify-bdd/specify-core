@@ -5,7 +5,7 @@ import waitFor   from "@/lib/waitFor";
 
 import type { IWorldOptions  } from "@cucumber/cucumber";
 import type { WaitForOptions } from "@/lib/waitFor";
-import type { CoreConfig     } from "~/types";
+import type { CoreConfig     } from "@/types";
 
 /**
  * Specify's custom Cucumber World class

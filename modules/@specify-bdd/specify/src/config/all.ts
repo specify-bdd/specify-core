@@ -4,7 +4,7 @@ import path              from "node:path";
 import { globbySync    } from "globby";
 import { pathToFileURL } from "node:url";
 
-import type { CoreConfig } from "~/types";
+import type { CoreConfig } from "@/types";
 
 // the user's override file should be in the *current working directory*
 const configPath = `${process.cwd()}/specify.config.json`;
