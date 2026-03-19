@@ -73,3 +73,19 @@ specify test [paths] [options]
   → CucumberManager dispatches hooks/steps
   → SpecifyWorld (with QuickRef) created per scenario
 ```
+
+## Contributing
+
+**Issue tracker:** https://github.com/specify-bdd/specify-core/issues
+
+**Commit messages:**
+```
+[#<github-issue-id>] <explanation of why the change was needed>
+```
+Focus on *why*, not *what* — the diff covers what changed. Omit the ticket prefix only when there is genuinely no associated issue.
+
+**Pull requests:**
+- Always open a PR; never push directly to `main` or `develop`
+- Target `develop` by default. If the ticket's GitHub milestone matches a `rel/*` branch name, target that branch instead
+- Assign `specify-bdd/devs` as reviewer
+- PR description should include `Resolves #<issue>.` where applicable
