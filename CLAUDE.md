@@ -86,6 +86,6 @@ Focus on *why*, not *what* — the diff covers what changed. Omit the ticket pre
 
 **Pull requests:**
 - Always open a PR; never push directly to `main` or `develop`
-- Target `develop` by default. If the ticket's GitHub milestone matches a `rel/<short-description>` branch name, target that branch instead
+- Target `develop` by default. If the ticket has a GitHub milestone, target the corresponding `rel/<milestone-slug>` branch instead (e.g. milestone "Browser Plugin" → `rel/browser-plugin`). If that branch doesn't exist yet, create it based on `origin/main`
 - Assign `specify-bdd/devs` as reviewer
 - PR description should include `Resolves #<issue>.` where applicable
