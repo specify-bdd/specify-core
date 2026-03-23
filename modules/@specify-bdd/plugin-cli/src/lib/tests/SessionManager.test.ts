@@ -51,6 +51,22 @@ describe("SessionManager", () => {
 
                 expect(sessionManager.commandEndTime).toBe(time);
             });
+
+            it("returns the last non-hidden command's end time", async () => {
+                const time = Math.random();
+
+                sessionManager.addSession(session);
+                sessionManager.run("echo visible");
+                vi.spyOn(Date, "now").mockReturnValueOnce(time);
+                session.emitDelimiter(0);
+                await sessionManager.waitForReturn();
+
+                sessionManager.run("echo hidden", { "hidden": true });
+                session.emitDelimiter(0);
+                await sessionManager.waitForReturn();
+
+                expect(sessionManager.commandEndTime).toBe(time);
+            });
         });
 
         describe("commandStartTime", () => {
@@ -61,6 +77,22 @@ describe("SessionManager", () => {
                 vi.spyOn(Date, "now").mockReturnValueOnce(time);
 
                 sessionManager.run("echo test");
+
+                expect(sessionManager.commandStartTime).toBe(time);
+            });
+
+            it("returns the last non-hidden command's start time", async () => {
+                const time = Math.random();
+
+                sessionManager.addSession(session);
+                vi.spyOn(Date, "now").mockReturnValueOnce(time);
+                sessionManager.run("echo visible");
+                session.emitDelimiter(0);
+                await sessionManager.waitForReturn();
+
+                sessionManager.run("echo hidden", { "hidden": true });
+                session.emitDelimiter(0);
+                await sessionManager.waitForReturn();
 
                 expect(sessionManager.commandStartTime).toBe(time);
             });
@@ -110,6 +142,20 @@ describe("SessionManager", () => {
 
                     expect(sessionManager.exitCode).toBeUndefined();
                 });
+            });
+
+            it("returns the last non-hidden command's exit code", async () => {
+                sessionManager.addSession(session);
+
+                sessionManager.run("echo visible");
+                session.emitDelimiter(0);
+                await sessionManager.waitForReturn();
+
+                sessionManager.run("echo hidden", { "hidden": true });
+                session.emitDelimiter(42);
+                await sessionManager.waitForReturn();
+
+                expect(sessionManager.exitCode).toBe(0);
             });
         });
 
@@ -165,6 +211,35 @@ describe("SessionManager", () => {
 
                 it("...the active session has not executed any commands", () => {
                     sessionManager.addSession(session);
+
+                    expect(sessionManager.output).toBeUndefined();
+                });
+            });
+
+            describe("skips hidden commands", () => {
+                beforeEach(() => {
+                    sessionManager.addSession(session);
+                });
+
+                it("returns the last non-hidden command's output", async () => {
+                    sessionManager.run("echo visible");
+                    session.emitOutput("visible");
+                    session.emitDelimiter(0);
+                    await sessionManager.waitForReturn();
+
+                    sessionManager.run("echo hidden", { "hidden": true });
+                    session.emitOutput("hidden");
+                    session.emitDelimiter(0);
+                    await sessionManager.waitForReturn();
+
+                    expect(sessionManager.output).toBe("visible");
+                });
+
+                it("returns undefined when only hidden commands have run", async () => {
+                    sessionManager.run("echo hidden", { "hidden": true });
+                    session.emitOutput("hidden");
+                    session.emitDelimiter(0);
+                    await sessionManager.waitForReturn();
 
                     expect(sessionManager.output).toBeUndefined();
                 });
@@ -510,6 +585,18 @@ describe("SessionManager", () => {
                     `A command is already running: ${command}`,
                 );
             });
+
+            it("sets hidden: true on the CommandMeta when instructed", () => {
+                const cmdMeta = sessionManager.run("echo test", { "hidden": true });
+
+                expect(cmdMeta.hidden).toBe(true);
+            });
+
+            it("sets hidden: false on the CommandMeta by default", () => {
+                const cmdMeta = sessionManager.run("echo test");
+
+                expect(cmdMeta.hidden).toBe(false);
+            });
         });
 
         describe("sendInput()", () => {
@@ -626,6 +713,37 @@ describe("SessionManager", () => {
                 session.emitDelimiter(0);
 
                 await expect(promise).resolves.toBe(false);
+            });
+
+            it("does not affect the output property", async () => {
+                sessionManager.addSession(session);
+
+                const promise = sessionManager.validateShell("bash");
+
+                session.emitOutput("Current shell is: bash");
+                session.emitDelimiter(0);
+
+                await promise;
+
+                expect(sessionManager.output).toBeUndefined();
+            });
+
+            it("does not overwrite output from a prior visible command", async () => {
+                sessionManager.addSession(session);
+
+                sessionManager.run("echo hello");
+                session.emitOutput("hello");
+                session.emitDelimiter(0);
+                await sessionManager.waitForReturn();
+
+                const promise = sessionManager.validateShell("bash");
+
+                session.emitOutput("Current shell is: bash");
+                session.emitDelimiter(0);
+
+                await promise;
+
+                expect(sessionManager.output).toBe("hello");
             });
         });
 

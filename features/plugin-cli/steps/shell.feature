@@ -173,7 +173,7 @@ Feature: Shell Step Definitions
             Given another CLI shell named "Test Shell"
             When the user runs the command "echo Named Shell"
             And switches CLI shells
-            Then the last command's terminal output should match "^Current shell is: sh$"
+            Then the last command's terminal output should be empty
             When the user switches to the CLI shell named "Test Shell"
             Then the last command's terminal output should match "Named Shell"
 

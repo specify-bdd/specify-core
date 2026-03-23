@@ -18,6 +18,7 @@ export interface CommandMeta {
     command: string;
     delimiter?: Delimiter;
     exitCode?: number;
+    hidden?: boolean;
     output: OutputMeta[];
     promise?: Promise<CommandMeta>;
     reject?: ((err: Error) => void) | null;
@@ -72,6 +73,14 @@ export interface SessionMeta {
  */
 export interface SessionManagerOptions {
     sessionMeta?: SessionMeta;
+}
+
+/**
+ * The options set for methods which handle session commands, such as run() and
+ * getLastCommand().
+ */
+export interface CommandOptions extends SessionManagerOptions {
+    hidden?: boolean;
 }
 
 /**
@@ -312,9 +321,9 @@ export class SessionManager {
      * @throws AssertionError
      * If another command is already in progress
      */
-    run(command: string, opts: SessionManagerOptions = {}): CommandMeta {
+    run(command: string, opts: CommandOptions = {}): CommandMeta {
         const sessionMeta = opts.sessionMeta ?? this.#activeSession;
-        const lastCmdMeta = this.#getLastCommand({ sessionMeta });
+        const lastCmdMeta = this.#getLastCommand({ sessionMeta, "hidden": true });
 
         if (lastCmdMeta) {
             assert.ok(
@@ -326,6 +335,7 @@ export class SessionManager {
         const newCmdMeta = {
             command,
             "delimiter": this.#createDelimiter(),
+            "hidden":    opts.hidden ?? false,
             "output":    [],
             "timeStart": Date.now(),
         } as CommandMeta;
@@ -391,13 +401,17 @@ export class SessionManager {
      * @returns Whether its the correct type or not
      */
     async validateShell(shellType: string): Promise<boolean> {
-        const phrase = "Current shell is: ";
-
-        this.run(`echo ${phrase}$0`);
+        const phrase  = "Current shell is: ";
+        const cmdMeta = this.run(`echo ${phrase}$0`, { "hidden": true });
 
         await this.waitForReturn();
 
-        return this.output === phrase + shellType;
+        const rawOutput = cmdMeta.output
+            .map((entry) => entry.output)
+            .join("")
+            .trim();
+
+        return rawOutput === phrase + shellType;
     }
 
     /**
@@ -432,7 +446,7 @@ export class SessionManager {
     async waitForReturn(opts: SessionManagerOptions = {}): Promise<CommandMeta> {
         const sessionMeta = opts.sessionMeta ?? this.#activeSession;
 
-        return this.#getLastCommand({ sessionMeta }).promise;
+        return this.#getLastCommand({ sessionMeta, "hidden": true }).promise;
     }
 
     /**
@@ -507,10 +521,14 @@ export class SessionManager {
      *
      * @param opts - Options to modify the behavior of #getLastCommand()
      */
-    #getLastCommand(opts: SessionManagerOptions = {}): CommandMeta | null {
+    #getLastCommand(opts: CommandOptions = {}): CommandMeta | null {
         const sessionMeta = opts.sessionMeta ?? this.#activeSession;
 
-        return sessionMeta?.commands?.at(-1) ?? null;
+        if (opts.hidden) {
+            return sessionMeta?.commands?.at(-1) ?? null;
+        } else {
+            return sessionMeta?.commands?.findLast((cmd) => !cmd.hidden) ?? null;
+        }
     }
 
     /**
@@ -545,7 +563,7 @@ export class SessionManager {
      */
     #processOutput(output: string, stream: IOStream, opts: SessionManagerOptions = {}): void {
         const sessionMeta = opts.sessionMeta ?? this.#activeSession;
-        const lastCmdMeta = this.#getLastCommand({ sessionMeta });
+        const lastCmdMeta = this.#getLastCommand({ sessionMeta, "hidden": true });
         const cleanOutput = output.replace(lastCmdMeta.delimiter.regexp, "");
         const timestamp   = Date.now();
 
