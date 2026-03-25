@@ -85,6 +85,11 @@ Feature: Shell Step Definitions
             When the user runs the command "echo foo"
             Then the last command's terminal output should match "^foo$"
 
+        Scenario: Execute a command that produces no output
+            When the user runs the command "true"
+            Then the last command's exit code should be 0
+            And the last command's terminal output should be empty
+
         Scenario: Start a persistent process and wait for any terminal output
             When the user starts the async command "echo foo; sleep 2; echo bar"
             And waits for terminal output

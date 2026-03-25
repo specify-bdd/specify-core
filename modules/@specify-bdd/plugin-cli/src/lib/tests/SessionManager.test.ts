@@ -586,16 +586,16 @@ describe("SessionManager", () => {
                 );
             });
 
-            it("sets hidden: true on the CommandMeta when instructed", () => {
-                const cmdMeta = sessionManager.run("echo test", { "hidden": true });
-
-                expect(cmdMeta.hidden).toBe(true);
-            });
-
             it("sets hidden: false on the CommandMeta by default", () => {
                 const cmdMeta = sessionManager.run("echo test");
 
                 expect(cmdMeta.hidden).toBe(false);
+            });
+
+            it("sets hidden: true on the CommandMeta when instructed", () => {
+                const cmdMeta = sessionManager.run("echo test", { "hidden": true });
+
+                expect(cmdMeta.hidden).toBe(true);
             });
         });
 

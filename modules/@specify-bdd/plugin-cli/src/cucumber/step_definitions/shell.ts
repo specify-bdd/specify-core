@@ -517,6 +517,12 @@ function verifyNoMatchingOutput(pattern: RegExp | string): void {
     );
 }
 
+/**
+ * Verify that the CLI output for the last command is empty.
+ *
+ * @throws AssertionError
+ * If the last command produced any output
+ */
 function verifyEmptyOutput(): void {
     assert.ok(
         !this.cli.manager.output,
