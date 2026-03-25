@@ -4,6 +4,7 @@
  *
  * @param predicate - the function to poll against
  * @param options   - {@link WaitForOptions}
+ * `default = { "error": Error("waitFor timed out"), "interval": 25, "timeout": 1000 }`
  *
  * @throws Error
  * If the interval or timeout parameters are invalid (non-positive numbers)
@@ -67,22 +68,16 @@ export default async function waitFor(
 export interface WaitForOptions {
     /**
      * The error thrown on timeout.
-     *
-     * @defaultValue Error("waitFor timed out")
      */
     error?: Error;
-    
+
     /**
      * Time to wait after a predicate returns before calling it again, in milliseconds.
-     *
-     * @defaultValue 25
      */
     interval?: number;
 
     /**
      * Maximum time to wait before giving up, in milliseconds.
-     *
-     * @defaultValue 1000
      */
     timeout?: number;
-};
+}
