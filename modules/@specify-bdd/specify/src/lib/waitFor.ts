@@ -20,11 +20,11 @@ export default async function waitFor(
     { error = Error("waitFor timed out"), interval = 25, timeout = 1000 }: WaitForOptions = {},
 ): Promise<void> {
     if (interval <= 0) {
-        throw new Error("Invalid waitFor interval, must be a postitive number.");
+        throw new Error("Invalid waitFor interval, must be a positive number.");
     }
 
     if (timeout <= 0) {
-        throw new Error("Invalid waitFor timeout, must be a postitive number.");
+        throw new Error("Invalid waitFor timeout, must be a positive number.");
     }
 
     const endTimestamp   = Date.now() + timeout;

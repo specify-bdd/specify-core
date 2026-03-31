@@ -141,7 +141,7 @@ describe("waitFor", () => {
     test("throws for invalid interval", async () => {
         const expectation = expectToReject(
             waitFor(failFn, { "interval": 0 }),
-            Error("Invalid waitFor interval, must be a postitive number."),
+            Error("Invalid waitFor interval, must be a positive number."),
         );
 
         await vi.runAllTimersAsync();
@@ -153,7 +153,7 @@ describe("waitFor", () => {
     test("throws for invalid timeout", async () => {
         const expectation = expectToReject(
             waitFor(failFn, { "timeout": 0 }),
-            Error("Invalid waitFor timeout, must be a postitive number."),
+            Error("Invalid waitFor timeout, must be a positive number."),
         );
 
         await vi.runAllTimersAsync();
