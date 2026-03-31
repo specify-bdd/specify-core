@@ -525,11 +525,11 @@ async function verifyNoMatchingOutput(pattern: RegExp | string): Promise<void> {
  * seconds.
  */
 async function verifyMaximumElapsedTime(maxTime: number): Promise<void> {
-    const elapsed = this.cli.manager.commandElapsedTime / 1000;
+    const elapsed = () => this.cli.manager.commandElapsedTime / 1000;
 
-    await this.waitFor(() => elapsed < maxTime, {
+    await this.waitFor(() => elapsed() < maxTime, {
         "error": Error(
-            `The last command's total execution time ${elapsed}s was more than ${maxTime}s.`,
+            `The last command's total execution time ${elapsed()}s was more than ${maxTime}s.`,
         ),
     });
 }
@@ -546,11 +546,11 @@ async function verifyMaximumElapsedTime(maxTime: number): Promise<void> {
  * seconds.
  */
 async function verifyMinimumElapsedTime(minTime: number): Promise<void> {
-    const elapsed = this.cli.manager.commandElapsedTime / 1000;
+    const elapsed = () => this.cli.manager.commandElapsedTime / 1000;
 
-    await this.waitFor(() => elapsed > minTime, {
+    await this.waitFor(() => elapsed() > minTime, {
         "error": Error(
-            `The last command's total execution time ${elapsed}s was less than ${minTime}s.`,
+            `The last command's total execution time ${elapsed()}s was less than ${minTime}s.`,
         ),
     });
 }
