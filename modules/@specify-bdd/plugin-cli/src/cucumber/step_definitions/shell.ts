@@ -140,6 +140,8 @@ defineStep(
     verifyNoMatchingOutput,
 );
 
+defineStep("Then the last command's terminal output should be empty", verifyEmptyOutput);
+
 defineStep(["When [I press/the user presses] the {string} key"], sendKeyPressToCLI);
 
 defineStep(
@@ -511,6 +513,21 @@ async function verifyNoMatchingOutput(pattern: RegExp | string): Promise<void> {
             `Command output matched the specified pattern. Output:\n${this.cli.manager.output}`,
         ),
     });
+}
+
+/**
+ * Verify that the CLI output for the last command is empty.
+ *
+ * @throws AssertionError
+ * If the last command produced any output
+ */
+function verifyEmptyOutput(): void {
+    assert.ok(
+        !this.cli.manager.output,
+        new AssertionError({
+            "message": `Expected no command output.  Output:\n${this.cli.manager.output}`,
+        }),
+    );
 }
 
 /**
