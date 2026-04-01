@@ -517,6 +517,9 @@ async function verifyNoMatchingOutput(pattern: RegExp | string): Promise<void> {
  * Verify that the last command's execution time is the specified number of
  * seconds or less.
  *
+ * @remarks
+ * Will wait for the last command to return before asserting.
+ *
  * @param maxTime - The maximum amount of time, in seconds, that should have
  *                  elapsed
  *
@@ -525,18 +528,24 @@ async function verifyNoMatchingOutput(pattern: RegExp | string): Promise<void> {
  * seconds.
  */
 async function verifyMaximumElapsedTime(maxTime: number): Promise<void> {
-    const elapsed = () => this.cli.manager.commandElapsedTime / 1000;
+    await this.cli.manager.waitForReturn();
 
-    await this.waitFor(() => elapsed() < maxTime, {
-        "error": Error(
-            `The last command's total execution time ${elapsed()}s was more than ${maxTime}s.`,
-        ),
-    });
+    const elapsed = this.cli.manager.commandElapsedTime / 1000;
+
+    assert.ok(
+        elapsed <= maxTime,
+        new AssertionError({
+            "message": `The last command's total execution time ${elapsed}s was more than ${maxTime}s.`,
+        }),
+    );
 }
 
 /**
  * Verify that the last command's execution time is the specified number of
  * seconds or more.
+ *
+ * @remarks
+ * Will wait for the last command to return before asserting.
  *
  * @param minTime - The minimum amount of time, in seconds, that should have
  *                  elapsed
@@ -546,13 +555,16 @@ async function verifyMaximumElapsedTime(maxTime: number): Promise<void> {
  * seconds.
  */
 async function verifyMinimumElapsedTime(minTime: number): Promise<void> {
-    const elapsed = () => this.cli.manager.commandElapsedTime / 1000;
+    await this.cli.manager.waitForReturn();
 
-    await this.waitFor(() => elapsed() > minTime, {
-        "error": Error(
-            `The last command's total execution time ${elapsed()}s was less than ${minTime}s.`,
-        ),
-    });
+    const elapsed = this.cli.manager.commandElapsedTime / 1000;
+
+    assert.ok(
+        elapsed >= minTime,
+        new AssertionError({
+            "message": `The last command's total execution time ${elapsed}s was less than ${minTime}s.`,
+        }),
+    );
 }
 
 /**
