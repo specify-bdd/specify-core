@@ -5,7 +5,6 @@
  */
 
 import { defineStep                           } from "@specify-bdd/specify";
-import assert, { AssertionError               } from "node:assert/strict";
 import { existsSync                           } from "node:fs";
 import { mkdtemp, readFile, unlink, writeFile } from "node:fs/promises";
 import { tmpdir                               } from "node:os";
@@ -83,18 +82,18 @@ async function deleteFile(filePath: string): Promise<void> {
  * @param filePath - The file path to check the content of
  * @param pattern  - The regex pattern (as string) the file content should match
  *
- * @throws AssertionError
+ * @throws Error
  * If the file does not exist.
  *
- * @throws AssertionError
+ * @throws Error
  * If the file content doesn't match the pattern.
  */
 async function verifyFileContent(filePath: string, pattern: string): Promise<void> {
     await verifyFilePathExists.call(this, filePath);
 
-    const content = await readFile(filePath, "utf8");
-
-    assert.match(content, RegExp(pattern), "File content does not match the expected pattern.");
+    await this.waitFor(async () => RegExp(pattern).test(await readFile(filePath, "utf8")), {
+        "error": Error("File content does not match the expected pattern."),
+    });
 }
 
 /**
@@ -102,21 +101,18 @@ async function verifyFileContent(filePath: string, pattern: string): Promise<voi
  *
  * @param filePath - The file path to check for emptiness
  *
- * @throws AssertionError
+ * @throws Error
  * If the file does not exist.
  *
- * @throws AssertionError
+ * @throws Error
  * If the file is not empty.
  */
 async function verifyFileIsEmpty(filePath: string): Promise<void> {
     await verifyFilePathExists.call(this, filePath);
 
-    const content = await readFile(filePath, "utf8");
-
-    assert.ok(
-        !content,
-        new AssertionError({ "message": "Expected file to be empty but it is not." }),
-    );
+    await this.waitFor(async () => !(await readFile(filePath, "utf8")), {
+        "error": Error("Expected file to be empty but it is not."),
+    });
 }
 
 /**
@@ -124,14 +120,13 @@ async function verifyFileIsEmpty(filePath: string): Promise<void> {
  *
  * @param filePath - The file path to check for existence
  *
- * @throws AssertionError
+ * @throws Error
  * If the file does not exist.
  */
 async function verifyFilePathExists(filePath: string): Promise<void> {
-    assert.ok(
-        existsSync(filePath),
-        new AssertionError({ "message": `The file path "${filePath}" does not exist` }),
-    );
+    await this.waitFor(() => existsSync(filePath), {
+        "error": Error(`The file path "${filePath}" does not exist`),
+    });
 }
 
 /**

@@ -2,6 +2,7 @@ import { World    } from "@cucumber/cucumber";
 import { QuickRef } from "@specify-bdd/quick-ref";
 
 import { SpecifyWorld } from "@/lib/SpecifyWorld";
+import waitFor          from "@/lib/waitFor";
 
 const { mockWorld } = vi.hoisted(() => {
     return { "mockWorld": vi.fn() };
@@ -16,6 +17,7 @@ vi.mock("@cucumber/cucumber", () => {
 });
 
 vi.mock("@specify-bdd/quick-ref");
+vi.mock("@/lib/waitFor");
 
 describe("Specify World", () => {
     const opts = {};
@@ -51,6 +53,23 @@ describe("Specify World", () => {
                     "Cannot set property quickRef",
                 );
             });
+        });
+    });
+
+    describe("waitFor", () => {
+        test("waitFor is a wrapper for the waitFor utility function with configured default", () => {
+            const predicate = vi.fn().mockResolvedValue(false);
+            const options   = { "interval": 100, "error": Error("custom error") };
+
+            world.config = {
+                "time": {
+                    "implicitWait": 999,
+                },
+            };
+
+            world.waitFor(predicate, options);
+
+            expect(waitFor).toHaveBeenCalledWith(predicate, { "timeout": 999, ...options });
         });
     });
 });

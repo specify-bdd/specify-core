@@ -54,6 +54,7 @@ addBeforeAllHook(
 
 addBeforeScenarioHook(
     async function (data) {
+        this.config = config;
         this.quickRef.add(...refsModules, { config });
 
         // attaching this pickle (test case) to the scenario World allows us to reference its data later

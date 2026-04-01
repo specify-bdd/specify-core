@@ -2,7 +2,7 @@
  * Generates type definitions using the type generation scripts in the
  * `@specify-bdd/specify/scripts/types` directory.
  *
- * The generated type definitions are written to the `@/types/index.d.ts` file.
+ * The generated type definitions are written to the `@/types/index.ts` file.
  */
 
 import { writeFileSync } from "node:fs";
@@ -12,7 +12,7 @@ import { globbySync    } from "globby";
 import type { InterfaceExportOptions } from "./utils";
 
 const __dirname  = import.meta.dirname;
-const outputFile = path.join(__dirname, "..", "types", "index.d.ts");
+const outputFile = path.join(__dirname, "..", "src", "types", "index.ts");
 
 const typeScripts = globbySync([path.join(__dirname, "types", `*.ts`)], {
     "absolute":  true,

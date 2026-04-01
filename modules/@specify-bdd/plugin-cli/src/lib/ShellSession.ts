@@ -20,7 +20,6 @@ export class ShellSession implements SystemIOSession {
      * Creates a new interactive shell session.
      *
      * @remarks
-     *
      * If `userPath` is provided, it will override the default PATH
      * environment variable for this session.
      *
