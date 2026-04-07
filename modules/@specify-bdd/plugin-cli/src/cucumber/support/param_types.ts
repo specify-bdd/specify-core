@@ -9,8 +9,8 @@ import { defineParamType        } from "@specify-bdd/specify";
 import assert, { AssertionError } from "node:assert/strict";
 import { constants              } from "node:os";
 
-const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;                                                                                                              
-const flexInt      = new RegExp(`-?\\d+|${quotedString.source}`); 
+const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;
+const flexInt      = new RegExp(`-?\\d+|${quotedString.source}`);
 
 defineParamType({
     "name":   "cliSignal",
@@ -35,7 +35,7 @@ defineParamType({
         if (input.startsWith('"') || input.startsWith("'")) {
             input = input.slice(1, -1);
         }
-        
+
         const num = Number(input);
 
         assert.ok(
