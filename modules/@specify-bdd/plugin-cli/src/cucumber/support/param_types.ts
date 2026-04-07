@@ -9,6 +9,7 @@ import { defineParamType        } from "@specify-bdd/specify";
 import assert, { AssertionError } from "node:assert/strict";
 import { constants              } from "node:os";
 
+const flexInt      = /-?\d+|"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/; // integer or quoted string
 const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;
 
 defineParamType({
@@ -23,6 +24,26 @@ defineParamType({
         );
 
         return parsedInput;
+    },
+    "useForSnippets": false,
+});
+
+defineParamType({
+    "name":   "flexInt",
+    "regexp": flexInt,
+    transformer(input: string): number {
+        if (input.startsWith('"') || input.startsWith("'")) {
+            input = input.slice(1, -1);
+        }
+
+        const result = parseInt(input, 10);
+
+        assert.ok(
+            !isNaN(result),
+            new AssertionError({ "message": `Expected a valid integer but received "${input}"` }),
+        );
+        
+        return result;
     },
     "useForSnippets": false,
 });

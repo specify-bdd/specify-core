@@ -13,18 +13,18 @@ import { ShellSession             } from "@/lib/ShellSession";
 
 import type { SpawnOptions } from "node:child_process";
 
-defineStep("When [I kill/the user kills] CLI shell {int}", killCLIShellByIndex);
+defineStep("When [I kill/the user kills] CLI shell {flexInt}", killCLIShellByIndex);
 defineStep("When [I kill/the user kills] the CLI shell", killCLIShell);
 defineStep("When [I kill/the user kills] the CLI shell named {string}", killCLIShellByName);
 defineStep("When [I send/the user sends] a {cliSignal} signal to the last command", sendKillSignal);
 defineStep("When [I start/the user starts] a/an/the (async )command/process {refstr}", execCommand);
 defineStep("When [I switch/the user switches] CLI shells", switchToNextShell);
-defineStep("When [I switch/the user switches] to CLI shell {int}", switchShellByIndex);
+defineStep("When [I switch/the user switches] to CLI shell {flexInt}", switchShellByIndex);
 defineStep("When [I switch/the user switches] to the CLI shell named {string}", switchShellByName);
 defineStep("When [I wait/the user waits] for terminal output", waitForAnyOutput, {
     "timeout": 60000,
 });
-defineStep("Then there should be {int} active CLI shell(s)", verifyShellCount);
+defineStep("Then there should be {flexInt} active CLI shell(s)", verifyShellCount);
 
 defineStep(
     ["Given a/another CLI shell", "When [I start/the user starts] a/another CLI shell"],
@@ -78,9 +78,9 @@ defineStep(
 
 defineStep(
     [
-        "Then the last command's exit code/status should be {int}",
+        "Then the last command's exit code/status should be {flexInt}",
         "Then the last command's exit code/status should be {ref}",
-        "Then the last command's exit code/status should be a/an {int}",
+        "Then the last command's exit code/status should be a/an {flexInt}",
         "Then the last command's exit code/status should be a/an {ref}",
     ],
     verifyExitCode,
