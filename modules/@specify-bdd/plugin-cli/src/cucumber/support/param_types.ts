@@ -9,8 +9,10 @@ import { defineParamType        } from "@specify-bdd/specify";
 import assert, { AssertionError } from "node:assert/strict";
 import { constants              } from "node:os";
 
+// matches "1", "-2", '3', but not '4". Auto-strips quotes
+const quotedInt = /'(-?\d+)'|"(-?\d+)"/;
+
 const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;
-const flexInt      = new RegExp(`-?\\d+|${quotedString.source}`);
 
 defineParamType({
     "name":   "cliSignal",
@@ -29,21 +31,10 @@ defineParamType({
 });
 
 defineParamType({
-    "name":   "flexInt",
-    "regexp": flexInt,
-    transformer(input: string): number {
-        if (input.startsWith('"') || input.startsWith("'")) {
-            input = input.slice(1, -1);
-        }
-
-        const num = Number(input);
-
-        assert.ok(
-            Number.isInteger(num),
-            new AssertionError({ "message": `Expected a valid integer but received "${input}"` }),
-        );
-
-        return num;
+    "name":   "intstr",
+    "regexp": quotedInt,
+    transformer(single: string, double: string): number {
+        return parseInt(single ?? double, 10);
     },
     "useForSnippets": false,
 });

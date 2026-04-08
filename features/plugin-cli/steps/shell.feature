@@ -16,7 +16,7 @@ Feature: Shell Step Definitions
         Scenario: Create multiple shells
             Given a CLI shell
             When the user starts another CLI shell
-            Then there should be "2" active CLI shells
+            Then there should be 2 active CLI shells
 
         Scenario: Destroy the active shell
             Given a CLI shell
