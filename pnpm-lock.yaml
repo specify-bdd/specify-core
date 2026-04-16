@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@specify-bdd/plugin-browser':
+        specifier: workspace:*
+        version: link:modules/@specify-bdd/plugin-browser
       '@specify-bdd/plugin-cli':
         specifier: workspace:*
         version: link:modules/@specify-bdd/plugin-cli
@@ -124,6 +127,19 @@ importers:
       '@typescript-eslint/utils':
         specifier: ^8.54.0
         version: 8.54.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
+
+  modules/@specify-bdd/plugin-browser:
+    dependencies:
+      '@specify-bdd/specify':
+        specifier: workspace:*
+        version: link:../specify
+    devDependencies:
+      tsc-alias:
+        specifier: ^1.8.16
+        version: 1.8.16
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
 
   modules/@specify-bdd/plugin-cli:
     dependencies:
