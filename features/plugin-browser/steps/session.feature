@@ -7,7 +7,7 @@ Feature: Browser Session Step Definitions
         Given that the "@specify-bdd/specify" NPM package is installed
         And that the "@specify-bdd/plugin-browser" NPM package is installed
 
-    Rule: I can start browser sessions
+    Rule: The user can start browser sessions
 
         Scenario: Start a browser session
             When the user starts a "chrome" browser session
@@ -18,7 +18,7 @@ Feature: Browser Session Step Definitions
             And starts another "chrome" browser session
             Then there should be 2 active browser sessions
 
-    Rule: I can end browser sessions
+    Rule: The user can end browser sessions
 
         Scenario: End the active browser session
             Given a "chrome" browser session

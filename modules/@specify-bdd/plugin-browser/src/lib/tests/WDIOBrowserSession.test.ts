@@ -108,6 +108,22 @@ describe("WDIOBrowserSession", () => {
             );
         });
 
+        it("does not set goog:chromeOptions for non-chrome browsers in headless mode", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "firefox", "mode": "headless" });
+
+            const call = vi.mocked(remote).mock.calls[0][0] as {
+                capabilities: Record<string, unknown>;
+            };
+
+            expect(call.capabilities["goog:chromeOptions"]).toBeUndefined();
+        });
+
         it("calls remote() without goog:chromeOptions when mode is 'visual'", async () => {
             const { remote } = await import("webdriverio");
 
