@@ -163,6 +163,28 @@ describe("WDIOBrowserSession", () => {
             );
         });
 
+        it("includes binary in goog:chromeOptions when CHROME_PATH is set", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            vi.stubEnv("CHROME_PATH", "/opt/google/chrome/chrome");
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+
+            expect(remote).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    "capabilities": expect.objectContaining({
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        "goog:chromeOptions": expect.objectContaining({
+                            "binary": "/opt/google/chrome/chrome",
+                        }),
+                    }),
+                }),
+            );
+        });
+
         it("does not set wdio:chromedriverOptions when CHROMEDRIVER_PATH is not set", async () => {
             const { remote } = await import("webdriverio");
 
@@ -177,7 +199,6 @@ describe("WDIOBrowserSession", () => {
                 capabilities: Record<string, unknown>;
             };
 
-             
             expect(call.capabilities["wdio:chromedriverOptions"]).toBeUndefined();
         });
 
