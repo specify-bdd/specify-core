@@ -54,6 +54,10 @@ jobs:
         with:
           cache: pnpm
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v2
+        with:
+          install-chromedriver: true
       - name: Generate types
         run: pnpm generate-types
       - name: Build

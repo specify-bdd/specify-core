@@ -47,6 +47,10 @@ jobs:
       - name: Audit
         if: ${{ inputs.audit == true }}
         run: pnpm audit --prod --audit-level=moderate
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v2
+        with:
+          install-chromedriver: true
       - name: Generate types
         run: pnpm generate-types
       - name: Build

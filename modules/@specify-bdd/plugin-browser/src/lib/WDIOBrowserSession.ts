@@ -73,9 +73,10 @@ export class WDIOBrowserSession implements BrowserSession {
                 "hostname": url.hostname,
                 "port":     parseInt(url.port, 10) || (url.protocol === "https:" ? 443 : 80),
                 "path":     url.pathname,
+                "logLevel": "error",
             };
         }
 
-        return { capabilities };
+        return { capabilities, "logLevel": "error" };
     }
 }
