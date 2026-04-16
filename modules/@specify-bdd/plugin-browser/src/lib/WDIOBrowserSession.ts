@@ -66,17 +66,15 @@ export class WDIOBrowserSession implements BrowserSession {
             };
         }
 
+        const opts: Capabilities.WebdriverIOConfig = { capabilities, "logLevel": "error" };
+
         if (mode === "grid" && gridUrl) {
             const url = new URL(gridUrl);
-            return {
-                capabilities,
-                "hostname": url.hostname,
-                "port":     parseInt(url.port, 10) || (url.protocol === "https:" ? 443 : 80),
-                "path":     url.pathname,
-                "logLevel": "error",
-            };
+            opts.hostname = url.hostname;
+            opts.port = parseInt(url.port, 10) || (url.protocol === "https:" ? 443 : 80);
+            opts.path = url.pathname;
         }
 
-        return { capabilities, "logLevel": "error" };
+        return opts;
     }
 }
