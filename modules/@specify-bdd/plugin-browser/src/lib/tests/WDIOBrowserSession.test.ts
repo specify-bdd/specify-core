@@ -10,6 +10,7 @@ const mockDriver = {
 
 beforeEach(() => {
     vi.resetAllMocks();
+    vi.unstubAllEnvs();
 });
 
 describe("WDIOBrowserSession", () => {
@@ -138,6 +139,46 @@ describe("WDIOBrowserSession", () => {
             };
 
             expect(call.capabilities["goog:chromeOptions"]).toBeUndefined();
+        });
+
+        it("sets wdio:chromedriverOptions.binary to CHROMEDRIVER_PATH when that env var is set", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            vi.stubEnv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver");
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+
+            expect(remote).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    "capabilities": expect.objectContaining({
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        "wdio:chromedriverOptions": expect.objectContaining({
+                            "binary": "/usr/bin/chromedriver",
+                        }),
+                    }),
+                }),
+            );
+        });
+
+        it("does not set wdio:chromedriverOptions when CHROMEDRIVER_PATH is not set", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            vi.stubEnv("CHROMEDRIVER_PATH", "");
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+
+            const call = vi.mocked(remote).mock.calls[0][0] as {
+                capabilities: Record<string, unknown>;
+            };
+
+             
+            expect(call.capabilities["wdio:chromedriverOptions"]).toBeUndefined();
         });
 
         it("calls remote() with hostname, port, and path when mode is 'grid'", async () => {

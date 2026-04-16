@@ -57,6 +57,7 @@ jobs:
           cache: pnpm
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
       - name: Setup Chrome
+        id: setup-chrome
         uses: browser-actions/setup-chrome@v2
         with:
           install-chromedriver: true
@@ -66,3 +67,5 @@ jobs:
         run: pnpm build
       - name: Run Specify tests
         run: pnpm specify
+        env:
+          CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
