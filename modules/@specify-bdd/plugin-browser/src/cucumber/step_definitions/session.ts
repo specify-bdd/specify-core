@@ -16,7 +16,7 @@ defineStep(
         "When [I start/the user starts] a/another {string} browser session",
     ],
     startBrowserSession,
-    { "timeout": 10000 },
+    { "timeout": 30000 },
 );
 
 defineStep("When [I end/the user ends] the browser session", endBrowserSession);
