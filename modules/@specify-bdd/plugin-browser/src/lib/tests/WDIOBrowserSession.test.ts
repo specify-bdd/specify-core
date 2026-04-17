@@ -77,12 +77,12 @@ describe("WDIOBrowserSession", () => {
 
             const session = new WDIOBrowserSession();
 
-            await session.start({ "browser": "firefox" });
+            await session.start({ "browser": "chrome" });
 
             expect(remote).toHaveBeenCalledWith(
                 expect.objectContaining({
                     "capabilities": expect.objectContaining({
-                        "browserName": "firefox",
+                        "browserName": "chrome",
                     }),
                 }),
             );
@@ -109,20 +109,14 @@ describe("WDIOBrowserSession", () => {
             );
         });
 
-        it("does not set goog:chromeOptions for non-chrome browsers in headless mode", async () => {
-            const { remote } = await import("webdriverio");
-
-            vi.mocked(remote).mockResolvedValue(mockDriver as never);
-
+        it("throws for unsupported browsers", async () => {
             const session = new WDIOBrowserSession();
 
-            await session.start({ "browser": "firefox", "mode": "headless" });
-
-            const call = vi.mocked(remote).mock.calls[0][0] as {
-                capabilities: Record<string, unknown>;
-            };
-
-            expect(call.capabilities["goog:chromeOptions"]).toBeUndefined();
+            for (const browser of ["firefox", "edge", "safari"]) {
+                await expect(
+                    session.start({ "browser": browser, "mode": "headless" }),
+                ).rejects.toThrow(`Browser "${browser}" is not yet supported.`);
+            }
         });
 
         it("calls remote() without goog:chromeOptions when mode is 'visual'", async () => {
@@ -180,6 +174,14 @@ describe("WDIOBrowserSession", () => {
             expect(call.capabilities["wdio:chromedriverOptions"]).toBeUndefined();
         });
 
+        it("throws when mode is 'grid' but gridUrl is not provided", async () => {
+            const session = new WDIOBrowserSession();
+
+            await expect(session.start({ "browser": "chrome", "mode": "grid" })).rejects.toThrow(
+                'gridUrl is required when mode is "grid".',
+            );
+        });
+
         it("calls remote() with hostname, port, and path when mode is 'grid'", async () => {
             const { remote } = await import("webdriverio");
 
@@ -215,6 +217,20 @@ describe("WDIOBrowserSession", () => {
             await session.end();
 
             expect(mockDriver.deleteSession).toHaveBeenCalledOnce();
+        });
+
+        it("nulls driver even when deleteSession() rejects", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            mockDriver.deleteSession.mockRejectedValue(new Error("Session closed unexpectedly"));
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+
+            await expect(session.end()).rejects.toThrow("Session closed unexpectedly");
+            expect(session.driver).toBeNull();
         });
 
         it("does not throw if called before start()", async () => {

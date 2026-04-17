@@ -18,10 +18,8 @@ addBeforeScenarioHook(
 
 addAfterScenarioHook(
     async function (): Promise<void> {
-        // terminate any remaining browser sessions
-        for (const session of this.browser.sessions) {
-            await session.end();
-        }
+        // terminate all remaining browser sessions, even if some fail to end
+        await Promise.allSettled(this.browser.sessions.map((s) => s.end()));
 
         this.browser.sessions = [];
     },

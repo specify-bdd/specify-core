@@ -42,8 +42,11 @@ export class WDIOBrowserSession implements BrowserSession {
      * End the browser session and release all associated resources.
      */
     async end(): Promise<void> {
-        await this.#driver?.deleteSession();
-        this.#driver = null;
+        try {
+            await this.#driver?.deleteSession();
+        } finally {
+            this.#driver = null;
+        }
     }
 
     /**
@@ -76,11 +79,20 @@ export class WDIOBrowserSession implements BrowserSession {
 
                 break;
             }
+
+            case "firefox":
+            case "edge":
+            case "safari":
+                throw new Error(`Browser "${browser}" is not yet supported.`);
         }
 
         const opts: Capabilities.WebdriverIOConfig = { capabilities, "logLevel": "error" };
 
-        if (mode === "grid" && gridUrl) {
+        if (mode === "grid") {
+            if (!gridUrl) {
+                throw new Error('gridUrl is required when mode is "grid".');
+            }
+
             const url = new URL(gridUrl);
             opts.hostname = url.hostname;
             opts.port = parseInt(url.port, 10) || (url.protocol === "https:" ? 443 : 80);
