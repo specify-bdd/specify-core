@@ -5,6 +5,8 @@
  * using WDIO's standalone mode to manage browser lifecycle.
  */
 
+import assert from "node:assert/strict";
+
 import { remote            } from "webdriverio";
 import type { Capabilities } from "@wdio/types";
 
@@ -89,9 +91,7 @@ export class WDIOBrowserSession implements BrowserSession {
         const opts: Capabilities.WebdriverIOConfig = { capabilities, "logLevel": "error" };
 
         if (mode === "grid") {
-            if (!gridUrl) {
-                throw new Error('gridUrl is required when mode is "grid".');
-            }
+            assert.ok(gridUrl, 'gridUrl is required when mode is "grid".');
 
             const url = new URL(gridUrl);
             opts.hostname = url.hostname;
