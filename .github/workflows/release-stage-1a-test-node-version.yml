@@ -52,8 +52,6 @@ jobs:
         uses: browser-actions/setup-chrome@v2
         with:
           install-chromedriver: true
-      - name: Fix chrome_sandbox permissions
-        run: sudo chmod 4755 "$(dirname '${{ steps.setup-chrome.outputs.chrome-path }}')/chrome_sandbox"
       - name: Generate types
         run: pnpm generate-types
       - name: Build
@@ -61,7 +59,6 @@ jobs:
       - name: Test
         run: pnpm test
         env:
-          CHROME_PATH:       ${{ steps.setup-chrome.outputs.chrome-path }}
           CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
       - name: Upload build artifacts
         if: ${{ inputs.store_artifacts == true }}

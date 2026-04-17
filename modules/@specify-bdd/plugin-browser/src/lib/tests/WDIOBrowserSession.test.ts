@@ -63,7 +63,7 @@ describe("WDIOBrowserSession", () => {
                         "browserName": "chrome",
                         // eslint-disable-next-line @typescript-eslint/naming-convention
                         "goog:chromeOptions": expect.objectContaining({
-                            "args": expect.arrayContaining(["--headless"]),
+                            "args": expect.arrayContaining(["--headless", "--no-sandbox"]),
                         }),
                     }),
                 }),
@@ -102,7 +102,7 @@ describe("WDIOBrowserSession", () => {
                     "capabilities": expect.objectContaining({
                         // eslint-disable-next-line @typescript-eslint/naming-convention
                         "goog:chromeOptions": expect.objectContaining({
-                            "args": expect.arrayContaining(["--headless"]),
+                            "args": expect.arrayContaining(["--headless", "--no-sandbox"]),
                         }),
                     }),
                 }),
@@ -157,28 +157,6 @@ describe("WDIOBrowserSession", () => {
                         // eslint-disable-next-line @typescript-eslint/naming-convention
                         "wdio:chromedriverOptions": expect.objectContaining({
                             "binary": "/usr/bin/chromedriver",
-                        }),
-                    }),
-                }),
-            );
-        });
-
-        it("includes binary in goog:chromeOptions when CHROME_PATH is set", async () => {
-            const { remote } = await import("webdriverio");
-
-            vi.mocked(remote).mockResolvedValue(mockDriver as never);
-            vi.stubEnv("CHROME_PATH", "/opt/google/chrome/chrome");
-
-            const session = new WDIOBrowserSession();
-
-            await session.start({ "browser": "chrome" });
-
-            expect(remote).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    "capabilities": expect.objectContaining({
-                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                        "goog:chromeOptions": expect.objectContaining({
-                            "binary": "/opt/google/chrome/chrome",
                         }),
                     }),
                 }),
