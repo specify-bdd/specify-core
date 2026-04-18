@@ -1,5 +1,7 @@
 name: PR Checks
-on: pull_request
+on:
+  pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -54,9 +56,16 @@ jobs:
         with:
           cache: pnpm
           node-version: ${{ vars.NODE_LTS_ACTIVE_VERSION }}
+      - name: Setup Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v2
+        with:
+          install-chromedriver: true
       - name: Generate types
         run: pnpm generate-types
       - name: Build
         run: pnpm build
       - name: Run Specify tests
         run: pnpm specify
+        env:
+          CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
