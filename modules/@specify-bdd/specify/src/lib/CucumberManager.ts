@@ -322,7 +322,7 @@ export class CucumberManager {
      *          single type.
      */
     #expandTypeVariants(phrase: string): string[] {
-        const match = phrase.match(/\{([^}|]+(?:\|[^}|]+)+)\}/);
+        const match = phrase.match(/\{([^{}|]+(?:\|[^{}|]+)+)\}/);
 
         if (!match) {
             return [phrase];
