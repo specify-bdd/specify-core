@@ -301,9 +301,38 @@ export class CucumberManager {
         const keyword = match[1];
         const trimmed = expression.slice(match[0].length);
 
-        return this.#parseEnhancedNotation(trimmed).map((variant) => {
-            return { keyword, "pattern": variant };
-        });
+        return this.#parseEnhancedNotation(trimmed)
+            .flatMap((variant) => this.#expandTypeVariants(variant))
+            .map((variant) => ({ keyword, "pattern": variant }));
+    }
+
+    /**
+     * Recursively expand pipe-delimited parameter types in a Cucumber expression
+     * phrase into one variant per declared type.
+     *
+     * For example, `"store the value {int|float}"` expands to
+     * `["store the value {int}", "store the value {float}"]`.
+     *
+     * Multiple multi-type params in the same phrase produce the Cartesian
+     * product of all type combinations.
+     *
+     * @param phrase - The phrase to expand
+     *
+     * @returns A list of phrases with each multi-type param replaced by a
+     *          single type.
+     */
+    #expandTypeVariants(phrase: string): string[] {
+        const match = phrase.match(/\{([^}|]+(?:\|[^}|]+)+)\}/);
+
+        if (!match) {
+            return [phrase];
+        }
+
+        const types = match[1].split("|");
+
+        return types.flatMap((type) =>
+            this.#expandTypeVariants(phrase.replace(match[0], `{${type}}`)),
+        );
     }
 
     /**
