@@ -9,8 +9,8 @@ import { defineParamType        } from "@specify-bdd/specify";
 import assert, { AssertionError } from "node:assert/strict";
 import { constants              } from "node:os";
 
-// matches "1", "-2", '3', but not '4". Auto-strips quotes
-const quotedInt = /'(-?\d+)'|"(-?\d+)"/;
+// matches "1", "-2", '3', but not '4". Quotes stripped in transformer.
+const quotedInt = /'-?\d+'|"-?\d+"/;
 
 const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;
 
@@ -33,8 +33,8 @@ defineParamType({
 defineParamType({
     "name":   "intstr",
     "regexp": quotedInt,
-    transformer(single: string, double: string): number {
-        return parseInt(single ?? double, 10);
+    transformer(input: string): number {
+        return parseInt(input.slice(1, -1), 10);
     },
     "useForSnippets": false,
 });
