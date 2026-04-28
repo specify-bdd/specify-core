@@ -34,7 +34,7 @@ export interface ParamTypeOptions {
     name: string;
     preferForRegexpMatch?: boolean;
     regexp: RegExp;
-    transformer?: (arg: string) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    transformer?: (...args: string[]) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
     useForSnippets?: boolean;
 }
 
