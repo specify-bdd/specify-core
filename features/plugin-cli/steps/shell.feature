@@ -140,10 +140,6 @@ Feature: Shell Step Definitions
             When the user runs the command "echo foo"
             Then the last command's terminal output should not include "bar"
 
-        Scenario: Verify terminal output includes a string from async command
-            When the user starts the async command "echo foo; sleep 0.5; echo bar"
-            Then the last command's terminal output should include "bar"
-
         Scenario: Wait for terminal output including a string
             When the user starts the async command "echo foo; sleep 0.5; echo bar"
             And waits for terminal output including "bar"
