@@ -53,9 +53,22 @@ defineParamType({
 
 defineParamType({
     "name":   "regexp",
-    "regexp": quotedString,
+    "regexp": /\/(?:[^/\\]|\\.)*\/[dgimsuvy]*/,
     transformer(input: string): RegExp {
-        return RegExp(this.quickRef.parse(input.slice(1, -1)));
+        const lastSlash = input.lastIndexOf("/");
+        const pattern   = input.slice(1, lastSlash);
+        const flags     = input.slice(lastSlash + 1);
+        return new RegExp(pattern, flags);
+    },
+    "useForSnippets": false,
+});
+
+defineParamType({
+    "name":   "regexpstr",
+    "regexp": new RegExp(`${quotedString.source}|${refNotation.source}`),
+    transformer(input: string): RegExp {
+        const content = input.startsWith("$") ? input : input.slice(1, -1);
+        return new RegExp(this.quickRef.parse(content));
     },
     "useForSnippets": false,
 });

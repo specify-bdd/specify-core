@@ -108,29 +108,51 @@ defineStep(
 
 defineStep(
     [
-        "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){ref}",
         "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){regexp}",
+        "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){regexpstr}",
     ],
     waitForMatchingOutputOnSTDERR,
     { "timeout": 60000 },
 );
 
 defineStep(
+    "When [I wait/the user waits] for terminal output on STDERR including {string}",
+    waitForIncludingOutputOnSTDERR,
+    { "timeout": 60000 },
+);
+
+defineStep(
     [
-        "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){ref}",
         "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){regexp}",
+        "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){regexpstr}",
     ],
     waitForMatchingOutputOnSTDOUT,
     { "timeout": 60000 },
 );
 
 defineStep(
+    "When [I wait/the user waits] for terminal output on STDOUT including {string}",
+    waitForIncludingOutputOnSTDOUT,
+    { "timeout": 60000 },
+);
+
+defineStep(
     [
-        "When [I wait/the user waits] for terminal output matching (the regular expression ){ref}",
         "When [I wait/the user waits] for terminal output matching (the regular expression ){regexp}",
+        "When [I wait/the user waits] for terminal output matching (the regular expression ){regexpstr}",
         "When [I wait/the user waits] for the prompt {regexp}",
+        "When [I wait/the user waits] for the prompt {regexpstr}",
     ],
     waitForMatchingOutput,
+    { "timeout": 60000 },
+);
+
+defineStep(
+    [
+        "When [I wait/the user waits] for terminal output including {string}",
+        "When [I wait/the user waits] for the prompt including {string}",
+    ],
+    waitForIncludingOutput,
     { "timeout": 60000 },
 );
 
@@ -146,18 +168,28 @@ defineStep(
 
 defineStep(
     [
-        "Then the last command's terminal output should match (the regular expression ){ref}",
         "Then the last command's terminal output should match (the regular expression ){regexp}",
+        "Then the last command's terminal output should match (the regular expression ){regexpstr}",
     ],
     verifyMatchingOutput,
 );
 
+defineStep("Then the last command's terminal output should be {string}", verifyOutputIs);
+defineStep("Then the last command's terminal output should include {string}", verifyIncludesOutput);
+
 defineStep(
     [
-        "Then the last command's terminal output should not match (the regular expression ){ref}",
         "Then the last command's terminal output should not match (the regular expression ){regexp}",
+        "Then the last command's terminal output should not match (the regular expression ){regexpstr}",
     ],
     verifyNoMatchingOutput,
+);
+
+defineStep("Then the last command's terminal output should not be {string}", verifyOutputIsNot);
+
+defineStep(
+    "Then the last command's terminal output should not include {string}",
+    verifyNoIncludingOutput,
 );
 
 defineStep("Then the last command's terminal output should be empty", verifyEmptyOutput);
@@ -165,8 +197,16 @@ defineStep("Then the last command's terminal output should be empty", verifyEmpt
 defineStep(["When [I press/the user presses] the {string} key"], sendKeyPressToCLI);
 
 defineStep(
-    ["When [I respond/the user responds] to the prompt {regexp} by pressing the {string} key"],
-    respondToPromptByPressingKey,
+    [
+        "When [I respond/the user responds] to the prompt matching {regexp} by pressing the {string} key",
+        "When [I respond/the user responds] to the prompt matching {regexpstr} by pressing the {string} key",
+    ],
+    respondToMatchingPromptByPressingKey,
+);
+
+defineStep(
+    "When [I respond/the user responds] to the prompt including {string} by pressing the {string} key",
+    respondToIncludingPromptByPressingKey,
 );
 
 defineStep(
@@ -175,8 +215,16 @@ defineStep(
 );
 
 defineStep(
-    ["When [I respond/the user responds] to the prompt {string} by entering/inputting {string}"],
-    respondToPromptByEnteringLine,
+    "When [I respond/the user responds] to the prompt including {string} by entering/inputting {string}",
+    respondToIncludingPromptByEnteringLine,
+);
+
+defineStep(
+    [
+        "When [I respond/the user responds] to the prompt matching {regexp} by entering/inputting {string}",
+        "When [I respond/the user responds] to the prompt matching {regexpstr} by entering/inputting {string}",
+    ],
+    respondToMatchingPromptByEnteringLine,
 );
 
 /**
@@ -261,7 +309,7 @@ async function killCLIShellByName(name: string): Promise<void> {
 async function killCLIShellBySelector(selector?: number | string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
-    if (!selector) {
+    if (selector === undefined) {
         await this.cli.manager.killSession();
     } else {
         await this.cli.manager.killSession({
@@ -271,12 +319,26 @@ async function killCLIShellBySelector(selector?: number | string): Promise<void>
 }
 
 /**
- * Wait for a prompt matching the given pattern, then respond by entering the given line.
+ * Wait for a matching prompt, then respond by entering the given line.
  *
- * @param prompt - the prompt to wait for before responding
+ * @param prompt - the string to wait for in the prompt
+ * @param line   - the string to enter in response
+ */
+async function respondToIncludingPromptByEnteringLine(prompt: string, line: string): Promise<void> {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    await waitForIncludingOutput.call(this, prompt);
+
+    sendLineToCLI.call(this, line);
+}
+
+/**
+ * Wait for a prompt matching the given regexp, then respond by entering the given line.
+ *
+ * @param prompt - the pattern to match the prompt against before responding
  * @param line   - the line to enter in response to the prompt
  */
-async function respondToPromptByEnteringLine(prompt: RegExp, line: string): Promise<void> {
+async function respondToMatchingPromptByEnteringLine(prompt: RegExp, line: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     await waitForMatchingOutput.call(this, prompt);
@@ -287,13 +349,27 @@ async function respondToPromptByEnteringLine(prompt: RegExp, line: string): Prom
 /**
  * Wait for a prompt matching the given pattern, then respond by sending the given key
  *
- * @param prompt - the prompt to wait for before responding
+ * @param prompt - the pattern to match the prompt against before responding
  * @param key    - the key to send in response to the prompt
  */
-async function respondToPromptByPressingKey(prompt: RegExp, key: string): Promise<void> {
+async function respondToMatchingPromptByPressingKey(prompt: RegExp, key: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     await waitForMatchingOutput.call(this, prompt);
+
+    sendKeyPressToCLI.call(this, key);
+}
+
+/**
+ * Wait for a prompt containing the given literal string, then respond by sending the given key.
+ *
+ * @param prompt - the literal string to wait for in the prompt before responding
+ * @param key    - the key to send in response to the prompt
+ */
+async function respondToIncludingPromptByPressingKey(prompt: string, key: string): Promise<void> {
+    assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
+
+    await waitForIncludingOutput.call(this, prompt);
 
     sendKeyPressToCLI.call(this, key);
 }
@@ -472,7 +548,7 @@ function switchShellByName(name): void {
 function switchShell(selector?: number | string): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
-    if (!selector) {
+    if (selector === undefined) {
         this.cli.manager.switchToNextSession();
     } else {
         const session = this.cli.manager.findSession(selector);
@@ -506,12 +582,42 @@ async function verifyExitCode(exitCode: number): Promise<void> {
  * @throws Error
  * If no matches for the regexp pattern were found
  */
-async function verifyMatchingOutput(pattern: RegExp | string): Promise<void> {
-    const regexp = new RegExp(pattern);
-
-    await this.waitFor(() => regexp.test(this.cli.manager.output), {
+async function verifyMatchingOutput(pattern: RegExp): Promise<void> {
+    await this.waitFor(() => pattern.test(this.cli.manager.output), {
         "error": Error(
             `Command output did not match the specified pattern. Output:\n${this.cli.manager.output}`,
+        ),
+    });
+}
+
+/**
+ * Verify that the CLI output for the last command is exactly the given string.
+ *
+ * @param expected - The expected output
+ *
+ * @throws Error
+ * If the output does not exactly equal the expected string
+ */
+async function verifyOutputIs(expected: string): Promise<void> {
+    await this.waitFor(() => this.cli.manager.output.trim() === expected, {
+        "error": Error(
+            `Expected output to be exactly: ${expected}\nActual:\n${this.cli.manager.output}`,
+        ),
+    });
+}
+
+/**
+ * Verify that the CLI output for the last command contains the given string.
+ *
+ * @param text - The substring to look for in the output
+ *
+ * @throws Error
+ * If the output does not contain the given string
+ */
+async function verifyIncludesOutput(text: string): Promise<void> {
+    await this.waitFor(() => this.cli.manager.output.includes(text), {
+        "error": Error(
+            `Command output did not include the expected string.\nExpected: ${text}\nOutput:\n${this.cli.manager.output}`,
         ),
     });
 }
@@ -523,14 +629,42 @@ async function verifyMatchingOutput(pattern: RegExp | string): Promise<void> {
  * @param pattern - The pattern to match output against
  *
  * @throws Error
- * If no matches for the regexp pattern were found
+ * If the output matches the pattern
  */
-async function verifyNoMatchingOutput(pattern: RegExp | string): Promise<void> {
-    const regexp = new RegExp(pattern);
-
-    await this.waitFor(() => !regexp.test(this.cli.manager.output), {
+async function verifyNoMatchingOutput(pattern: RegExp): Promise<void> {
+    await this.waitFor(() => !pattern.test(this.cli.manager.output), {
         "error": Error(
             `Command output matched the specified pattern. Output:\n${this.cli.manager.output}`,
+        ),
+    });
+}
+
+/**
+ * Verify that the CLI output for the last command is NOT exactly the given string.
+ *
+ * @param expected - The string the output should not equal
+ *
+ * @throws Error
+ * If the output exactly equals the given string
+ */
+async function verifyOutputIsNot(expected: string): Promise<void> {
+    await this.waitFor(() => this.cli.manager.output.trim() !== expected, {
+        "error": Error(`Command output was exactly: ${expected}`),
+    });
+}
+
+/**
+ * Verify that the CLI output for the last command does NOT contain the given string.
+ *
+ * @param text - The substring that should not appear in the output
+ *
+ * @throws Error
+ * If the output contains the given string
+ */
+async function verifyNoIncludingOutput(text: string): Promise<void> {
+    await this.waitFor(() => !this.cli.manager.output.includes(text), {
+        "error": Error(
+            `Command output included the unexpected string.\nUnexpected: ${text}\nOutput:\n${this.cli.manager.output}`,
         ),
     });
 }
@@ -680,6 +814,15 @@ async function waitForMatchingOutput(pattern: RegExp): Promise<void> {
 }
 
 /**
+ * Wait for output containing a specific literal string.
+ *
+ * @param text - The literal string to wait for in the output
+ */
+async function waitForIncludingOutput(text: string): Promise<void> {
+    await waitForOutput.call(this, IOStream.ANY, new RegExp(escapeRegExp(text)));
+}
+
+/**
  * Wait for output matching a specific phrase on the STDERR stream.
  *
  * @param pattern - The pattern to match output against
@@ -689,10 +832,38 @@ async function waitForMatchingOutputOnSTDERR(pattern: RegExp): Promise<void> {
 }
 
 /**
+ * Wait for output containing a specific literal string on the STDERR stream.
+ *
+ * @param text - The literal string to wait for in the output
+ */
+async function waitForIncludingOutputOnSTDERR(text: string): Promise<void> {
+    await waitForOutput.call(this, IOStream.STDERR, new RegExp(escapeRegExp(text)));
+}
+
+/**
  * Wait for output matching a specific phrase on the STDOUT stream.
  *
  * @param pattern - The pattern to match output against
  */
 async function waitForMatchingOutputOnSTDOUT(pattern: RegExp): Promise<void> {
     await waitForOutput.call(this, IOStream.STDOUT, pattern);
+}
+
+/**
+ * Wait for output containing a specific literal string on the STDOUT stream.
+ *
+ * @param text - The literal string to wait for in the output
+ */
+async function waitForIncludingOutputOnSTDOUT(text: string): Promise<void> {
+    await waitForOutput.call(this, IOStream.STDOUT, new RegExp(escapeRegExp(text)));
+}
+
+/**
+ * Escape all special regexp characters in a string so it can be used as a
+ * literal match pattern inside a RegExp.
+ *
+ * @param text - The string to escape
+ */
+function escapeRegExp(text: string): string {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

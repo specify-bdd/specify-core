@@ -119,7 +119,42 @@ Feature: Shell Step Definitions
             When the user starts the async command "echo foo; echo bar >&2; sleep 2; echo baz >&2"
             And waits for terminal output on STDERR matching "baz"
             Then the last command's terminal output should match "^foo\nbar\nbaz$"
-    
+
+        Scenario: Verify terminal output using slash-delimited regexp
+            When the user runs the command "echo foo"
+            Then the last command's terminal output should match /^foo$/
+
+        Scenario: Verify terminal output is an exact string
+            When the user runs the command "echo foo"
+            Then the last command's terminal output should be "foo"
+
+        Scenario: Verify terminal output is not an exact string
+            When the user runs the command "echo foo"
+            Then the last command's terminal output should not be "bar"
+
+        Scenario: Verify terminal output includes a string
+            When the user runs the command "echo foo bar"
+            Then the last command's terminal output should include "foo"
+
+        Scenario: Verify terminal output does not include a string
+            When the user runs the command "echo foo"
+            Then the last command's terminal output should not include "bar"
+
+        Scenario: Wait for terminal output including a string
+            When the user starts the async command "echo foo; sleep 0.5; echo bar"
+            And waits for terminal output including "bar"
+            Then the last command's terminal output should include "bar"
+
+        Scenario: Wait for terminal output on STDOUT including a string
+            When the user starts the async command "echo foo; sleep 0.5; echo bar"
+            And waits for terminal output on STDOUT including "bar"
+            Then the last command's terminal output should include "bar"
+
+        Scenario: Wait for terminal output on STDERR including a string
+            When the user starts the async command "echo foo >&2; sleep 0.5; echo bar >&2"
+            And waits for terminal output on STDERR including "bar"
+            Then the last command's terminal output should include "bar"
+
     Rule: I can enter non-command input
 
         Background:
@@ -127,26 +162,41 @@ Feature: Shell Step Definitions
 
         Scenario: Press a key to respond to a prompt
             When the user starts the async command "./scripts/sh-prompt-key.sh"
-            And waits for the prompt "Press test key"
+            And waits for the prompt including "Press test key"
             And presses the "Space" key
             Then the last command's terminal output should match "Key pressed: Space"
 
         Scenario: Press a key to respond to a prompt as a single step
             When the user starts the async command "./scripts/sh-prompt-key.sh"
-            And responds to the prompt "Press test key" by pressing the "Space" key
+            And responds to the prompt including "Press test key" by pressing the "Space" key
             Then the last command's terminal output should match "Key pressed: Space"
         
         Scenario: Enter a line of input to respond to a prompt
             When the user starts the async command "./scripts/sh-prompt-line.sh"
-            And waits for the prompt "Enter test input"
+            And waits for the prompt including "Enter test input"
             And enters "Test Line"
             Then the last command's terminal output should match "Input: Test Line"
         
         Scenario: Enter a line of input to respond to a prompt as a single step
             When the user starts the async command "./scripts/sh-prompt-line.sh"
-            And responds to the prompt "Enter test input" by entering "Test Line"
+            And responds to the prompt including "Enter test input" by entering "Test Line"
             Then the last command's terminal output should match "Input: Test Line"
-    
+
+        Scenario: Press a key to respond to a prompt matching a regexp
+            When the user starts the async command "./scripts/sh-prompt-key.sh"
+            And responds to the prompt matching /Press test key/ by pressing the "Space" key
+            Then the last command's terminal output should include "Key pressed: Space"
+
+        Scenario: Enter a line of input to respond to a prompt matching a regexp
+            When the user starts the async command "./scripts/sh-prompt-line.sh"
+            And responds to the prompt matching /Enter test input/ by entering "Test Line"
+            Then the last command's terminal output should match "Input: Test Line"
+
+        Scenario: Wait for terminal output matching a slash-delimited regexp
+            When the user starts the async command "echo foo; sleep 0.5; echo bar"
+            And waits for terminal output matching /bar/
+            Then the last command's terminal output should include "bar"
+
     Rule: I can swap between shells and run commands in parallel
 
         Background:
