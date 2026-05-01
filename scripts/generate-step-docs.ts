@@ -1,0 +1,296 @@
+/**
+ * Step Definition Documentation Generator
+ *
+ * Parses step definition source files in the current package and generates
+ * a Markdown reference document for each module, extracting step patterns
+ * and handler JSDoc comments.
+ *
+ * Invoke from the root directory of the package to document:
+ *   tsx ../../scripts/generate-step-docs.ts
+ */
+
+import { mkdirSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
+import { globbySync } from "globby";
+import { Node, Project, SyntaxKind } from "ts-morph";
+import type { JSDoc, StringLiteral } from "ts-morph";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface ModuleDoc {
+    name: string;
+    description: string;
+}
+
+interface ParsedJSDoc {
+    description: string;
+    remarks: string;
+    params: string[];
+    throws: Array<{ type: string; description: string }>;
+}
+
+// ---------------------------------------------------------------------------
+// Entry point
+// ---------------------------------------------------------------------------
+
+const packageRoot = process.cwd();
+
+const stepDefPaths = globbySync("src/cucumber/step_definitions/*.ts", {
+    "cwd": packageRoot,
+    "absolute": true,
+});
+
+if (stepDefPaths.length === 0) {
+    process.exit(0);
+}
+
+const project = new Project({ "skipAddingFilesFromTsConfig": true });
+
+for (const filePath of stepDefPaths) {
+    const sourceFile = project.addSourceFileAtPath(filePath);
+    const fileName = path.basename(filePath, ".ts");
+    const moduleDoc = parseModuleDoc(sourceFile.getFullText());
+
+    // Find every defineStep(...) call in the file
+    const defineStepCalls = sourceFile
+        .getDescendantsOfKind(SyntaxKind.CallExpression)
+        .filter((call) => {
+            const expr = call.getExpression();
+            return Node.isIdentifier(expr) && expr.getText() === "defineStep";
+        });
+
+    const sections: string[] = [];
+
+    for (const call of defineStepCalls) {
+        const args = call.getArguments();
+
+        if (args.length < 2) {
+            continue;
+        }
+
+        // --- Extract step patterns from the first argument ---
+        const firstArg = args[0];
+        let patterns: string[] = [];
+
+        if (Node.isStringLiteral(firstArg)) {
+            patterns = [firstArg.getLiteralValue()];
+        } else if (Node.isArrayLiteralExpression(firstArg)) {
+            patterns = firstArg
+                .getElements()
+                .filter((el): el is StringLiteral => Node.isStringLiteral(el))
+                .map((el) => el.getLiteralValue());
+        }
+
+        if (patterns.length === 0) {
+            continue;
+        }
+
+        // --- Extract handler name from the second argument ---
+        const secondArg = args[1];
+
+        if (!Node.isIdentifier(secondArg)) {
+            continue;
+        }
+
+        const handlerName = secondArg.getText();
+
+        // --- Look up the handler function and parse its JSDoc ---
+        const fn = sourceFile.getFunction(handlerName);
+        const jsDocs = fn?.getJsDocs() ?? [];
+        const parsed = jsDocs.length > 0 ? parseJSDoc(jsDocs[0]) : null;
+
+        const heading = parsed?.description
+            ? firstSentence(parsed.description)
+            : `\`${handlerName}\``;
+
+        sections.push(buildSection(heading, patterns, parsed));
+    }
+
+    if (sections.length === 0) {
+        continue;
+    }
+
+    // --- Compose and write the Markdown document ---
+    let doc = `# ${moduleDoc.name}\n\n`;
+
+    if (moduleDoc.description) {
+        doc += `${moduleDoc.description}\n\n`;
+    }
+
+    doc += sections.join("\n---\n\n");
+
+    const outputDir = path.join(packageRoot, "docs", "markdown", "cucumber", "step_definitions");
+
+    mkdirSync(outputDir, { "recursive": true });
+    writeFileSync(path.join(outputDir, `${fileName}.md`), doc);
+
+    // eslint-disable-next-line no-console
+    console.log(`  Generated: docs/markdown/cucumber/step_definitions/${fileName}.md`);
+}
+
+// ---------------------------------------------------------------------------
+// Parsers
+// ---------------------------------------------------------------------------
+
+/**
+ * Extract the module name and description from the first JSDoc block in the
+ * source text.  The first non-empty line of the comment body is treated as
+ * the module name; the remaining lines form the description.
+ */
+function parseModuleDoc(sourceText: string): ModuleDoc {
+    const match = sourceText.match(/^\/\*\*([\s\S]*?)\*\//);
+
+    if (!match) {
+        return { "name": "Step Definitions", "description": "" };
+    }
+
+    const lines = stripJSDocDecorations(match[0]);
+
+    const nameIdx = lines.findIndex((l) => l.trim() !== "");
+    const name = nameIdx >= 0 ? lines[nameIdx].trim() : "Step Definitions";
+
+    const description = lines
+        .slice(nameIdx + 1)
+        .join(" ")
+        .trim()
+        .replace(/\s+/g, " ");
+
+    return { name, description };
+}
+
+/**
+ * Parse a handler function's JSDoc comment into structured fields.
+ */
+function parseJSDoc(jsDoc: JSDoc): ParsedJSDoc {
+    const lines = stripJSDocDecorations(jsDoc.getText());
+
+    const result: ParsedJSDoc = {
+        "description": "",
+        "remarks": "",
+        "params": [],
+        "throws": [],
+    };
+
+    type Section = "description" | "param" | "throws" | "remarks" | "other";
+
+    let section: Section = "description";
+    let buffer: string[] = [];
+    let throwType: string = "";
+
+    function flush(): void {
+        const text = buffer.join(" ").trim().replace(/\s+/g, " ");
+        buffer = [];
+
+        switch (section) {
+            case "description":
+                result.description = text;
+                break;
+            case "param":
+                // Strip "name - " or "name " prefix — only the description matters
+                result.params.push(text.replace(/^\w+\s*[-–]\s*/, ""));
+                break;
+            case "throws":
+                if (throwType) {
+                    result.throws.push({ "type": throwType, "description": text });
+                }
+                break;
+            case "remarks":
+                result.remarks = text;
+                break;
+        }
+    }
+
+    for (const line of lines) {
+        if (!line.startsWith("@")) {
+            buffer.push(line);
+            continue;
+        }
+
+        flush();
+
+        if (line.startsWith("@param")) {
+            section = "param";
+            buffer = [line.slice("@param".length).trim()];
+        } else if (line.startsWith("@throws")) {
+            section = "throws";
+            throwType = line.slice("@throws".length).trim();
+            buffer = [];
+        } else if (line.startsWith("@remarks")) {
+            section = "remarks";
+            const rest = line.slice("@remarks".length).trim();
+            buffer = rest ? [rest] : [];
+        } else {
+            section = "other";
+        }
+    }
+
+    flush();
+
+    return result;
+}
+
+/**
+ * Remove `/** * /` delimiters and leading `*` characters from each line of a
+ * JSDoc block, returning the cleaned lines.
+ */
+function stripJSDocDecorations(raw: string): string[] {
+    return raw
+        .replace(/^\/\*\*/, "")
+        .replace(/\s*\*\/$/, "")
+        .split("\n")
+        .map((line) => line.replace(/^\s*\*\s?/, "").trimEnd());
+}
+
+// ---------------------------------------------------------------------------
+// Markdown builders
+// ---------------------------------------------------------------------------
+
+/**
+ * Return the first sentence of a string (up to the first ". " or newline),
+ * with any trailing period stripped.
+ */
+function firstSentence(text: string): string {
+    return text
+        .split(/\.\s|\n/)[0]
+        .replace(/\.$/, "")
+        .trim();
+}
+
+/**
+ * Compose the Markdown section for a single step definition.
+ */
+function buildSection(heading: string, patterns: string[], doc: ParsedJSDoc | null): string {
+    const lines: string[] = [];
+
+    lines.push(`## ${heading}`, "");
+    lines.push(...patterns.map((p) => `- \`${p}\``), "");
+
+    if (doc?.description) {
+        lines.push(doc.description, "");
+    }
+
+    if (doc?.remarks) {
+        lines.push(`> ${doc.remarks}`, "");
+    }
+
+    if (doc?.params.length) {
+        lines.push("**Parameters**", "");
+        lines.push("| # | Description |");
+        lines.push("|---|-------------|");
+        doc.params.forEach((desc, i) => lines.push(`| ${i + 1} | ${desc} |`));
+        lines.push("");
+    }
+
+    if (doc?.throws.length) {
+        lines.push("**Throws**", "");
+        doc.throws.forEach(({ type, description }) => {
+            lines.push(`- \`${type}\`${description ? ` — ${description}` : ""}`);
+        });
+        lines.push("");
+    }
+
+    return lines.join("\n");
+}
