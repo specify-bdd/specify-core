@@ -10,9 +10,9 @@
  */
 
 import { mkdirSync, writeFileSync } from "node:fs";
-import path from "node:path";
+import path                         from "node:path";
 
-import { globbySync } from "globby";
+import { globbySync                } from "globby";
 import { Node, Project, SyntaxKind } from "ts-morph";
 import type { JSDoc, StringLiteral } from "ts-morph";
 
@@ -39,7 +39,7 @@ interface ParsedJSDoc {
 const packageRoot = process.cwd();
 
 const stepDefPaths = globbySync("src/cucumber/step_definitions/*.ts", {
-    "cwd": packageRoot,
+    "cwd":      packageRoot,
     "absolute": true,
 });
 
@@ -51,8 +51,8 @@ const project = new Project({ "skipAddingFilesFromTsConfig": true });
 
 for (const filePath of stepDefPaths) {
     const sourceFile = project.addSourceFileAtPath(filePath);
-    const fileName = path.basename(filePath, ".ts");
-    const moduleDoc = parseModuleDoc(sourceFile.getFullText());
+    const fileName   = path.basename(filePath, ".ts");
+    const moduleDoc  = parseModuleDoc(sourceFile.getFullText());
 
     // Find every defineStep(...) call in the file
     const defineStepCalls = sourceFile
@@ -72,7 +72,7 @@ for (const filePath of stepDefPaths) {
         }
 
         // --- Extract step patterns from the first argument ---
-        const firstArg = args[0];
+        const firstArg         = args[0];
         let patterns: string[] = [];
 
         if (Node.isStringLiteral(firstArg)) {
@@ -98,7 +98,7 @@ for (const filePath of stepDefPaths) {
         const handlerName = secondArg.getText();
 
         // --- Look up the handler function and parse its JSDoc ---
-        const fn = sourceFile.getFunction(handlerName);
+        const fn     = sourceFile.getFunction(handlerName);
         const jsDocs = fn?.getJsDocs() ?? [];
         const parsed = jsDocs.length > 0 ? parseJSDoc(jsDocs[0]) : null;
 
@@ -150,7 +150,7 @@ function parseModuleDoc(sourceText: string): ModuleDoc {
     const lines = stripJSDocDecorations(match[0]);
 
     const nameIdx = lines.findIndex((l) => l.trim() !== "");
-    const name = nameIdx >= 0 ? lines[nameIdx].trim() : "Step Definitions";
+    const name    = nameIdx >= 0 ? lines[nameIdx].trim() : "Step Definitions";
 
     const description = lines
         .slice(nameIdx + 1)
@@ -169,15 +169,15 @@ function parseJSDoc(jsDoc: JSDoc): ParsedJSDoc {
 
     const result: ParsedJSDoc = {
         "description": "",
-        "remarks": "",
-        "params": [],
-        "throws": [],
+        "remarks":     "",
+        "params":      [],
+        "throws":      [],
     };
 
     type Section = "description" | "param" | "throws" | "remarks" | "other";
 
-    let section: Section = "description";
-    let buffer: string[] = [];
+    let section: Section  = "description";
+    let buffer: string[]  = [];
     let throwType: string = "";
 
     function flush(): void {
