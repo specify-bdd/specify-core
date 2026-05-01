@@ -16,8 +16,7 @@ defineStep("When [I delete/the user deletes] the {filePath} file", deleteFile);
 
 defineStep(
     [
-        "Given (that )the {filePath} file content is {string}",
-        "Given (that )the {ref} file content is {string}",
+        "Given (that )the {filePath|ref} file content is {string}",
         "When [I change/the user changes] the {filePath} file content to {string}",
     ],
     writeFileContent,
@@ -25,33 +24,17 @@ defineStep(
 
 defineStep(
     [
-        "Given (that )the {filePath} file content is empty",
-        "Given (that )the {ref} file content is empty",
+        "Given (that )the {filePath|ref} file content is empty",
         "When [I create/the user creates] the {filePath} file",
     ],
     writeEmptyFileContent,
 );
 
-defineStep(
-    [
-        "Then the {filePath} file content should be empty",
-        "Then the {ref} file content should be empty",
-    ],
-    verifyFileIsEmpty,
-);
+defineStep("Then the {filePath|ref} file content should be empty", verifyFileIsEmpty);
 
-defineStep(
-    [
-        "Then the {filePath} file content should match {ref}",
-        "Then the {ref} file content should match {ref}",
-    ],
-    verifyFileContent,
-);
+defineStep("Then the {filePath|ref} file content should match {ref}", verifyFileContent);
 
-defineStep(
-    ["Then the {filePath} file path should exist", "Then the {ref} file path should exist"],
-    verifyFilePathExists,
-);
+defineStep("Then the {filePath|ref} file path should exist", verifyFilePathExists);
 
 /**
  * Create a new /tmp filepath and store it in QuickRef at the given address.

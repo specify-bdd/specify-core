@@ -13,36 +13,18 @@ import { ShellSession             } from "@/lib/ShellSession";
 
 import type { SpawnOptions } from "node:child_process";
 
-defineStep(
-    [
-        "When [I kill/the user kills] CLI shell {int}",
-        "When [I kill/the user kills] CLI shell {intstr}",
-    ],
-    killCLIShellByIndex,
-);
+defineStep("When [I kill/the user kills] CLI shell {int|intstr}", killCLIShellByIndex);
 defineStep("When [I kill/the user kills] the CLI shell", killCLIShell);
 defineStep("When [I kill/the user kills] the CLI shell named {string}", killCLIShellByName);
 defineStep("When [I send/the user sends] a {cliSignal} signal to the last command", sendKillSignal);
 defineStep("When [I start/the user starts] a/an/the (async )command/process {refstr}", execCommand);
 defineStep("When [I switch/the user switches] CLI shells", switchToNextShell);
-defineStep(
-    [
-        "When [I switch/the user switches] to CLI shell {int}",
-        "When [I switch/the user switches] to CLI shell {intstr}",
-    ],
-    switchShellByIndex,
-);
+defineStep("When [I switch/the user switches] to CLI shell {int|intstr}", switchShellByIndex);
 defineStep("When [I switch/the user switches] to the CLI shell named {string}", switchShellByName);
 defineStep("When [I wait/the user waits] for terminal output", waitForAnyOutput, {
     "timeout": 60000,
 });
-defineStep(
-    [
-        "Then there should be {int} active CLI shell(s)",
-        "Then there should be {intstr} active CLI shell(s)",
-    ],
-    verifyShellCount,
-);
+defineStep("Then there should be {int|intstr} active CLI shell(s)", verifyShellCount);
 
 defineStep(
     ["Given a/another CLI shell", "When [I start/the user starts] a/another CLI shell"],
@@ -96,21 +78,14 @@ defineStep(
 
 defineStep(
     [
-        "Then the last command's exit code/status should be {int}",
-        "Then the last command's exit code/status should be {intstr}",
-        "Then the last command's exit code/status should be {ref}",
-        "Then the last command's exit code/status should be a/an {int}",
-        "Then the last command's exit code/status should be a/an {intstr}",
-        "Then the last command's exit code/status should be a/an {ref}",
+        "Then the last command's exit code/status should be {int|intstr|ref}",
+        "Then the last command's exit code/status should be a/an {int|intstr|ref}",
     ],
     verifyExitCode,
 );
 
 defineStep(
-    [
-        "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){regexp}",
-        "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){regexpstr}",
-    ],
+    "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){regexp|regexpstr}",
     waitForMatchingOutputOnSTDERR,
     { "timeout": 60000 },
 );
@@ -122,10 +97,7 @@ defineStep(
 );
 
 defineStep(
-    [
-        "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){regexp}",
-        "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){regexpstr}",
-    ],
+    "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){regexp|regexpstr}",
     waitForMatchingOutputOnSTDOUT,
     { "timeout": 60000 },
 );
@@ -138,10 +110,8 @@ defineStep(
 
 defineStep(
     [
-        "When [I wait/the user waits] for terminal output matching (the regular expression ){regexp}",
-        "When [I wait/the user waits] for terminal output matching (the regular expression ){regexpstr}",
-        "When [I wait/the user waits] for the prompt {regexp}",
-        "When [I wait/the user waits] for the prompt {regexpstr}",
+        "When [I wait/the user waits] for terminal output matching (the regular expression ){regexp|regexpstr}",
+        "When [I wait/the user waits] for the prompt {regexp|regexpstr}",
     ],
     waitForMatchingOutput,
     { "timeout": 60000 },
@@ -167,10 +137,7 @@ defineStep(
 );
 
 defineStep(
-    [
-        "Then the last command's terminal output should match (the regular expression ){regexp}",
-        "Then the last command's terminal output should match (the regular expression ){regexpstr}",
-    ],
+    "Then the last command's terminal output should match (the regular expression ){regexp|regexpstr}",
     verifyMatchingOutput,
 );
 
@@ -178,10 +145,7 @@ defineStep("Then the last command's terminal output should be {string}", verifyO
 defineStep("Then the last command's terminal output should include {string}", verifyIncludesOutput);
 
 defineStep(
-    [
-        "Then the last command's terminal output should not match (the regular expression ){regexp}",
-        "Then the last command's terminal output should not match (the regular expression ){regexpstr}",
-    ],
+    "Then the last command's terminal output should not match (the regular expression ){regexp|regexpstr}",
     verifyNoMatchingOutput,
 );
 
@@ -197,10 +161,7 @@ defineStep("Then the last command's terminal output should be empty", verifyEmpt
 defineStep(["When [I press/the user presses] the {string} key"], sendKeyPressToCLI);
 
 defineStep(
-    [
-        "When [I respond/the user responds] to the prompt matching {regexp} by pressing the {string} key",
-        "When [I respond/the user responds] to the prompt matching {regexpstr} by pressing the {string} key",
-    ],
+    "When [I respond/the user responds] to the prompt matching {regexp|regexpstr} by pressing the {string} key",
     respondToMatchingPromptByPressingKey,
 );
 
@@ -220,10 +181,7 @@ defineStep(
 );
 
 defineStep(
-    [
-        "When [I respond/the user responds] to the prompt matching {regexp} by entering/inputting {string}",
-        "When [I respond/the user responds] to the prompt matching {regexpstr} by entering/inputting {string}",
-    ],
+    "When [I respond/the user responds] to the prompt matching {regexp|regexpstr} by entering/inputting {string}",
     respondToMatchingPromptByEnteringLine,
 );
 
