@@ -109,7 +109,7 @@ for (const filePath of stepDefPaths) {
         const jsDocs = fn?.getJsDocs() ?? [];
         const parsed = jsDocs.length > 0 ? parseJSDoc(jsDocs[0]) : null;
 
-        const heading = parsed?.title ? firstSentence(parsed.title) : `\`${handlerName}\``;
+        const heading = parsed?.title ? parsed.title : `\`${handlerName}\``;
 
         sections.push(buildSection(heading, patterns, parsed));
     }
@@ -186,16 +186,21 @@ function parseJSDoc(jsDoc: JSDoc): ParsedJSDoc {
     const tagStart = lines.findIndex((l) => l.startsWith("@"));
     const preamble = tagStart >= 0 ? lines.slice(0, tagStart) : lines;
 
-    // Strip leading blank lines (stripJSDocDecorations always produces one after
-    // the opening /**), then split at the first blank line: title vs description.
-    const contentStart = preamble.findIndex((l) => l.trim() !== "");
-    const trimmed      = contentStart >= 0 ? preamble.slice(contentStart) : [];
-    const blankIdx     = trimmed.findIndex((l) => l.trim() === "");
-    const titleLines   = blankIdx >= 0 ? trimmed.slice(0, blankIdx) : trimmed;
-    const descLines    = blankIdx >= 0 ? trimmed.slice(blankIdx + 1) : [];
+    // Strip leading blank lines, join the preamble into a single string, then
+    // split at the first sentence boundary (". "): everything before the period
+    // becomes the title; everything after becomes the description.
+    const contentStart  = preamble.findIndex((l) => l.trim() !== "");
+    const trimmed       = contentStart >= 0 ? preamble.slice(contentStart) : [];
+    const preambleText  = trimmed.join(" ").trim().replace(/\s+/g, " ");
+    const sentenceBreak = preambleText.indexOf(". ");
 
-    result.title = titleLines.join(" ").trim().replace(/\s+/g, " ");
-    result.description = descLines.join(" ").trim().replace(/\s+/g, " ");
+    if (sentenceBreak >= 0) {
+        result.title = preambleText.slice(0, sentenceBreak);
+        result.description = preambleText.slice(sentenceBreak + 2).trim();
+    } else {
+        result.title = preambleText.replace(/\.$/, "").trim();
+        result.description = "";
+    }
 
     // Use ts-morph's structured tag API for @param, @throws, and @remarks.
     // @throws requires standard {Type} notation; entries without braces are
@@ -248,20 +253,6 @@ function stripJSDocDecorations(raw: string): string[] {
 // ---------------------------------------------------------------------------
 // Markdown builders
 // ---------------------------------------------------------------------------
-
-/**
- * Return the first sentence of a string (up to the first ". " or newline),
- * with any trailing period stripped.
- *
- * Applied to docblock titles so that any multi-sentence first paragraph in an
- * existing docblock doesn't bleed into the heading.
- */
-function firstSentence(text: string): string {
-    return text
-        .split(/\.\s|\n/)[0]
-        .replace(/\.$/, "")
-        .trim();
-}
 
 /**
  * Compose the Markdown section for a single step definition.
