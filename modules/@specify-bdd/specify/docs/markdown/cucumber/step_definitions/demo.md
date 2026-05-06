@@ -8,8 +8,6 @@ Cucumber step definitions that demonstrate basic Specify functionality.
 - `When this step passes`
 - `Then this step should pass`
 
-Always passes.
-
 ---
 
 ## Always throws, causing a scenario failure
@@ -17,5 +15,3 @@ Always passes.
 - `Given (that )this step has failed`
 - `When this step fails`
 - `Then this step should fail`
-
-Always throws, causing a scenario failure.

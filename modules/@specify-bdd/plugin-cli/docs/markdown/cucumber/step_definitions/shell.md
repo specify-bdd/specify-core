@@ -7,8 +7,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 - `When [I kill/the user kills] CLI shell {int}`
 - `When [I kill/the user kills] CLI shell {intstr}`
 
-Kill a CLI shell by its index.
-
 **Parameters**
 
 | # | Description |
@@ -21,15 +19,11 @@ Kill a CLI shell by its index.
 
 - `When [I kill/the user kills] the CLI shell`
 
-Kill the active CLI shell.
-
 ---
 
 ## Kill a CLI shell by its name
 
 - `When [I kill/the user kills] the CLI shell named {string}`
-
-Kill a CLI shell by its name.
 
 **Parameters**
 
@@ -43,8 +37,6 @@ Kill a CLI shell by its name.
 
 - `When [I send/the user sends] a {cliSignal} signal to the last command`
 
-Send a system kill signal to the command in the last used CLI.
-
 **Parameters**
 
 | # | Description |
@@ -56,8 +48,6 @@ Send a system kill signal to the command in the last used CLI.
 ## Execute the given command via the CLI asynchronously and move on without waiting for it to return
 
 - `When [I start/the user starts] a/an/the (async )command/process {refstr}`
-
-Execute the given command via the CLI asynchronously and move on without waiting for it to return.
 
 **Parameters**
 
@@ -75,8 +65,6 @@ Execute the given command via the CLI asynchronously and move on without waiting
 
 - `When [I switch/the user switches] CLI shells`
 
-Switch to the next shell in the list.
-
 **Throws**
 
 - `AssertionError` — If there is no SessionManager initialized.
@@ -87,8 +75,6 @@ Switch to the next shell in the list.
 
 - `When [I switch/the user switches] to CLI shell {int}`
 - `When [I switch/the user switches] to CLI shell {intstr}`
-
-Switch to the shell matching the index.
 
 **Parameters**
 
@@ -106,8 +92,6 @@ Switch to the shell matching the index.
 
 - `When [I switch/the user switches] to the CLI shell named {string}`
 
-Switch to a named shell.
-
 **Parameters**
 
 | # | Description |
@@ -124,16 +108,12 @@ Switch to a named shell.
 
 - `When [I wait/the user waits] for terminal output`
 
-Wait for literally any output.
-
 ---
 
 ## Verify the number of shell sessions
 
 - `Then there should be {int} active CLI shell(s)`
 - `Then there should be {intstr} active CLI shell(s)`
-
-Verify the number of shell sessions.
 
 **Parameters**
 
@@ -153,15 +133,11 @@ Verify the number of shell sessions.
 - `Given a/another CLI shell`
 - `When [I start/the user starts] a/another CLI shell`
 
-Start a default shell without a name.
-
 ---
 
 ## Execute the given command and wait for it to return
 
 - `When [I run/the user runs] the command/process {refstr}`
-
-Execute the given command and wait for it to return.
 
 **Parameters**
 
@@ -175,8 +151,6 @@ Execute the given command and wait for it to return.
 
 - `When [I wait/the user waits] for the last command to return`
 
-Wait for the last command to return.
-
 **Throws**
 
 - `AssertionError` — If there is no SessionManager initialized.
@@ -187,15 +161,11 @@ Wait for the last command to return.
 
 - `When [I wait/the user waits] for terminal output on STDERR`
 
-Wait for output on the STDERR stream.
-
 ---
 
 ## Wait for output on the STDOUTstream
 
 - `When [I wait/the user waits] for terminal output on STDOUT`
-
-Wait for output on the STDOUTstream.
 
 ---
 
@@ -203,8 +173,6 @@ Wait for output on the STDOUTstream.
 
 - `Given a/another CLI shell named {string}`
 - `When [I start/the user starts] a/another CLI shell named {string}`
-
-Start a default shell with a name.
 
 **Parameters**
 
@@ -219,8 +187,6 @@ Start a default shell with a name.
 - `Given a/an {string} CLI shell`
 - `When [I start/the user starts] a/an {string} CLI shell`
 
-Start a user-specified shell.
-
 **Parameters**
 
 | # | Description |
@@ -233,8 +199,6 @@ Start a user-specified shell.
 
 - `Given a/an {string} CLI shell named {string}`
 - `When [I start/the user starts] a/an {string} CLI shell named {string}`
-
-Start a user-specified shell with a name.
 
 **Parameters**
 
@@ -249,8 +213,6 @@ Start a user-specified shell with a name.
 
 - `Given (that )the working directory is {filePath}`
 - `When [I change/the user changes] the working directory to {filePath}`
-
-Change the current working directory in the active shell.
 
 **Parameters**
 
@@ -274,8 +236,6 @@ Change the current working directory in the active shell.
 - `Then the last command's exit code/status should be a/an {intstr}`
 - `Then the last command's exit code/status should be a/an {ref}`
 
-Verify that the CLI exit code for the last command is as expected.
-
 **Parameters**
 
 | # | Description |
@@ -293,8 +253,6 @@ Verify that the CLI exit code for the last command is as expected.
 - `When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){regexp}`
 - `When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){regexpstr}`
 
-Wait for output matching a specific phrase on the STDERR stream.
-
 **Parameters**
 
 | # | Description |
@@ -306,8 +264,6 @@ Wait for output matching a specific phrase on the STDERR stream.
 ## Wait for output containing a specific literal string on the STDERR stream
 
 - `When [I wait/the user waits] for terminal output on STDERR including {string}`
-
-Wait for output containing a specific literal string on the STDERR stream.
 
 **Parameters**
 
@@ -322,8 +278,6 @@ Wait for output containing a specific literal string on the STDERR stream.
 - `When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){regexp}`
 - `When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){regexpstr}`
 
-Wait for output matching a specific phrase on the STDOUT stream.
-
 **Parameters**
 
 | # | Description |
@@ -335,8 +289,6 @@ Wait for output matching a specific phrase on the STDOUT stream.
 ## Wait for output containing a specific literal string on the STDOUT stream
 
 - `When [I wait/the user waits] for terminal output on STDOUT including {string}`
-
-Wait for output containing a specific literal string on the STDOUT stream.
 
 **Parameters**
 
@@ -353,8 +305,6 @@ Wait for output containing a specific literal string on the STDOUT stream.
 - `When [I wait/the user waits] for the prompt {regexp}`
 - `When [I wait/the user waits] for the prompt {regexpstr}`
 
-Wait for output matching a specific phrase.
-
 **Parameters**
 
 | # | Description |
@@ -368,8 +318,6 @@ Wait for output matching a specific phrase.
 - `When [I wait/the user waits] for terminal output including {string}`
 - `When [I wait/the user waits] for the prompt including {string}`
 
-Wait for output containing a specific literal string.
-
 **Parameters**
 
 | # | Description |
@@ -381,8 +329,6 @@ Wait for output containing a specific literal string.
 ## Verify that the last command's execution time is the specified number of seconds or more
 
 - `Then the last command's execution time should be at least {float} seconds`
-
-Verify that the last command's execution time is the specified number of seconds or more.
 
 > Will wait for the last command to return before asserting.
 
@@ -401,8 +347,6 @@ Verify that the last command's execution time is the specified number of seconds
 ## Verify that the last command's execution time is the specified number of seconds or less
 
 - `Then the last command's execution time should be at most {float} seconds`
-
-Verify that the last command's execution time is the specified number of seconds or less.
 
 > Will wait for the last command to return before asserting.
 
@@ -423,8 +367,6 @@ Verify that the last command's execution time is the specified number of seconds
 - `Then the last command's terminal output should match (the regular expression ){regexp}`
 - `Then the last command's terminal output should match (the regular expression ){regexpstr}`
 
-Verify that the CLI output for the last command matches the given regexp.
-
 **Parameters**
 
 | # | Description |
@@ -441,8 +383,6 @@ Verify that the CLI output for the last command matches the given regexp.
 
 - `Then the last command's terminal output should be {string}`
 
-Verify that the CLI output for the last command is exactly the given string.
-
 **Parameters**
 
 | # | Description |
@@ -458,8 +398,6 @@ Verify that the CLI output for the last command is exactly the given string.
 ## Verify that the CLI output for the last command contains the given string
 
 - `Then the last command's terminal output should include {string}`
-
-Verify that the CLI output for the last command contains the given string.
 
 **Parameters**
 
@@ -478,8 +416,6 @@ Verify that the CLI output for the last command contains the given string.
 - `Then the last command's terminal output should not match (the regular expression ){regexp}`
 - `Then the last command's terminal output should not match (the regular expression ){regexpstr}`
 
-Verify that the CLI output for the last command does NOT match the given regexp.
-
 **Parameters**
 
 | # | Description |
@@ -495,8 +431,6 @@ Verify that the CLI output for the last command does NOT match the given regexp.
 ## Verify that the CLI output for the last command is NOT exactly the given string
 
 - `Then the last command's terminal output should not be {string}`
-
-Verify that the CLI output for the last command is NOT exactly the given string.
 
 **Parameters**
 
@@ -514,8 +448,6 @@ Verify that the CLI output for the last command is NOT exactly the given string.
 
 - `Then the last command's terminal output should not include {string}`
 
-Verify that the CLI output for the last command does NOT contain the given string.
-
 **Parameters**
 
 | # | Description |
@@ -532,8 +464,6 @@ Verify that the CLI output for the last command does NOT contain the given strin
 
 - `Then the last command's terminal output should be empty`
 
-Verify that the CLI output for the last command is empty.
-
 **Throws**
 
 - `AssertionError` — If the last command produced any output
@@ -543,8 +473,6 @@ Verify that the CLI output for the last command is empty.
 ## Send the character value of a key press to the CLI
 
 - `When [I press/the user presses] the {string} key`
-
-Send the character value of a key press to the CLI
 
 > Special keys like "enter", "tab", and "space" are supported, in addition to regular single-character keys. No other special keys are currently supported.
 
@@ -565,8 +493,6 @@ Send the character value of a key press to the CLI
 - `When [I respond/the user responds] to the prompt matching {regexp} by pressing the {string} key`
 - `When [I respond/the user responds] to the prompt matching {regexpstr} by pressing the {string} key`
 
-Wait for a prompt matching the given pattern, then respond by sending the given key
-
 **Parameters**
 
 | # | Description |
@@ -579,8 +505,6 @@ Wait for a prompt matching the given pattern, then respond by sending the given 
 ## Wait for a prompt containing the given literal string, then respond by sending the given key
 
 - `When [I respond/the user responds] to the prompt including {string} by pressing the {string} key`
-
-Wait for a prompt containing the given literal string, then respond by sending the given key.
 
 **Parameters**
 
@@ -596,8 +520,6 @@ Wait for a prompt containing the given literal string, then respond by sending t
 - `When [I enter/the user enters] {string}`
 - `When [I input/the user inputs] {string}`
 
-Send a line of input to the CLI, followed by a newline character to execute it.
-
 > One character at a time is sent to simulate real user input
 
 **Parameters**
@@ -612,8 +534,6 @@ Send a line of input to the CLI, followed by a newline character to execute it.
 
 - `When [I respond/the user responds] to the prompt including {string} by entering/inputting {string}`
 
-Wait for a matching prompt, then respond by entering the given line.
-
 **Parameters**
 
 | # | Description |
@@ -627,8 +547,6 @@ Wait for a matching prompt, then respond by entering the given line.
 
 - `When [I respond/the user responds] to the prompt matching {regexp} by entering/inputting {string}`
 - `When [I respond/the user responds] to the prompt matching {regexpstr} by entering/inputting {string}`
-
-Wait for a prompt matching the given regexp, then respond by entering the given line.
 
 **Parameters**
 

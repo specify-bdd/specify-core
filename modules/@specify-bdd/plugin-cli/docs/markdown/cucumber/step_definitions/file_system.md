@@ -6,8 +6,6 @@ Cucumber step definitions covering interactions with a file system.
 
 - `Given a new temp file path referenced as {string}`
 
-Create a new /tmp filepath and store it in QuickRef at the given address.
-
 **Parameters**
 
 | # | Description |
@@ -19,8 +17,6 @@ Create a new /tmp filepath and store it in QuickRef at the given address.
 ## Delete the file at the given path
 
 - `When [I delete/the user deletes] the {filePath} file`
-
-Delete the file at the given path.
 
 **Parameters**
 
@@ -35,8 +31,6 @@ Delete the file at the given path.
 - `Given (that )the {filePath} file content is {string}`
 - `Given (that )the {ref} file content is {string}`
 - `When [I change/the user changes] the {filePath} file content to {string}`
-
-Set the content of the file at the given path. Creates the file if it does not exist, overwrites if it does.
 
 **Parameters**
 
@@ -53,8 +47,6 @@ Set the content of the file at the given path. Creates the file if it does not e
 - `Given (that )the {ref} file content is empty`
 - `When [I create/the user creates] the {filePath} file`
 
-Create an empty file at the given path. If the file already exists, it will be overwritten as empty.
-
 **Parameters**
 
 | # | Description |
@@ -67,8 +59,6 @@ Create an empty file at the given path. If the file already exists, it will be o
 
 - `Then the {filePath} file content should be empty`
 - `Then the {ref} file content should be empty`
-
-Verify that the file at the given path is empty.
 
 **Parameters**
 
@@ -88,8 +78,6 @@ Verify that the file at the given path is empty.
 - `Then the {filePath} file content should match {ref}`
 - `Then the {ref} file content should match {ref}`
 
-Verify that the file at the given path has content matching the given pattern.
-
 **Parameters**
 
 | # | Description |
@@ -108,8 +96,6 @@ Verify that the file at the given path has content matching the given pattern.
 
 - `Then the {filePath} file path should exist`
 - `Then the {ref} file path should exist`
-
-Verify that a file exists at the given path.
 
 **Parameters**
 

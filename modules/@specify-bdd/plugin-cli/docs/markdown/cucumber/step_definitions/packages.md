@@ -6,8 +6,6 @@ Cucumber step definitions covering Node.js package management.
 
 - `Given (that )the {refstr} NPM package is installed`
 
-Verify that an NPM package is installed
-
 **Parameters**
 
 | # | Description |
