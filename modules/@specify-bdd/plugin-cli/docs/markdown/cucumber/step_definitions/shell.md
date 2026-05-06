@@ -55,19 +55,11 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 |---|-------------|
 | 1 | The command to run |
 
-**Throws**
-
-- `AssertionError` — If there is no SessionManager initialized.
-
 ---
 
 ## Switch to the next shell in the list
 
 - `When [I switch/the user switches] CLI shells`
-
-**Throws**
-
-- `AssertionError` — If there is no SessionManager initialized.
 
 ---
 
@@ -82,10 +74,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 |---|-------------|
 | 1 | The index of the shell to switch to |
 
-**Throws**
-
-- `AssertionError` — If there is no SessionManager initialized.
-
 ---
 
 ## Switch to a named shell
@@ -97,10 +85,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 | # | Description |
 |---|-------------|
 | 1 | The name of the shell to switch to |
-
-**Throws**
-
-- `AssertionError` — If there is no SessionManager initialized.
 
 ---
 
@@ -120,11 +104,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 | # | Description |
 |---|-------------|
 | 1 | The expected number of shell sessions |
-
-**Throws**
-
-- `AssertionError` — If there is no SessionManager initialized.
-- `AssertionError` — If the actual number of shell sessions is not equal to the expected count
 
 ---
 
@@ -150,10 +129,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 ## Wait for the last command to return
 
 - `When [I wait/the user waits] for the last command to return`
-
-**Throws**
-
-- `AssertionError` — If there is no SessionManager initialized.
 
 ---
 
@@ -220,11 +195,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 |---|-------------|
 | 1 | The new working directory |
 
-**Throws**
-
-- `AssertionError` — If there is no SessionManager initialized.
-- `AssertionError` — If the `cd` command returns a non-zero exit code.
-
 ---
 
 ## Verify that the CLI exit code for the last command is as expected
@@ -241,10 +211,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 | # | Description |
 |---|-------------|
 | 1 | The exit code expected from the last command |
-
-**Throws**
-
-- `Error` — If the actual exit code is different
 
 ---
 
@@ -336,11 +302,8 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 
 | # | Description |
 |---|-------------|
-| 1 | The minimum amount of time, in seconds, that should have elapsed |
-
-**Throws**
-
-- `Error` — If the last command's execution time is less than the specified number of seconds.
+| 1 | The minimum amount of time, in seconds, that should have
+  elapsed |
 
 ---
 
@@ -354,11 +317,8 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 
 | # | Description |
 |---|-------------|
-| 1 | The maximum amount of time, in seconds, that should have elapsed |
-
-**Throws**
-
-- `Error` — If the last command's execution time is more than the specified number of seconds.
+| 1 | The maximum amount of time, in seconds, that should have
+  elapsed |
 
 ---
 
@@ -373,10 +333,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 |---|-------------|
 | 1 | The pattern to match output against |
 
-**Throws**
-
-- `Error` — If no matches for the regexp pattern were found
-
 ---
 
 ## Verify that the CLI output for the last command is exactly the given string
@@ -389,10 +345,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 |---|-------------|
 | 1 | The expected output |
 
-**Throws**
-
-- `Error` — If the output does not exactly equal the expected string
-
 ---
 
 ## Verify that the CLI output for the last command contains the given string
@@ -404,10 +356,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 | # | Description |
 |---|-------------|
 | 1 | The substring to look for in the output |
-
-**Throws**
-
-- `Error` — If the output does not contain the given string
 
 ---
 
@@ -422,10 +370,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 |---|-------------|
 | 1 | The pattern to match output against |
 
-**Throws**
-
-- `Error` — If the output matches the pattern
-
 ---
 
 ## Verify that the CLI output for the last command is NOT exactly the given string
@@ -437,10 +381,6 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 | # | Description |
 |---|-------------|
 | 1 | The string the output should not equal |
-
-**Throws**
-
-- `Error` — If the output exactly equals the given string
 
 ---
 
@@ -454,19 +394,11 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 |---|-------------|
 | 1 | The substring that should not appear in the output |
 
-**Throws**
-
-- `Error` — If the output contains the given string
-
 ---
 
 ## Verify that the CLI output for the last command is empty
 
 - `Then the last command's terminal output should be empty`
-
-**Throws**
-
-- `AssertionError` — If the last command produced any output
 
 ---
 
@@ -474,17 +406,14 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 
 - `When [I press/the user presses] the {string} key`
 
-> Special keys like "enter", "tab", and "space" are supported, in addition to regular single-character keys. No other special keys are currently supported.
+> Special keys like "enter", "tab", and "space" are supported, in addition to
+regular single-character keys. No other special keys are currently supported.
 
 **Parameters**
 
 | # | Description |
 |---|-------------|
 | 1 | The character or name of the key to send to the CLI |
-
-**Throws**
-
-- `AssertionError` — If the key is not a single character or a recognized special key name.
 
 ---
 

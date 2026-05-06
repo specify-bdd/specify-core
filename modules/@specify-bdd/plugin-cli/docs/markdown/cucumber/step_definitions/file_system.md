@@ -66,11 +66,6 @@ Cucumber step definitions covering interactions with a file system.
 |---|-------------|
 | 1 | The file path to check for emptiness |
 
-**Throws**
-
-- `Error` — If the file does not exist.
-- `Error` — If the file is not empty.
-
 ---
 
 ## Verify that the file at the given path has content matching the given pattern
@@ -85,11 +80,6 @@ Cucumber step definitions covering interactions with a file system.
 | 1 | The file path to check the content of |
 | 2 | The regex pattern (as string) the file content should match |
 
-**Throws**
-
-- `Error` — If the file does not exist.
-- `Error` — If the file content doesn't match the pattern.
-
 ---
 
 ## Verify that a file exists at the given path
@@ -102,7 +92,3 @@ Cucumber step definitions covering interactions with a file system.
 | # | Description |
 |---|-------------|
 | 1 | The file path to check for existence |
-
-**Throws**
-
-- `Error` — If the file does not exist.
