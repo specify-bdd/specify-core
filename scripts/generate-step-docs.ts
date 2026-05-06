@@ -15,7 +15,7 @@ import path                                 from "node:path";
 import { globbySync                } from "globby";
 import { Node, Project, SyntaxKind } from "ts-morph";
 
-import type { JSDoc, StringLiteral } from "ts-morph";
+import type { JSDoc, JSDocTag, StringLiteral } from "ts-morph";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -181,10 +181,10 @@ function parseJSDoc(jsDoc: JSDoc): ParsedJSDoc {
         "throws":      [],
     };
 
-    // Split into preamble (prose before first @tag) and the tagged section.
+    // Split the raw lines into a preamble (prose before the first @tag) to
+    // extract the title and description. Tags are handled via the structured API.
     const tagStart = lines.findIndex((l) => l.startsWith("@"));
     const preamble = tagStart >= 0 ? lines.slice(0, tagStart) : lines;
-    const tagged   = tagStart >= 0 ? lines.slice(tagStart) : [];
 
     // Strip leading blank lines (stripJSDocDecorations always produces one after
     // the opening /**), then split at the first blank line: title vs description.
@@ -197,60 +197,40 @@ function parseJSDoc(jsDoc: JSDoc): ParsedJSDoc {
     result.title = titleLines.join(" ").trim().replace(/\s+/g, " ");
     result.description = descLines.join(" ").trim().replace(/\s+/g, " ");
 
-    // Process @param, @throws, @remarks tags.
-    type Section = "param" | "throws" | "remarks" | "other";
+    // Use ts-morph's structured tag API for @param, @throws, and @remarks.
+    // @throws requires standard {Type} notation; entries without braces are
+    // silently skipped until docblocks are updated (see ticket #331).
+    for (const tag of jsDoc.getTags()) {
+        const comment = tagCommentToString(tag.getComment());
 
-    let section: Section  = "other";
-    let buffer: string[]  = [];
-    let throwType: string = "";
-
-    function flush(): void {
-        const text = buffer.join(" ").trim().replace(/\s+/g, " ");
-        buffer = [];
-
-        switch (section) {
-            case "param":
-                // Strip "name - " or "name " prefix — only the description matters
-                result.params.push(text.replace(/^\w+\s*[-–]\s*/, ""));
-                break;
-            case "throws":
-                if (throwType) {
-                    result.throws.push({ "type": throwType, "description": text });
-                }
-                break;
-            case "remarks":
-                result.remarks = text;
-                break;
+        if (Node.isJSDocParameterTag(tag)) {
+            // getComment() returns the description without the parameter name;
+            // strip a leading dash that may remain from "name - description" format.
+            result.params.push(comment.replace(/^[-–]\s*/, ""));
+        } else if (Node.isJSDocThrowsTag(tag)) {
+            const type = tag.getTypeExpression()?.getTypeNode().getText();
+            if (type) {
+                result.throws.push({ type, "description": comment });
+            }
+        } else if (tag.getTagName() === "remarks") {
+            result.remarks = comment;
         }
     }
-
-    for (const line of tagged) {
-        if (!line.startsWith("@")) {
-            buffer.push(line);
-            continue;
-        }
-
-        flush();
-
-        if (line.startsWith("@param")) {
-            section = "param";
-            buffer = [line.slice("@param".length).trim()];
-        } else if (line.startsWith("@throws")) {
-            section = "throws";
-            throwType = line.slice("@throws".length).trim();
-            buffer = [];
-        } else if (line.startsWith("@remarks")) {
-            section = "remarks";
-            const rest = line.slice("@remarks".length).trim();
-            buffer = rest ? [rest] : [];
-        } else {
-            section = "other";
-        }
-    }
-
-    flush();
 
     return result;
+}
+
+/**
+ * Normalise a JSDocTag comment value — which ts-morph returns as a string,
+ * an array of inline nodes, or undefined — to a plain trimmed string.
+ */
+function tagCommentToString(raw: ReturnType<JSDocTag["getComment"]>): string {
+    if (!raw) return "";
+    if (typeof raw === "string") return raw.trim();
+    return raw
+        .map((part) => part.getText())
+        .join("")
+        .trim();
 }
 
 /**
