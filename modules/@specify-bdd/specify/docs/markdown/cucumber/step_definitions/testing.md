@@ -38,6 +38,8 @@ treats the absence of this env var as equivalent to 1 worker.
 - `When this step passes on the {ordinal} attempt`
 - `Then this step should pass on the {ordinal} attempt`
 
+Multiple attempts are managed via the "retry" feature.
+
 **Parameters**
 
 | # | Description |

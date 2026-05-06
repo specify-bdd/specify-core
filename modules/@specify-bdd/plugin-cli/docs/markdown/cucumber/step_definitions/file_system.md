@@ -32,6 +32,8 @@ Cucumber step definitions covering interactions with a file system.
 - `Given (that )the {ref} file content is {string}`
 - `When [I change/the user changes] the {filePath} file content to {string}`
 
+Creates the file if it does not exist, overwrites if it does.
+
 **Parameters**
 
 | # | Description |
@@ -46,6 +48,8 @@ Cucumber step definitions covering interactions with a file system.
 - `Given (that )the {filePath} file content is empty`
 - `Given (that )the {ref} file content is empty`
 - `When [I create/the user creates] the {filePath} file`
+
+If the file already exists, it will be overwritten as empty.
 
 **Parameters**
 
