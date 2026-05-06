@@ -14,6 +14,7 @@ import path                                 from "node:path";
 
 import { globbySync                } from "globby";
 import { Node, Project, SyntaxKind } from "ts-morph";
+
 import type { JSDoc, StringLiteral } from "ts-morph";
 
 // ---------------------------------------------------------------------------
@@ -26,6 +27,7 @@ interface ModuleDoc {
 }
 
 interface ParsedJSDoc {
+    title: string;
     description: string;
     remarks: string;
     params: string[];
@@ -74,11 +76,8 @@ for (const filePath of stepDefPaths) {
     for (const call of defineStepCalls) {
         const args = call.getArguments();
 
-        if (args.length < 2) {
-            continue;
-        }
-
-        // --- Extract step patterns from the first argument ---
+        // Extract step patterns from the first argument.
+        // If the arg is missing or not a string/array, skip this call gracefully.
         const firstArg         = args[0];
         let patterns: string[] = [];
 
@@ -95,7 +94,8 @@ for (const filePath of stepDefPaths) {
             continue;
         }
 
-        // --- Extract handler name from the second argument ---
+        // Extract handler name from the second argument.
+        // If the arg is missing or not an identifier, skip this call gracefully.
         const secondArg = args[1];
 
         if (!Node.isIdentifier(secondArg)) {
@@ -104,14 +104,12 @@ for (const filePath of stepDefPaths) {
 
         const handlerName = secondArg.getText();
 
-        // --- Look up the handler function and parse its JSDoc ---
+        // Look up the handler function and parse its JSDoc.
         const fn     = sourceFile.getFunction(handlerName);
         const jsDocs = fn?.getJsDocs() ?? [];
         const parsed = jsDocs.length > 0 ? parseJSDoc(jsDocs[0]) : null;
 
-        const heading = parsed?.description
-            ? firstSentence(parsed.description)
-            : `\`${handlerName}\``;
+        const heading = parsed?.title ? firstSentence(parsed.title) : `\`${handlerName}\``;
 
         sections.push(buildSection(heading, patterns, parsed));
     }
@@ -120,7 +118,7 @@ for (const filePath of stepDefPaths) {
         continue;
     }
 
-    // --- Compose and write the Markdown document ---
+    // Compose and write the Markdown document.
     let doc = `# ${moduleDoc.name}\n\n`;
 
     if (moduleDoc.description) {
@@ -167,20 +165,42 @@ function parseModuleDoc(sourceText: string): ModuleDoc {
 
 /**
  * Parse a handler function's JSDoc comment into structured fields.
+ *
+ * The first paragraph of the comment body (before the first blank line) is
+ * treated as the title. Any remaining prose before the first `@` tag becomes
+ * the description.
  */
 function parseJSDoc(jsDoc: JSDoc): ParsedJSDoc {
     const lines = stripJSDocDecorations(jsDoc.getText());
 
     const result: ParsedJSDoc = {
+        "title":       "",
         "description": "",
         "remarks":     "",
         "params":      [],
         "throws":      [],
     };
 
-    type Section = "description" | "param" | "throws" | "remarks" | "other";
+    // Split into preamble (prose before first @tag) and the tagged section.
+    const tagStart = lines.findIndex((l) => l.startsWith("@"));
+    const preamble = tagStart >= 0 ? lines.slice(0, tagStart) : lines;
+    const tagged   = tagStart >= 0 ? lines.slice(tagStart) : [];
 
-    let section: Section  = "description";
+    // Strip leading blank lines (stripJSDocDecorations always produces one after
+    // the opening /**), then split at the first blank line: title vs description.
+    const contentStart = preamble.findIndex((l) => l.trim() !== "");
+    const trimmed      = contentStart >= 0 ? preamble.slice(contentStart) : [];
+    const blankIdx     = trimmed.findIndex((l) => l.trim() === "");
+    const titleLines   = blankIdx >= 0 ? trimmed.slice(0, blankIdx) : trimmed;
+    const descLines    = blankIdx >= 0 ? trimmed.slice(blankIdx + 1) : [];
+
+    result.title = titleLines.join(" ").trim().replace(/\s+/g, " ");
+    result.description = descLines.join(" ").trim().replace(/\s+/g, " ");
+
+    // Process @param, @throws, @remarks tags.
+    type Section = "param" | "throws" | "remarks" | "other";
+
+    let section: Section  = "other";
     let buffer: string[]  = [];
     let throwType: string = "";
 
@@ -189,9 +209,6 @@ function parseJSDoc(jsDoc: JSDoc): ParsedJSDoc {
         buffer = [];
 
         switch (section) {
-            case "description":
-                result.description = text;
-                break;
             case "param":
                 // Strip "name - " or "name " prefix — only the description matters
                 result.params.push(text.replace(/^\w+\s*[-–]\s*/, ""));
@@ -207,7 +224,7 @@ function parseJSDoc(jsDoc: JSDoc): ParsedJSDoc {
         }
     }
 
-    for (const line of lines) {
+    for (const line of tagged) {
         if (!line.startsWith("@")) {
             buffer.push(line);
             continue;
@@ -255,6 +272,9 @@ function stripJSDocDecorations(raw: string): string[] {
 /**
  * Return the first sentence of a string (up to the first ". " or newline),
  * with any trailing period stripped.
+ *
+ * Applied to docblock titles so that any multi-sentence first paragraph in an
+ * existing docblock doesn't bleed into the heading.
  */
 function firstSentence(text: string): string {
     return text
