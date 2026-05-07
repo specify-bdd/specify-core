@@ -302,8 +302,7 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 
 | # | Description |
 |---|-------------|
-| 1 | The minimum amount of time, in seconds, that should have
-  elapsed |
+| 1 | The minimum amount of time, in seconds, that should have elapsed |
 
 ---
 
@@ -317,8 +316,7 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 
 | # | Description |
 |---|-------------|
-| 1 | The maximum amount of time, in seconds, that should have
-  elapsed |
+| 1 | The maximum amount of time, in seconds, that should have elapsed |
 
 ---
 
@@ -406,8 +404,7 @@ Cucumber step definitions covering the provisioning of an OS shell for testing p
 
 - `When [I press/the user presses] the {string} key`
 
-> Special keys like "enter", "tab", and "space" are supported, in addition to
-regular single-character keys. No other special keys are currently supported.
+> Special keys like "enter", "tab", and "space" are supported, in addition to regular single-character keys. No other special keys are currently supported.
 
 **Parameters**
 

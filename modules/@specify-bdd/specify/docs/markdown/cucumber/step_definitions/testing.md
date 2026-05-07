@@ -6,10 +6,7 @@ Cucumber step definitions that facilitate Specify testing itself.
 
 - `Then there should be (only ){int} parallel worker(s)`
 
-> The env var CUCUMBER_TOTAL_WORKERS is set within the worker child processes
-Cucumber spins up when operating in parallel mode.  When operating in the
-default serial mode, this env var is not set.  Therefore, this step def
-treats the absence of this env var as equivalent to 1 worker.
+> The env var CUCUMBER_TOTAL_WORKERS is set within the worker child processes Cucumber spins up when operating in parallel mode. When operating in the default serial mode, this env var is not set. Therefore, this step def treats the absence of this env var as equivalent to 1 worker.
 
 **Parameters**
 
