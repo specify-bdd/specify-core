@@ -186,20 +186,43 @@ function parseJSDoc(jsDoc: JSDoc): ParsedJSDoc {
     const tagStart = lines.findIndex((l) => l.startsWith("@"));
     const preamble = tagStart >= 0 ? lines.slice(0, tagStart) : lines;
 
-    // Strip leading blank lines, join the preamble into a single string, then
-    // split at the first sentence boundary (". "): everything before the period
-    // becomes the title; everything after becomes the description.
-    const contentStart  = preamble.findIndex((l) => l.trim() !== "");
-    const trimmed       = contentStart >= 0 ? preamble.slice(contentStart) : [];
-    const preambleText  = trimmed.join(" ").trim().replace(/\s+/g, " ");
-    const sentenceBreak = preambleText.indexOf(". ");
+    // Strip leading blank lines, split the preamble into paragraphs, then
+    // search for a sentence boundary (". ") within the first paragraph only:
+    //   - Found: title = before the period; description = rest of that
+    //     paragraph joined with any further paragraphs.
+    //   - Not found: entire first paragraph is the title; remaining
+    //     paragraphs become the description.
+    const contentStart = preamble.findIndex((l) => l.trim() !== "");
+    const trimmed      = contentStart >= 0 ? preamble.slice(contentStart) : [];
+
+    const paragraphs: string[] = [];
+    let paraBuffer: string[]   = [];
+
+    for (const line of trimmed) {
+        if (line.trim() === "") {
+            if (paraBuffer.length > 0) {
+                paragraphs.push(paraBuffer.join(" ").replace(/\s+/g, " ").trim());
+                paraBuffer = [];
+            }
+        } else {
+            paraBuffer.push(line);
+        }
+    }
+    if (paraBuffer.length > 0) {
+        paragraphs.push(paraBuffer.join(" ").replace(/\s+/g, " ").trim());
+    }
+
+    const firstPara     = paragraphs[0] ?? "";
+    const restParas     = paragraphs.slice(1).join(" ").trim();
+    const sentenceBreak = firstPara.indexOf(". ");
 
     if (sentenceBreak >= 0) {
-        result.title = preambleText.slice(0, sentenceBreak);
-        result.description = preambleText.slice(sentenceBreak + 2).trim();
+        result.title = firstPara.slice(0, sentenceBreak);
+        const restOfFirst = firstPara.slice(sentenceBreak + 2).trim();
+        result.description = [restOfFirst, restParas].filter(Boolean).join(" ");
     } else {
-        result.title = preambleText.replace(/\.$/, "").trim();
-        result.description = "";
+        result.title = firstPara.replace(/\.$/, "").trim();
+        result.description = restParas;
     }
 
     // Use ts-morph's structured tag API for @param, @throws, and @remarks.
