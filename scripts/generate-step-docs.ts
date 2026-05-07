@@ -250,15 +250,14 @@ function parseJSDoc(jsDoc: JSDoc): ParsedJSDoc {
 
 /**
  * Normalise a JSDocTag comment value — which ts-morph returns as a string,
- * an array of inline nodes, or undefined — to a plain trimmed string.
+ * an array of inline nodes, or undefined — to a plain single-line string.
+ * Internal whitespace (including newlines from wrapped comment text) is
+ * collapsed so that multi-line tag values render correctly in Markdown.
  */
 function tagCommentToString(raw: ReturnType<JSDocTag["getComment"]>): string {
     if (!raw) return "";
-    if (typeof raw === "string") return raw.trim();
-    return raw
-        .map((part) => part.getText())
-        .join("")
-        .trim();
+    const text = typeof raw === "string" ? raw : raw.map((part) => part.getText()).join("");
+    return text.replace(/\s+/g, " ").trim();
 }
 
 /**
