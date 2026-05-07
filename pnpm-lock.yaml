@@ -84,6 +84,9 @@ importers:
       rimraf:
         specifier: ^6.1.2
         version: 6.1.2
+      ts-morph:
+        specifier: ^25.0.1
+        version: 25.0.1
       tsc-alias:
         specifier: ^1.8.16
         version: 1.8.16
