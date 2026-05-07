@@ -10,32 +10,34 @@ import assert, { AssertionError } from "node:assert/strict";
 
 import { waitForIncludingOutput, waitForMatchingOutput } from "./output";
 
-defineStep(["When [I press/the user presses] the {string} key"], sendKeyPressToCLI);
+export function register(): void {
+    defineStep(["When [I press/the user presses] the {string} key"], sendKeyPressToCLI);
 
-defineStep(
-    "When [I respond/the user responds] to the prompt matching {regexp|regexpstr} by pressing the {string} key",
-    respondToMatchingPromptByPressingKey,
-);
+    defineStep(
+        "When [I respond/the user responds] to the prompt matching {regexp|regexpstr} by pressing the {string} key",
+        respondToMatchingPromptByPressingKey,
+    );
 
-defineStep(
-    "When [I respond/the user responds] to the prompt including {string} by pressing the {string} key",
-    respondToIncludingPromptByPressingKey,
-);
+    defineStep(
+        "When [I respond/the user responds] to the prompt including {string} by pressing the {string} key",
+        respondToIncludingPromptByPressingKey,
+    );
 
-defineStep(
-    ["When [I enter/the user enters] {string}", "When [I input/the user inputs] {string}"],
-    sendLineToCLI,
-);
+    defineStep(
+        ["When [I enter/the user enters] {string}", "When [I input/the user inputs] {string}"],
+        sendLineToCLI,
+    );
 
-defineStep(
-    "When [I respond/the user responds] to the prompt including {string} by entering/inputting {string}",
-    respondToIncludingPromptByEnteringLine,
-);
+    defineStep(
+        "When [I respond/the user responds] to the prompt including {string} by entering/inputting {string}",
+        respondToIncludingPromptByEnteringLine,
+    );
 
-defineStep(
-    "When [I respond/the user responds] to the prompt matching {regexp|regexpstr} by entering/inputting {string}",
-    respondToMatchingPromptByEnteringLine,
-);
+    defineStep(
+        "When [I respond/the user responds] to the prompt matching {regexp|regexpstr} by entering/inputting {string}",
+        respondToMatchingPromptByEnteringLine,
+    );
+}
 
 /**
  * Wait for a matching prompt, then respond by entering the given line.

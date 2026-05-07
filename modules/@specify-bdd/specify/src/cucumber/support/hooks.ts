@@ -24,59 +24,61 @@ const cwd = process.cwd(),
 
 let refsModules = [];
 
-addBeforeAllHook(
-    async function () {
-        const modulePaths = await globby(this.parameters.refsPath, {
-            "absolute":  true,
-            "onlyFiles": true,
-        });
+export function register(): void {
+    addBeforeAllHook(
+        async function () {
+            const modulePaths = await globby(this.parameters.refsPath, {
+                "absolute":  true,
+                "onlyFiles": true,
+            });
 
-        refsModules = await Promise.all(
-            modulePaths.map((modulePath) =>
-                import(pathToFileURL(modulePath).href, {
-                    "with": { "type": "json" },
-                }).then((mod) => ({ "ref": mod.default }) as JsonObject),
-            ),
-        );
+            refsModules = await Promise.all(
+                modulePaths.map((modulePath) =>
+                    import(pathToFileURL(modulePath).href, {
+                        "with": { "type": "json" },
+                    }).then((mod) => ({ "ref": mod.default }) as JsonObject),
+                ),
+            );
 
-        // warn if CucumberManager registered any duplicate step patterns
-        // but only do it once per run (even if running multiple parallel workers)
-        if (!process.env.CUCUMBER_WORKER_ID || process.env.CUCUMBER_WORKER_ID === "0") {
-            Object.entries(CucumberManager.getInstance().patterns)
-                .filter((entry) => entry[1] > 1)
-                .forEach((entry) =>
-                    error("WARNING: pattern '%s' was registered %d times.", entry[0], entry[1]),
-                );
-        }
-    },
-    { "name": "Core before all hook" },
-);
+            // warn if CucumberManager registered any duplicate step patterns
+            // but only do it once per run (even if running multiple parallel workers)
+            if (!process.env.CUCUMBER_WORKER_ID || process.env.CUCUMBER_WORKER_ID === "0") {
+                Object.entries(CucumberManager.getInstance().patterns)
+                    .filter((entry) => entry[1] > 1)
+                    .forEach((entry) =>
+                        error("WARNING: pattern '%s' was registered %d times.", entry[0], entry[1]),
+                    );
+            }
+        },
+        { "name": "Core before all hook" },
+    );
 
-addBeforeScenarioHook(
-    async function (data) {
-        this.config = config;
-        this.quickRef.add(...refsModules, { config });
+    addBeforeScenarioHook(
+        async function (data) {
+            this.config = config;
+            this.quickRef.add(...refsModules, { config });
 
-        // attaching this pickle (test case) to the scenario World allows us to reference its data later
-        // we'll use the existing pickle data if it exists in the store, but if not, we'll initialize a new entry
-        this.pickle = pickleJar[data.pickle.id] ?? { ...data.pickle, "attempts": {} };
+            // attaching this pickle (test case) to the scenario World allows us to reference its data later
+            // we'll use the existing pickle data if it exists in the store, but if not, we'll initialize a new entry
+            this.pickle = pickleJar[data.pickle.id] ?? { ...data.pickle, "attempts": {} };
 
-        // add the pickle to the store, if necessary
-        pickleJar[this.pickle.id] ??= this.pickle;
+            // add the pickle to the store, if necessary
+            pickleJar[this.pickle.id] ??= this.pickle;
 
-        // initialize an empty attempt object with a unique ID
-        this.pickle.attempts[data.testCaseStartedId] = {};
+            // initialize an empty attempt object with a unique ID
+            this.pickle.attempts[data.testCaseStartedId] = {};
 
-        // initialize the file system namespace
-        this.fs = { cwd };
-    },
-    { "name": "Core before scenario hook" },
-);
+            // initialize the file system namespace
+            this.fs = { cwd };
+        },
+        { "name": "Core before scenario hook" },
+    );
 
-addAfterScenarioHook(
-    async function (data) {
-        // update the attempt data with results
-        this.pickle.attempts[data.testCaseStartedId] = data.result;
-    },
-    { "name": "Core after scenario hook" },
-);
+    addAfterScenarioHook(
+        async function (data) {
+            // update the attempt data with results
+            this.pickle.attempts[data.testCaseStartedId] = data.result;
+        },
+        { "name": "Core after scenario hook" },
+    );
+}

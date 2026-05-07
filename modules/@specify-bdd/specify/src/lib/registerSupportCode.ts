@@ -8,7 +8,12 @@ const SUPPORT_DIR   = "support";
 const STEP_DEFS_DIR = "step_definitions";
 
 const defaultLoader: ModuleLoader = {
-    "glob":       (pattern) => globby(pattern, { "absolute": true, "onlyFiles": true }),
+    "glob": (pattern) =>
+        globby(pattern, {
+            "absolute":  true,
+            "ignore":    ["**/*.d.{ts,mts,cts}"],
+            "onlyFiles": true,
+        }),
     "loadModule": (modulePath) => import(pathToFileURL(modulePath).href),
 };
 
@@ -62,7 +67,7 @@ export async function registerSupportCode(
 /**
  * Glob directory for registerable modules, then dynamically import each module
  * and invoke its `register()` export.
- * 
+ *
  * @remarks
  * Modules within `dir` are loaded and registered in parallel via `Promise.all`.
  *

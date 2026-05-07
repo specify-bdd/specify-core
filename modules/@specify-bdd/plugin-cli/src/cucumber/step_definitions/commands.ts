@@ -9,34 +9,46 @@
 import { defineStep             } from "@specify-bdd/specify";
 import assert, { AssertionError } from "node:assert/strict";
 
-defineStep("When [I send/the user sends] a {cliSignal} signal to the last command", sendKillSignal);
-defineStep("When [I start/the user starts] a/an/the (async )command/process {refstr}", execCommand);
+export function register(): void {
+    defineStep(
+        "When [I send/the user sends] a {cliSignal} signal to the last command",
+        sendKillSignal,
+    );
+    defineStep(
+        "When [I start/the user starts] a/an/the (async )command/process {refstr}",
+        execCommand,
+    );
 
-defineStep("When [I run/the user runs] the command/process {refstr}", execCommandSync, {
-    "timeout": 60000,
-});
+    defineStep("When [I run/the user runs] the command/process {refstr}", execCommandSync, {
+        "timeout": 60000,
+    });
 
-defineStep("When [I wait/the user waits] for the last command to return", waitForCommandReturn, {
-    "timeout": 60000,
-});
+    defineStep(
+        "When [I wait/the user waits] for the last command to return",
+        waitForCommandReturn,
+        {
+            "timeout": 60000,
+        },
+    );
 
-defineStep(
-    [
-        "Then the last command's exit code/status should be {int|intstr|ref}",
-        "Then the last command's exit code/status should be a/an {int|intstr|ref}",
-    ],
-    verifyExitCode,
-);
+    defineStep(
+        [
+            "Then the last command's exit code/status should be {int|intstr|ref}",
+            "Then the last command's exit code/status should be a/an {int|intstr|ref}",
+        ],
+        verifyExitCode,
+    );
 
-defineStep(
-    "Then the last command's execution time should be at least {float} seconds",
-    verifyMinimumElapsedTime,
-);
+    defineStep(
+        "Then the last command's execution time should be at least {float} seconds",
+        verifyMinimumElapsedTime,
+    );
 
-defineStep(
-    "Then the last command's execution time should be at most {float} seconds",
-    verifyMaximumElapsedTime,
-);
+    defineStep(
+        "Then the last command's execution time should be at most {float} seconds",
+        verifyMaximumElapsedTime,
+    );
+}
 
 /**
  * Execute the given command via the CLI asynchronously and move on without

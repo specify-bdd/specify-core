@@ -8,7 +8,9 @@ import { defineStep } from "@specify-bdd/specify";
 import assert         from "node:assert/strict";
 import npmValidate    from "validate-npm-package-name";
 
-defineStep("Given (that )the {refstr} NPM package is installed", verifyNPMPackage);
+export function register(): void {
+    defineStep("Given (that )the {refstr} NPM package is installed", verifyNPMPackage);
+}
 
 /**
  * Verify that an NPM package is installed

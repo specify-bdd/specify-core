@@ -38,7 +38,7 @@ for (const plugin of config.plugins) {
 
 // add core cucumber support code path
 cucumberCfg.import ??= [];
-cucumberCfg.import.push(path.resolve(import.meta.dirname, "cucumber"));
+cucumberCfg.import.push(path.resolve(import.meta.dirname, "cucumber/register/register.js"));
 
 // build CLI app behavior
 const app      = new App();

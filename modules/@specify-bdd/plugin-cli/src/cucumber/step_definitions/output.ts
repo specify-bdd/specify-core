@@ -11,81 +11,94 @@ import assert, { AssertionError } from "node:assert/strict";
 
 import { IOStream } from "@/lib/SessionManager";
 
-defineStep("When [I wait/the user waits] for terminal output", waitForAnyOutput, {
-    "timeout": 60000,
-});
+export function register(): void {
+    defineStep("When [I wait/the user waits] for terminal output", waitForAnyOutput, {
+        "timeout": 60000,
+    });
 
-defineStep("When [I wait/the user waits] for terminal output on STDERR", waitForOutputOnSTDERR, {
-    "timeout": 60000,
-});
+    defineStep(
+        "When [I wait/the user waits] for terminal output on STDERR",
+        waitForOutputOnSTDERR,
+        {
+            "timeout": 60000,
+        },
+    );
 
-defineStep("When [I wait/the user waits] for terminal output on STDOUT", waitForOutputOnSTDOUT, {
-    "timeout": 60000,
-});
+    defineStep(
+        "When [I wait/the user waits] for terminal output on STDOUT",
+        waitForOutputOnSTDOUT,
+        {
+            "timeout": 60000,
+        },
+    );
 
-defineStep(
-    "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){regexp|regexpstr}",
-    waitForMatchingOutputOnSTDERR,
-    { "timeout": 60000 },
-);
+    defineStep(
+        "When [I wait/the user waits] for terminal output on STDERR matching (the regular expression ){regexp|regexpstr}",
+        waitForMatchingOutputOnSTDERR,
+        { "timeout": 60000 },
+    );
 
-defineStep(
-    "When [I wait/the user waits] for terminal output on STDERR including {string}",
-    waitForIncludingOutputOnSTDERR,
-    { "timeout": 60000 },
-);
+    defineStep(
+        "When [I wait/the user waits] for terminal output on STDERR including {string}",
+        waitForIncludingOutputOnSTDERR,
+        { "timeout": 60000 },
+    );
 
-defineStep(
-    "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){regexp|regexpstr}",
-    waitForMatchingOutputOnSTDOUT,
-    { "timeout": 60000 },
-);
+    defineStep(
+        "When [I wait/the user waits] for terminal output on STDOUT matching (the regular expression ){regexp|regexpstr}",
+        waitForMatchingOutputOnSTDOUT,
+        { "timeout": 60000 },
+    );
 
-defineStep(
-    "When [I wait/the user waits] for terminal output on STDOUT including {string}",
-    waitForIncludingOutputOnSTDOUT,
-    { "timeout": 60000 },
-);
+    defineStep(
+        "When [I wait/the user waits] for terminal output on STDOUT including {string}",
+        waitForIncludingOutputOnSTDOUT,
+        { "timeout": 60000 },
+    );
 
-defineStep(
-    [
-        "When [I wait/the user waits] for terminal output matching (the regular expression ){regexp|regexpstr}",
-        "When [I wait/the user waits] for the prompt {regexp|regexpstr}",
-    ],
-    waitForMatchingOutput,
-    { "timeout": 60000 },
-);
+    defineStep(
+        [
+            "When [I wait/the user waits] for terminal output matching (the regular expression ){regexp|regexpstr}",
+            "When [I wait/the user waits] for the prompt {regexp|regexpstr}",
+        ],
+        waitForMatchingOutput,
+        { "timeout": 60000 },
+    );
 
-defineStep(
-    [
-        "When [I wait/the user waits] for terminal output including {string}",
-        "When [I wait/the user waits] for the prompt including {string}",
-    ],
-    waitForIncludingOutput,
-    { "timeout": 60000 },
-);
+    defineStep(
+        [
+            "When [I wait/the user waits] for terminal output including {string}",
+            "When [I wait/the user waits] for the prompt including {string}",
+        ],
+        waitForIncludingOutput,
+        { "timeout": 60000 },
+    );
 
-defineStep(
-    "Then the last command's terminal output should match (the regular expression ){regexp|regexpstr}",
-    verifyMatchingOutput,
-);
+    defineStep(
+        "Then the last command's terminal output should match (the regular expression ){regexp|regexpstr}",
+        verifyMatchingOutput,
+    );
 
-defineStep("Then the last command's terminal output should be {string}", verifyOutputIs);
-defineStep("Then the last command's terminal output should include {string}", verifyIncludesOutput);
+    defineStep("Then the last command's terminal output should be {string}", verifyOutputIs);
+    defineStep(
+        "Then the last command's terminal output should include {string}",
+        verifyIncludesOutput,
+    );
 
-defineStep(
-    "Then the last command's terminal output should not match (the regular expression ){regexp|regexpstr}",
-    verifyNoMatchingOutput,
-);
+    defineStep(
+        "Then the last command's terminal output should not match (the regular expression ){regexp|regexpstr}",
+        verifyNoMatchingOutput,
+    );
 
-defineStep("Then the last command's terminal output should not be {string}", verifyOutputIsNot);
+    defineStep("Then the last command's terminal output should not be {string}", verifyOutputIsNot);
 
-defineStep(
-    "Then the last command's terminal output should not include {string}",
-    verifyNoIncludingOutput,
-);
+    defineStep(
+        "Then the last command's terminal output should not include {string}",
+        verifyNoIncludingOutput,
+    );
 
-defineStep("Then the last command's terminal output should be empty", verifyEmptyOutput);
+    defineStep("Then the last command's terminal output should be empty", verifyEmptyOutput);
+}
 
 /**
  * Verify that the CLI output for the last command matches the given regexp.

@@ -14,47 +14,52 @@ import { ShellSession   } from "@/lib/ShellSession";
 
 import type { SpawnOptions } from "node:child_process";
 
-defineStep("When [I kill/the user kills] CLI shell {int|intstr}", killCLIShellByIndex);
-defineStep("When [I kill/the user kills] the CLI shell", killCLIShell);
-defineStep("When [I kill/the user kills] the CLI shell named {string}", killCLIShellByName);
-defineStep("When [I switch/the user switches] CLI shells", switchToNextShell);
-defineStep("When [I switch/the user switches] to CLI shell {int|intstr}", switchShellByIndex);
-defineStep("When [I switch/the user switches] to the CLI shell named {string}", switchShellByName);
-defineStep("Then there should be {int|intstr} active CLI shell(s)", verifyShellCount);
+export function register(): void {
+    defineStep("When [I kill/the user kills] CLI shell {int|intstr}", killCLIShellByIndex);
+    defineStep("When [I kill/the user kills] the CLI shell", killCLIShell);
+    defineStep("When [I kill/the user kills] the CLI shell named {string}", killCLIShellByName);
+    defineStep("When [I switch/the user switches] CLI shells", switchToNextShell);
+    defineStep("When [I switch/the user switches] to CLI shell {int|intstr}", switchShellByIndex);
+    defineStep(
+        "When [I switch/the user switches] to the CLI shell named {string}",
+        switchShellByName,
+    );
+    defineStep("Then there should be {int|intstr} active CLI shell(s)", verifyShellCount);
 
-defineStep(
-    ["Given a/another CLI shell", "When [I start/the user starts] a/another CLI shell"],
-    startDefaultShell,
-);
+    defineStep(
+        ["Given a/another CLI shell", "When [I start/the user starts] a/another CLI shell"],
+        startDefaultShell,
+    );
 
-defineStep(
-    [
-        "Given a/another CLI shell named {string}",
-        "When [I start/the user starts] a/another CLI shell named {string}",
-    ],
-    startDefaultNamedShell,
-);
+    defineStep(
+        [
+            "Given a/another CLI shell named {string}",
+            "When [I start/the user starts] a/another CLI shell named {string}",
+        ],
+        startDefaultNamedShell,
+    );
 
-defineStep(
-    ["Given a/an {string} CLI shell", "When [I start/the user starts] a/an {string} CLI shell"],
-    startAltShell,
-);
+    defineStep(
+        ["Given a/an {string} CLI shell", "When [I start/the user starts] a/an {string} CLI shell"],
+        startAltShell,
+    );
 
-defineStep(
-    [
-        "Given a/an {string} CLI shell named {string}",
-        "When [I start/the user starts] a/an {string} CLI shell named {string}",
-    ],
-    startAltNamedShell,
-);
+    defineStep(
+        [
+            "Given a/an {string} CLI shell named {string}",
+            "When [I start/the user starts] a/an {string} CLI shell named {string}",
+        ],
+        startAltNamedShell,
+    );
 
-defineStep(
-    [
-        "Given (that )the working directory is {filePath}",
-        "When [I change/the user changes] the working directory to {filePath}",
-    ],
-    changeDirectory,
-);
+    defineStep(
+        [
+            "Given (that )the working directory is {filePath}",
+            "When [I change/the user changes] the working directory to {filePath}",
+        ],
+        changeDirectory,
+    );
+}
 
 /**
  * Change the current working directory in the active shell.

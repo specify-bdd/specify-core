@@ -7,15 +7,21 @@
 import { defineStep } from "@specify-bdd/specify";
 import assert         from "node:assert/strict";
 
-defineStep(
-    ["Given (that )this step has passed", "When this step passes", "Then this step should pass"],
-    pass,
-);
+export function register(): void {
+    defineStep(
+        [
+            "Given (that )this step has passed",
+            "When this step passes",
+            "Then this step should pass",
+        ],
+        pass,
+    );
 
-defineStep(
-    ["Given (that )this step has failed", "When this step fails", "Then this step should fail"],
-    fail,
-);
+    defineStep(
+        ["Given (that )this step has failed", "When this step fails", "Then this step should fail"],
+        fail,
+    );
+}
 
 /**
  * Always throws, causing a scenario failure.
