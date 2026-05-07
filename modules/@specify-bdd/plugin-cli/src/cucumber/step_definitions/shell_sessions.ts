@@ -224,7 +224,7 @@ function switchShellByIndex(index: number): void {
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function switchShellByName(name): void {
+function switchShellByName(name: string): void {
     switchShell.call(this, name);
 }
 

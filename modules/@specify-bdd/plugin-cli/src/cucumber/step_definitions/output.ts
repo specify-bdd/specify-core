@@ -241,7 +241,7 @@ async function waitForOutputOnSTDERR(): Promise<void> {
 }
 
 /**
- * Wait for output on the STDOUTstream.
+ * Wait for output on the STDOUT stream.
  */
 async function waitForOutputOnSTDOUT(): Promise<void> {
     await waitForOutput.call(this, IOStream.STDOUT);
