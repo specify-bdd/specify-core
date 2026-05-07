@@ -13,6 +13,7 @@ import type {
     WorldLike,
 } from "@/lib/CucumberManager";
 
+export { registerSupportCode } from "@/lib/registerSupportCode";
 export { SpecifyWorld } from "@/lib/SpecifyWorld";
 
 const cm = CucumberManager.getInstance(Cucumber, {
