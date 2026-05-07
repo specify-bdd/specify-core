@@ -8,7 +8,9 @@
 import { defineStep             } from "@specify-bdd/specify";
 import assert, { AssertionError } from "node:assert/strict";
 
-import { waitForIncludingOutput, waitForMatchingOutput } from "./output";
+import { handlers as outputHandlers } from "./output";
+
+const { waitForIncludingOutput, waitForMatchingOutput } = outputHandlers;
 
 export function register(): void {
     defineStep("When [I press/the user presses] the {string} key", sendKeyPressToCLI);
@@ -144,3 +146,12 @@ function sendLineToCLI(line: string): void {
 
     sendKeyPressToCLI.call(this, "\n");
 }
+
+export const handlers = {
+    respondToIncludingPromptByEnteringLine,
+    respondToIncludingPromptByPressingKey,
+    respondToMatchingPromptByEnteringLine,
+    respondToMatchingPromptByPressingKey,
+    sendKeyPressToCLI,
+    sendLineToCLI,
+};

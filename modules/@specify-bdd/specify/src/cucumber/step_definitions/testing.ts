@@ -70,3 +70,5 @@ function passOnNthAttempt(attempt: number): void {
 async function waitForTime(seconds: number): Promise<void> {
     await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
+
+export const handlers = { passIfNWorkers, passOnNthAttempt, waitForTime };

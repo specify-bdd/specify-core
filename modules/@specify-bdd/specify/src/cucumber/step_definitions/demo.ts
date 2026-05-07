@@ -36,3 +36,5 @@ function fail(): void {
 function pass(): void {
     // no return or throw is a passing step result
 }
+
+export const handlers = { fail, pass };

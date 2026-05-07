@@ -21,3 +21,5 @@ function verifyNPMPackage(packageName: string): void {
     assert.ok(npmValidate(packageName));
     assert.ok(import.meta.resolve(packageName));
 }
+
+export const handlers = { verifyNPMPackage };

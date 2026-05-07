@@ -168,3 +168,13 @@ async function waitForCommandReturn(): Promise<void> {
 
     this.fs.cwd = this.cli.manager.cwd;
 }
+
+export const handlers = {
+    execCommand,
+    execCommandSync,
+    sendKillSignal,
+    verifyExitCode,
+    verifyMaximumElapsedTime,
+    verifyMinimumElapsedTime,
+    waitForCommandReturn,
+};

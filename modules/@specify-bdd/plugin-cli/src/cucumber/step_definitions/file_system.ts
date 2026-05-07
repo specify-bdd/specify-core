@@ -134,3 +134,13 @@ async function writeEmptyFileContent(filePath: string): Promise<void> {
 async function writeFileContent(filePath: string, content: string): Promise<void> {
     await writeFile(filePath, content);
 }
+
+export const handlers = {
+    createTempFileRef,
+    deleteFile,
+    verifyFileContent,
+    verifyFileIsEmpty,
+    verifyFilePathExists,
+    writeEmptyFileContent,
+    writeFileContent,
+};

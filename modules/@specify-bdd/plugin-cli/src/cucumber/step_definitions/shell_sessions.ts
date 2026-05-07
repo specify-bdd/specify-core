@@ -265,3 +265,21 @@ function verifyShellCount(count: number): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     assert.equal(this.cli.manager.sessions.length, count);
 }
+
+export const handlers = {
+    changeDirectory,
+    killCLIShell,
+    killCLIShellByIndex,
+    killCLIShellByName,
+    killCLIShellBySelector,
+    startAltNamedShell,
+    startAltShell,
+    startDefaultNamedShell,
+    startDefaultShell,
+    startShell,
+    switchShell,
+    switchShellByIndex,
+    switchShellByName,
+    switchToNextShell,
+    verifyShellCount,
+};
