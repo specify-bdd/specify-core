@@ -14,7 +14,7 @@ export function register(): void {
         "When [I send/the user sends] a {cliSignal} signal to the last command",
         sendKillSignal,
     );
-    
+
     defineStep(
         "When [I start/the user starts] a/an/the (async )command/process {refstr}",
         execCommand,

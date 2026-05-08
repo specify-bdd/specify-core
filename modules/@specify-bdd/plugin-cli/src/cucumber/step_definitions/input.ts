@@ -45,7 +45,10 @@ export function register(): void {
  * @param prompt - The string to wait for in the prompt
  * @param line   - The string to enter in response
  */
-export async function respondToIncludingPromptByEnteringLine(prompt: string, line: string): Promise<void> {
+export async function respondToIncludingPromptByEnteringLine(
+    prompt: string,
+    line: string,
+): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     await waitForIncludingOutput.call(this, prompt);
@@ -59,7 +62,10 @@ export async function respondToIncludingPromptByEnteringLine(prompt: string, lin
  * @param prompt - The pattern to match the prompt against before responding
  * @param line   - The line to enter in response to the prompt
  */
-export async function respondToMatchingPromptByEnteringLine(prompt: RegExp, line: string): Promise<void> {
+export async function respondToMatchingPromptByEnteringLine(
+    prompt: RegExp,
+    line: string,
+): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     await waitForMatchingOutput.call(this, prompt);
@@ -73,7 +79,10 @@ export async function respondToMatchingPromptByEnteringLine(prompt: RegExp, line
  * @param prompt - The pattern to match the prompt against before responding
  * @param key    - The key to send in response to the prompt
  */
-export async function respondToMatchingPromptByPressingKey(prompt: RegExp, key: string): Promise<void> {
+export async function respondToMatchingPromptByPressingKey(
+    prompt: RegExp,
+    key: string,
+): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     await waitForMatchingOutput.call(this, prompt);
@@ -87,7 +96,10 @@ export async function respondToMatchingPromptByPressingKey(prompt: RegExp, key: 
  * @param prompt - The literal string to wait for in the prompt before responding
  * @param key    - The key to send in response to the prompt
  */
-export async function respondToIncludingPromptByPressingKey(prompt: string, key: string): Promise<void> {
+export async function respondToIncludingPromptByPressingKey(
+    prompt: string,
+    key: string,
+): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     await waitForIncludingOutput.call(this, prompt);
