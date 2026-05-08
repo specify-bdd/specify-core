@@ -40,7 +40,7 @@ export function register(): void {
  *
  * @param workers - The expected number of parallel workers
  */
-function passIfNWorkers(workers: number): void {
+export function passIfNWorkers(workers: number): void {
     assert.equal(
         parseInt(process.env.CUCUMBER_TOTAL_WORKERS, 10) || 1,
         workers,
@@ -54,7 +54,7 @@ function passIfNWorkers(workers: number): void {
  *
  * @param attempt - The attempt number to pass
  */
-function passOnNthAttempt(attempt: number): void {
+export function passOnNthAttempt(attempt: number): void {
     assert.equal(
         Object.keys(this.pickle.attempts).length,
         attempt,
@@ -67,8 +67,6 @@ function passOnNthAttempt(attempt: number): void {
  *
  * @param seconds - The number of seconds to wait
  */
-async function waitForTime(seconds: number): Promise<void> {
+export async function waitForTime(seconds: number): Promise<void> {
     await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
-
-export const handlers = { passIfNWorkers, passOnNthAttempt, waitForTime };

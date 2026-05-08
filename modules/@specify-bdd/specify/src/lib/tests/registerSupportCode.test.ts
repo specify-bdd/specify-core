@@ -1,8 +1,8 @@
 import path from "node:path";
 
-import { registerSupportCode } from "@/lib/registerSupportCode";
+import { registerSupportCode } from "@/lib/CucumberRegistrar";
 
-import type { ModuleLoader } from "@/lib/registerSupportCode";
+import type { ModuleLoader } from "@/lib/CucumberRegistrar";
 
 const REGISTER_DIR = "/fake/cucumber/register";
 const SUPPORT_DIR  = "/fake/cucumber/support";

@@ -43,7 +43,7 @@ export function register(): void {
  *
  * @param address - The dot notation address at which to store the temp file path
  */
-async function createTempFileRef(address: string): Promise<void> {
+export async function createTempFileRef(address: string): Promise<void> {
     const dirPath  = await mkdtemp(join(tmpdir(), "specify", "test-"));
     const filePath = join(dirPath, "rerun.txt");
 
@@ -55,7 +55,7 @@ async function createTempFileRef(address: string): Promise<void> {
  *
  * @param filePath - The path to the file
  */
-async function deleteFile(filePath: string): Promise<void> {
+export async function deleteFile(filePath: string): Promise<void> {
     await verifyFilePathExists.call(this, filePath);
 
     await unlink(filePath);
@@ -73,7 +73,7 @@ async function deleteFile(filePath: string): Promise<void> {
  * @throws Error
  * If the file content doesn't match the pattern.
  */
-async function verifyFileContent(filePath: string, pattern: string): Promise<void> {
+export async function verifyFileContent(filePath: string, pattern: string): Promise<void> {
     await verifyFilePathExists.call(this, filePath);
 
     await this.waitFor(async () => RegExp(pattern).test(await readFile(filePath, "utf8")), {
@@ -92,7 +92,7 @@ async function verifyFileContent(filePath: string, pattern: string): Promise<voi
  * @throws Error
  * If the file is not empty.
  */
-async function verifyFileIsEmpty(filePath: string): Promise<void> {
+export async function verifyFileIsEmpty(filePath: string): Promise<void> {
     await verifyFilePathExists.call(this, filePath);
 
     await this.waitFor(async () => !(await readFile(filePath, "utf8")), {
@@ -108,7 +108,7 @@ async function verifyFileIsEmpty(filePath: string): Promise<void> {
  * @throws Error
  * If the file does not exist.
  */
-async function verifyFilePathExists(filePath: string): Promise<void> {
+export async function verifyFilePathExists(filePath: string): Promise<void> {
     await this.waitFor(() => existsSync(filePath), {
         "error": Error(`The file path "${filePath}" does not exist`),
     });
@@ -120,7 +120,7 @@ async function verifyFilePathExists(filePath: string): Promise<void> {
  *
  * @param filePath - The path to the file
  */
-async function writeEmptyFileContent(filePath: string): Promise<void> {
+export async function writeEmptyFileContent(filePath: string): Promise<void> {
     await writeFileContent.call(this, filePath, "");
 }
 
@@ -131,16 +131,6 @@ async function writeEmptyFileContent(filePath: string): Promise<void> {
  * @param filePath - The path to the file to set content for
  * @param content  - The content to write to the file
  */
-async function writeFileContent(filePath: string, content: string): Promise<void> {
+export async function writeFileContent(filePath: string, content: string): Promise<void> {
     await writeFile(filePath, content);
 }
-
-export const handlers = {
-    createTempFileRef,
-    deleteFile,
-    verifyFileContent,
-    verifyFileIsEmpty,
-    verifyFilePathExists,
-    writeEmptyFileContent,
-    writeFileContent,
-};

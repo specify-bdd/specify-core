@@ -14,6 +14,7 @@ export function register(): void {
         "When [I send/the user sends] a {cliSignal} signal to the last command",
         sendKillSignal,
     );
+    
     defineStep(
         "When [I start/the user starts] a/an/the (async )command/process {refstr}",
         execCommand,
@@ -59,7 +60,7 @@ export function register(): void {
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function execCommand(command: string): void {
+export function execCommand(command: string): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     this.cli.manager.run(command);
 }
@@ -69,7 +70,7 @@ function execCommand(command: string): void {
  *
  * @param command - The command to run
  */
-async function execCommandSync(command: string): Promise<void> {
+export async function execCommandSync(command: string): Promise<void> {
     execCommand.call(this, command);
     await waitForCommandReturn.call(this);
 
@@ -81,7 +82,7 @@ async function execCommandSync(command: string): Promise<void> {
  *
  * @param signal - The system signal to pass to killCommand()
  */
-async function sendKillSignal(signal: string): Promise<void> {
+export async function sendKillSignal(signal: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     await this.cli.manager.killCommand({}, signal);
 }
@@ -94,7 +95,7 @@ async function sendKillSignal(signal: string): Promise<void> {
  * @throws Error
  * If the actual exit code is different
  */
-async function verifyExitCode(exitCode: number): Promise<void> {
+export async function verifyExitCode(exitCode: number): Promise<void> {
     await this.waitFor(() => exitCode === this.cli.manager.exitCode, {
         "error": Error(
             `The command's exit code was not the expected value.\nExpected: ${exitCode}\nActual: ${this.cli.manager.exitCode}`,
@@ -116,7 +117,7 @@ async function verifyExitCode(exitCode: number): Promise<void> {
  * If the last command's execution time is more than the specified number of
  * seconds.
  */
-async function verifyMaximumElapsedTime(maxTime: number): Promise<void> {
+export async function verifyMaximumElapsedTime(maxTime: number): Promise<void> {
     await this.cli.manager.waitForReturn();
 
     const elapsed = this.cli.manager.commandElapsedTime / 1000;
@@ -143,7 +144,7 @@ async function verifyMaximumElapsedTime(maxTime: number): Promise<void> {
  * If the last command's execution time is less than the specified number of
  * seconds.
  */
-async function verifyMinimumElapsedTime(minTime: number): Promise<void> {
+export async function verifyMinimumElapsedTime(minTime: number): Promise<void> {
     await this.cli.manager.waitForReturn();
 
     const elapsed = this.cli.manager.commandElapsedTime / 1000;
@@ -162,19 +163,9 @@ async function verifyMinimumElapsedTime(minTime: number): Promise<void> {
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-async function waitForCommandReturn(): Promise<void> {
+export async function waitForCommandReturn(): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     await this.cli.manager.waitForReturn();
 
     this.fs.cwd = this.cli.manager.cwd;
 }
-
-export const handlers = {
-    execCommand,
-    execCommandSync,
-    sendKillSignal,
-    verifyExitCode,
-    verifyMaximumElapsedTime,
-    verifyMinimumElapsedTime,
-    waitForCommandReturn,
-};

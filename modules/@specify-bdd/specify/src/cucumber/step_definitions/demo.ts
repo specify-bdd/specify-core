@@ -26,15 +26,13 @@ export function register(): void {
 /**
  * Always throws, causing a scenario failure.
  */
-function fail(): void {
+export function fail(): void {
     assert.fail("This is an expected failure");
 }
 
 /**
  * Always passes.
  */
-function pass(): void {
+export function pass(): void {
     // no return or throw is a passing step result
 }
-
-export const handlers = { fail, pass };

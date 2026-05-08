@@ -106,7 +106,7 @@ export function register(): void {
  * @throws AssertionError
  * If the last command produced any output
  */
-function verifyEmptyOutput(): void {
+export function verifyEmptyOutput(): void {
     assert.ok(
         !this.cli.manager.output,
         new AssertionError({
@@ -123,7 +123,7 @@ function verifyEmptyOutput(): void {
  * @throws Error
  * If the output does not contain the given string
  */
-async function verifyIncludesOutput(text: string): Promise<void> {
+export async function verifyIncludesOutput(text: string): Promise<void> {
     await this.waitFor(() => this.cli.manager.output.includes(text), {
         "error": Error(
             `Command output did not include the expected string.\nExpected: ${text}\nOutput:\n${this.cli.manager.output}`,
@@ -139,7 +139,7 @@ async function verifyIncludesOutput(text: string): Promise<void> {
  * @throws Error
  * If no matches for the regexp pattern were found
  */
-async function verifyMatchingOutput(pattern: RegExp): Promise<void> {
+export async function verifyMatchingOutput(pattern: RegExp): Promise<void> {
     await this.waitFor(() => pattern.test(this.cli.manager.output), {
         "error": Error(
             `Command output did not match the specified pattern. Output:\n${this.cli.manager.output}`,
@@ -155,7 +155,7 @@ async function verifyMatchingOutput(pattern: RegExp): Promise<void> {
  * @throws Error
  * If the output contains the given string
  */
-async function verifyNoIncludingOutput(text: string): Promise<void> {
+export async function verifyNoIncludingOutput(text: string): Promise<void> {
     await this.waitFor(() => !this.cli.manager.output.includes(text), {
         "error": Error(
             `Command output included the unexpected string.\nUnexpected: ${text}\nOutput:\n${this.cli.manager.output}`,
@@ -172,7 +172,7 @@ async function verifyNoIncludingOutput(text: string): Promise<void> {
  * @throws Error
  * If the output matches the pattern
  */
-async function verifyNoMatchingOutput(pattern: RegExp): Promise<void> {
+export async function verifyNoMatchingOutput(pattern: RegExp): Promise<void> {
     await this.waitFor(() => !pattern.test(this.cli.manager.output), {
         "error": Error(
             `Command output matched the specified pattern. Output:\n${this.cli.manager.output}`,
@@ -188,7 +188,7 @@ async function verifyNoMatchingOutput(pattern: RegExp): Promise<void> {
  * @throws Error
  * If the output does not exactly equal the expected string
  */
-async function verifyOutputIs(expected: string): Promise<void> {
+export async function verifyOutputIs(expected: string): Promise<void> {
     await this.waitFor(() => this.cli.manager.output.trim() === expected, {
         "error": Error(
             `Expected output to be exactly: ${expected}\nActual:\n${this.cli.manager.output}`,
@@ -204,7 +204,7 @@ async function verifyOutputIs(expected: string): Promise<void> {
  * @throws Error
  * If the output exactly equals the given string
  */
-async function verifyOutputIsNot(expected: string): Promise<void> {
+export async function verifyOutputIsNot(expected: string): Promise<void> {
     await this.waitFor(() => this.cli.manager.output.trim() !== expected, {
         "error": Error(`Command output was exactly: ${expected}`),
     });
@@ -213,7 +213,7 @@ async function verifyOutputIsNot(expected: string): Promise<void> {
 /**
  * Wait for literally any output.
  */
-async function waitForAnyOutput(): Promise<void> {
+export async function waitForAnyOutput(): Promise<void> {
     await waitForOutput.call(this);
 }
 
@@ -222,7 +222,7 @@ async function waitForAnyOutput(): Promise<void> {
  *
  * @param text - The literal string to wait for in the output
  */
-async function waitForIncludingOutput(text: string): Promise<void> {
+export async function waitForIncludingOutput(text: string): Promise<void> {
     await waitForOutput.call(this, IOStream.ANY, new RegExp(escapeRegExp(text)));
 }
 
@@ -231,7 +231,7 @@ async function waitForIncludingOutput(text: string): Promise<void> {
  *
  * @param text - The literal string to wait for in the output
  */
-async function waitForIncludingOutputOnSTDERR(text: string): Promise<void> {
+export async function waitForIncludingOutputOnSTDERR(text: string): Promise<void> {
     await waitForOutput.call(this, IOStream.STDERR, new RegExp(escapeRegExp(text)));
 }
 
@@ -240,7 +240,7 @@ async function waitForIncludingOutputOnSTDERR(text: string): Promise<void> {
  *
  * @param text - The literal string to wait for in the output
  */
-async function waitForIncludingOutputOnSTDOUT(text: string): Promise<void> {
+export async function waitForIncludingOutputOnSTDOUT(text: string): Promise<void> {
     await waitForOutput.call(this, IOStream.STDOUT, new RegExp(escapeRegExp(text)));
 }
 
@@ -249,7 +249,7 @@ async function waitForIncludingOutputOnSTDOUT(text: string): Promise<void> {
  *
  * @param pattern - The pattern to match output against
  */
-async function waitForMatchingOutput(pattern: RegExp): Promise<void> {
+export async function waitForMatchingOutput(pattern: RegExp): Promise<void> {
     await waitForOutput.call(this, IOStream.ANY, pattern);
 }
 
@@ -258,7 +258,7 @@ async function waitForMatchingOutput(pattern: RegExp): Promise<void> {
  *
  * @param pattern - The pattern to match output against
  */
-async function waitForMatchingOutputOnSTDERR(pattern: RegExp): Promise<void> {
+export async function waitForMatchingOutputOnSTDERR(pattern: RegExp): Promise<void> {
     await waitForOutput.call(this, IOStream.STDERR, pattern);
 }
 
@@ -267,7 +267,7 @@ async function waitForMatchingOutputOnSTDERR(pattern: RegExp): Promise<void> {
  *
  * @param pattern - The pattern to match output against
  */
-async function waitForMatchingOutputOnSTDOUT(pattern: RegExp): Promise<void> {
+export async function waitForMatchingOutputOnSTDOUT(pattern: RegExp): Promise<void> {
     await waitForOutput.call(this, IOStream.STDOUT, pattern);
 }
 
@@ -280,7 +280,7 @@ async function waitForMatchingOutputOnSTDOUT(pattern: RegExp): Promise<void> {
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-async function waitForOutput(stream?: IOStream, pattern?: RegExp): Promise<void> {
+export async function waitForOutput(stream?: IOStream, pattern?: RegExp): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     await this.cli.manager.waitForOutput({ pattern, stream });
 
@@ -290,14 +290,14 @@ async function waitForOutput(stream?: IOStream, pattern?: RegExp): Promise<void>
 /**
  * Wait for output on the STDERR stream.
  */
-async function waitForOutputOnSTDERR(): Promise<void> {
+export async function waitForOutputOnSTDERR(): Promise<void> {
     await waitForOutput.call(this, IOStream.STDERR);
 }
 
 /**
  * Wait for output on the STDOUT stream.
  */
-async function waitForOutputOnSTDOUT(): Promise<void> {
+export async function waitForOutputOnSTDOUT(): Promise<void> {
     await waitForOutput.call(this, IOStream.STDOUT);
 }
 
@@ -310,23 +310,3 @@ async function waitForOutputOnSTDOUT(): Promise<void> {
 function escapeRegExp(text: string): string {
     return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
-
-export const handlers = {
-    verifyEmptyOutput,
-    verifyIncludesOutput,
-    verifyMatchingOutput,
-    verifyNoIncludingOutput,
-    verifyNoMatchingOutput,
-    verifyOutputIs,
-    verifyOutputIsNot,
-    waitForAnyOutput,
-    waitForIncludingOutput,
-    waitForIncludingOutputOnSTDERR,
-    waitForIncludingOutputOnSTDOUT,
-    waitForMatchingOutput,
-    waitForMatchingOutputOnSTDERR,
-    waitForMatchingOutputOnSTDOUT,
-    waitForOutput,
-    waitForOutputOnSTDERR,
-    waitForOutputOnSTDOUT,
-};

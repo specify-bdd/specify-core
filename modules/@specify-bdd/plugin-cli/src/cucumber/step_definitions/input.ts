@@ -8,9 +8,7 @@
 import { defineStep             } from "@specify-bdd/specify";
 import assert, { AssertionError } from "node:assert/strict";
 
-import { handlers as outputHandlers } from "./output";
-
-const { waitForIncludingOutput, waitForMatchingOutput } = outputHandlers;
+import { waitForIncludingOutput, waitForMatchingOutput } from "./output";
 
 export function register(): void {
     defineStep("When [I press/the user presses] the {string} key", sendKeyPressToCLI);
@@ -47,7 +45,7 @@ export function register(): void {
  * @param prompt - The string to wait for in the prompt
  * @param line   - The string to enter in response
  */
-async function respondToIncludingPromptByEnteringLine(prompt: string, line: string): Promise<void> {
+export async function respondToIncludingPromptByEnteringLine(prompt: string, line: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     await waitForIncludingOutput.call(this, prompt);
@@ -61,7 +59,7 @@ async function respondToIncludingPromptByEnteringLine(prompt: string, line: stri
  * @param prompt - The pattern to match the prompt against before responding
  * @param line   - The line to enter in response to the prompt
  */
-async function respondToMatchingPromptByEnteringLine(prompt: RegExp, line: string): Promise<void> {
+export async function respondToMatchingPromptByEnteringLine(prompt: RegExp, line: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     await waitForMatchingOutput.call(this, prompt);
@@ -75,7 +73,7 @@ async function respondToMatchingPromptByEnteringLine(prompt: RegExp, line: strin
  * @param prompt - The pattern to match the prompt against before responding
  * @param key    - The key to send in response to the prompt
  */
-async function respondToMatchingPromptByPressingKey(prompt: RegExp, key: string): Promise<void> {
+export async function respondToMatchingPromptByPressingKey(prompt: RegExp, key: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     await waitForMatchingOutput.call(this, prompt);
@@ -89,7 +87,7 @@ async function respondToMatchingPromptByPressingKey(prompt: RegExp, key: string)
  * @param prompt - The literal string to wait for in the prompt before responding
  * @param key    - The key to send in response to the prompt
  */
-async function respondToIncludingPromptByPressingKey(prompt: string, key: string): Promise<void> {
+export async function respondToIncludingPromptByPressingKey(prompt: string, key: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     await waitForIncludingOutput.call(this, prompt);
@@ -109,7 +107,7 @@ async function respondToIncludingPromptByPressingKey(prompt: string, key: string
  * @throws AssertionError
  * If the key is not a single character or a recognized special key name.
  */
-function sendKeyPressToCLI(key: string): void {
+export function sendKeyPressToCLI(key: string): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     const specialKeyMap = {
@@ -139,19 +137,10 @@ function sendKeyPressToCLI(key: string): void {
  *
  * @param line - The line of input to enter
  */
-function sendLineToCLI(line: string): void {
+export function sendLineToCLI(line: string): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     line.split("").forEach((char) => sendKeyPressToCLI.call(this, char));
 
     sendKeyPressToCLI.call(this, "\n");
 }
-
-export const handlers = {
-    respondToIncludingPromptByEnteringLine,
-    respondToIncludingPromptByPressingKey,
-    respondToMatchingPromptByEnteringLine,
-    respondToMatchingPromptByPressingKey,
-    sendKeyPressToCLI,
-    sendLineToCLI,
-};

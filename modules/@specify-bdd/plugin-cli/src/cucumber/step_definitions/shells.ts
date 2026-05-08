@@ -72,7 +72,7 @@ export function register(): void {
  * @throws AssertionError
  * If the `cd` command returns a non-zero exit code.
  */
-async function changeDirectory(dirPath: string): Promise<void> {
+export async function changeDirectory(dirPath: string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     this.cli.manager.run(`cd ${dirPath}`);
@@ -87,7 +87,7 @@ async function changeDirectory(dirPath: string): Promise<void> {
 /**
  * Kill the active CLI shell.
  */
-async function killCLIShell(): Promise<void> {
+export async function killCLIShell(): Promise<void> {
     killCLIShellBySelector.call(this);
 }
 
@@ -96,7 +96,7 @@ async function killCLIShell(): Promise<void> {
  *
  * @param index - The index of the CLI shell to kill
  */
-async function killCLIShellByIndex(index: number): Promise<void> {
+export async function killCLIShellByIndex(index: number): Promise<void> {
     killCLIShellBySelector.call(this, index);
 }
 
@@ -105,7 +105,7 @@ async function killCLIShellByIndex(index: number): Promise<void> {
  *
  * @param name - The name of the CLI shell to kill
  */
-async function killCLIShellByName(name: string): Promise<void> {
+export async function killCLIShellByName(name: string): Promise<void> {
     killCLIShellBySelector.call(this, name);
 }
 
@@ -114,7 +114,7 @@ async function killCLIShellByName(name: string): Promise<void> {
  *
  * @param selector - The selector of the CLI shell to kill
  */
-async function killCLIShellBySelector(selector?: number | string): Promise<void> {
+export async function killCLIShellBySelector(selector?: number | string): Promise<void> {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     if (selector === undefined) {
@@ -131,7 +131,7 @@ async function killCLIShellBySelector(selector?: number | string): Promise<void>
  *
  * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
  */
-async function startAltShell(shellType: string): Promise<void> {
+export async function startAltShell(shellType: string): Promise<void> {
     return startShell.call(this, shellType);
 }
 
@@ -141,14 +141,14 @@ async function startAltShell(shellType: string): Promise<void> {
  * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
  * @param name      - The name of the shell
  */
-async function startAltNamedShell(shellType: string, name: string): Promise<void> {
+export async function startAltNamedShell(shellType: string, name: string): Promise<void> {
     return startShell.call(this, shellType, name);
 }
 
 /**
  * Start a default shell without a name.
  */
-async function startDefaultShell(): Promise<void> {
+export async function startDefaultShell(): Promise<void> {
     return startShell.call(this);
 }
 
@@ -157,7 +157,7 @@ async function startDefaultShell(): Promise<void> {
  *
  * @param name - The name of the shell
  */
-async function startDefaultNamedShell(name: string): Promise<void> {
+export async function startDefaultNamedShell(name: string): Promise<void> {
     return startShell.call(this, "sh", name);
 }
 
@@ -167,7 +167,7 @@ async function startDefaultNamedShell(name: string): Promise<void> {
  * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
  * @param name      - The name of the shell
  */
-async function startShell(shellType: string = "sh", name?: string): Promise<void> {
+export async function startShell(shellType: string = "sh", name?: string): Promise<void> {
     const options: SpawnOptions = { "cwd": this.fs.cwd, "env": { ...process.env } };
 
     // strip Cucumber env vars from the options object that will be passed to the child process
@@ -200,7 +200,7 @@ async function startShell(shellType: string = "sh", name?: string): Promise<void
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function switchToNextShell(): void {
+export function switchToNextShell(): void {
     switchShell.call(this);
 }
 
@@ -212,7 +212,7 @@ function switchToNextShell(): void {
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function switchShellByIndex(index: number): void {
+export function switchShellByIndex(index: number): void {
     switchShell.call(this, index);
 }
 
@@ -224,7 +224,7 @@ function switchShellByIndex(index: number): void {
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function switchShellByName(name: string): void {
+export function switchShellByName(name: string): void {
     switchShell.call(this, name);
 }
 
@@ -237,7 +237,7 @@ function switchShellByName(name: string): void {
  * @throws AssertionError
  * If there is no SessionManager initialized.
  */
-function switchShell(selector?: number | string): void {
+export function switchShell(selector?: number | string): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
 
     if (selector === undefined) {
@@ -261,25 +261,7 @@ function switchShell(selector?: number | string): void {
  * @throws AssertionError
  * If the actual number of shell sessions is not equal to the expected count
  */
-function verifyShellCount(count: number): void {
+export function verifyShellCount(count: number): void {
     assert.ok(this.cli.manager, new AssertionError({ "message": "No shell session initialized." }));
     assert.equal(this.cli.manager.sessions.length, count);
 }
-
-export const handlers = {
-    changeDirectory,
-    killCLIShell,
-    killCLIShellByIndex,
-    killCLIShellByName,
-    killCLIShellBySelector,
-    startAltNamedShell,
-    startAltShell,
-    startDefaultNamedShell,
-    startDefaultShell,
-    startShell,
-    switchShell,
-    switchShellByIndex,
-    switchShellByName,
-    switchToNextShell,
-    verifyShellCount,
-};
