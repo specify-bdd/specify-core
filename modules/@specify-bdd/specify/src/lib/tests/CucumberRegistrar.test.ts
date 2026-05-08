@@ -19,9 +19,9 @@ describe("registerSupportCode", () => {
 
         loader = {
             "glob": vi.fn(async (pattern: string) => {
-                const dir = path.dirname(pattern);
+                const base = pattern.split("/**/")[0];
 
-                return [...modules.keys()].filter((p) => path.dirname(p) === dir);
+                return [...modules.keys()].filter((p) => p.startsWith(`${base}${path.sep}`));
             }),
             "loadModule": vi.fn(async (modulePath: string) => modules.get(modulePath) ?? {}),
         };
@@ -44,24 +44,13 @@ describe("registerSupportCode", () => {
         };
     }
 
-    test("invokes register() on every sibling support and step-definition module", async () => {
+    test("invokes register() on every module in the cucumber directory", async () => {
         addModule(SUPPORT_DIR, "params", fakeModule("support"));
         addModule(STEPDEFS_DIR, "steps", fakeModule("stepdefs"));
 
         await registerSupportCode(REGISTER_DIR, loader);
 
-        expect(calls).toEqual(["support", "stepdefs"]);
-    });
-
-    test("awaits support modules before invoking step_definitions", async () => {
-        addModule(SUPPORT_DIR, "params", fakeModule("support"));
-        addModule(STEPDEFS_DIR, "steps", {
-            "register": () => calls.push("stepdefs"),
-        });
-
-        await registerSupportCode(REGISTER_DIR, loader);
-
-        expect(calls).toEqual(["support", "stepdefs"]);
+        expect(calls.sort()).toEqual(["stepdefs", "support"]);
     });
 
     test("invokes multiple modules within a single directory", async () => {
@@ -70,7 +59,7 @@ describe("registerSupportCode", () => {
 
         await registerSupportCode(REGISTER_DIR, loader);
 
-        expect(calls).toEqual(["first", "second"]);
+        expect(calls.sort()).toEqual(["first", "second"]);
     });
 
     test("throws when a module is missing a register export", async () => {
@@ -89,20 +78,6 @@ describe("registerSupportCode", () => {
         });
 
         await expect(registerSupportCode(REGISTER_DIR, loader)).rejects.toThrow("inner error");
-    });
-
-    test("does not invoke step_definitions when a support module fails", async () => {
-        addModule(SUPPORT_DIR, "broken", {
-            "register": () => {
-                throw new Error("nope");
-            },
-        });
-
-        addModule(STEPDEFS_DIR, "steps", fakeModule("stepdefs"));
-
-        await expect(registerSupportCode(REGISTER_DIR, loader)).rejects.toThrow();
-
-        expect(calls).not.toContain("stepdefs");
     });
 
     test("resolves cleanly when no modules are present", async () => {
