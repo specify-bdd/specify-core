@@ -14,27 +14,29 @@ const quotedInt = /'-?\d+'|"-?\d+"/;
 
 const quotedString = /"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'/;
 
-defineParamType({
-    "name":   "cliSignal",
-    "regexp": quotedString,
-    transformer(input: string): string {
-        const parsedInput = input.slice(1, -1);
+export function register(): void {
+    defineParamType({
+        "name":   "cliSignal",
+        "regexp": quotedString,
+        transformer(input: string): string {
+            const parsedInput = input.slice(1, -1);
 
-        assert.ok(
-            parsedInput in constants.signals,
-            new AssertionError({ "message": `Invalid signal: ${input}` }),
-        );
+            assert.ok(
+                parsedInput in constants.signals,
+                new AssertionError({ "message": `Invalid signal: ${input}` }),
+            );
 
-        return parsedInput;
-    },
-    "useForSnippets": false,
-});
+            return parsedInput;
+        },
+        "useForSnippets": false,
+    });
 
-defineParamType({
-    "name":   "intstr",
-    "regexp": quotedInt,
-    transformer(input: string): number {
-        return parseInt(input.slice(1, -1), 10);
-    },
-    "useForSnippets": false,
-});
+    defineParamType({
+        "name":   "intstr",
+        "regexp": quotedInt,
+        transformer(input: string): number {
+            return parseInt(input.slice(1, -1), 10);
+        },
+        "useForSnippets": false,
+    });
+}
