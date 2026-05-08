@@ -2,9 +2,11 @@
 
 Cucumber step definitions covering interactions with a file system.
 
-## Create a new /tmp filepath and store it in QuickRef at the given address
+## Create temp file reference
 
 - `Given a new temp file path referenced as {string}`
+
+Creates a temporary directory and file path, then stores the path in QuickRef at the given dot-notation address.
 
 **Parameters**
 
@@ -14,9 +16,11 @@ Cucumber step definitions covering interactions with a file system.
 
 ---
 
-## Delete the file at the given path
+## Delete a file
 
 - `When [I delete/the user deletes] the {filePath} file`
+
+Deletes the file at the specified path. Fails if the file does not exist.
 
 **Parameters**
 
@@ -26,13 +30,12 @@ Cucumber step definitions covering interactions with a file system.
 
 ---
 
-## Set the content of the file at the given path
+## Write file content
 
-- `Given (that )the {filePath} file content is {string}`
-- `Given (that )the {ref} file content is {string}`
+- `Given (that )the {filePath|ref} file content is {string}`
 - `When [I change/the user changes] the {filePath} file content to {string}`
 
-Creates the file if it does not exist, overwrites if it does.
+Writes the specified content to the file at the given path, creating the file if it does not exist or overwriting it if it does.
 
 **Parameters**
 
@@ -43,13 +46,12 @@ Creates the file if it does not exist, overwrites if it does.
 
 ---
 
-## Create an empty file at the given path
+## Write empty file content
 
-- `Given (that )the {filePath} file content is empty`
-- `Given (that )the {ref} file content is empty`
+- `Given (that )the {filePath|ref} file content is empty`
 - `When [I create/the user creates] the {filePath} file`
 
-If the file already exists, it will be overwritten as empty.
+Creates an empty file at the given path, or overwrites its content if the file already exists.
 
 **Parameters**
 
@@ -59,10 +61,11 @@ If the file already exists, it will be overwritten as empty.
 
 ---
 
-## Verify that the file at the given path is empty
+## Assert file is empty
 
-- `Then the {filePath} file content should be empty`
-- `Then the {ref} file content should be empty`
+- `Then the {filePath|ref} file content should be empty`
+
+Verifies that the file at the given path exists and contains no content.
 
 **Parameters**
 
@@ -72,10 +75,11 @@ If the file already exists, it will be overwritten as empty.
 
 ---
 
-## Verify that the file at the given path has content matching the given pattern
+## Assert file content matches
 
-- `Then the {filePath} file content should match {ref}`
-- `Then the {ref} file content should match {ref}`
+- `Then the {filePath|ref} file content should match {ref}`
+
+Verifies that the content of the file at the given path matches the provided regular expression pattern.
 
 **Parameters**
 
@@ -86,10 +90,11 @@ If the file already exists, it will be overwritten as empty.
 
 ---
 
-## Verify that a file exists at the given path
+## Assert file path exists
 
-- `Then the {filePath} file path should exist`
-- `Then the {ref} file path should exist`
+- `Then the {filePath|ref} file path should exist`
+
+Verifies that a file exists at the given path.
 
 **Parameters**
 
