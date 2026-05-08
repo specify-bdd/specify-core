@@ -62,7 +62,10 @@ export function register(): void {
 }
 
 /**
- * Change the current working directory in the active shell.
+ * Change working directory
+ *
+ * Runs `cd` in the active shell session and updates the world's tracked
+ * working directory to match.
  *
  * @param dirPath - The new working directory
  *
@@ -85,14 +88,18 @@ export async function changeDirectory(dirPath: string): Promise<void> {
 }
 
 /**
- * Kill the active CLI shell.
+ * Kill active CLI shell
+ *
+ * Kills the currently active shell session.
  */
 export async function killCLIShell(): Promise<void> {
     killCLIShellBySelector.call(this);
 }
 
 /**
- * Kill a CLI shell by its index.
+ * Kill shell by index
+ *
+ * Kills the shell session identified by the given index.
  *
  * @param index - The index of the CLI shell to kill
  */
@@ -101,7 +108,9 @@ export async function killCLIShellByIndex(index: number): Promise<void> {
 }
 
 /**
- * Kill a CLI shell by its name.
+ * Kill shell by name
+ *
+ * Kills the shell session with the given name.
  *
  * @param name - The name of the CLI shell to kill
  */
@@ -110,7 +119,10 @@ export async function killCLIShellByName(name: string): Promise<void> {
 }
 
 /**
- * Kill the given CLI shell by its selector, or the active shell if no selector.
+ * Kill shell by selector
+ *
+ * Kills the shell session identified by the given index or name, or the
+ * currently active session if no selector is provided.
  *
  * @param selector - The selector of the CLI shell to kill
  */
@@ -127,7 +139,9 @@ export async function killCLIShellBySelector(selector?: number | string): Promis
 }
 
 /**
- * Start a user-specified shell.
+ * Start alternate shell
+ *
+ * Starts a new unnamed shell of the specified type.
  *
  * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
  */
@@ -136,7 +150,9 @@ export async function startAltShell(shellType: string): Promise<void> {
 }
 
 /**
- * Start a user-specified shell with a name.
+ * Start named alternate shell
+ *
+ * Starts a new named shell of the specified type.
  *
  * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
  * @param name      - The name of the shell
@@ -146,14 +162,18 @@ export async function startAltNamedShell(shellType: string, name: string): Promi
 }
 
 /**
- * Start a default shell without a name.
+ * Start default shell
+ *
+ * Starts a new unnamed shell using the default shell type (`sh`).
  */
 export async function startDefaultShell(): Promise<void> {
     return startShell.call(this);
 }
 
 /**
- * Start a default shell with a name.
+ * Start named default shell
+ *
+ * Starts a new named shell using the default shell type (`sh`).
  *
  * @param name - The name of the shell
  */
@@ -162,7 +182,11 @@ export async function startDefaultNamedShell(name: string): Promise<void> {
 }
 
 /**
- * Start a shell. Defaults to "sh" and no name.
+ * Start a shell session
+ *
+ * Spawns a new shell process of the given type, registers it with the session
+ * manager, and validates that it started successfully. Strips Cucumber
+ * environment variables from the child process to avoid interference.
  *
  * @param shellType - The type of shell to spawn (`sh`, `bash`, etc.)
  * @param name      - The name of the shell
@@ -195,7 +219,9 @@ export async function startShell(shellType: string = "sh", name?: string): Promi
 }
 
 /**
- * Switch to the next shell in the list.
+ * Switch to next shell
+ *
+ * Switches to the next shell in the session manager's list.
  *
  * @throws AssertionError
  * If there is no SessionManager initialized.
@@ -205,7 +231,9 @@ export function switchToNextShell(): void {
 }
 
 /**
- * Switch to the shell matching the index.
+ * Switch shell by index
+ *
+ * Switches to the shell session at the given index.
  *
  * @param index - The index of the shell to switch to
  *
@@ -217,7 +245,9 @@ export function switchShellByIndex(index: number): void {
 }
 
 /**
- * Switch to a named shell.
+ * Switch shell by name
+ *
+ * Switches to the shell session with the given name.
  *
  * @param name - The name of the shell to switch to
  *
@@ -229,8 +259,10 @@ export function switchShellByName(name: string): void {
 }
 
 /**
- * Switch to the shell matching the selector, or to the next shell
- * in the managed shell list if there is no selector.
+ * Switch shell by selector
+ *
+ * Switches to the shell session identified by the given index or name, or to
+ * the next session in the list if no selector is provided.
  *
  * @param selector - The index or name of the shell to switch to
  *
@@ -251,7 +283,10 @@ export function switchShell(selector?: number | string): void {
 }
 
 /**
- * Verify the number of shell sessions.
+ * Assert shell session count
+ *
+ * Verifies that the session manager has exactly the expected number of active
+ * shell sessions.
  *
  * @param count - The expected number of shell sessions
  *

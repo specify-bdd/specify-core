@@ -101,7 +101,9 @@ export function register(): void {
 }
 
 /**
- * Verify that the CLI output for the last command is empty.
+ * Assert output is empty
+ *
+ * Verifies that the last command produced no terminal output.
  *
  * @throws AssertionError
  * If the last command produced any output
@@ -116,7 +118,9 @@ export function verifyEmptyOutput(): void {
 }
 
 /**
- * Verify that the CLI output for the last command contains the given string.
+ * Assert output includes string
+ *
+ * Verifies that the last command's terminal output contains the given literal string.
  *
  * @param text - The substring to look for in the output
  *
@@ -132,7 +136,9 @@ export async function verifyIncludesOutput(text: string): Promise<void> {
 }
 
 /**
- * Verify that the CLI output for the last command matches the given regexp.
+ * Assert output matches pattern
+ *
+ * Verifies that the last command's terminal output matches the given regular expression.
  *
  * @param pattern - The pattern to match output against
  *
@@ -148,7 +154,10 @@ export async function verifyMatchingOutput(pattern: RegExp): Promise<void> {
 }
 
 /**
- * Verify that the CLI output for the last command does NOT contain the given string.
+ * Assert output excludes string
+ *
+ * Verifies that the last command's terminal output does not contain the given
+ * literal string.
  *
  * @param text - The substring that should not appear in the output
  *
@@ -164,8 +173,10 @@ export async function verifyNoIncludingOutput(text: string): Promise<void> {
 }
 
 /**
- * Verify that the CLI output for the last command does NOT match the given
- * regexp.
+ * Assert output not matching
+ *
+ * Verifies that the last command's terminal output does not match the given
+ * regular expression.
  *
  * @param pattern - The pattern to match output against
  *
@@ -181,7 +192,10 @@ export async function verifyNoMatchingOutput(pattern: RegExp): Promise<void> {
 }
 
 /**
- * Verify that the CLI output for the last command is exactly the given string.
+ * Assert exact output
+ *
+ * Verifies that the last command's terminal output is exactly the given string,
+ * after trimming whitespace.
  *
  * @param expected - The expected output
  *
@@ -197,7 +211,10 @@ export async function verifyOutputIs(expected: string): Promise<void> {
 }
 
 /**
- * Verify that the CLI output for the last command is NOT exactly the given string.
+ * Assert output differs
+ *
+ * Verifies that the last command's terminal output is not exactly the given
+ * string, after trimming whitespace.
  *
  * @param expected - The string the output should not equal
  *
@@ -211,14 +228,18 @@ export async function verifyOutputIsNot(expected: string): Promise<void> {
 }
 
 /**
- * Wait for literally any output.
+ * Wait for any output
+ *
+ * Waits until the active shell produces any terminal output.
  */
 export async function waitForAnyOutput(): Promise<void> {
     await waitForOutput.call(this);
 }
 
 /**
- * Wait for output containing a specific literal string.
+ * Wait for string in output
+ *
+ * Waits until the active shell's output includes the given literal string.
  *
  * @param text - The literal string to wait for in the output
  */
@@ -227,7 +248,9 @@ export async function waitForIncludingOutput(text: string): Promise<void> {
 }
 
 /**
- * Wait for output containing a specific literal string on the STDERR stream.
+ * Wait for string on STDERR
+ *
+ * Waits until STDERR includes the given literal string.
  *
  * @param text - The literal string to wait for in the output
  */
@@ -236,7 +259,9 @@ export async function waitForIncludingOutputOnSTDERR(text: string): Promise<void
 }
 
 /**
- * Wait for output containing a specific literal string on the STDOUT stream.
+ * Wait for string on STDOUT
+ *
+ * Waits until STDOUT includes the given literal string.
  *
  * @param text - The literal string to wait for in the output
  */
@@ -245,7 +270,9 @@ export async function waitForIncludingOutputOnSTDOUT(text: string): Promise<void
 }
 
 /**
- * Wait for output matching a specific phrase.
+ * Wait for matching output
+ *
+ * Waits until the active shell's output matches the given regular expression.
  *
  * @param pattern - The pattern to match output against
  */
@@ -254,7 +281,9 @@ export async function waitForMatchingOutput(pattern: RegExp): Promise<void> {
 }
 
 /**
- * Wait for output matching a specific phrase on the STDERR stream.
+ * Wait for STDERR match
+ *
+ * Waits until STDERR output matches the given regular expression.
  *
  * @param pattern - The pattern to match output against
  */
@@ -263,7 +292,9 @@ export async function waitForMatchingOutputOnSTDERR(pattern: RegExp): Promise<vo
 }
 
 /**
- * Wait for output matching a specific phrase on the STDOUT stream.
+ * Wait for STDOUT match
+ *
+ * Waits until STDOUT output matches the given regular expression.
  *
  * @param pattern - The pattern to match output against
  */
@@ -272,7 +303,10 @@ export async function waitForMatchingOutputOnSTDOUT(pattern: RegExp): Promise<vo
 }
 
 /**
- * Wait for the last command to send some output.
+ * Wait for shell output
+ *
+ * Waits for the active shell to produce output, optionally filtered by stream
+ * and pattern. Updates the world's tracked working directory when output arrives.
  *
  * @param stream  - The stream to watch for output
  * @param pattern - The pattern to match output against
@@ -288,22 +322,28 @@ export async function waitForOutput(stream?: IOStream, pattern?: RegExp): Promis
 }
 
 /**
- * Wait for output on the STDERR stream.
+ * Wait for STDERR output
+ *
+ * Waits until the active shell produces any output on STDERR.
  */
 export async function waitForOutputOnSTDERR(): Promise<void> {
     await waitForOutput.call(this, IOStream.STDERR);
 }
 
 /**
- * Wait for output on the STDOUT stream.
+ * Wait for STDOUT output
+ *
+ * Waits until the active shell produces any output on STDOUT.
  */
 export async function waitForOutputOnSTDOUT(): Promise<void> {
     await waitForOutput.call(this, IOStream.STDOUT);
 }
 
 /**
- * Escape all special regexp characters in a string so it can be used as a
- * literal match pattern inside a RegExp.
+ * Escape regexp characters
+ *
+ * Returns the input string with all special regular expression characters
+ * escaped so it can be used as a literal match pattern.
  *
  * @param text - The string to escape
  */

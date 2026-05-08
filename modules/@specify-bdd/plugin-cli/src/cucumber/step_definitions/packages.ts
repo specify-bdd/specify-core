@@ -13,7 +13,10 @@ export function register(): void {
 }
 
 /**
- * Verify that an NPM package is installed
+ * Assert NPM package installed
+ *
+ * Verifies that the given name is a valid NPM package identifier and that the
+ * package is resolvable in the current environment.
  *
  * @param packageName - The name of the package to verify
  */

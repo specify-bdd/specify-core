@@ -30,7 +30,9 @@ export function register(): void {
 }
 
 /**
- * Only passes if the expected number of parallel workers are currently active.
+ * Assert parallel worker count
+ *
+ * Passes only when the number of active Cucumber parallel workers equals the expected value.
  *
  * @remarks
  * The env var CUCUMBER_TOTAL_WORKERS is set within the worker child processes
@@ -49,8 +51,10 @@ export function passIfNWorkers(workers: number): void {
 }
 
 /**
- * Only passes on the Nth attempt for any given test case.  Multiple attempts
- * are managed via the "retry" feature.
+ * Pass on nth attempt
+ *
+ * Passes only when the current scenario attempt number matches the expected value.
+ * Multiple attempts are managed via the retry feature.
  *
  * @param attempt - The attempt number to pass
  */
@@ -63,7 +67,9 @@ export function passOnNthAttempt(attempt: number): void {
 }
 
 /**
- * Wait for the specified number of seconds.
+ * Wait for duration
+ *
+ * Pauses execution for the specified number of seconds.
  *
  * @param seconds - The number of seconds to wait
  */
