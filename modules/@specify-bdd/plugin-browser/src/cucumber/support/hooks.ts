@@ -6,22 +6,26 @@
 
 import { addAfterScenarioHook, addBeforeScenarioHook } from "@specify-bdd/specify";
 
-addBeforeScenarioHook(
-    async function (): Promise<void> {
-        // initialize the browser namespace
-        this.browser = {
-            "sessions": [],
-        };
-    },
-    { "name": "Browser plugin before scenario hook" },
-);
+export function register(): void {
+    addBeforeScenarioHook(
+        async function (): Promise<void> {
+            // initialize the browser namespace
+            this.browser = {
+                "sessions":      [],
+                "activeSession": null,
+            };
+        },
+        { "name": "Browser plugin before scenario hook" },
+    );
 
-addAfterScenarioHook(
-    async function (): Promise<void> {
-        // terminate all remaining browser sessions, even if some fail to end
-        await Promise.allSettled(this.browser.sessions.map((s) => s.end()));
+    addAfterScenarioHook(
+        async function (): Promise<void> {
+            // terminate all remaining browser sessions, even if some fail to end
+            await Promise.allSettled(this.browser.sessions.map((s) => s.end()));
 
-        this.browser.sessions = [];
-    },
-    { "name": "Browser plugin after scenario hook" },
-);
+            this.browser.sessions = [];
+            this.browser.activeSession = null;
+        },
+        { "name": "Browser plugin after scenario hook" },
+    );
+}
