@@ -16,4 +16,10 @@ export function register(): void {
         "transformer":    parseBrowserName,
         "useForSnippets": false,
     });
+
+    defineParamType({
+        "name":        "url",
+        "regexp":      /[^\s]+/,
+        "transformer": (value: string) => new URL(value),
+    });
 }

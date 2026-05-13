@@ -16,3 +16,18 @@ describe("{browserName} param type", () => {
         });
     });
 });
+
+describe("{url} param type", () => {
+    describe("transformer", () => {
+        it("returns a URL object with the correct href for a valid URL string", () => {
+            const result = new URL("https://example.com/path?q=1");
+
+            expect(result).toBeInstanceOf(URL);
+            expect(result.href).toBe("https://example.com/path?q=1");
+        });
+
+        it("throws a TypeError for a malformed URL string", () => {
+            expect(() => new URL("not-a-url")).toThrow(TypeError);
+        });
+    });
+});

@@ -46,4 +46,11 @@ export interface BrowserSession {
      * End the browser session and release all associated resources.
      */
     end(): Promise<void>;
+
+    /**
+     * Navigate the active browser tab to the given URL.
+     *
+     * @param url - The URL to navigate to
+     */
+    navigateTo(url: URL): Promise<void>;
 }

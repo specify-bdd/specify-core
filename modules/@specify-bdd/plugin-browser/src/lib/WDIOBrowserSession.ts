@@ -52,6 +52,15 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
+     * Navigate the active browser tab to the given URL.
+     *
+     * @param url - The URL to navigate to
+     */
+    async navigateTo(url: URL): Promise<void> {
+        await this.#driver!.url(url.href);
+    }
+
+    /**
      * Build a WDIO RemoteOptions object from the given session start options.
      *
      * @param opts - The session start options
