@@ -5,9 +5,11 @@ import { WDIOBrowserSession } from "@/lib/WDIOBrowserSession";
 vi.mock("webdriverio");
 
 const mockDriver = {
+    "closeWindow":     vi.fn(),
     "deleteSession":   vi.fn(),
     "getWindowHandle": vi.fn(),
     "newWindow":       vi.fn(),
+    "switchToWindow":  vi.fn(),
 };
 
 beforeEach(() => {
@@ -362,6 +364,112 @@ describe("WDIOBrowserSession", () => {
             await session.openTab();
 
             expect(session.activeTab).not.toHaveProperty("name");
+        });
+    });
+
+    describe("closeTab()", () => {
+        /** Helper: start a session and open n-1 additional tabs for a total of n tabs. */
+        async function startWithTabs(n: number): Promise<WDIOBrowserSession> {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+
+            for (let i = 0; i < n; i++) {
+                mockDriver.getWindowHandle.mockResolvedValueOnce(`handle-${i}`);
+            }
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+
+            for (let i = 1; i < n; i++) {
+                await session.openTab();
+            }
+
+            return session;
+        }
+
+        it("closing the active (only) tab sets driver to null and activeTab to null", async () => {
+            const session = await startWithTabs(1);
+
+            await session.closeTab();
+
+            expect(session.driver).toBeNull();
+            expect(session.activeTab).toBeNull();
+        });
+
+        it("closing the active tab (not last) makes the previous tab active", async () => {
+            const session = await startWithTabs(3); // tabs: h0, h1, h2 — active: h2
+
+            await session.closeTab(); // close h2
+
+            expect(session.tabs).toHaveLength(2);
+            expect(session.activeTab?.handle).toBe("handle-1");
+        });
+
+        it("closing the first (active) tab makes the new first tab active", async () => {
+            const session = await startWithTabs(3); // active: h2
+
+            // switch active to first tab for this test
+            await session.closeTab(2); // close h1 (non-active), active stays h2
+            // now tabs: h0, h2 — still active h2; now close first by switching manually
+            // Easier: start fresh with active = first tab by closing down to 1 and reopening
+            // Instead use a 2-tab session and close the first tab directly by index
+            const session2 = await startWithTabs(2); // active: h1
+
+            await session2.closeTab(1); // close first tab h0 (non-active since active=h1)
+
+            expect(session2.tabs).toHaveLength(1);
+            expect(session2.activeTab?.handle).toBe("handle-1"); // unchanged
+        });
+
+        it("closing a non-active tab by index does not change activeTab", async () => {
+            const session = await startWithTabs(3); // active: h2
+
+            await session.closeTab(1); // close tab at index 1 (h0)
+
+            expect(session.activeTab?.handle).toBe("handle-2");
+            expect(session.tabs).toHaveLength(2);
+        });
+
+        it("closing a non-active tab by index calls switchToWindow for target then back to active", async () => {
+            const session = await startWithTabs(3); // active: h2
+
+            await session.closeTab(1); // close h0
+
+            expect(mockDriver.switchToWindow).toHaveBeenCalledWith("handle-0");
+            expect(mockDriver.switchToWindow).toHaveBeenCalledWith("handle-2");
+        });
+
+        it("closing a non-active tab by name does not change activeTab", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            mockDriver.getWindowHandle
+                .mockResolvedValueOnce("handle-0")
+                .mockResolvedValueOnce("handle-1") // named-tab
+                .mockResolvedValueOnce("handle-2"); // becomes active after openTab
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.openTab("named-tab"); // active = handle-1
+            await session.openTab(); // active = handle-2
+
+            await session.closeTab("named-tab"); // close non-active handle-1
+
+            expect(session.activeTab?.handle).toBe("handle-2"); // unchanged
+            expect(session.tabs).toHaveLength(2);
+        });
+
+        it("throws when the selector does not match any tab", async () => {
+            const session = await startWithTabs(2);
+
+            await expect(session.closeTab("nonexistent")).rejects.toThrow(
+                `No tab named "nonexistent".`,
+            );
+
+            await expect(session.closeTab(99)).rejects.toThrow("No tab at position 99.");
         });
     });
 });

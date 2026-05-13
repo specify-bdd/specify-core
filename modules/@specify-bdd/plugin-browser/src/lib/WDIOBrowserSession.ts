@@ -5,7 +5,7 @@
  * using WDIO's standalone mode to manage browser lifecycle.
  */
 
-import assert from "node:assert/strict";
+import assert, { AssertionError } from "node:assert/strict";
 
 import { remote            } from "webdriverio";
 import type { Capabilities } from "@wdio/types";
@@ -88,6 +88,74 @@ export class WDIOBrowserSession implements BrowserSession {
 
         this.#tabs.push(tab);
         this.#activeTab = tab;
+    }
+
+    /**
+     * Close a browser tab.
+     *
+     * When `selector` is omitted, the active tab is closed. Accepts a 1-based
+     * ordinal index or a tab name. Closing the last tab in the session causes
+     * the browser process to terminate; the driver is set to `null` without
+     * calling `deleteSession()`.
+     *
+     * @param selector - A 1-based tab index or tab name; omit to close the active tab
+     */
+    async closeTab(selector?: number | string): Promise<void> {
+        const targetTab = selector === undefined ? this.#activeTab : this.#findTab(selector);
+
+        assert.ok(targetTab, new AssertionError({ "message": "No active tab to close." }));
+
+        const isActive    = targetTab === this.#activeTab;
+        const closedIndex = this.#tabs.indexOf(targetTab);
+
+        if (!isActive) {
+            // switch to target, close it, then switch back to the active tab
+            await this.#driver.switchToWindow(targetTab.handle);
+            await this.#driver.closeWindow();
+            await this.#driver.switchToWindow(this.#activeTab!.handle);
+        } else {
+            await this.#driver.closeWindow();
+        }
+
+        this.#tabs.splice(closedIndex, 1);
+
+        if (isActive) {
+            // prefer the tab just before the closed one; fall back to the new
+            // first tab if the closed tab was the first, or null if none remain
+            this.#activeTab = this.#tabs[closedIndex - 1] ?? this.#tabs[0] ?? null;
+
+            if (this.#activeTab) {
+                await this.#driver.switchToWindow(this.#activeTab.handle);
+            }
+        }
+
+        if (this.#tabs.length === 0) {
+            // the browser process terminated when the last tab was closed
+            this.#driver = null;
+        }
+    }
+
+    /**
+     * Find a tab by 1-based ordinal index or by name.
+     *
+     * @param selector - A 1-based index or a tab name
+     *
+     * @throws AssertionError If no tab matches the selector
+     */
+    #findTab(selector: number | string): TabMeta {
+        if (typeof selector === "number") {
+            const tab = this.#tabs[selector - 1];
+
+            assert.ok(tab, new AssertionError({ "message": `No tab at position ${selector}.` }));
+
+            return tab;
+        }
+
+        const tab = this.#tabs.find((t) => t.name === selector);
+
+        assert.ok(tab, new AssertionError({ "message": `No tab named "${selector}".` }));
+
+        return tab;
     }
 
     /**
