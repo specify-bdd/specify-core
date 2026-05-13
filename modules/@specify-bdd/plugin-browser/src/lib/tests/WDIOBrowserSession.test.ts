@@ -6,6 +6,7 @@ vi.mock("webdriverio");
 
 const mockDriver = {
     "deleteSession": vi.fn(),
+    "refresh":       vi.fn(),
     "url":           vi.fn(),
 };
 
@@ -253,6 +254,21 @@ describe("WDIOBrowserSession", () => {
             await session.navigateTo(new URL("https://example.com/path?q=1"));
 
             expect(mockDriver.url).toHaveBeenCalledWith("https://example.com/path?q=1");
+        });
+    });
+
+    describe("refresh()", () => {
+        it("calls driver.refresh()", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.refresh();
+
+            expect(mockDriver.refresh).toHaveBeenCalledOnce();
         });
     });
 });

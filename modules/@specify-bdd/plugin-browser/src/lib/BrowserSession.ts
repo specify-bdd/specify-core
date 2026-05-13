@@ -53,4 +53,9 @@ export interface BrowserSession {
      * @param url - The URL to navigate to
      */
     navigateTo(url: URL): Promise<void>;
+
+    /**
+     * Reload the current page in the active browser tab.
+     */
+    refresh(): Promise<void>;
 }

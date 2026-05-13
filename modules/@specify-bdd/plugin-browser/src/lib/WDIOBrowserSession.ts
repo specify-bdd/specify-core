@@ -61,6 +61,13 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
+     * Reload the current page in the active browser tab.
+     */
+    async refresh(): Promise<void> {
+        await this.#driver!.refresh();
+    }
+
+    /**
      * Build a WDIO RemoteOptions object from the given session start options.
      *
      * @param opts - The session start options

@@ -1,7 +1,8 @@
 /**
  * Browser Navigation Step Definitions Module
  *
- * Cucumber step definitions for navigating the active browser tab to a URL.
+ * Cucumber step definitions for navigating the active browser tab to a URL
+ * and refreshing the current page.
  */
 
 import assert, { AssertionError } from "node:assert/strict";
@@ -15,6 +16,14 @@ export function register(): void {
             "When [I go/the user goes] to the URL {url}",
         ],
         navigateToURL,
+    );
+
+    defineStep(
+        [
+            "When [I click/the user clicks] the browser's refresh button",
+            "When [I refresh/the user refreshes] the page",
+        ],
+        refreshPage,
     );
 }
 
@@ -32,4 +41,18 @@ async function navigateToURL(url: URL): Promise<void> {
     );
 
     await this.browser.activeSession.navigateTo(url);
+}
+
+/**
+ * Reload the current page in the active browser tab.
+ *
+ * @throws AssertionError If there is no active browser session.
+ */
+async function refreshPage(): Promise<void> {
+    assert.ok(
+        this.browser.activeSession,
+        new AssertionError({ "message": "No active browser session." }),
+    );
+
+    await this.browser.activeSession.refresh();
 }
