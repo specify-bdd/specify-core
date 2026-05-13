@@ -73,6 +73,9 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
+# Private keys
+*.pem
+
 # dotenv environment variable files
 .env
 .env.development.local

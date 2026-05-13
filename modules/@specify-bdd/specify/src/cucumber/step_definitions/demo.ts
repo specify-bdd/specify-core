@@ -7,26 +7,36 @@
 import { defineStep } from "@specify-bdd/specify";
 import assert         from "node:assert/strict";
 
-defineStep(
-    ["Given (that )this step has passed", "When this step passes", "Then this step should pass"],
-    pass,
-);
+export function register(): void {
+    defineStep(
+        [
+            "Given (that )this step has passed",
+            "When this step passes",
+            "Then this step should pass",
+        ],
+        pass,
+    );
 
-defineStep(
-    ["Given (that )this step has failed", "When this step fails", "Then this step should fail"],
-    fail,
-);
+    defineStep(
+        ["Given (that )this step has failed", "When this step fails", "Then this step should fail"],
+        fail,
+    );
+}
 
 /**
- * Always throws, causing a scenario failure.
+ * Fail the scenario
+ *
+ * Throws an assertion error unconditionally, causing the current scenario to fail.
  */
-function fail(): void {
+export function fail(): void {
     assert.fail("This is an expected failure");
 }
 
 /**
- * Always passes.
+ * Pass the step
+ *
+ * Returns without throwing, making the current step pass.
  */
-function pass(): void {
+export function pass(): void {
     // no return or throw is a passing step result
 }

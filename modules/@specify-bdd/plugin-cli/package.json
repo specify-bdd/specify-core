@@ -1,42 +1,42 @@
 {
-  "name": "@specify-bdd/plugin-cli",
-  "version": "0.4.0",
-  "description": "A plugin for Specify BDD adding CLI testing support.",
-  "type": "module",
-  "contributors": [
-    "Adam Lacoste",
-    "Michael Brown",
-    "Wild Love"
-  ],
-  "license": "MIT",
-  "exports": {
-    ".": "./dist/main.js"
-  },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "tsc --project tsconfig.build.json && tsc-alias --resolve-full-paths",
-    "generate-docs": "typedoc --options typedoc.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "@specify-bdd/specify": "workspace:*",
-    "ps-list": "^9.0.0",
-    "tree-kill": "^1.2.2",
-    "validate-npm-package-name": "^6.0.2"
-  },
-  "devDependencies": {
-    "@types/validate-npm-package-name": "^4.0.2",
-    "tsc-alias": "^1.8.16",
-    "typescript": "^5.9.3"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/specify-bdd/specify-core.git"
-  },
-  "bugs": {
-    "url": "https://github.com/specify-bdd/specify-core/issues"
-  },
-  "homepage": "https://github.com/specify-bdd/specify-core#readme"
+    "name": "@specify-bdd/plugin-cli",
+    "version": "0.4.0",
+    "description": "A plugin for Specify BDD adding CLI testing support.",
+    "type": "module",
+    "contributors": [
+        "Adam Lacoste",
+        "Michael Brown",
+        "Wild Love"
+    ],
+    "license": "MIT",
+    "exports": {
+        ".": "./dist/main.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc --project tsconfig.build.json && tsc-alias --resolve-full-paths",
+        "generate-docs": "typedoc --options typedoc.json && tsx ../../../scripts/generate-step-docs.ts",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "@specify-bdd/specify": "workspace:*",
+        "ps-list": "^9.0.0",
+        "tree-kill": "^1.2.2",
+        "validate-npm-package-name": "^6.0.2"
+    },
+    "devDependencies": {
+        "@types/validate-npm-package-name": "^4.0.2",
+        "tsc-alias": "^1.8.16",
+        "typescript": "^5.9.3"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/specify-bdd/specify-core.git"
+    },
+    "bugs": {
+        "url": "https://github.com/specify-bdd/specify-core/issues"
+    },
+    "homepage": "https://github.com/specify-bdd/specify-core#readme"
 }

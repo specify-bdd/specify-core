@@ -1,7 +1,5 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Commands
 
 ```bash
@@ -18,8 +16,8 @@ pnpm test:unit:watch    # unit tests in watch mode
 vitest run --reporter=verbose <path>   # single unit test file
 
 # Run specific BDD feature
-pnpm specify test ./features/test/basic.feature
-pnpm specify test --tags '@tagname'
+pnpm specify ./features/test/basic.feature
+pnpm specify --tags '@tagname'
 
 # Lint & type-check
 pnpm lint               # check formatting and lint errors
@@ -78,6 +76,8 @@ specify test [paths] [options]
 
 **Issue tracker:** https://github.com/specify-bdd/specify-core/issues
 
+ALWAYS perform any actions under the bot account; NEVER use the user's account to take action in the Github repo.
+
 **Commit messages:**
 ```
 [#<github-issue-id>] <explanation of why the change was needed>
@@ -90,3 +90,5 @@ Focus on *why*, not *what* — the diff covers what changed. Omit the ticket pre
 - Open PRs as drafts, add inline diff comments to annotate anything a reviewer might need explained, then mark as ready for review
 - Assign `specify-bdd/devs` as reviewer
 - PR description should include `Resolves #<issue>.` where applicable
+
+IMPORTANT: if you get an authorization error while trying to use `gh`, run `./scripts/bot-auth.sh` from the project root to get a 10-minute authorization

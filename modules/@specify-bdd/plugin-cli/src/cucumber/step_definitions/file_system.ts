@@ -10,55 +10,43 @@ import { mkdtemp, readFile, unlink, writeFile } from "node:fs/promises";
 import { tmpdir                               } from "node:os";
 import { join                                 } from "node:path";
 
-defineStep("Given a new temp file path referenced as {string}", createTempFileRef);
+export function register(): void {
+    defineStep("Given a new temp file path referenced as {string}", createTempFileRef);
 
-defineStep("When [I delete/the user deletes] the {filePath} file", deleteFile);
+    defineStep("When [I delete/the user deletes] the {filePath} file", deleteFile);
 
-defineStep(
-    [
-        "Given (that )the {filePath} file content is {string}",
-        "Given (that )the {ref} file content is {string}",
-        "When [I change/the user changes] the {filePath} file content to {string}",
-    ],
-    writeFileContent,
-);
+    defineStep(
+        [
+            "Given (that )the {filePath|ref} file content is {string}",
+            "When [I change/the user changes] the {filePath} file content to {string}",
+        ],
+        writeFileContent,
+    );
 
-defineStep(
-    [
-        "Given (that )the {filePath} file content is empty",
-        "Given (that )the {ref} file content is empty",
-        "When [I create/the user creates] the {filePath} file",
-    ],
-    writeEmptyFileContent,
-);
+    defineStep(
+        [
+            "Given (that )the {filePath|ref} file content is empty",
+            "When [I create/the user creates] the {filePath} file",
+        ],
+        writeEmptyFileContent,
+    );
 
-defineStep(
-    [
-        "Then the {filePath} file content should be empty",
-        "Then the {ref} file content should be empty",
-    ],
-    verifyFileIsEmpty,
-);
+    defineStep("Then the {filePath|ref} file content should be empty", verifyFileIsEmpty);
 
-defineStep(
-    [
-        "Then the {filePath} file content should match {ref}",
-        "Then the {ref} file content should match {ref}",
-    ],
-    verifyFileContent,
-);
+    defineStep("Then the {filePath|ref} file content should match {ref}", verifyFileContent);
 
-defineStep(
-    ["Then the {filePath} file path should exist", "Then the {ref} file path should exist"],
-    verifyFilePathExists,
-);
+    defineStep("Then the {filePath|ref} file path should exist", verifyFilePathExists);
+}
 
 /**
- * Create a new /tmp filepath and store it in QuickRef at the given address.
+ * Create temp file reference
+ *
+ * Creates a temporary directory and file path, then stores the path in
+ * QuickRef at the given dot-notation address.
  *
  * @param address - The dot notation address at which to store the temp file path
  */
-async function createTempFileRef(address: string): Promise<void> {
+export async function createTempFileRef(address: string): Promise<void> {
     const dirPath  = await mkdtemp(join(tmpdir(), "specify", "test-"));
     const filePath = join(dirPath, "rerun.txt");
 
@@ -66,18 +54,23 @@ async function createTempFileRef(address: string): Promise<void> {
 }
 
 /**
- * Delete the file at the given path.
+ * Delete a file
+ *
+ * Deletes the file at the specified path. Fails if the file does not exist.
  *
  * @param filePath - The path to the file
  */
-async function deleteFile(filePath: string): Promise<void> {
+export async function deleteFile(filePath: string): Promise<void> {
     await verifyFilePathExists.call(this, filePath);
 
     await unlink(filePath);
 }
 
 /**
- * Verify that the file at the given path has content matching the given pattern.
+ * Assert file content matches
+ *
+ * Verifies that the content of the file at the given path matches the provided
+ * regular expression pattern.
  *
  * @param filePath - The file path to check the content of
  * @param pattern  - The regex pattern (as string) the file content should match
@@ -88,7 +81,7 @@ async function deleteFile(filePath: string): Promise<void> {
  * @throws Error
  * If the file content doesn't match the pattern.
  */
-async function verifyFileContent(filePath: string, pattern: string): Promise<void> {
+export async function verifyFileContent(filePath: string, pattern: string): Promise<void> {
     await verifyFilePathExists.call(this, filePath);
 
     await this.waitFor(async () => RegExp(pattern).test(await readFile(filePath, "utf8")), {
@@ -97,7 +90,9 @@ async function verifyFileContent(filePath: string, pattern: string): Promise<voi
 }
 
 /**
- * Verify that the file at the given path is empty.
+ * Assert file is empty
+ *
+ * Verifies that the file at the given path exists and contains no content.
  *
  * @param filePath - The file path to check for emptiness
  *
@@ -107,7 +102,7 @@ async function verifyFileContent(filePath: string, pattern: string): Promise<voi
  * @throws Error
  * If the file is not empty.
  */
-async function verifyFileIsEmpty(filePath: string): Promise<void> {
+export async function verifyFileIsEmpty(filePath: string): Promise<void> {
     await verifyFilePathExists.call(this, filePath);
 
     await this.waitFor(async () => !(await readFile(filePath, "utf8")), {
@@ -116,36 +111,42 @@ async function verifyFileIsEmpty(filePath: string): Promise<void> {
 }
 
 /**
- * Verify that a file exists at the given path.
+ * Assert file path exists
+ *
+ * Verifies that a file exists at the given path.
  *
  * @param filePath - The file path to check for existence
  *
  * @throws Error
  * If the file does not exist.
  */
-async function verifyFilePathExists(filePath: string): Promise<void> {
+export async function verifyFilePathExists(filePath: string): Promise<void> {
     await this.waitFor(() => existsSync(filePath), {
         "error": Error(`The file path "${filePath}" does not exist`),
     });
 }
 
 /**
- * Create an empty file at the given path.
- * If the file already exists, it will be overwritten as empty.
+ * Write empty file content
+ *
+ * Creates an empty file at the given path, or overwrites its content if the
+ * file already exists.
  *
  * @param filePath - The path to the file
  */
-async function writeEmptyFileContent(filePath: string): Promise<void> {
+export async function writeEmptyFileContent(filePath: string): Promise<void> {
     await writeFileContent.call(this, filePath, "");
 }
 
 /**
- * Set the content of the file at the given path. Creates the file if it does
- * not exist, overwrites if it does.
+ * Write file content
+ *
+ * Writes the specified content to the file at the given path, creating the
+ * file if it does not exist or overwriting it if it does.
  *
  * @param filePath - The path to the file to set content for
  * @param content  - The content to write to the file
  */
-async function writeFileContent(filePath: string, content: string): Promise<void> {
+export async function writeFileContent(filePath: string, content: string): Promise<void> {
     await writeFile(filePath, content);
 }

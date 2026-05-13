@@ -342,6 +342,122 @@ describe("CucumberManager", () => {
                     });
                 });
 
+                describe("pipe-delimited type parameters", () => {
+                    it("expands {type1|type2} to one variant per type", () => {
+                        cm.defineStep("When I store the value {int|float}", fakeHandler);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledTimes(2);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I store the value {int}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I store the value {float}",
+                            {},
+                            fakeHandler,
+                        );
+                    });
+
+                    it("expands three or more types to one variant per type", () => {
+                        cm.defineStep("When I store the value {int|float|string}", fakeHandler);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledTimes(3);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I store the value {int}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I store the value {float}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I store the value {string}",
+                            {},
+                            fakeHandler,
+                        );
+                    });
+
+                    it("produces the Cartesian product for multiple multi-type params", () => {
+                        cm.defineStep("When I store {int|float} and {string|word}", fakeHandler);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledTimes(4);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I store {int} and {string}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I store {int} and {word}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I store {float} and {string}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I store {float} and {word}",
+                            {},
+                            fakeHandler,
+                        );
+                    });
+
+                    it("does not expand a param with a single type", () => {
+                        cm.defineStep("When I store the value {string}", fakeHandler);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledTimes(1);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "I store the value {string}",
+                            {},
+                            fakeHandler,
+                        );
+                    });
+
+                    it("combines bracket alternates with type expansion", () => {
+                        cm.defineStep("When [save/load] the value {int|float}", fakeHandler);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledTimes(4);
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "save the value {int}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "save the value {float}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "load the value {int}",
+                            {},
+                            fakeHandler,
+                        );
+
+                        expect(cm.cucumber.When).toHaveBeenCalledWith(
+                            "load the value {float}",
+                            {},
+                            fakeHandler,
+                        );
+                    });
+                });
+
                 it("a single regular expression", () => {
                     cm.defineStep(/Given that I have done something with .*/i, fakeHandler);
                     cm.defineStep(/When I do something with .*/i, fakeHandler);

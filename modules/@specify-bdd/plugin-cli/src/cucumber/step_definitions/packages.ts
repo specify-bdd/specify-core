@@ -8,14 +8,19 @@ import { defineStep } from "@specify-bdd/specify";
 import assert         from "node:assert/strict";
 import npmValidate    from "validate-npm-package-name";
 
-defineStep("Given (that )the {refstr} NPM package is installed", verifyNPMPackage);
+export function register(): void {
+    defineStep("Given (that )the {refstr} NPM package is installed", verifyNPMPackage);
+}
 
 /**
- * Verify that an NPM package is installed
+ * Assert NPM package installed
+ *
+ * Verifies that the given name is a valid NPM package identifier and that the
+ * package is resolvable in the current environment.
  *
  * @param packageName - The name of the package to verify
  */
-function verifyNPMPackage(packageName: string): void {
+export function verifyNPMPackage(packageName: string): void {
     assert.ok(npmValidate(packageName));
     assert.ok(import.meta.resolve(packageName));
 }
