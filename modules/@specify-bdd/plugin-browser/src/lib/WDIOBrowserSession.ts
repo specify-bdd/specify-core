@@ -136,6 +136,44 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
+     * Switch to the next tab, wrapping around to the first tab if the current
+     * tab is the last.
+     */
+    async switchToNextTab(): Promise<void> {
+        const currentIndex = this.#tabs.indexOf(this.#activeTab!);
+        const nextTab      = this.#tabs[(currentIndex + 1) % this.#tabs.length];
+
+        await this.#driver!.switchToWindow(nextTab.handle);
+        this.#activeTab = nextTab;
+    }
+
+    /**
+     * Switch to the previous tab, wrapping around to the last tab if the
+     * current tab is the first.
+     */
+    async switchToPreviousTab(): Promise<void> {
+        const currentIndex = this.#tabs.indexOf(this.#activeTab!);
+        const prevTab      = this.#tabs[(currentIndex - 1 + this.#tabs.length) % this.#tabs.length];
+
+        await this.#driver!.switchToWindow(prevTab.handle);
+        this.#activeTab = prevTab;
+    }
+
+    /**
+     * Switch to a tab by 1-based ordinal index or by name.
+     *
+     * @param selector - A 1-based index or a tab name
+     *
+     * @throws AssertionError If no tab matches the selector
+     */
+    async switchToTab(selector: number | string): Promise<void> {
+        const tab = this.#findTab(selector);
+
+        await this.#driver!.switchToWindow(tab.handle);
+        this.#activeTab = tab;
+    }
+
+    /**
      * Find a tab by 1-based ordinal index or by name.
      *
      * @param selector - A 1-based index or a tab name

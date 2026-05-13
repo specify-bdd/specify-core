@@ -81,4 +81,23 @@ export interface BrowserSession {
      * @param selector - A 1-based tab index or tab name; omit to close the active tab
      */
     closeTab(selector?: number | string): Promise<void>;
+
+    /**
+     * Switch to the next tab, wrapping around to the first tab if the current
+     * tab is the last one.
+     */
+    switchToNextTab(): Promise<void>;
+
+    /**
+     * Switch to the previous tab, wrapping around to the last tab if the
+     * current tab is the first one.
+     */
+    switchToPreviousTab(): Promise<void>;
+
+    /**
+     * Switch to a tab by 1-based ordinal index or by name.
+     *
+     * @param selector - A 1-based index or a tab name
+     */
+    switchToTab(selector: number | string): Promise<void>;
 }

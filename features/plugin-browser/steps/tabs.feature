@@ -57,3 +57,54 @@ Feature: Browser Tab Step Definitions
             Given a chrome browser session
             When the user closes the browser tab
             Then there should be 0 active browser sessions
+
+    Rule: The user can switch between browser tabs
+
+        Scenario: Switching to the next tab makes it active
+            Given a chrome browser session
+            When the user opens a new browser tab
+            And switches to the next browser tab
+            Then the active session should have 2 browser tabs
+
+        Scenario: Switching to the next tab from the last tab wraps to the first
+            Given a chrome browser session
+            When the user opens a new browser tab
+            And switches to the next browser tab
+            And switches to the next browser tab
+            Then the active session should have 2 browser tabs
+
+        Scenario: Switching to the previous tab makes it active
+            Given a chrome browser session
+            When the user opens a new browser tab
+            And switches to the next browser tab
+            And switches to the previous browser tab
+            Then the active session should have 2 browser tabs
+
+        Scenario: Switching to the previous tab from the first tab wraps to the last
+            Given a chrome browser session
+            When the user opens a new browser tab
+            And switches to the 1st browser tab
+            And switches to the previous browser tab
+            Then the active session should have 2 browser tabs
+
+        Scenario: Switching to a tab by ordinal index makes it active
+            Given a chrome browser session
+            When the user opens a new browser tab
+            And opens a new browser tab
+            And switches to the 1st browser tab
+            Then the active session should have 3 browser tabs
+
+        Scenario: Switching to the last tab makes it active
+            Given a chrome browser session
+            When the user opens a new browser tab
+            And opens a new browser tab
+            And switches to the 1st browser tab
+            And switches to the last browser tab
+            Then the active session should have 3 browser tabs
+
+        Scenario: Switching to a tab by name makes it active
+            Given a chrome browser session
+            When the user opens a new browser tab named "target"
+            And opens a new browser tab
+            And switches to the browser tab named "target"
+            Then the active session should have 3 browser tabs
