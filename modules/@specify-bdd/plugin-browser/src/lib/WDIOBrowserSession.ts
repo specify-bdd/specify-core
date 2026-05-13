@@ -52,6 +52,25 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
+     * Set the browser window size.
+     *
+     * @param width  - The desired window width in pixels
+     * @param height - The desired window height in pixels
+     */
+    async setWindowSize(width: number, height: number): Promise<void> {
+        await this.#driver!.setWindowSize(width, height);
+    }
+
+    /**
+     * Get the current browser window size.
+     *
+     * @returns The current window dimensions in pixels
+     */
+    async getWindowSize(): Promise<{ width: number; height: number }> {
+        return this.#driver!.getWindowSize();
+    }
+
+    /**
      * Build a WDIO RemoteOptions object from the given session start options.
      *
      * @param opts - The session start options

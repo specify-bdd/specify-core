@@ -46,4 +46,19 @@ export interface BrowserSession {
      * End the browser session and release all associated resources.
      */
     end(): Promise<void>;
+
+    /**
+     * Set the browser window size.
+     *
+     * @param width  - The desired window width in pixels
+     * @param height - The desired window height in pixels
+     */
+    setWindowSize(width: number, height: number): Promise<void>;
+
+    /**
+     * Get the current browser window size.
+     *
+     * @returns The current window dimensions in pixels
+     */
+    getWindowSize(): Promise<{ width: number; height: number }>;
 }

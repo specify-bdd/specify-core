@@ -6,6 +6,8 @@ vi.mock("webdriverio");
 
 const mockDriver = {
     "deleteSession": vi.fn(),
+    "getWindowSize": vi.fn(),
+    "setWindowSize": vi.fn(),
 };
 
 beforeEach(() => {
@@ -237,6 +239,38 @@ describe("WDIOBrowserSession", () => {
             const session = new WDIOBrowserSession();
 
             await expect(session.end()).resolves.not.toThrow();
+        });
+    });
+
+    describe("setWindowSize()", () => {
+        it("calls driver.setWindowSize() with the given width and height", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.setWindowSize(1280, 720);
+
+            expect(mockDriver.setWindowSize).toHaveBeenCalledWith(1280, 720);
+        });
+    });
+
+    describe("getWindowSize()", () => {
+        it("returns the value from driver.getWindowSize()", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            mockDriver.getWindowSize.mockResolvedValue({ "width": 1280, "height": 720 });
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+
+            const size = await session.getWindowSize();
+
+            expect(size).toEqual({ "width": 1280, "height": 720 });
         });
     });
 });
