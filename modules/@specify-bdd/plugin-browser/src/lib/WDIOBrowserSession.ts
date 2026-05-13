@@ -68,15 +68,24 @@ export class WDIOBrowserSession implements BrowserSession {
         switch (browser) {
             case "chrome": {
                 const chromedriverPath = process.env["CHROMEDRIVER_PATH"];
+                const chromePath       = process.env["CHROME_PATH"];
 
                 if (chromedriverPath) {
                     capabilities["wdio:chromedriverOptions"] = { "binary": chromedriverPath };
                 }
 
+                const chromeOptions: Record<string, unknown> = {};
+
                 if (mode === "headless") {
-                    capabilities["goog:chromeOptions"] = {
-                        "args": ["--headless", "--disable-gpu", "--no-sandbox"],
-                    };
+                    chromeOptions["args"] = ["--headless", "--disable-gpu", "--no-sandbox"];
+                }
+
+                if (chromePath) {
+                    chromeOptions["binary"] = chromePath;
+                }
+
+                if (Object.keys(chromeOptions).length > 0) {
+                    capabilities["goog:chromeOptions"] = chromeOptions;
                 }
 
                 break;
