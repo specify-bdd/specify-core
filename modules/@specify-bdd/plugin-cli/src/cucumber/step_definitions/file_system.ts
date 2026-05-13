@@ -39,7 +39,10 @@ export function register(): void {
 }
 
 /**
- * Create a new /tmp filepath and store it in QuickRef at the given address.
+ * Create temp file reference
+ *
+ * Creates a temporary directory and file path, then stores the path in
+ * QuickRef at the given dot-notation address.
  *
  * @param address - The dot notation address at which to store the temp file path
  */
@@ -51,7 +54,9 @@ export async function createTempFileRef(address: string): Promise<void> {
 }
 
 /**
- * Delete the file at the given path.
+ * Delete a file
+ *
+ * Deletes the file at the specified path. Fails if the file does not exist.
  *
  * @param filePath - The path to the file
  */
@@ -62,7 +67,10 @@ export async function deleteFile(filePath: string): Promise<void> {
 }
 
 /**
- * Verify that the file at the given path has content matching the given pattern.
+ * Assert file content matches
+ *
+ * Verifies that the content of the file at the given path matches the provided
+ * regular expression pattern.
  *
  * @param filePath - The file path to check the content of
  * @param pattern  - The regex pattern (as string) the file content should match
@@ -82,7 +90,9 @@ export async function verifyFileContent(filePath: string, pattern: string): Prom
 }
 
 /**
- * Verify that the file at the given path is empty.
+ * Assert file is empty
+ *
+ * Verifies that the file at the given path exists and contains no content.
  *
  * @param filePath - The file path to check for emptiness
  *
@@ -101,7 +111,9 @@ export async function verifyFileIsEmpty(filePath: string): Promise<void> {
 }
 
 /**
- * Verify that a file exists at the given path.
+ * Assert file path exists
+ *
+ * Verifies that a file exists at the given path.
  *
  * @param filePath - The file path to check for existence
  *
@@ -115,8 +127,10 @@ export async function verifyFilePathExists(filePath: string): Promise<void> {
 }
 
 /**
- * Create an empty file at the given path.
- * If the file already exists, it will be overwritten as empty.
+ * Write empty file content
+ *
+ * Creates an empty file at the given path, or overwrites its content if the
+ * file already exists.
  *
  * @param filePath - The path to the file
  */
@@ -125,8 +139,10 @@ export async function writeEmptyFileContent(filePath: string): Promise<void> {
 }
 
 /**
- * Set the content of the file at the given path. Creates the file if it does
- * not exist, overwrites if it does.
+ * Write file content
+ *
+ * Writes the specified content to the file at the given path, creating the
+ * file if it does not exist or overwriting it if it does.
  *
  * @param filePath - The path to the file to set content for
  * @param content  - The content to write to the file

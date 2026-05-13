@@ -24,14 +24,18 @@ export function register(): void {
 }
 
 /**
- * Always throws, causing a scenario failure.
+ * Fail the scenario
+ *
+ * Throws an assertion error unconditionally, causing the current scenario to fail.
  */
 export function fail(): void {
     assert.fail("This is an expected failure");
 }
 
 /**
- * Always passes.
+ * Pass the step
+ *
+ * Returns without throwing, making the current step pass.
  */
 export function pass(): void {
     // no return or throw is a passing step result

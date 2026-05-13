@@ -2,9 +2,11 @@
 
 Cucumber step definitions covering Node.js package management.
 
-## Verify that an NPM package is installed
+## Assert NPM package installed
 
 - `Given (that )the {refstr} NPM package is installed`
+
+Verifies that the given name is a valid NPM package identifier and that the package is resolvable in the current environment.
 
 **Parameters**
 

@@ -40,7 +40,10 @@ export function register(): void {
 }
 
 /**
- * Wait for a matching prompt, then respond by entering the given line.
+ * Respond to string prompt
+ *
+ * Waits for the terminal output to include the given literal string, then
+ * sends the specified line as input.
  *
  * @param prompt - The string to wait for in the prompt
  * @param line   - The string to enter in response
@@ -57,7 +60,10 @@ export async function respondToIncludingPromptByEnteringLine(
 }
 
 /**
- * Wait for a prompt matching the given regexp, then respond by entering the given line.
+ * Respond to pattern prompt
+ *
+ * Waits for the terminal output to match the given pattern, then sends the
+ * specified line as input.
  *
  * @param prompt - The pattern to match the prompt against before responding
  * @param line   - The line to enter in response to the prompt
@@ -74,7 +80,10 @@ export async function respondToMatchingPromptByEnteringLine(
 }
 
 /**
- * Wait for a prompt matching the given pattern, then respond by sending the given key
+ * Press key at matching prompt
+ *
+ * Waits for the terminal output to match the given pattern, then sends the
+ * specified key press.
  *
  * @param prompt - The pattern to match the prompt against before responding
  * @param key    - The key to send in response to the prompt
@@ -91,7 +100,10 @@ export async function respondToMatchingPromptByPressingKey(
 }
 
 /**
- * Wait for a prompt containing the given literal string, then respond by sending the given key.
+ * Press key at string prompt
+ *
+ * Waits for the terminal output to include the given literal string, then
+ * sends the specified key press.
  *
  * @param prompt - The literal string to wait for in the prompt before responding
  * @param key    - The key to send in response to the prompt
@@ -108,11 +120,10 @@ export async function respondToIncludingPromptByPressingKey(
 }
 
 /**
- * Send the character value of a key press to the CLI
+ * Send key press
  *
- * @remarks
- * Special keys like "enter", "tab", and "space" are supported, in addition to
- * regular single-character keys. No other special keys are currently supported.
+ * Sends a single key press to the active shell. Supports single-character
+ * keys and the named special keys `enter`, `tab`, and `space`.
  *
  * @param key - The character or name of the key to send to the CLI
  *
@@ -142,10 +153,10 @@ export function sendKeyPressToCLI(key: string): void {
 }
 
 /**
- * Send a line of input to the CLI, followed by a newline character to execute it.
+ * Send input line
  *
- * @remarks
- * One character at a time is sent to simulate real user input
+ * Sends the given string to the active shell one character at a time,
+ * followed by a newline to execute it.
  *
  * @param line - The line of input to enter
  */

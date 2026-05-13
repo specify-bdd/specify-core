@@ -52,8 +52,10 @@ export function register(): void {
 }
 
 /**
- * Execute the given command via the CLI asynchronously and move on without
- * waiting for it to return.
+ * Run command asynchronously
+ *
+ * Sends the given command to the active shell and returns immediately without
+ * waiting for it to finish.
  *
  * @param command - The command to run
  *
@@ -66,7 +68,10 @@ export function execCommand(command: string): void {
 }
 
 /**
- * Execute the given command and wait for it to return.
+ * Run command synchronously
+ *
+ * Sends the given command to the active shell and waits for it to return
+ * before continuing.
  *
  * @param command - The command to run
  */
@@ -78,7 +83,9 @@ export async function execCommandSync(command: string): Promise<void> {
 }
 
 /**
- * Send a system kill signal to the command in the last used CLI.
+ * Send kill signal
+ *
+ * Sends the specified system signal to the most recently executed command.
  *
  * @param signal - The system signal to pass to killCommand()
  */
@@ -88,7 +95,9 @@ export async function sendKillSignal(signal: string): Promise<void> {
 }
 
 /**
- * Verify that the CLI exit code for the last command is as expected.
+ * Assert exit code
+ *
+ * Verifies that the last command exited with the expected exit code.
  *
  * @param exitCode - The exit code expected from the last command
  *
@@ -104,11 +113,10 @@ export async function verifyExitCode(exitCode: number): Promise<void> {
 }
 
 /**
- * Verify that the last command's execution time is the specified number of
- * seconds or less.
+ * Assert maximum execution time
  *
- * @remarks
- * Will wait for the last command to return before asserting.
+ * Verifies that the last command completed within the specified number of
+ * seconds. Waits for the command to return before asserting.
  *
  * @param maxTime - The maximum amount of time, in seconds, that should have
  *                  elapsed
@@ -131,11 +139,10 @@ export async function verifyMaximumElapsedTime(maxTime: number): Promise<void> {
 }
 
 /**
- * Verify that the last command's execution time is the specified number of
- * seconds or more.
+ * Assert minimum execution time
  *
- * @remarks
- * Will wait for the last command to return before asserting.
+ * Verifies that the last command took at least the specified number of seconds
+ * to complete. Waits for the command to return before asserting.
  *
  * @param minTime - The minimum amount of time, in seconds, that should have
  *                  elapsed
@@ -158,7 +165,10 @@ export async function verifyMinimumElapsedTime(minTime: number): Promise<void> {
 }
 
 /**
- * Wait for the last command to return.
+ * Wait for command return
+ *
+ * Waits for the last command to finish executing and updates the world's
+ * tracked working directory.
  *
  * @throws AssertionError
  * If there is no SessionManager initialized.
