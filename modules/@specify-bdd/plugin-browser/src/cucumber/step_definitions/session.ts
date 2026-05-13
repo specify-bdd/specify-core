@@ -21,7 +21,8 @@ export function register(): void {
         { "timeout": 30000 },
     );
 
-    defineStep("When [I end/the user ends] the browser session", endBrowserSession);
+    defineStep("When [I end/the user ends] the (active )browser( session)", endBrowserSession);
+    defineStep("When [I close/the user closes] the (active )browser( session)", endBrowserSession);
 
     defineStep("Then there should be {int} active browser session(s)", verifySessionCount);
 }
