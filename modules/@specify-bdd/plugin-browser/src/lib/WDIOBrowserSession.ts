@@ -10,7 +10,7 @@ import assert from "node:assert/strict";
 import { remote            } from "webdriverio";
 import type { Capabilities } from "@wdio/types";
 
-import type { BrowserSession, BrowserSessionStartOptions } from "@/lib/BrowserSession";
+import type { BrowserSession, BrowserSessionStartOptions, TabMeta } from "@/lib/BrowserSession";
 
 /**
  * A browser session managed via WebdriverIO in standalone mode.
@@ -22,6 +22,12 @@ export class WDIOBrowserSession implements BrowserSession {
      */
     #driver: WebdriverIO.Browser | null = null;
 
+    /** Tabs open in this session. */
+    #tabs: TabMeta[] = [];
+
+    /** The currently active tab. */
+    #activeTab: TabMeta | null = null;
+
     /**
      * The underlying WebdriverIO browser instance.
      *
@@ -31,13 +37,29 @@ export class WDIOBrowserSession implements BrowserSession {
         return this.#driver;
     }
 
+    /** All tabs currently open in this session. */
+    get tabs(): TabMeta[] {
+        return this.#tabs;
+    }
+
+    /** The currently active tab, or `null` if the session has not started. */
+    get activeTab(): TabMeta | null {
+        return this.#activeTab;
+    }
+
     /**
-     * Start the browser session.
+     * Start the browser session and capture the initial tab.
      *
      * @param opts - Options controlling how the session is started
      */
     async start(opts: BrowserSessionStartOptions = {}): Promise<void> {
         this.#driver = await remote(this.#buildOptions(opts));
+
+        const handle     = await this.#driver.getWindowHandle();
+        const initialTab = { handle };
+
+        this.#tabs = [initialTab];
+        this.#activeTab = initialTab;
     }
 
     /**
@@ -48,7 +70,24 @@ export class WDIOBrowserSession implements BrowserSession {
             await this.#driver?.deleteSession();
         } finally {
             this.#driver = null;
+            this.#tabs = [];
+            this.#activeTab = null;
         }
+    }
+
+    /**
+     * Open a new browser tab and make it active.
+     *
+     * @param name - Optional name to assign to the tab for later reference
+     */
+    async openTab(name?: string): Promise<void> {
+        await this.#driver.newWindow("about:blank", { "type": "tab" });
+
+        const handle       = await this.#driver.getWindowHandle();
+        const tab: TabMeta = name ? { name, handle } : { handle };
+
+        this.#tabs.push(tab);
+        this.#activeTab = tab;
     }
 
     /**

@@ -5,12 +5,17 @@ import { WDIOBrowserSession } from "@/lib/WDIOBrowserSession";
 vi.mock("webdriverio");
 
 const mockDriver = {
-    "deleteSession": vi.fn(),
+    "deleteSession":   vi.fn(),
+    "getWindowHandle": vi.fn(),
+    "newWindow":       vi.fn(),
 };
 
 beforeEach(() => {
     vi.resetAllMocks();
     vi.unstubAllEnvs();
+
+    // default stub so start() can always resolve a handle without per-test setup
+    mockDriver.getWindowHandle.mockResolvedValue("handle-0");
 });
 
 describe("WDIOBrowserSession", () => {
@@ -237,6 +242,126 @@ describe("WDIOBrowserSession", () => {
             const session = new WDIOBrowserSession();
 
             await expect(session.end()).resolves.not.toThrow();
+        });
+
+        it("clears tabs after end()", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.end();
+
+            expect(session.tabs).toHaveLength(0);
+        });
+
+        it("sets activeTab to null after end()", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.end();
+
+            expect(session.activeTab).toBeNull();
+        });
+    });
+
+    describe("tabs and activeTab", () => {
+        it("has one tab and a non-null activeTab after start()", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+
+            expect(session.tabs).toHaveLength(1);
+            expect(session.activeTab).not.toBeNull();
+        });
+
+        it("activeTab has the handle returned by getWindowHandle() after start()", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            mockDriver.getWindowHandle.mockResolvedValue("initial-handle");
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+
+            expect(session.activeTab?.handle).toBe("initial-handle");
+        });
+    });
+
+    describe("openTab()", () => {
+        it("increases tabs.length by one", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            mockDriver.getWindowHandle
+                .mockResolvedValueOnce("handle-0")
+                .mockResolvedValueOnce("handle-1");
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.openTab();
+
+            expect(session.tabs).toHaveLength(2);
+        });
+
+        it("makes the new tab active", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            mockDriver.getWindowHandle
+                .mockResolvedValueOnce("handle-0")
+                .mockResolvedValueOnce("handle-1");
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.openTab();
+
+            expect(session.activeTab?.handle).toBe("handle-1");
+        });
+
+        it("stores the name when one is provided", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            mockDriver.getWindowHandle
+                .mockResolvedValueOnce("handle-0")
+                .mockResolvedValueOnce("handle-1");
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.openTab("my-tab");
+
+            expect(session.activeTab?.name).toBe("my-tab");
+        });
+
+        it("stores no name property when none is provided", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            mockDriver.getWindowHandle
+                .mockResolvedValueOnce("handle-0")
+                .mockResolvedValueOnce("handle-1");
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.openTab();
+
+            expect(session.activeTab).not.toHaveProperty("name");
         });
     });
 });

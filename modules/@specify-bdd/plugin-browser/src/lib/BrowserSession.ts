@@ -32,6 +32,17 @@ export interface BrowserSessionStartOptions {
 }
 
 /**
+ * Metadata for a tracked browser tab.
+ */
+export interface TabMeta {
+    /** Optional display name assigned when the tab was opened. */
+    name?: string;
+
+    /** The opaque WDIO window handle string returned by `getWindowHandle()`. */
+    handle: string;
+}
+
+/**
  * A managed browser session.
  */
 export interface BrowserSession {
@@ -46,4 +57,17 @@ export interface BrowserSession {
      * End the browser session and release all associated resources.
      */
     end(): Promise<void>;
+
+    /** All tabs currently open in this session, in the order they were opened. */
+    readonly tabs: TabMeta[];
+
+    /** The currently active tab, or `null` if the session has not been started. */
+    readonly activeTab: TabMeta | null;
+
+    /**
+     * Open a new browser tab and make it active.
+     *
+     * @param name - Optional name to assign to the tab for later reference
+     */
+    openTab(name?: string): Promise<void>;
 }
