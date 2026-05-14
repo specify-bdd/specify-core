@@ -143,17 +143,18 @@ export class WDIOBrowserSession implements BrowserSession {
      * @throws AssertionError If no tab matches the selector
      */
     #findTab(selector: number | string): TabMeta {
+        let message: string;
+        let tab: TabMeta | undefined;
+
         if (typeof selector === "number") {
-            const tab = this.#tabs[selector - 1];
-
-            assert.ok(tab, new AssertionError({ "message": `No tab at position ${selector}.` }));
-
-            return tab;
+            tab     = this.#tabs[selector - 1];
+            message = `No tab at position ${selector}.`;
+        } else {
+            tab     = this.#tabs.find((t) => t.name === selector);
+            message = `No tab named "${selector}".`;
         }
 
-        const tab = this.#tabs.find((t) => t.name === selector);
-
-        assert.ok(tab, new AssertionError({ "message": `No tab named "${selector}".` }));
+        assert.ok(tab, new AssertionError({ message }));
 
         return tab;
     }
