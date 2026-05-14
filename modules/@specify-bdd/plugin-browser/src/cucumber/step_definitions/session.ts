@@ -21,7 +21,8 @@ export function register(): void {
         { "timeout": 30000 },
     );
 
-    defineStep("When [I end/the user ends] the browser session", endBrowserSession);
+    defineStep("When [I end/the user ends] the (active )browser( session)", endBrowserSession);
+    defineStep("When [I close/the user closes] the (active )browser( session)", endBrowserSession);
 
     defineStep("Then there should be {int} open browser session(s)", verifySessionCount);
 }
@@ -35,7 +36,7 @@ export function register(): void {
  *
  * @param browser - The name of the browser to launch (e.g. `"chrome"`)
  */
-async function startBrowserSession(browser: string): Promise<void> {
+export async function startBrowserSession(browser: string): Promise<void> {
     const session = new WDIOBrowserSession();
 
     await session.start({ browser });
@@ -55,7 +56,7 @@ async function startBrowserSession(browser: string): Promise<void> {
  * @throws AssertionError
  * If there is no active browser session to end.
  */
-async function endBrowserSession(): Promise<void> {
+export async function endBrowserSession(): Promise<void> {
     const session = this.browser.activeSession;
 
     assert.ok(session, new AssertionError({ "message": "No active browser session." }));
@@ -76,6 +77,6 @@ async function endBrowserSession(): Promise<void> {
  *
  * @param count - The expected number of open sessions
  */
-function verifySessionCount(count: number): void {
+export function verifySessionCount(count: number): void {
     assert.equal(this.browser.sessions.length, count);
 }
