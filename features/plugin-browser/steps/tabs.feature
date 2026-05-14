@@ -56,4 +56,4 @@ Feature: Browser Tab Step Definitions
         Scenario: Closing the last remaining tab removes the session
             Given a chrome browser session
             When the user closes the browser tab
-            Then there should be 0 active browser sessions
+            Then there should be 0 open browser sessions
