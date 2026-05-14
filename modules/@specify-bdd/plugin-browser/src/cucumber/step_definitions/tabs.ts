@@ -23,7 +23,7 @@ export function register(): void {
  *
  * @throws AssertionError If there is no active browser session.
  */
-function verifyTabCount(count: number): void {
+export function verifyTabCount(count: number): void {
     assert.ok(
         this.browser.activeSession,
         new AssertionError({ "message": "No active browser session." }),
@@ -37,7 +37,7 @@ function verifyTabCount(count: number): void {
  *
  * @throws AssertionError If there is no active browser session.
  */
-async function openUnnamedTab(): Promise<void> {
+export async function openUnnamedTab(): Promise<void> {
     assert.ok(
         this.browser.activeSession,
         new AssertionError({ "message": "No active browser session." }),
@@ -53,7 +53,7 @@ async function openUnnamedTab(): Promise<void> {
  *
  * @throws AssertionError If there is no active browser session.
  */
-async function openNamedTab(name: string): Promise<void> {
+export async function openNamedTab(name: string): Promise<void> {
     assert.ok(
         this.browser.activeSession,
         new AssertionError({ "message": "No active browser session." }),
