@@ -83,7 +83,7 @@ function cleanupSessionIfEmpty(this: WorldWithBrowser, session: BrowserSession):
  *
  * @throws AssertionError If there is no active browser session.
  */
-async function closeTab(this: WorldWithBrowser, selector?: number | string): Promise<void> {
+export async function closeTab(this: WorldWithBrowser, selector?: number | string): Promise<void> {
     assert.ok(
         this.browser.activeSession,
         new AssertionError({ "message": "No active browser session." }),
