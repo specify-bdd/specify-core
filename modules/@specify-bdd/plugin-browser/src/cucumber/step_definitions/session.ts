@@ -8,7 +8,7 @@ import assert, { AssertionError } from "node:assert/strict";
 
 import { defineStep } from "@specify-bdd/specify";
 
-import { WDIOBrowserSession } from "@/lib/WDIOBrowserSession.js";
+import { WDIOBrowserSession } from "@/lib/WDIOBrowserSession";
 
 export function register(): void {
     defineStep(
@@ -24,7 +24,7 @@ export function register(): void {
     defineStep("When [I end/the user ends] the (active )browser( session)", endBrowserSession);
     defineStep("When [I close/the user closes] the (active )browser( session)", endBrowserSession);
 
-    defineStep("Then there should be {int} active browser session(s)", verifySessionCount);
+    defineStep("Then there should be {int} open browser session(s)", verifySessionCount);
 }
 
 /**
@@ -49,8 +49,9 @@ async function startBrowserSession(browser: string): Promise<void> {
  * End the active browser session and update session tracking.
  *
  * Ends `this.browser.activeSession`, removes it from `this.browser.sessions`,
- * and sets `activeSession` to the last remaining session, or `null` if none
- * remain.
+ * and sets `activeSession` to the preceding session (`index - 1`), wrapping
+ * to the last session when the closed session was at index 0, or `null` if
+ * no sessions remain.
  *
  * @throws AssertionError
  * If there is no active browser session to end.
@@ -65,13 +66,16 @@ async function endBrowserSession(): Promise<void> {
     const index = this.browser.sessions.indexOf(session);
 
     this.browser.sessions.splice(index, 1);
-    this.browser.activeSession = this.browser.sessions[this.browser.sessions.length - 1] ?? null;
+
+    const prevIndex = index === 0 ? this.browser.sessions.length - 1 : index - 1;
+
+    this.browser.activeSession = prevIndex < 0 ? null : (this.browser.sessions[prevIndex] ?? null);
 }
 
 /**
- * Assert the number of currently active browser sessions.
+ * Assert the number of currently open browser sessions.
  *
- * @param count - The expected number of active sessions
+ * @param count - The expected number of open sessions
  */
 function verifySessionCount(count: number): void {
     assert.equal(this.browser.sessions.length, count);
