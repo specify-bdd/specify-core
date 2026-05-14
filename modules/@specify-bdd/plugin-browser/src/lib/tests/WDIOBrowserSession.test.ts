@@ -438,6 +438,19 @@ describe("WDIOBrowserSession", () => {
             expect(session.activeTab).toBeNull();
         });
 
+        it("closing the last tab succeeds even when closeWindow() throws", async () => {
+            const session = await startWithTabs(1);
+
+            mockDriver.closeWindow.mockRejectedValue(
+                new Error("All window handles were removed, causing WebdriverIO to close the session."),
+            );
+
+            await expect(session.closeTab()).resolves.not.toThrow();
+            expect(session.driver).toBeNull();
+            expect(session.activeTab).toBeNull();
+            expect(session.tabs).toHaveLength(0);
+        });
+
         it("closing the active tab (not last) makes the previous tab active", async () => {
             const session = await startWithTabs(3); // tabs: h0, h1, h2 — active: h2
 
