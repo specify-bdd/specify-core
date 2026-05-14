@@ -68,4 +68,5 @@ jobs:
       - name: Run Specify tests
         run: pnpm specify
         env:
+          CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
           CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
