@@ -1,16 +1,16 @@
 import { vi } from "vitest";
 
-import { SessionManager } from "@/lib/SessionManager";
+import { SessionManager      } from "@/lib/SessionManager";
 import type { BrowserSession } from "@/lib/BrowserSession";
 
 /** Create a minimal BrowserSession mock for use in SessionManager tests. */
 function makeMockSession(): BrowserSession {
     return {
-        "end":      vi.fn().mockResolvedValue(undefined),
-        "start":    vi.fn().mockResolvedValue(undefined),
-        "openTab":  vi.fn().mockResolvedValue(undefined),
-        "closeTab": vi.fn().mockResolvedValue(undefined),
-        "tabs":     [],
+        "end":       vi.fn().mockResolvedValue(undefined),
+        "start":     vi.fn().mockResolvedValue(undefined),
+        "openTab":   vi.fn().mockResolvedValue(undefined),
+        "closeTab":  vi.fn().mockResolvedValue(undefined),
+        "tabs":      [],
         "activeTab": null,
     };
 }

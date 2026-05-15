@@ -64,10 +64,7 @@ export class SessionManager {
     removeSession(session?: BrowserSession): void {
         const target = session ?? this.#activeSession;
 
-        assert.ok(
-            target,
-            new AssertionError({ "message": "No active session to remove." }),
-        );
+        assert.ok(target, new AssertionError({ "message": "No active session to remove." }));
 
         const index = this.#sessions.indexOf(target);
 
@@ -94,7 +91,7 @@ export class SessionManager {
     async killAllSessions(): Promise<void> {
         await Promise.allSettled(this.#sessions.map((s) => s.end()));
 
-        this.#sessions      = [];
+        this.#sessions = [];
         this.#activeSession = null;
     }
 }
