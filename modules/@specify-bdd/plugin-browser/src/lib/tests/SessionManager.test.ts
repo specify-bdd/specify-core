@@ -22,8 +22,6 @@ describe("SessionManager", () => {
         manager = new SessionManager();
     });
 
-    // ─── addSession() ─────────────────────────────────────────────────────────
-
     describe("addSession()", () => {
         it("adds the session to the sessions list", () => {
             const session = makeMockSession();
@@ -59,8 +57,6 @@ describe("SessionManager", () => {
             expect(manager.sessions).not.toBe(manager.sessions);
         });
     });
-
-    // ─── removeSession() ──────────────────────────────────────────────────────
 
     describe("removeSession()", () => {
         it("removes the active session when called with no argument", () => {
@@ -182,8 +178,6 @@ describe("SessionManager", () => {
             );
         });
     });
-
-    // ─── killAllSessions() ────────────────────────────────────────────────────
 
     describe("killAllSessions()", () => {
         it("calls end() on every managed session", async () => {
