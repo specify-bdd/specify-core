@@ -8,14 +8,25 @@ import assert, { AssertionError } from "node:assert/strict";
 
 import { defineStep } from "@specify-bdd/specify";
 
+import type { SessionManager } from "@/lib/SessionManager";
+
+interface WorldWithBrowser {
+    browser: {
+        manager: SessionManager;
+    };
+}
+
 export function register(): void {
     defineStep("When [I open/the user opens] a new browser tab", function () {
         return openTab.call(this);
     });
 
-    defineStep("When [I open/the user opens] a new browser tab named {string}", function (name: string) {
-        return openTab.call(this, name);
-    });
+    defineStep(
+        "When [I open/the user opens] a new browser tab named {string}",
+        function (name: string) {
+            return openTab.call(this, name);
+        },
+    );
 
     defineStep("Then the active session should have {int} browser tab(s)", verifyTabCount);
 }
@@ -27,13 +38,13 @@ export function register(): void {
  *
  * @throws AssertionError If there is no active browser session.
  */
-export function verifyTabCount(count: number): void {
+export function verifyTabCount(this: WorldWithBrowser, count: number): void {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    assert.equal(this.browser.activeSession.tabs.length, count);
+    assert.equal(this.browser.manager.activeSession.tabs.length, count);
 }
 
 /**
@@ -43,11 +54,11 @@ export function verifyTabCount(count: number): void {
  *
  * @throws AssertionError If there is no active browser session.
  */
-export async function openTab(name?: string): Promise<void> {
+export async function openTab(this: WorldWithBrowser, name?: string): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    await this.browser.activeSession.openTab(name);
+    await this.browser.manager.activeSession.openTab(name);
 }
