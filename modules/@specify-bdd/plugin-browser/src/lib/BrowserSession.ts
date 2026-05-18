@@ -74,11 +74,11 @@ export interface BrowserSession {
     /**
      * Close a browser tab.
      *
-     * When omitted, the active tab is closed. Accepts a 1-based ordinal index
-     * or a tab name. Closing the last tab terminates the browser process; the
-     * driver is nulled without calling `deleteSession()`.
+     * When omitted, the active tab is closed. Accepts a 0-based index or a tab
+     * name. Closing the last tab terminates the browser process; the driver is
+     * nulled without calling `deleteSession()`.
      *
-     * @param selector - A 1-based tab index or tab name; omit to close the active tab
+     * @param selector - A 0-based tab index or tab name; omit to close the active tab
      */
     closeTab(selector?: number | string): Promise<void>;
 
@@ -95,9 +95,9 @@ export interface BrowserSession {
     switchToPreviousTab(): Promise<void>;
 
     /**
-     * Switch to a tab by 1-based ordinal index or by name.
+     * Switch to a tab by 0-based index or by name.
      *
-     * @param selector - A 1-based index or a tab name
+     * @param selector - A 0-based index or a tab name
      */
     switchToTab(selector: number | string): Promise<void>;
 }

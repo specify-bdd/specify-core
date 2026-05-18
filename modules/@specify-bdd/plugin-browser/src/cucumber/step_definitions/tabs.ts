@@ -8,53 +8,87 @@ import assert, { AssertionError } from "node:assert/strict";
 
 import { defineStep } from "@specify-bdd/specify";
 
-import type { BrowserSession } from "@/lib/BrowserSession.js";
+import type { SessionManager } from "@/lib/SessionManager";
 
 interface WorldWithBrowser {
     browser: {
-        sessions: BrowserSession[];
-        activeSession: BrowserSession | null;
+        manager: SessionManager;
     };
 }
 
 export function register(): void {
-    defineStep("When [I open/the user opens] a new browser tab", openUnnamedTab);
+    defineStep("When [I open/the user opens] a new browser tab", function () {
+        return openTab.call(this);
+    });
 
-    defineStep("When [I open/the user opens] a new browser tab named {string}", openNamedTab);
+    defineStep(
+        "When [I open/the user opens] a new browser tab named {string}",
+        function (name: string) {
+            return openTab.call(this, name);
+        },
+    );
 
     defineStep("Then the active session should have {int} browser tab(s)", verifyTabCount);
 
-    defineStep("When [I close/the user closes] the (active )browser tab", closeActiveTab);
+    defineStep("When [I close/the user closes] the (active )browser tab", function () {
+        return closeTab.call(this);
+    });
 
-    defineStep("When [I close/the user closes] the {ordinal} browser tab", closeTabByIndex);
+    defineStep(
+        "When [I close/the user closes] the {ordinal} browser tab",
+        function (index: number) {
+            return closeTab.call(this, index - 1);
+        },
+    );
 
-    defineStep("When [I close/the user closes] the last browser tab", closeLastTab);
+    defineStep("When [I close/the user closes] the last browser tab", function () {
+        const session = this.browser.manager.activeSession;
 
-    defineStep("When [I close/the user closes] the browser tab named {string}", closeTabByName);
+        return closeTab.call(this, session ? session.tabs.length - 1 : undefined);
+    });
+
+    defineStep(
+        "When [I close/the user closes] the browser tab named {string}",
+        function (name: string) {
+            return closeTab.call(this, name);
+        },
+    );
 
     defineStep(
         [
             "When [I switch/the user switches] browser tabs",
             "When [I switch/the user switches] to the next browser tab",
         ],
-        switchToNextTab,
+        function () {
+            return switchToNextTab.call(this);
+        },
     );
 
-    defineStep(
-        "When [I switch/the user switches] to the previous browser tab",
-        switchToPreviousTab,
-    );
+    defineStep("When [I switch/the user switches] to the previous browser tab", function () {
+        return switchToPreviousTab.call(this);
+    });
 
     defineStep(
         "When [I switch/the user switches] to the {ordinal} browser tab",
-        switchToTabByIndex,
+        function (index: number) {
+            return switchToTab.call(this, index - 1);
+        },
     );
 
-    defineStep("When [I switch/the user switches] to the last browser tab", switchToLastTab);
+    defineStep("When [I switch/the user switches] to the last browser tab", function () {
+        assert.ok(
+            this.browser.manager.activeSession,
+            new AssertionError({ "message": "No active browser session." }),
+        );
+
+        return switchToTab.call(this, this.browser.manager.activeSession.tabs.length - 1);
+    });
 
     defineStep(
         "When [I switch/the user switches] to the browser tab named {string}",
-        switchToTabByName,
+        function (name: string) {
+            return switchToTab.call(this, name);
+        },
     );
 }
 
@@ -65,149 +99,65 @@ export function register(): void {
  *
  * @throws AssertionError If there is no active browser session.
  */
-function verifyTabCount(count: number): void {
+export function verifyTabCount(this: WorldWithBrowser, count: number): void {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    assert.equal(this.browser.activeSession.tabs.length, count);
-}
-
-// ─── Close-tab helpers ────────────────────────────────────────────────────────
-
-/**
- * After closing a tab, check whether the session lost all its tabs. If so,
- * remove it from the world's session list and update `activeSession`.
- */
-function cleanupSessionIfEmpty(world: WorldWithBrowser, session: BrowserSession): void {
-    if (session.tabs.length === 0) {
-        const idx = world.browser.sessions.indexOf(session);
-
-        world.browser.sessions.splice(idx, 1);
-        world.browser.activeSession =
-            world.browser.sessions[world.browser.sessions.length - 1] ?? null;
-    }
+    assert.equal(this.browser.manager.activeSession.tabs.length, count);
 }
 
 /**
- * Close the active browser tab.
+ * Close a browser tab.
+ *
+ * When `selector` is omitted, the active tab is closed. Accepts a 0-based
+ * index or a tab name.
+ *
+ * @param selector - A 0-based tab index or tab name; omit to close the active tab
  *
  * @throws AssertionError If there is no active browser session.
  */
-async function closeActiveTab(): Promise<void> {
+export async function closeTab(this: WorldWithBrowser, selector?: number | string): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    const session = this.browser.activeSession;
+    const session = this.browser.manager.activeSession;
 
-    await session.closeTab();
-    cleanupSessionIfEmpty(this, session);
+    await session.closeTab(selector);
+    this.browser.manager.removeSessionIfEmpty(session);
 }
 
 /**
- * Close a browser tab by ordinal position (1-based).
+ * Open a new browser tab in the active session.
  *
- * @param index - The 1-based position of the tab to close
- *
- * @throws AssertionError If there is no active browser session.
- */
-async function closeTabByIndex(index: number): Promise<void> {
-    assert.ok(
-        this.browser.activeSession,
-        new AssertionError({ "message": "No active browser session." }),
-    );
-
-    const session = this.browser.activeSession;
-
-    await session.closeTab(index);
-    cleanupSessionIfEmpty(this, session);
-}
-
-/**
- * Close the last browser tab in the active session.
+ * @param name - Optional name to assign to the new tab
  *
  * @throws AssertionError If there is no active browser session.
  */
-async function closeLastTab(): Promise<void> {
+export async function openTab(this: WorldWithBrowser, name?: string): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    const session = this.browser.activeSession;
-
-    await session.closeTab(session.tabs.length);
-    cleanupSessionIfEmpty(this, session);
+    await this.browser.manager.activeSession.openTab(name);
 }
-
-/**
- * Close the browser tab with the given name.
- *
- * @param name - The name of the tab to close
- *
- * @throws AssertionError If there is no active browser session.
- */
-async function closeTabByName(name: string): Promise<void> {
-    assert.ok(
-        this.browser.activeSession,
-        new AssertionError({ "message": "No active browser session." }),
-    );
-
-    const session = this.browser.activeSession;
-
-    await session.closeTab(name);
-    cleanupSessionIfEmpty(this, session);
-}
-
-// ─── Open-tab handlers ────────────────────────────────────────────────────────
-
-/**
- * Open a new unnamed browser tab in the active session.
- *
- * @throws AssertionError If there is no active browser session.
- */
-async function openUnnamedTab(): Promise<void> {
-    assert.ok(
-        this.browser.activeSession,
-        new AssertionError({ "message": "No active browser session." }),
-    );
-
-    await this.browser.activeSession.openTab();
-}
-
-/**
- * Open a new named browser tab in the active session.
- *
- * @param name - The name to assign to the new tab
- *
- * @throws AssertionError If there is no active browser session.
- */
-async function openNamedTab(name: string): Promise<void> {
-    assert.ok(
-        this.browser.activeSession,
-        new AssertionError({ "message": "No active browser session." }),
-    );
-
-    await this.browser.activeSession.openTab(name);
-}
-
-// ─── Switch-tab handlers ──────────────────────────────────────────────────────
 
 /**
  * Switch to the next browser tab, wrapping around to the first if on the last.
  *
  * @throws AssertionError If there is no active browser session.
  */
-async function switchToNextTab(): Promise<void> {
+export async function switchToNextTab(this: WorldWithBrowser): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    await this.browser.activeSession.switchToNextTab();
+    await this.browser.manager.activeSession.switchToNextTab();
 }
 
 /**
@@ -215,59 +165,30 @@ async function switchToNextTab(): Promise<void> {
  *
  * @throws AssertionError If there is no active browser session.
  */
-async function switchToPreviousTab(): Promise<void> {
+export async function switchToPreviousTab(this: WorldWithBrowser): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    await this.browser.activeSession.switchToPreviousTab();
+    await this.browser.manager.activeSession.switchToPreviousTab();
 }
 
 /**
- * Switch to a browser tab by 1-based ordinal position.
+ * Switch to a browser tab by 0-based index or by name.
  *
- * @param index - The 1-based position of the tab to switch to
- *
- * @throws AssertionError If there is no active browser session.
- */
-async function switchToTabByIndex(index: number): Promise<void> {
-    assert.ok(
-        this.browser.activeSession,
-        new AssertionError({ "message": "No active browser session." }),
-    );
-
-    await this.browser.activeSession.switchToTab(index);
-}
-
-/**
- * Switch to the last browser tab in the active session.
+ * @param selector - A 0-based tab index or tab name
  *
  * @throws AssertionError If there is no active browser session.
  */
-async function switchToLastTab(): Promise<void> {
+export async function switchToTab(
+    this: WorldWithBrowser,
+    selector: number | string,
+): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    const session = this.browser.activeSession;
-
-    await session.switchToTab(session.tabs.length);
-}
-
-/**
- * Switch to the browser tab with the given name.
- *
- * @param name - The name of the tab to switch to
- *
- * @throws AssertionError If there is no active browser session.
- */
-async function switchToTabByName(name: string): Promise<void> {
-    assert.ok(
-        this.browser.activeSession,
-        new AssertionError({ "message": "No active browser session." }),
-    );
-
-    await this.browser.activeSession.switchToTab(name);
+    await this.browser.manager.activeSession.switchToTab(selector);
 }

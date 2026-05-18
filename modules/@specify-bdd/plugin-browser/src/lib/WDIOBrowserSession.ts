@@ -93,12 +93,12 @@ export class WDIOBrowserSession implements BrowserSession {
     /**
      * Close a browser tab.
      *
-     * When `selector` is omitted, the active tab is closed. Accepts a 1-based
-     * ordinal index or a tab name. Closing the last tab in the session causes
-     * the browser process to terminate; the driver is set to `null` without
+     * When `selector` is omitted, the active tab is closed. Accepts a 0-based
+     * index or a tab name. Closing the last tab in the session causes the
+     * browser process to terminate; the driver is set to `null` without
      * calling `deleteSession()`.
      *
-     * @param selector - A 1-based tab index or tab name; omit to close the active tab
+     * @param selector - A 0-based tab index or tab name; omit to close the active tab
      */
     async closeTab(selector?: number | string): Promise<void> {
         const targetTab = selector === undefined ? this.#activeTab : this.#findTab(selector);
@@ -106,6 +106,7 @@ export class WDIOBrowserSession implements BrowserSession {
         assert.ok(targetTab, new AssertionError({ "message": "No active tab to close." }));
 
         const isActive    = targetTab === this.#activeTab;
+        const isOnlyTab   = this.#tabs.length === 1;
         const closedIndex = this.#tabs.indexOf(targetTab);
 
         if (!isActive) {
@@ -113,6 +114,13 @@ export class WDIOBrowserSession implements BrowserSession {
             await this.#driver.switchToWindow(targetTab.handle);
             await this.#driver.closeWindow();
             await this.#driver.switchToWindow(this.#activeTab!.handle);
+        } else if (isOnlyTab) {
+            try {
+                await this.#driver.closeWindow();
+            } catch {
+                // WDIO terminates the session when the last window is closed and
+                // throws as a side-effect; the cleanup below handles driver state
+            }
         } else {
             await this.#driver.closeWindow();
         }
@@ -120,9 +128,10 @@ export class WDIOBrowserSession implements BrowserSession {
         this.#tabs.splice(closedIndex, 1);
 
         if (isActive) {
-            // prefer the tab just before the closed one; fall back to the new
-            // first tab if the closed tab was the first, or null if none remain
-            this.#activeTab = this.#tabs[closedIndex - 1] ?? this.#tabs[0] ?? null;
+            // prefer the tab just before the closed one; wrap to the last tab
+            // if the closed tab was at index 0, or null if none remain
+            this.#activeTab =
+                this.#tabs[closedIndex - 1] ?? this.#tabs[this.#tabs.length - 1] ?? null;
 
             if (this.#activeTab) {
                 await this.#driver.switchToWindow(this.#activeTab.handle);
@@ -160,9 +169,9 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
-     * Switch to a tab by 1-based ordinal index or by name.
+     * Switch to a tab by 0-based index or by name.
      *
-     * @param selector - A 1-based index or a tab name
+     * @param selector - A 0-based index or a tab name
      *
      * @throws AssertionError If no tab matches the selector
      */
@@ -174,24 +183,25 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
-     * Find a tab by 1-based ordinal index or by name.
+     * Find a tab by 0-based index or by name.
      *
-     * @param selector - A 1-based index or a tab name
+     * @param selector - A 0-based index or a tab name
      *
      * @throws AssertionError If no tab matches the selector
      */
     #findTab(selector: number | string): TabMeta {
+        let message: string;
+        let tab: TabMeta | undefined;
+
         if (typeof selector === "number") {
-            const tab = this.#tabs[selector - 1];
-
-            assert.ok(tab, new AssertionError({ "message": `No tab at position ${selector}.` }));
-
-            return tab;
+            tab = this.#tabs[selector];
+            message = `No tab at index ${selector}.`;
+        } else {
+            tab = this.#tabs.find((t) => t.name === selector);
+            message = `No tab named "${selector}".`;
         }
 
-        const tab = this.#tabs.find((t) => t.name === selector);
-
-        assert.ok(tab, new AssertionError({ "message": `No tab named "${selector}".` }));
+        assert.ok(tab, new AssertionError({ message }));
 
         return tab;
     }
@@ -211,21 +221,9 @@ export class WDIOBrowserSession implements BrowserSession {
         const capabilities: WebdriverIO.Capabilities = { "browserName": browser };
 
         switch (browser) {
-            case "chrome": {
-                const chromedriverPath = process.env["CHROMEDRIVER_PATH"];
-
-                if (chromedriverPath) {
-                    capabilities["wdio:chromedriverOptions"] = { "binary": chromedriverPath };
-                }
-
-                if (mode === "headless") {
-                    capabilities["goog:chromeOptions"] = {
-                        "args": ["--headless", "--disable-gpu", "--no-sandbox"],
-                    };
-                }
-
+            case "chrome":
+                this.#buildChromeCapabilities(capabilities, mode);
                 break;
-            }
 
             case "firefox":
             case "edge":
@@ -245,5 +243,41 @@ export class WDIOBrowserSession implements BrowserSession {
         }
 
         return opts;
+    }
+
+    /**
+     * Populate Chrome-specific capability keys on the given capabilities object.
+     *
+     * Sets `wdio:chromedriverOptions.binary` when `CHROMEDRIVER_PATH` is set,
+     * and builds `goog:chromeOptions` (args for headless mode, binary for
+     * `CHROME_PATH`) when either condition applies.
+     *
+     * @param capabilities - The capabilities object to mutate
+     * @param mode         - The session mode controlling headless args
+     */
+    #buildChromeCapabilities(
+        capabilities: WebdriverIO.Capabilities,
+        mode: BrowserSessionStartOptions["mode"],
+    ): void {
+        const chromedriverPath = process.env["CHROMEDRIVER_PATH"];
+        const chromePath       = process.env["CHROME_PATH"];
+
+        if (chromedriverPath) {
+            capabilities["wdio:chromedriverOptions"] = { "binary": chromedriverPath };
+        }
+
+        const chromeOptions: Record<string, unknown> = {};
+
+        if (mode === "headless") {
+            chromeOptions["args"] = ["--headless", "--disable-gpu", "--no-sandbox"];
+        }
+
+        if (chromePath) {
+            chromeOptions["binary"] = chromePath;
+        }
+
+        if (Object.keys(chromeOptions).length > 0) {
+            capabilities["goog:chromeOptions"] = chromeOptions;
+        }
     }
 }

@@ -10,6 +10,6 @@ import path from "node:path";
 
 export default {
     "cucumber": {
-        "import": [path.resolve(import.meta.dirname, "cucumber/register/register.js")],
+        "import": [path.resolve(import.meta.dirname, "cucumber/register")],
     },
 };
