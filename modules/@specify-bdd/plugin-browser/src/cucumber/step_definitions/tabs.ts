@@ -74,10 +74,10 @@ export function verifyTabCount(this: WorldWithBrowser, count: number): void {
 /**
  * Close a browser tab.
  *
- * When `selector` is omitted, the active tab is closed. Accepts a 1-based
- * 0-based index or a tab name.
+ * When `selector` is omitted, the active tab is closed. Accepts a 0-based
+ * index or a tab name.
  *
- * @param selector - A 1-based tab index or tab name; omit to close the active tab
+ * @param selector - A 0-based tab index or tab name; omit to close the active tab
  *
  * @throws AssertionError If there is no active browser session.
  */
