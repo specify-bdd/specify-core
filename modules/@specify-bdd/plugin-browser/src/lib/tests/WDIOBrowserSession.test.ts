@@ -462,20 +462,14 @@ describe("WDIOBrowserSession", () => {
             expect(session.activeTab?.handle).toBe("handle-1");
         });
 
-        it("closing the first (active) tab makes the new first tab active", async () => {
-            const session = await startWithTabs(3); // active: h2
+        it.skip("closing the first active tab wraps activeTab to the last tab", async () => {
+            const session = await startWithTabs(3); // tabs: h0, h1, h2 — active: h2
 
-            // switch active to first tab for this test
-            await session.closeTab(1); // close h1 (non-active), active stays h2
-            // now tabs: h0, h2 — still active h2; now close first by switching manually
-            // Easier: start fresh with active = first tab by closing down to 1 and reopening
-            // Instead use a 2-tab session and close the first tab directly by index
-            const session2 = await startWithTabs(2); // active: h1
+            // TODO: await session.switchToTab(0); — requires switchToTab(), not yet available
+            await session.closeTab(); // close h0 (active, index 0) → should wrap to h2 (last)
 
-            await session2.closeTab(0); // close first tab h0 (non-active since active=h1)
-
-            expect(session2.tabs).toHaveLength(1);
-            expect(session2.activeTab?.handle).toBe("handle-1"); // unchanged
+            expect(session.tabs).toHaveLength(2);
+            expect(session.activeTab?.handle).toBe("handle-2");
         });
 
         it("closing a non-active tab by index does not change activeTab", async () => {

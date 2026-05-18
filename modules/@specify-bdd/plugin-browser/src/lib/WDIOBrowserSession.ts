@@ -128,9 +128,10 @@ export class WDIOBrowserSession implements BrowserSession {
         this.#tabs.splice(closedIndex, 1);
 
         if (isActive) {
-            // prefer the tab just before the closed one; fall back to the new
-            // first tab if the closed tab was the first, or null if none remain
-            this.#activeTab = this.#tabs[closedIndex - 1] ?? this.#tabs[0] ?? null;
+            // prefer the tab just before the closed one; wrap to the last tab
+            // if the closed tab was at index 0, or null if none remain
+            this.#activeTab =
+                this.#tabs[closedIndex - 1] ?? this.#tabs[this.#tabs.length - 1] ?? null;
 
             if (this.#activeTab) {
                 await this.#driver.switchToWindow(this.#activeTab.handle);
