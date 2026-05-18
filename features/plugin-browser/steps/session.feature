@@ -25,6 +25,11 @@ Feature: Browser Session Step Definitions
             When the user ends the browser session
             Then there should be 0 open browser sessions
 
+        Scenario: Close the active browser session
+            Given a chrome browser session
+            When the user closes the browser
+            Then there should be 0 open browser sessions
+
         Scenario: Ending a session with others open leaves the remaining sessions active
             Given a chrome browser session
             And another chrome browser session
