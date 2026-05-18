@@ -194,19 +194,19 @@ describe("SessionManager", () => {
             expect(manager.activeSession).toBe(s1);
         });
 
-        it("does not change activeSession when a non-empty session is passed", () => {
+        it("does not remove the active session when it is non-empty", () => {
             const s1 = makeMockSession();
             const s2 = makeMockSession();
 
-            (s1.tabs as unknown[]).push({ "handle": "abc", "name": null });
+            (s2.tabs as unknown[]).push({ "handle": "abc", "name": null });
 
             manager.addSession(s1);
             manager.addSession(s2); // active = s2
 
-            manager.removeSessionIfEmpty(s1);
+            manager.removeSessionIfEmpty(s2);
 
             expect(manager.activeSession).toBe(s2);
-            expect(manager.sessions).toContain(s1);
+            expect(manager.sessions).toContain(s2);
         });
     });
 
