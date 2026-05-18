@@ -155,10 +155,10 @@ export class WDIOBrowserSession implements BrowserSession {
         let tab: TabMeta | undefined;
 
         if (typeof selector === "number") {
-            tab     = this.#tabs[selector - 1];
+            tab = this.#tabs[selector - 1];
             message = `No tab at position ${selector}.`;
         } else {
-            tab     = this.#tabs.find((t) => t.name === selector);
+            tab = this.#tabs.find((t) => t.name === selector);
             message = `No tab named "${selector}".`;
         }
 

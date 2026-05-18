@@ -6,13 +6,13 @@
 
 import { addAfterScenarioHook, addBeforeScenarioHook } from "@specify-bdd/specify";
 
+import { SessionManager } from "@/lib/SessionManager";
+
 export function register(): void {
     addBeforeScenarioHook(
         async function (): Promise<void> {
-            // initialize the browser namespace
             this.browser = {
-                "sessions":      [],
-                "activeSession": null,
+                "manager": new SessionManager(),
             };
         },
         { "name": "Browser plugin before scenario hook" },
@@ -20,11 +20,7 @@ export function register(): void {
 
     addAfterScenarioHook(
         async function (): Promise<void> {
-            // terminate all remaining browser sessions, even if some fail to end
-            await Promise.allSettled(this.browser.sessions.map((s) => s.end()));
-
-            this.browser.sessions = [];
-            this.browser.activeSession = null;
+            await this.browser.manager.killAllSessions();
         },
         { "name": "Browser plugin after scenario hook" },
     );

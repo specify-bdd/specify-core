@@ -442,7 +442,9 @@ describe("WDIOBrowserSession", () => {
             const session = await startWithTabs(1);
 
             mockDriver.closeWindow.mockRejectedValue(
-                new Error("All window handles were removed, causing WebdriverIO to close the session."),
+                new Error(
+                    "All window handles were removed, causing WebdriverIO to close the session.",
+                ),
             );
 
             await expect(session.closeTab()).resolves.not.toThrow();
