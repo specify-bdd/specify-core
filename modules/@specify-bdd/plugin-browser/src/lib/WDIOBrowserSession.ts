@@ -66,21 +66,9 @@ export class WDIOBrowserSession implements BrowserSession {
         const capabilities: WebdriverIO.Capabilities = { "browserName": browser };
 
         switch (browser) {
-            case "chrome": {
-                const chromedriverPath = process.env["CHROMEDRIVER_PATH"];
-
-                if (chromedriverPath) {
-                    capabilities["wdio:chromedriverOptions"] = { "binary": chromedriverPath };
-                }
-
-                if (mode === "headless") {
-                    capabilities["goog:chromeOptions"] = {
-                        "args": ["--headless", "--disable-gpu", "--no-sandbox"],
-                    };
-                }
-
+            case "chrome":
+                this.#buildChromeCapabilities(capabilities, mode);
                 break;
-            }
 
             case "firefox":
             case "edge":
@@ -100,5 +88,41 @@ export class WDIOBrowserSession implements BrowserSession {
         }
 
         return opts;
+    }
+
+    /**
+     * Populate Chrome-specific capability keys on the given capabilities object.
+     *
+     * Sets `wdio:chromedriverOptions.binary` when `CHROMEDRIVER_PATH` is set,
+     * and builds `goog:chromeOptions` (args for headless mode, binary for
+     * `CHROME_PATH`) when either condition applies.
+     *
+     * @param capabilities - The capabilities object to mutate
+     * @param mode         - The session mode controlling headless args
+     */
+    #buildChromeCapabilities(
+        capabilities: WebdriverIO.Capabilities,
+        mode: BrowserSessionStartOptions["mode"],
+    ): void {
+        const chromedriverPath = process.env["CHROMEDRIVER_PATH"];
+        const chromePath       = process.env["CHROME_PATH"];
+
+        if (chromedriverPath) {
+            capabilities["wdio:chromedriverOptions"] = { "binary": chromedriverPath };
+        }
+
+        const chromeOptions: Record<string, unknown> = {};
+
+        if (mode === "headless") {
+            chromeOptions["args"] = ["--headless", "--disable-gpu", "--no-sandbox"];
+        }
+
+        if (chromePath) {
+            chromeOptions["binary"] = chromePath;
+        }
+
+        if (Object.keys(chromeOptions).length > 0) {
+            capabilities["goog:chromeOptions"] = chromeOptions;
+        }
     }
 }
