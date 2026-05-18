@@ -149,7 +149,9 @@ export class WDIOBrowserSession implements BrowserSession {
      * tab is the last.
      */
     async switchToNextTab(): Promise<void> {
-        const currentIndex = this.#tabs.indexOf(this.#activeTab!);
+        assert.ok(this.#activeTab, new AssertionError({ "message": "No active tab." }));
+
+        const currentIndex = this.#tabs.indexOf(this.#activeTab);
         const nextTab      = this.#tabs[(currentIndex + 1) % this.#tabs.length];
 
         await this.#driver!.switchToWindow(nextTab.handle);
@@ -161,7 +163,9 @@ export class WDIOBrowserSession implements BrowserSession {
      * current tab is the first.
      */
     async switchToPreviousTab(): Promise<void> {
-        const currentIndex = this.#tabs.indexOf(this.#activeTab!);
+        assert.ok(this.#activeTab, new AssertionError({ "message": "No active tab." }));
+
+        const currentIndex = this.#tabs.indexOf(this.#activeTab);
         const prevTab      = this.#tabs[(currentIndex - 1 + this.#tabs.length) % this.#tabs.length];
 
         await this.#driver!.switchToWindow(prevTab.handle);

@@ -132,13 +132,14 @@ export function verifyActiveTab(this: WorldWithBrowser, selector: number | strin
 
     const { activeTab, tabs } = this.browser.manager.activeSession;
 
+    assert.ok(activeTab, new AssertionError({ "message": "No active tab." }));
+
     if (typeof selector === "number") {
         const expected = tabs[selector];
 
         assert.ok(expected, new AssertionError({ "message": `No tab at index ${selector}.` }));
         assert.strictEqual(activeTab, expected);
     } else {
-        assert.ok(activeTab, new AssertionError({ "message": "No active tab." }));
         assert.strictEqual(activeTab.name, selector);
     }
 }
