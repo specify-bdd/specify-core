@@ -453,7 +453,7 @@ describe("WDIOBrowserSession", () => {
             expect(session.tabs).toHaveLength(0);
         });
 
-        it("closing the active tab (not last) makes the previous tab active", async () => {
+        it("closing the active tab makes the previous tab active", async () => {
             const session = await startWithTabs(3); // tabs: h0, h1, h2 — active: h2
 
             await session.closeTab(); // close h2
