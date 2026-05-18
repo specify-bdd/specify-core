@@ -106,7 +106,7 @@ export class WDIOBrowserSession implements BrowserSession {
         assert.ok(targetTab, new AssertionError({ "message": "No active tab to close." }));
 
         const isActive    = targetTab === this.#activeTab;
-        const isLastTab   = this.#tabs.length === 1;
+        const isOnlyTab   = this.#tabs.length === 1;
         const closedIndex = this.#tabs.indexOf(targetTab);
 
         if (!isActive) {
@@ -114,7 +114,7 @@ export class WDIOBrowserSession implements BrowserSession {
             await this.#driver.switchToWindow(targetTab.handle);
             await this.#driver.closeWindow();
             await this.#driver.switchToWindow(this.#activeTab!.handle);
-        } else if (isLastTab) {
+        } else if (isOnlyTab) {
             try {
                 await this.#driver.closeWindow();
             } catch {
