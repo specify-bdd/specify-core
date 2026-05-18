@@ -37,12 +37,14 @@ export function register(): void {
     defineStep(
         "When [I close/the user closes] the {ordinal} browser tab",
         function (index: number) {
-            return closeTab.call(this, index);
+            return closeTab.call(this, index - 1);
         },
     );
 
     defineStep("When [I close/the user closes] the last browser tab", function () {
-        return closeTab.call(this, this.browser.manager.activeSession?.tabs.length);
+        const session = this.browser.manager.activeSession;
+
+        return closeTab.call(this, session ? session.tabs.length - 1 : undefined);
     });
 
     defineStep(
@@ -73,7 +75,7 @@ export function verifyTabCount(this: WorldWithBrowser, count: number): void {
  * Close a browser tab.
  *
  * When `selector` is omitted, the active tab is closed. Accepts a 1-based
- * ordinal index or a tab name.
+ * 0-based index or a tab name.
  *
  * @param selector - A 1-based tab index or tab name; omit to close the active tab
  *

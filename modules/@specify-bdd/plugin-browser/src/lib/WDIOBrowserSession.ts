@@ -93,12 +93,12 @@ export class WDIOBrowserSession implements BrowserSession {
     /**
      * Close a browser tab.
      *
-     * When `selector` is omitted, the active tab is closed. Accepts a 1-based
-     * ordinal index or a tab name. Closing the last tab in the session causes
-     * the browser process to terminate; the driver is set to `null` without
+     * When `selector` is omitted, the active tab is closed. Accepts a 0-based
+     * index or a tab name. Closing the last tab in the session causes the
+     * browser process to terminate; the driver is set to `null` without
      * calling `deleteSession()`.
      *
-     * @param selector - A 1-based tab index or tab name; omit to close the active tab
+     * @param selector - A 0-based tab index or tab name; omit to close the active tab
      */
     async closeTab(selector?: number | string): Promise<void> {
         const targetTab = selector === undefined ? this.#activeTab : this.#findTab(selector);
@@ -144,9 +144,9 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
-     * Find a tab by 1-based ordinal index or by name.
+     * Find a tab by 0-based index or by name.
      *
-     * @param selector - A 1-based index or a tab name
+     * @param selector - A 0-based index or a tab name
      *
      * @throws AssertionError If no tab matches the selector
      */
@@ -155,8 +155,8 @@ export class WDIOBrowserSession implements BrowserSession {
         let tab: TabMeta | undefined;
 
         if (typeof selector === "number") {
-            tab = this.#tabs[selector - 1];
-            message = `No tab at position ${selector}.`;
+            tab = this.#tabs[selector];
+            message = `No tab at index ${selector}.`;
         } else {
             tab = this.#tabs.find((t) => t.name === selector);
             message = `No tab named "${selector}".`;

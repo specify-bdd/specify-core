@@ -466,13 +466,13 @@ describe("WDIOBrowserSession", () => {
             const session = await startWithTabs(3); // active: h2
 
             // switch active to first tab for this test
-            await session.closeTab(2); // close h1 (non-active), active stays h2
+            await session.closeTab(1); // close h1 (non-active), active stays h2
             // now tabs: h0, h2 — still active h2; now close first by switching manually
             // Easier: start fresh with active = first tab by closing down to 1 and reopening
             // Instead use a 2-tab session and close the first tab directly by index
             const session2 = await startWithTabs(2); // active: h1
 
-            await session2.closeTab(1); // close first tab h0 (non-active since active=h1)
+            await session2.closeTab(0); // close first tab h0 (non-active since active=h1)
 
             expect(session2.tabs).toHaveLength(1);
             expect(session2.activeTab?.handle).toBe("handle-1"); // unchanged
@@ -481,7 +481,7 @@ describe("WDIOBrowserSession", () => {
         it("closing a non-active tab by index does not change activeTab", async () => {
             const session = await startWithTabs(3); // active: h2
 
-            await session.closeTab(1); // close tab at index 1 (h0)
+            await session.closeTab(0); // close tab at index 0 (h0)
 
             expect(session.activeTab?.handle).toBe("handle-2");
             expect(session.tabs).toHaveLength(2);
@@ -490,7 +490,7 @@ describe("WDIOBrowserSession", () => {
         it("closing a non-active tab by index calls switchToWindow for target then back to active", async () => {
             const session = await startWithTabs(3); // active: h2
 
-            await session.closeTab(1); // close h0
+            await session.closeTab(0); // close h0
 
             expect(mockDriver.switchToWindow).toHaveBeenCalledWith("handle-0");
             expect(mockDriver.switchToWindow).toHaveBeenCalledWith("handle-2");
@@ -524,7 +524,7 @@ describe("WDIOBrowserSession", () => {
                 `No tab named "nonexistent".`,
             );
 
-            await expect(session.closeTab(99)).rejects.toThrow("No tab at position 99.");
+            await expect(session.closeTab(99)).rejects.toThrow("No tab at index 99.");
         });
     });
 });
