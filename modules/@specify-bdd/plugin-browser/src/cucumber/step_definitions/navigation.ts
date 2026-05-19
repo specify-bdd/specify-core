@@ -27,9 +27,9 @@ export function register(): void {
  */
 async function navigateToURL(url: URL): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    await this.browser.activeSession.navigateTo(url);
+    await this.browser.manager.activeSession.navigateTo(url);
 }

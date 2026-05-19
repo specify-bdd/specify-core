@@ -175,6 +175,46 @@ describe("WDIOBrowserSession", () => {
             expect(call.capabilities["wdio:chromedriverOptions"]).toBeUndefined();
         });
 
+        it("sets goog:chromeOptions.binary to CHROME_PATH when that env var is set", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            vi.stubEnv("CHROME_PATH", "/usr/bin/google-chrome-stable");
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+
+            expect(remote).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    "capabilities": expect.objectContaining({
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        "goog:chromeOptions": expect.objectContaining({
+                            "binary": "/usr/bin/google-chrome-stable",
+                        }),
+                    }),
+                }),
+            );
+        });
+
+        it("does not set goog:chromeOptions.binary when CHROME_PATH is not set", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            vi.stubEnv("CHROME_PATH", "");
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome", "mode": "visual" });
+
+            const call = vi.mocked(remote).mock.calls[0][0] as {
+                capabilities: Record<string, unknown>;
+            };
+
+            // visual mode + no CHROME_PATH → no goog:chromeOptions at all
+            expect(call.capabilities["goog:chromeOptions"]).toBeUndefined();
+        });
+
         it("throws when mode is 'grid' but gridUrl is not provided", async () => {
             const session = new WDIOBrowserSession();
 
