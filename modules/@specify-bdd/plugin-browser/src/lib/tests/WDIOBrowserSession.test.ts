@@ -23,7 +23,7 @@ beforeEach(() => {
  * Use this in tests that need a live session but don't require custom
  * pre-start mock configuration.
  */
-async function startedSession(): Promise<WDIOBrowserSession> {
+async function startSession(): Promise<WDIOBrowserSession> {
     const { remote } = await import("webdriverio");
 
     vi.mocked(remote).mockResolvedValue(mockDriver as never);
@@ -44,13 +44,13 @@ describe("WDIOBrowserSession", () => {
         });
 
         it("is set after start() is called", async () => {
-            const session = await startedSession();
+            const session = await startSession();
 
             expect(session.driver).toBe(mockDriver);
         });
 
         it("is null after end() is called", async () => {
-            const session = await startedSession();
+            const session = await startSession();
 
             await session.end();
 
@@ -258,7 +258,7 @@ describe("WDIOBrowserSession", () => {
 
     describe("end()", () => {
         it("calls deleteSession() on the driver", async () => {
-            const session = await startedSession();
+            const session = await startSession();
 
             await session.end();
 
@@ -266,7 +266,7 @@ describe("WDIOBrowserSession", () => {
         });
 
         it("nulls driver even when deleteSession() rejects", async () => {
-            const session = await startedSession();
+            const session = await startSession();
 
             mockDriver.deleteSession.mockRejectedValue(new Error("Session closed unexpectedly"));
 
@@ -281,7 +281,7 @@ describe("WDIOBrowserSession", () => {
         });
 
         it("clears tabs after end()", async () => {
-            const session = await startedSession();
+            const session = await startSession();
 
             await session.end();
 
@@ -289,7 +289,7 @@ describe("WDIOBrowserSession", () => {
         });
 
         it("sets activeTab to null after end()", async () => {
-            const session = await startedSession();
+            const session = await startSession();
 
             await session.end();
 
@@ -299,7 +299,7 @@ describe("WDIOBrowserSession", () => {
 
     describe("tabs and activeTab", () => {
         it("has one tab and a non-null activeTab after start()", async () => {
-            const session = await startedSession();
+            const session = await startSession();
 
             expect(session.tabs).toHaveLength(1);
             expect(session.activeTab).not.toBeNull();
