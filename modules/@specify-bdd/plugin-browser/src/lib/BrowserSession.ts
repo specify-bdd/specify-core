@@ -53,4 +53,9 @@ export interface BrowserSession {
      * @param url - The URL to navigate to
      */
     navigateTo(url: URL): Promise<void>;
+
+    /**
+     * Return the current URL of the active browser tab.
+     */
+    getURL(): Promise<string>;
 }

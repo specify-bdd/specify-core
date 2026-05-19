@@ -6,14 +6,10 @@ Feature: Browser Navigation Step Definitions
     Background:
         Given that the "@specify-bdd/specify" NPM package is installed
         And that the "@specify-bdd/plugin-browser" NPM package is installed
+        And a chrome browser session
 
     Rule: The user can navigate to a URL
 
-        Scenario: Navigating to a URL using the Given pattern loads the expected page
-            Given a chrome browser session
-            And the user is at the URL https://example.com
-
-        Scenario: Navigating to a URL using the When pattern loads the expected page
-            Given a chrome browser session
+        Scenario: Navigating to a URL loads the expected page
             When the user goes to the URL https://example.com
-
+            Then the browser URL should be https://example.com
