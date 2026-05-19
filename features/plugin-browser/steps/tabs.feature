@@ -36,7 +36,7 @@ Feature: Browser Tab Step Definitions
             And closes the 1st browser tab
             Then the active session should have 2 browser tabs
 
-        Scenario: Closing the last tab using the last pattern reduces the tab count to zero
+        Scenario: Closing the last browser tab reduces the tab count by one
             When the user opens a new browser tab
             And closes the last browser tab
             Then the active session should have 1 browser tab
