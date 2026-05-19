@@ -12,7 +12,7 @@ import { defineStep } from "@specify-bdd/specify";
 export function register(): void {
     defineStep(
         [
-            "Given that the browser is {int} px tall",
+            "Given (that )the browser is {int} px tall",
             "When [I resize/the user resizes] the browser to {int} px tall",
         ],
         setWindowHeight,
@@ -20,7 +20,7 @@ export function register(): void {
 
     defineStep(
         [
-            "Given that the browser is {int} px wide",
+            "Given (that )the browser is {int} px wide",
             "When [I resize/the user resizes] the browser to {int} px wide",
         ],
         setWindowWidth,
@@ -28,7 +28,7 @@ export function register(): void {
 
     defineStep(
         [
-            "Given that the browser is {int} px wide by {int} px tall",
+            "Given (that )the browser is {int} px wide by {int} px tall",
             "When [I resize/the user resizes] the browser to {int} px wide by {int} px tall",
         ],
         setWindowDimensions,
