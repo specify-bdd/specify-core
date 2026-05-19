@@ -5,15 +5,24 @@
  * package's step definitions.
  */
 
-import { defineParamType } from "@specify-bdd/specify";
+import assert, { AssertionError } from "node:assert/strict";
 
-import { parseBrowserName } from "@/lib/browser_names.js";
+import { defineParamType } from "@specify-bdd/specify";
 
 export function register(): void {
     defineParamType({
-        "name":           "browserName",
-        "regexp":         /[a-z]+/,
-        "transformer":    parseBrowserName,
+        "name":   "browserName",
+        "regexp": /\w+/,
+        transformer(input: string): string {
+            const browserName = input.toLowerCase();
+
+            assert.ok(
+                this.config.browsers.includes(browserName),
+                new AssertionError({ "message": `Unrecognized browser name: "${input}".` }),
+            );
+
+            return browserName;
+        },
         "useForSnippets": false,
     });
 

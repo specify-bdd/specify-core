@@ -53,7 +53,8 @@ Config is modular, loaded from `src/config/` submodules (paths, cucumber, conten
 ### Test Structure
 
 - `modules/@specify-bdd/specify/src/lib/tests/` – Vitest unit tests for core classes
-- `features/test/` – Gherkin feature files + step definitions that test Specify itself (self-hosted BDD tests)
+- `features/test/` – Gherkin feature files describing how the `specify test` command should behave (self-hosted BDD tests)
+- `features/plugin-*/steps/` – Gherkin feature files describing the step definitions provided by each plugin (e.g. `features/plugin-cli/steps/`)
 - `test/gherkin/` – Fixture feature files used as test inputs (passing/failing scenarios for testing retry, parallel, rerun, etc.)
 
 ### Plugin System
@@ -72,6 +73,29 @@ specify test [paths] [options]
   → SpecifyWorld (with QuickRef) created per scenario
 ```
 
+## Development Workflow
+
+For any ticket involving user-facing behavior changes, follow this BDD process:
+
+1. **Write Gherkin behavior specs first.** Document the intended behavior in the appropriate `features/` subdirectory:
+   - `features/test/` — behavior of the `specify test` command
+   - `features/plugin-*/steps/` — behavior of plugin-provided step definitions (e.g. `features/plugin-browser/steps/`)
+
+   Focus on the "golden path" use cases. Also capture important corner cases and foreseeable fail states. If working with a human operator, share these scenarios and iterate until they are approved before proceeding to step 2. This step may be skipped if no user-facing behavior is changing.
+
+2. **Write any missing step definitions.** For each step in the Gherkin specs that does not yet have a matching step definition, write one now. Step definitions should be thin — they wire Gherkin language to the application code but contain no logic themselves. The underlying application code does not need to exist yet; stubs or placeholder implementations are fine at this stage.
+
+3. **Write unit tests before the implementation.** Write Vitest unit tests covering the code units that will be added or modified. Tests should be more comprehensive than the Gherkin specs — exercise a variety of inputs and edge cases. For each test, write the simplest assertion the code will fail. **Run the tests and confirm they fail before proceeding.**
+
+4. **Write the application code.** Implement changes that cause the failing unit tests to pass. Rerun and iterate until all tests pass. Then verify that the running code also fulfills the letter and spirit of the Gherkin behavior specs from step 1. If gaps remain, tighten the unit tests and repeat.
+
+5. **Verify before committing.** Run the following commands in order and fix any failures before opening a PR:
+   ```bash
+   pnpm lint:fix   # auto-fix formatting and lint issues
+   pnpm build      # ensure all packages compile cleanly
+   pnpm test       # unit tests + BDD integration tests
+   ```
+
 ## Contributing
 
 **Issue tracker:** https://github.com/specify-bdd/specify-core/issues
@@ -83,6 +107,13 @@ ALWAYS perform any actions under the bot account; NEVER use the user's account t
 [#<github-issue-id>] <explanation of why the change was needed>
 ```
 Focus on *why*, not *what* — the diff covers what changed. Omit the ticket prefix only when there is genuinely no associated issue.
+
+**GitHub CLI authentication:**
+The bot token for `gh` expires periodically. If `gh` commands fail with a credentials error, run:
+```bash
+bash scripts/bot-auth.sh
+```
+This re-authenticates the `gh` CLI and prints the new token expiry time. Run it at the start of any session that will open or modify PRs.
 
 **Pull requests:**
 - Always open a PR; never push directly to `main` or `develop`
