@@ -1,8 +1,7 @@
 /**
  * Browser Navigation Step Definitions Module
  *
- * Cucumber step definitions for navigating the active browser tab to a URL
- * and refreshing the current page.
+ * Cucumber step definitions for browser navigation.
  */
 
 import assert, { AssertionError } from "node:assert/strict";

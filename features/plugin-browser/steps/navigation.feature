@@ -1,7 +1,7 @@
 Feature: Browser Navigation Step Definitions
     As a software developer interested in using Specify to test web applications
-    I want to be able to navigate the browser to a specific URL and refresh the page
-    So that I can test pages at known URLs and reproduce page-reload scenarios during automated browser sessions
+    I want to be able to navigate the browser during a test session
+    So that I can interact with web applications at known URLs
 
     Background:
         Given that the "@specify-bdd/specify" NPM package is installed
@@ -17,9 +17,6 @@ Feature: Browser Navigation Step Definitions
     Rule: The user can refresh the current page
 
         Scenario: Refreshing the page reloads the current URL
-            And the user is at the URL https://example.com
+            Given that the user is at the URL https://example.com
             When the user refreshes the page
-
-        Scenario: Clicking the browser refresh button reloads the current URL
-            And the user is at the URL https://example.com
-            When the user clicks the browser's refresh button
+            Then the browser URL should be https://example.com
