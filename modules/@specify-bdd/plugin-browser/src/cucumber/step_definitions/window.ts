@@ -50,13 +50,13 @@ export function register(): void {
  */
 async function setWindowHeight(height: number): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    const { width } = await this.browser.activeSession.getWindowSize();
+    const { width } = await this.browser.manager.activeSession.getWindowSize();
 
-    await this.browser.activeSession.setWindowSize(width, height);
+    await this.browser.manager.activeSession.setWindowSize(width, height);
 }
 
 /**
@@ -68,13 +68,13 @@ async function setWindowHeight(height: number): Promise<void> {
  */
 async function setWindowWidth(width: number): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    const { height } = await this.browser.activeSession.getWindowSize();
+    const { height } = await this.browser.manager.activeSession.getWindowSize();
 
-    await this.browser.activeSession.setWindowSize(width, height);
+    await this.browser.manager.activeSession.setWindowSize(width, height);
 }
 
 /**
@@ -87,11 +87,11 @@ async function setWindowWidth(width: number): Promise<void> {
  */
 async function setWindowDimensions(width: number, height: number): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    await this.browser.activeSession.setWindowSize(width, height);
+    await this.browser.manager.activeSession.setWindowSize(width, height);
 }
 
 /**
@@ -103,11 +103,11 @@ async function setWindowDimensions(width: number, height: number): Promise<void>
  */
 async function verifyWindowHeight(expected: number): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    const { height } = await this.browser.activeSession.getWindowSize();
+    const { height } = await this.browser.manager.activeSession.getWindowSize();
 
     assert.equal(height, expected);
 }
@@ -121,11 +121,11 @@ async function verifyWindowHeight(expected: number): Promise<void> {
  */
 async function verifyWindowWidth(expected: number): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    const { width } = await this.browser.activeSession.getWindowSize();
+    const { width } = await this.browser.manager.activeSession.getWindowSize();
 
     assert.equal(width, expected);
 }
@@ -143,11 +143,11 @@ async function verifyWindowDimensions(
     expectedHeight: number,
 ): Promise<void> {
     assert.ok(
-        this.browser.activeSession,
+        this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
     );
 
-    const { width, height } = await this.browser.activeSession.getWindowSize();
+    const { width, height } = await this.browser.manager.activeSession.getWindowSize();
 
     assert.equal(width, expectedWidth);
     assert.equal(height, expectedHeight);
