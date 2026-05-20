@@ -100,4 +100,19 @@ export interface BrowserSession {
      * @param selector - A 0-based index or a tab name
      */
     switchToTab(selector: number | string): Promise<void>;
+
+    /**
+     * Set the browser window size.
+     *
+     * @param width  - The desired window width in pixels
+     * @param height - The desired window height in pixels
+     */
+    setWindowSize(width: number, height: number): Promise<void>;
+
+    /**
+     * Get the current browser window size.
+     *
+     * @returns The current window dimensions in pixels
+     */
+    getWindowSize(): Promise<{ width: number; height: number }>;
 }

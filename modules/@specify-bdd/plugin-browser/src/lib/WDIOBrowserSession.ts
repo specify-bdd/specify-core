@@ -187,6 +187,33 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
+     * Set the browser window size.
+     *
+     * @param width  - The desired window width in pixels
+     * @param height - The desired window height in pixels
+     *
+     * @throws AssertionError If `width` or `height` is not a positive number.
+     */
+    async setWindowSize(width: number, height: number): Promise<void> {
+        assert.ok(width > 0, new AssertionError({ "message": "Width must be a positive number." }));
+        assert.ok(
+            height > 0,
+            new AssertionError({ "message": "Height must be a positive number." }),
+        );
+
+        await this.#driver!.setWindowSize(width, height);
+    }
+
+    /**
+     * Get the current browser window size.
+     *
+     * @returns The current window dimensions in pixels
+     */
+    async getWindowSize(): Promise<{ width: number; height: number }> {
+        return this.#driver!.getWindowSize();
+    }
+
+    /**
      * Find a tab by 0-based index or by name.
      *
      * @param selector - A 0-based index or a tab name

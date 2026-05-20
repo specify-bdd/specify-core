@@ -8,7 +8,9 @@ const mockDriver = {
     "closeWindow":     vi.fn(),
     "deleteSession":   vi.fn(),
     "getWindowHandle": vi.fn(),
+    "getWindowSize":   vi.fn(),
     "newWindow":       vi.fn(),
+    "setWindowSize":   vi.fn(),
     "switchToWindow":  vi.fn(),
 };
 
@@ -589,6 +591,65 @@ describe("WDIOBrowserSession", () => {
             const session = await startWithTabs(2);
 
             await expect(session.switchToTab("ghost")).rejects.toThrow(`No tab named "ghost".`);
+        });
+    });
+
+    describe("setWindowSize()", () => {
+        it("calls driver.setWindowSize() with the given width and height", async () => {
+            const session = await startSession();
+
+            await session.setWindowSize(1280, 720);
+
+            expect(mockDriver.setWindowSize).toHaveBeenCalledWith(1280, 720);
+        });
+
+        it("throws when width is zero", async () => {
+            const session = new WDIOBrowserSession();
+
+            await expect(session.setWindowSize(0, 720)).rejects.toThrow(
+                "Width must be a positive number.",
+            );
+        });
+
+        it("throws when width is negative", async () => {
+            const session = new WDIOBrowserSession();
+
+            await expect(session.setWindowSize(-1, 720)).rejects.toThrow(
+                "Width must be a positive number.",
+            );
+        });
+
+        it("throws when height is zero", async () => {
+            const session = new WDIOBrowserSession();
+
+            await expect(session.setWindowSize(1280, 0)).rejects.toThrow(
+                "Height must be a positive number.",
+            );
+        });
+
+        it("throws when height is negative", async () => {
+            const session = new WDIOBrowserSession();
+
+            await expect(session.setWindowSize(1280, -1)).rejects.toThrow(
+                "Height must be a positive number.",
+            );
+        });
+    });
+
+    describe("getWindowSize()", () => {
+        it("returns the value from driver.getWindowSize()", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            mockDriver.getWindowSize.mockResolvedValue({ "width": 1280, "height": 720 });
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+
+            const size = await session.getWindowSize();
+
+            expect(size).toEqual({ "width": 1280, "height": 720 });
         });
     });
 });
