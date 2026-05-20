@@ -295,6 +295,38 @@ describe("WDIOBrowserSession", () => {
 
             expect(mockDriver.setWindowSize).toHaveBeenCalledWith(1280, 720);
         });
+
+        it("throws when width is zero", async () => {
+            const session = new WDIOBrowserSession();
+
+            await expect(session.setWindowSize(0, 720)).rejects.toThrow(
+                "Width must be a positive number.",
+            );
+        });
+
+        it("throws when width is negative", async () => {
+            const session = new WDIOBrowserSession();
+
+            await expect(session.setWindowSize(-1, 720)).rejects.toThrow(
+                "Width must be a positive number.",
+            );
+        });
+
+        it("throws when height is zero", async () => {
+            const session = new WDIOBrowserSession();
+
+            await expect(session.setWindowSize(1280, 0)).rejects.toThrow(
+                "Height must be a positive number.",
+            );
+        });
+
+        it("throws when height is negative", async () => {
+            const session = new WDIOBrowserSession();
+
+            await expect(session.setWindowSize(1280, -1)).rejects.toThrow(
+                "Height must be a positive number.",
+            );
+        });
     });
 
     describe("getWindowSize()", () => {

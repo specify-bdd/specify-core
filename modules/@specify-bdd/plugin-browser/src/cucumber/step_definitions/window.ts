@@ -13,7 +13,9 @@ export function register(): void {
     defineStep(
         [
             "Given (that )the browser is {int} px tall",
+            "Given (that )the browser height is {int} px",
             "When [I resize/the user resizes] the browser to {int} px tall",
+            "When [I resize/the user resizes] the browser height to {int} px",
         ],
         setWindowHeight,
     );
@@ -21,7 +23,9 @@ export function register(): void {
     defineStep(
         [
             "Given (that )the browser is {int} px wide",
+            "Given (that )the browser width is {int} px",
             "When [I resize/the user resizes] the browser to {int} px wide",
+            "When [I resize/the user resizes] the browser width to {int} px",
         ],
         setWindowWidth,
     );
@@ -29,7 +33,9 @@ export function register(): void {
     defineStep(
         [
             "Given (that )the browser is {int} px wide by {int} px tall",
+            "Given (that )the browser width is {int} px and the height is {int} px",
             "When [I resize/the user resizes] the browser to {int} px wide by {int} px tall",
+            "When [I resize/the user resizes] the browser width to {int} px and the height to {int} px",
         ],
         setWindowDimensions,
     );

@@ -5,7 +5,7 @@
  * using WDIO's standalone mode to manage browser lifecycle.
  */
 
-import assert from "node:assert/strict";
+import assert, { AssertionError } from "node:assert/strict";
 
 import { remote            } from "webdriverio";
 import type { Capabilities } from "@wdio/types";
@@ -56,8 +56,16 @@ export class WDIOBrowserSession implements BrowserSession {
      *
      * @param width  - The desired window width in pixels
      * @param height - The desired window height in pixels
+     *
+     * @throws AssertionError If `width` or `height` is not a positive number.
      */
     async setWindowSize(width: number, height: number): Promise<void> {
+        assert.ok(width > 0, new AssertionError({ "message": "Width must be a positive number." }));
+        assert.ok(
+            height > 0,
+            new AssertionError({ "message": "Height must be a positive number." }),
+        );
+
         await this.#driver!.setWindowSize(width, height);
     }
 
