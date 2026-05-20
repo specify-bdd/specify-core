@@ -13,14 +13,12 @@ Feature: Browser Window Step Definitions
         Scenario: Setting the browser height changes the height without affecting the width
             Given that the browser is 1280 px wide by 800 px tall
             When the user resizes the browser to 600 px tall
-            Then the browser should be 1280 px wide
-            And the browser should be 600 px tall
+            Then the browser should be 1280 px wide by 600 px tall
 
         Scenario: Setting the browser width changes the width without affecting the height
             Given that the browser is 1280 px wide by 800 px tall
             When the user resizes the browser to 960 px wide
-            Then the browser should be 800 px tall
-            And the browser should be 960 px wide
+            Then the browser should be 960 px wide by 800 px tall
 
         Scenario: Setting both dimensions changes width and height together
             When the user resizes the browser to 1024 px wide by 768 px tall

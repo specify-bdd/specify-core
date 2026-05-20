@@ -40,11 +40,23 @@ export function register(): void {
         setWindowDimensions,
     );
 
-    defineStep("Then the browser should be {int} px tall", verifyWindowHeight);
+    defineStep(
+        ["Then the browser should be {int} px tall", "Then the browser height should be {int} px"],
+        verifyWindowHeight,
+    );
 
-    defineStep("Then the browser should be {int} px wide", verifyWindowWidth);
+    defineStep(
+        ["Then the browser should be {int} px wide", "Then the browser width should be {int} px"],
+        verifyWindowWidth,
+    );
 
-    defineStep("Then the browser should be {int} px wide by {int} px tall", verifyWindowDimensions);
+    defineStep(
+        [
+            "Then the browser should be {int} px wide by {int} px tall",
+            "Then the browser width should be {int} px and the height should be {int} px",
+        ],
+        verifyWindowDimensions,
+    );
 }
 
 /**
