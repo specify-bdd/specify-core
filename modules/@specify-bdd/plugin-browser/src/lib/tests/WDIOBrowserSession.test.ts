@@ -363,28 +363,28 @@ describe("WDIOBrowserSession", () => {
         });
     });
 
-    describe("closeTab()", () => {
-        /** Helper: start a session and open n-1 additional tabs for a total of n tabs. */
-        async function startWithTabs(n: number): Promise<WDIOBrowserSession> {
-            const { remote } = await import("webdriverio");
+    /** Helper: start a session and open n-1 additional tabs for a total of n tabs. */
+    async function startWithTabs(n: number): Promise<WDIOBrowserSession> {
+        const { remote } = await import("webdriverio");
 
-            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+        vi.mocked(remote).mockResolvedValue(mockDriver as never);
 
-            for (let i = 0; i < n; i++) {
-                mockDriver.getWindowHandle.mockResolvedValueOnce(`handle-${i}`);
-            }
-
-            const session = new WDIOBrowserSession();
-
-            await session.start({ "browser": "chrome" });
-
-            for (let i = 1; i < n; i++) {
-                await session.openTab();
-            }
-
-            return session;
+        for (let i = 0; i < n; i++) {
+            mockDriver.getWindowHandle.mockResolvedValueOnce(`handle-${i}`);
         }
 
+        const session = new WDIOBrowserSession();
+
+        await session.start({ "browser": "chrome" });
+
+        for (let i = 1; i < n; i++) {
+            await session.openTab();
+        }
+
+        return session;
+    }
+
+    describe("closeTab()", () => {
         it("closing the active (only) tab sets driver to null and activeTab to null", async () => {
             const session = await startWithTabs(1);
 
@@ -478,15 +478,126 @@ describe("WDIOBrowserSession", () => {
         });
     });
 
-    describe("setWindowSize()", () => {
-        it("calls driver.setWindowSize() with the given width and height", async () => {
+    describe("switchToNextTab()", () => {
+        it("advances activeTab to the next tab", async () => {
+            const session = await startWithTabs(3); // active: h2
+
+            await session.switchToTab(0); // move to h0 so next is h1 (no wrap)
+            await session.switchToNextTab(); // h0 → h1
+
+            expect(session.activeTab?.handle).toBe("handle-1");
+        });
+
+        it("wraps from the last tab to the first", async () => {
+            const session = await startWithTabs(2); // active: h1
+
+            await session.switchToNextTab(); // wraps to h0
+
+            expect(session.activeTab?.handle).toBe("handle-0");
+        });
+
+        it("calls switchToWindow with the correct handle", async () => {
+            const session = await startWithTabs(3); // active: h2
+
+            await session.switchToNextTab(); // wraps to h0
+
+            expect(mockDriver.switchToWindow).toHaveBeenCalledWith("handle-0");
+        });
+    });
+
+    describe("switchToPreviousTab()", () => {
+        it("moves activeTab to the previous tab", async () => {
+            const session = await startWithTabs(3); // active: h2
+
+            await session.switchToPreviousTab(); // h2 → h1
+
+            expect(session.activeTab?.handle).toBe("handle-1");
+        });
+
+        it("wraps from the first tab to the last", async () => {
+            const session = await startWithTabs(1); // active: h0
+
+            await session.switchToPreviousTab(); // wraps: h0 is first → last = h0 (only one tab)
+
+            // With a single tab the wrap resolves to itself
+            expect(session.activeTab?.handle).toBe("handle-0");
+        });
+
+        it("wraps from the first of multiple tabs to the last", async () => {
+            const session = await startWithTabs(3); // active: h2
+
+            // Switch back to first tab first
+            await session.switchToTab(0); // h0
+            mockDriver.switchToWindow.mockClear();
+
+            await session.switchToPreviousTab(); // h0 → h2 (last)
+
+            expect(session.activeTab?.handle).toBe("handle-2");
+        });
+
+        it("calls switchToWindow with the correct handle", async () => {
+            const session = await startWithTabs(3); // active: h2
+
+            await session.switchToPreviousTab(); // h2 → h1
+
+            expect(mockDriver.switchToWindow).toHaveBeenCalledWith("handle-1");
+        });
+    });
+
+    describe("switchToTab()", () => {
+        it("switches activeTab by numeric index", async () => {
+            const session = await startWithTabs(3); // active: h2
+
+            await session.switchToTab(0);
+
+            expect(session.activeTab?.handle).toBe("handle-0");
+        });
+
+        it("switches activeTab by name", async () => {
             const { remote } = await import("webdriverio");
 
             vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            mockDriver.getWindowHandle
+                .mockResolvedValueOnce("handle-0")
+                .mockResolvedValueOnce("handle-1")
+                .mockResolvedValueOnce("handle-2");
 
             const session = new WDIOBrowserSession();
 
             await session.start({ "browser": "chrome" });
+            await session.openTab("named-tab"); // handle-1
+            await session.openTab(); // handle-2, active
+
+            await session.switchToTab("named-tab");
+
+            expect(session.activeTab?.handle).toBe("handle-1");
+        });
+
+        it("calls switchToWindow with the correct handle", async () => {
+            const session = await startWithTabs(3); // active: h2
+
+            await session.switchToTab(1); // h1
+
+            expect(mockDriver.switchToWindow).toHaveBeenCalledWith("handle-1");
+        });
+
+        it("throws when the numeric selector does not match any tab", async () => {
+            const session = await startWithTabs(2);
+
+            await expect(session.switchToTab(99)).rejects.toThrow("No tab at index 99.");
+        });
+
+        it("throws when the name selector does not match any tab", async () => {
+            const session = await startWithTabs(2);
+
+            await expect(session.switchToTab("ghost")).rejects.toThrow(`No tab named "ghost".`);
+        });
+    });
+
+    describe("setWindowSize()", () => {
+        it("calls driver.setWindowSize() with the given width and height", async () => {
+            const session = await startSession();
+
             await session.setWindowSize(1280, 720);
 
             expect(mockDriver.setWindowSize).toHaveBeenCalledWith(1280, 720);
