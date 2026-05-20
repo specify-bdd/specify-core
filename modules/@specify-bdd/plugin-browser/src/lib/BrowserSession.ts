@@ -32,6 +32,17 @@ export interface BrowserSessionStartOptions {
 }
 
 /**
+ * Metadata for a tracked browser tab.
+ */
+export interface TabMeta {
+    /** Optional display name assigned when the tab was opened. */
+    name?: string;
+
+    /** The opaque WDIO window handle string returned by `getWindowHandle()`. */
+    handle: string;
+}
+
+/**
  * A managed browser session.
  */
 export interface BrowserSession {
@@ -46,6 +57,64 @@ export interface BrowserSession {
      * End the browser session and release all associated resources.
      */
     end(): Promise<void>;
+
+    /** All tabs currently open in this session, in the order they were opened. */
+    readonly tabs: TabMeta[];
+
+    /** The currently active tab, or `null` if the session has not been started. */
+    readonly activeTab: TabMeta | null;
+
+    /**
+     * Open a new browser tab and make it active.
+     *
+     * @param name - Optional name to assign to the tab for later reference
+     */
+    openTab(name?: string): Promise<void>;
+
+    /**
+     * Close a browser tab.
+     *
+     * When omitted, the active tab is closed. Accepts a 0-based index or a tab
+     * name. Closing the last tab terminates the browser process; the driver is
+     * nulled without calling `deleteSession()`.
+     *
+     * @param selector - A 0-based tab index or tab name; omit to close the active tab
+     */
+    closeTab(selector?: number | string): Promise<void>;
+
+    /**
+     * Switch to the next tab, wrapping around to the first tab if the current
+     * tab is the last one.
+     */
+    switchToNextTab(): Promise<void>;
+
+    /**
+     * Switch to the previous tab, wrapping around to the last tab if the
+     * current tab is the first one.
+     */
+    switchToPreviousTab(): Promise<void>;
+
+    /**
+     * Switch to a tab by 0-based index or by name.
+     *
+     * @param selector - A 0-based index or a tab name
+     */
+    switchToTab(selector: number | string): Promise<void>;
+
+    /**
+     * Set the browser window size.
+     *
+     * @param width  - The desired window width in pixels
+     * @param height - The desired window height in pixels
+     */
+    setWindowSize(width: number, height: number): Promise<void>;
+
+    /**
+     * Get the current browser window size.
+     *
+     * @returns The current window dimensions in pixels
+     */
+    getWindowSize(): Promise<{ width: number; height: number }>;
 
     /**
      * Navigate the active browser tab to the given URL.

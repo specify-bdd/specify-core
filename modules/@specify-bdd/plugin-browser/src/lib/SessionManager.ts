@@ -83,6 +83,20 @@ export class SessionManager {
     }
 
     /**
+     * Remove a session if it has no remaining tabs.
+     *
+     * A no-op when the session still has open tabs. When the session has no tabs
+     * remaining it is removed exactly as `removeSession(session)` would remove it.
+     *
+     * @param session - The session to conditionally remove
+     */
+    removeSessionIfEmpty(session: BrowserSession): void {
+        if (session.tabs.length === 0) {
+            this.removeSession(session);
+        }
+    }
+
+    /**
      * End all managed sessions (best-effort) and clear all session state.
      *
      * Uses `Promise.allSettled` so that a failed `.end()` call does not prevent
