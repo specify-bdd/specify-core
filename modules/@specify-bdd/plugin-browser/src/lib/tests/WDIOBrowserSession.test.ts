@@ -526,9 +526,10 @@ describe("WDIOBrowserSession", () => {
         it("advances activeTab to the next tab", async () => {
             const session = await startWithTabs(3); // active: h2
 
-            await session.switchToNextTab(); // h2 is last → wraps to h0
+            await session.switchToTab(0); // move to h0 so next is h1 (no wrap)
+            await session.switchToNextTab(); // h0 → h1
 
-            expect(session.activeTab?.handle).toBe("handle-0");
+            expect(session.activeTab?.handle).toBe("handle-1");
         });
 
         it("wraps from the last tab to the first", async () => {
@@ -558,14 +559,7 @@ describe("WDIOBrowserSession", () => {
         });
 
         it("wraps from the first tab to the last", async () => {
-            const { remote } = await import("webdriverio");
-
-            vi.mocked(remote).mockResolvedValue(mockDriver as never);
-            mockDriver.getWindowHandle.mockResolvedValueOnce("handle-0");
-
-            const session = new WDIOBrowserSession();
-
-            await session.start({ "browser": "chrome" }); // active: h0
+            const session = await startWithTabs(1); // active: h0
 
             await session.switchToPreviousTab(); // wraps: h0 is first → last = h0 (only one tab)
 
@@ -583,7 +577,6 @@ describe("WDIOBrowserSession", () => {
             await session.switchToPreviousTab(); // h0 → h2 (last)
 
             expect(session.activeTab?.handle).toBe("handle-2");
-            expect(mockDriver.switchToWindow).toHaveBeenCalledWith("handle-2");
         });
 
         it("calls switchToWindow with the correct handle", async () => {

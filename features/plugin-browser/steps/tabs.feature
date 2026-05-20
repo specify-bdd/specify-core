@@ -72,9 +72,10 @@ Feature: Browser Tab Step Definitions
 
         Scenario: Switching to the previous tab from the first tab wraps to the last
             When the user opens a new browser tab
+            And opens a new browser tab
             And switches to the 1st browser tab
             And switches to the previous browser tab
-            Then the 2nd browser tab should be active
+            Then the 3rd browser tab should be active
 
         Scenario: Switching to a tab by ordinal index makes it active
             When the user opens a new browser tab
