@@ -17,12 +17,12 @@ interface WorldWithBrowser {
 }
 
 export function register(): void {
-    defineStep("When [I open/the user opens] a new browser tab", function () {
+    defineStep("When [I open/the user opens] a/another new browser tab", function () {
         return openTab.call(this);
     });
 
     defineStep(
-        "When [I open/the user opens] a new browser tab named {string}",
+        "When [I open/the user opens] a/another new browser tab named {string}",
         function (name: string) {
             return openTab.call(this, name);
         },
