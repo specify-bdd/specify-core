@@ -70,4 +70,15 @@ export interface BrowserSession {
      * @param name - Optional name to assign to the tab for later reference
      */
     openTab(name?: string): Promise<void>;
+
+    /**
+     * Close a browser tab.
+     *
+     * When omitted, the active tab is closed. Accepts a 0-based index or a tab
+     * name. Closing the last tab terminates the browser process; the driver is
+     * nulled without calling `deleteSession()`.
+     *
+     * @param selector - A 0-based tab index or tab name; omit to close the active tab
+     */
+    closeTab(selector?: number | string): Promise<void>;
 }

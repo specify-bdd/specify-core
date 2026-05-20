@@ -29,6 +29,30 @@ export function register(): void {
     );
 
     defineStep("Then the active session should have {int} browser tab(s)", verifyTabCount);
+
+    defineStep("When [I close/the user closes] the (active )browser tab", function () {
+        return closeTab.call(this);
+    });
+
+    defineStep(
+        "When [I close/the user closes] the {ordinal} browser tab",
+        function (index: number) {
+            return closeTab.call(this, index - 1);
+        },
+    );
+
+    defineStep("When [I close/the user closes] the last browser tab", function () {
+        const session = this.browser.manager.activeSession;
+
+        return closeTab.call(this, session ? session.tabs.length - 1 : undefined);
+    });
+
+    defineStep(
+        "When [I close/the user closes] the browser tab named {string}",
+        function (name: string) {
+            return closeTab.call(this, name);
+        },
+    );
 }
 
 /**
@@ -45,6 +69,28 @@ export function verifyTabCount(this: WorldWithBrowser, count: number): void {
     );
 
     assert.equal(this.browser.manager.activeSession.tabs.length, count);
+}
+
+/**
+ * Close a browser tab.
+ *
+ * When `selector` is omitted, the active tab is closed. Accepts a 0-based
+ * index or a tab name.
+ *
+ * @param selector - A 0-based tab index or tab name; omit to close the active tab
+ *
+ * @throws AssertionError If there is no active browser session.
+ */
+export async function closeTab(this: WorldWithBrowser, selector?: number | string): Promise<void> {
+    assert.ok(
+        this.browser.manager.activeSession,
+        new AssertionError({ "message": "No active browser session." }),
+    );
+
+    const session = this.browser.manager.activeSession;
+
+    await session.closeTab(selector);
+    this.browser.manager.removeSessionIfEmpty(session);
 }
 
 /**
