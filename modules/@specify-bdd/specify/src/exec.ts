@@ -48,10 +48,10 @@ app.name("specify")
     .description(npmPackage.description)
     .version(npmPackage.version, "-v, --version", helpText.options.version)
     .helpCommand("help [command]", helpText.commands.help)
-    .helpOption("-h, --help", helpText.options.help);
+    .helpOption("-h, --help", helpText.options.help)
+    .exitOverride(() => process.exit(2));
 
-app.exitOverride(() => process.exit(2))
-    .command("test", { "isDefault": true })
+app.command("test", { "isDefault": true })
     .summary(helpText.commands.test.summary)
     .description(helpText.commands.test.description)
     .argument("[paths...]", helpText.commands.test.arguments.paths)
