@@ -40,42 +40,32 @@ Feature: Browser Session Step Definitions
 
         Scenario: Switching to the next session makes it the active session
             Given a chrome browser session
-            And the user is at the URL https://example.com
             And another chrome browser session
-            And the user is at the URL https://example.org
             When the user switches to the 1st browser session
             And switches to the next browser session
-            Then the browser URL should be https://example.org
+            Then the 2nd browser session should be active
 
         Scenario: Switching to the next session from the last session wraps to the first
             Given a chrome browser session
-            And the user is at the URL https://example.com
             And another chrome browser session
-            And the user is at the URL https://example.org
             When the user switches to the next browser session
-            Then the browser URL should be https://example.com
+            Then the 1st browser session should be active
 
         Scenario: Switching to the previous session makes it the active session
             Given a chrome browser session
-            And the user is at the URL https://example.com
             And another chrome browser session
-            And the user is at the URL https://example.org
             When the user switches to the previous browser session
-            Then the browser URL should be https://example.com
+            Then the 1st browser session should be active
 
         Scenario: Switching to the previous session from the first session wraps to the last
             Given a chrome browser session
-            And the user is at the URL https://example.com
             And another chrome browser session
-            And the user is at the URL https://example.org
             When the user switches to the 1st browser session
             And switches to the previous browser session
-            Then the browser URL should be https://example.org
+            Then the 2nd browser session should be active
 
         Scenario: Switching to a session by ordinal index makes it the active session
             Given a chrome browser session
-            And the user is at the URL https://example.com
             And another chrome browser session
-            And the user is at the URL https://example.org
             When the user switches to the 1st browser session
-            Then the browser URL should be https://example.com
+            Then the 1st browser session should be active
