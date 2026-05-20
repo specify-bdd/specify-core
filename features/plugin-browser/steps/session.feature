@@ -20,52 +20,46 @@ Feature: Browser Session Step Definitions
 
     Rule: The user can end browser sessions
 
-        Scenario: End the active browser session
+        Background:
             Given a chrome browser session
+
+        Scenario: End the active browser session
             When the user ends the browser session
             Then there should be 0 open browser sessions
 
         Scenario: Close the active browser session
-            Given a chrome browser session
             When the user closes the browser
             Then there should be 0 open browser sessions
 
         Scenario: Ending a session with others open leaves the remaining sessions active
-            Given a chrome browser session
             And another chrome browser session
             When the user ends the browser session
             Then there should be 1 open browser session
 
     Rule: The user can switch between browser sessions
 
-        Scenario: Switching to the next session makes it the active session
+        Background:
             Given a chrome browser session
             And another chrome browser session
+
+        Scenario: Switching to the next session makes it the active session
             When the user switches to the 1st browser session
             And switches to the next browser session
             Then the 2nd browser session should be active
 
         Scenario: Switching to the next session from the last session wraps to the first
-            Given a chrome browser session
-            And another chrome browser session
             When the user switches to the next browser session
             Then the 1st browser session should be active
 
         Scenario: Switching to the previous session makes it the active session
-            Given a chrome browser session
-            And another chrome browser session
             When the user switches to the previous browser session
             Then the 1st browser session should be active
 
         Scenario: Switching to the previous session from the first session wraps to the last
-            Given a chrome browser session
-            And another chrome browser session
             When the user switches to the 1st browser session
             And switches to the previous browser session
             Then the 2nd browser session should be active
 
         Scenario: Switching to a session by ordinal index makes it the active session
-            Given a chrome browser session
-            And another chrome browser session
             When the user switches to the 1st browser session
             Then the 1st browser session should be active
