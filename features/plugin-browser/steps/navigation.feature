@@ -26,12 +26,12 @@ Feature: Browser Navigation Step Definitions
         Scenario: Clicking the back button navigates to the previous page
             Given that the user is at the URL https://example.com
             When the user goes to the URL https://example.org
-            And the user clicks the browser's back button
+            And clicks the browser's back button
             Then the browser URL should be https://example.com
 
         Scenario: Clicking the forward button navigates to the next page
             Given that the user is at the URL https://example.com
             When the user goes to the URL https://example.org
-            And the user clicks the browser's back button
-            And the user clicks the browser's forward button
+            And clicks the browser's back button
+            And clicks the browser's forward button
             Then the browser URL should be https://example.org
