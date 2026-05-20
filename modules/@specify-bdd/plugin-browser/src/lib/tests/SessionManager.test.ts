@@ -161,6 +161,55 @@ describe("SessionManager", () => {
         });
     });
 
+    describe("removeSessionIfEmpty()", () => {
+        it("removes the session when it has no tabs", () => {
+            const session = makeMockSession(); // tabs: []
+
+            manager.addSession(session);
+            manager.removeSessionIfEmpty(session);
+
+            expect(manager.sessions).not.toContain(session);
+        });
+
+        it("does nothing when the session still has tabs", () => {
+            const session = makeMockSession();
+
+            (session.tabs as unknown[]).push({ "handle": "abc", "name": null });
+
+            manager.addSession(session);
+            manager.removeSessionIfEmpty(session);
+
+            expect(manager.sessions).toContain(session);
+        });
+
+        it("updates activeSession when the empty session is the active one", () => {
+            const s1 = makeMockSession();
+            const s2 = makeMockSession(); // tabs: []
+
+            manager.addSession(s1);
+            manager.addSession(s2); // active = s2
+
+            manager.removeSessionIfEmpty(s2);
+
+            expect(manager.activeSession).toBe(s1);
+        });
+
+        it("does not remove the active session when it is non-empty", () => {
+            const s1 = makeMockSession();
+            const s2 = makeMockSession();
+
+            (s2.tabs as unknown[]).push({ "handle": "abc", "name": null });
+
+            manager.addSession(s1);
+            manager.addSession(s2); // active = s2
+
+            manager.removeSessionIfEmpty(s2);
+
+            expect(manager.activeSession).toBe(s2);
+            expect(manager.sessions).toContain(s2);
+        });
+    });
+
     describe("killAllSessions()", () => {
         it("calls end() on every managed session", async () => {
             const s1 = makeMockSession();
