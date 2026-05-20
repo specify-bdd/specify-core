@@ -83,6 +83,44 @@ export class SessionManager {
     }
 
     /**
+     * Switch to the next session, wrapping to the first session when the
+     * current session is the last.
+     *
+     * @throws AssertionError If there is no active session.
+     */
+    switchToNextSession(): void {
+        assert.ok(this.#activeSession, new AssertionError({ "message": "No active session." }));
+
+        const currentIndex = this.#sessions.indexOf(this.#activeSession);
+        this.#activeSession = this.#sessions[(currentIndex + 1) % this.#sessions.length];
+    }
+
+    /**
+     * Switch to the previous session, wrapping to the last session when the
+     * current session is the first.
+     *
+     * @throws AssertionError If there is no active session.
+     */
+    switchToPreviousSession(): void {
+        assert.ok(this.#activeSession, new AssertionError({ "message": "No active session." }));
+
+        const currentIndex = this.#sessions.indexOf(this.#activeSession);
+        this.#activeSession =
+            this.#sessions[(currentIndex - 1 + this.#sessions.length) % this.#sessions.length];
+    }
+
+    /**
+     * Switch to a session by 0-based index or by name.
+     *
+     * @param selector - A 0-based index or a session name
+     *
+     * @throws AssertionError If no session matches the selector.
+     */
+    switchToSession(selector: number | string): void {
+        this.#activeSession = this.#findSession(selector);
+    }
+
+    /**
      * Remove a session if it has no remaining tabs.
      *
      * A no-op when the session still has open tabs. When the session has no tabs
@@ -107,5 +145,29 @@ export class SessionManager {
 
         this.#sessions = [];
         this.#activeSession = null;
+    }
+
+    /**
+     * Find a session by 0-based index or by name.
+     *
+     * @param selector - A 0-based index or a session name
+     *
+     * @throws AssertionError If no session matches the selector.
+     */
+    #findSession(selector: number | string): BrowserSession {
+        let message: string;
+        let session: BrowserSession | undefined;
+
+        if (typeof selector === "number") {
+            session = this.#sessions[selector];
+            message = `No browser session at index ${selector}.`;
+        } else {
+            session = this.#sessions.find((s) => (s as { name?: string }).name === selector);
+            message = `No browser session named "${selector}".`;
+        }
+
+        assert.ok(session, new AssertionError({ message }));
+
+        return session;
     }
 }

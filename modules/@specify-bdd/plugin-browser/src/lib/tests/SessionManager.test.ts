@@ -121,7 +121,7 @@ describe("SessionManager", () => {
             expect(manager.activeSession).toBeNull();
         });
 
-        it.skip("wraps activeSession to the last element when the first active session is removed", () => {
+        it("wraps activeSession to the last element when the first active session is removed", () => {
             const s1 = makeMockSession();
             const s2 = makeMockSession();
             const s3 = makeMockSession();
@@ -130,7 +130,7 @@ describe("SessionManager", () => {
             manager.addSession(s2);
             manager.addSession(s3); // active = s3
 
-            // TODO: manager.switchToSession(s1); — requires switchToSession(), not yet available
+            manager.switchToSession(0); // make s1 (index 0) active
             manager.removeSession(); // remove s1 (active, index 0) → should wrap to s3 (last)
 
             expect(manager.activeSession).toBe(s3);
@@ -207,6 +207,108 @@ describe("SessionManager", () => {
 
             expect(manager.activeSession).toBe(s2);
             expect(manager.sessions).toContain(s2);
+        });
+    });
+
+    describe("switchToNextSession()", () => {
+        it("makes the next session the active session", () => {
+            const s1 = makeMockSession();
+            const s2 = makeMockSession();
+            const s3 = makeMockSession();
+
+            manager.addSession(s1);
+            manager.addSession(s2);
+            manager.addSession(s3); // active = s3
+
+            manager.switchToSession(0); // active = s1
+            manager.switchToNextSession();
+
+            expect(manager.activeSession).toBe(s2);
+        });
+
+        it("wraps to the first session when the last session is active", () => {
+            const s1 = makeMockSession();
+            const s2 = makeMockSession();
+
+            manager.addSession(s1);
+            manager.addSession(s2); // active = s2
+
+            manager.switchToNextSession();
+
+            expect(manager.activeSession).toBe(s1);
+        });
+
+        it("throws when there is no active session", () => {
+            expect(() => manager.switchToNextSession()).toThrow("No active session.");
+        });
+    });
+
+    describe("switchToPreviousSession()", () => {
+        it("makes the previous session the active session", () => {
+            const s1 = makeMockSession();
+            const s2 = makeMockSession();
+            const s3 = makeMockSession();
+
+            manager.addSession(s1);
+            manager.addSession(s2);
+            manager.addSession(s3); // active = s3
+
+            manager.switchToPreviousSession();
+
+            expect(manager.activeSession).toBe(s2);
+        });
+
+        it("wraps to the last session when the first session is active", () => {
+            const s1 = makeMockSession();
+            const s2 = makeMockSession();
+            const s3 = makeMockSession();
+
+            manager.addSession(s1);
+            manager.addSession(s2);
+            manager.addSession(s3); // active = s3
+
+            manager.switchToSession(0); // active = s1
+            manager.switchToPreviousSession();
+
+            expect(manager.activeSession).toBe(s3);
+        });
+
+        it("throws when there is no active session", () => {
+            expect(() => manager.switchToPreviousSession()).toThrow("No active session.");
+        });
+    });
+
+    describe("switchToSession()", () => {
+        it("makes the session at the given 0-based index the active session", () => {
+            const s1 = makeMockSession();
+            const s2 = makeMockSession();
+            const s3 = makeMockSession();
+
+            manager.addSession(s1);
+            manager.addSession(s2);
+            manager.addSession(s3); // active = s3
+
+            manager.switchToSession(1);
+
+            expect(manager.activeSession).toBe(s2);
+        });
+
+        it("throws when no session exists at the given index", () => {
+            const session = makeMockSession();
+
+            manager.addSession(session);
+
+            expect(() => manager.switchToSession(5)).toThrow("No browser session at index 5.");
+        });
+
+        it("throws when the selector is an unrecognised string", () => {
+            const session = makeMockSession();
+
+            manager.addSession(session);
+
+            expect(() => manager.switchToSession("main")).toThrow(
+                'No browser session named "main".',
+            );
         });
     });
 
