@@ -422,7 +422,7 @@ describe("WDIOBrowserSession", () => {
             const session = await startWithTabs(3); // tabs: h0, h1, h2 — active: h2
 
             await session.switchToTab(0); // make h0 (index 0) active
-            await session.closeTab();     // close h0 (active, index 0) → should wrap to h2 (last)
+            await session.closeTab(); // close h0 (active, index 0) → should wrap to h2 (last)
 
             expect(session.tabs).toHaveLength(2);
             expect(session.activeTab?.handle).toBe("handle-2");
