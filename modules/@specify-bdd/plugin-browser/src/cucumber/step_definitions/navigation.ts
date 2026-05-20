@@ -26,6 +26,22 @@ export function register(): void {
         ],
         refreshPage,
     );
+
+    defineStep(
+        [
+            "When [I click/the user clicks] the browser's back button",
+            "When [I navigate/the user navigates] back",
+        ],
+        navigateBack,
+    );
+
+    defineStep(
+        [
+            "When [I click/the user clicks] the browser's forward button",
+            "When [I navigate/the user navigates] forward",
+        ],
+        navigateForward,
+    );
 }
 
 /**
@@ -75,4 +91,32 @@ async function refreshPage(): Promise<void> {
     );
 
     await this.browser.manager.activeSession.refresh();
+}
+
+/**
+ * Navigate back to the previous page in the browser history.
+ *
+ * @throws AssertionError If there is no active browser session.
+ */
+async function navigateBack(): Promise<void> {
+    assert.ok(
+        this.browser.manager.activeSession,
+        new AssertionError({ "message": "No active browser session." }),
+    );
+
+    await this.browser.manager.activeSession.back();
+}
+
+/**
+ * Navigate forward to the next page in the browser history.
+ *
+ * @throws AssertionError If there is no active browser session.
+ */
+async function navigateForward(): Promise<void> {
+    assert.ok(
+        this.browser.manager.activeSession,
+        new AssertionError({ "message": "No active browser session." }),
+    );
+
+    await this.browser.manager.activeSession.forward();
 }

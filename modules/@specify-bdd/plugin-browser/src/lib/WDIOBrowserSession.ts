@@ -75,6 +75,20 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
+     * Navigate back to the previous page in the browser history.
+     */
+    async back(): Promise<void> {
+        await this.#driver!.back();
+    }
+
+    /**
+     * Navigate forward to the next page in the browser history.
+     */
+    async forward(): Promise<void> {
+        await this.#driver!.forward();
+    }
+
+    /**
      * Build a WDIO RemoteOptions object from the given session start options.
      *
      * @param opts - The session start options

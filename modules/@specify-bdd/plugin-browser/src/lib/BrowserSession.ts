@@ -63,4 +63,14 @@ export interface BrowserSession {
      * Reload the current page in the active browser tab.
      */
     refresh(): Promise<void>;
+
+    /**
+     * Navigate back to the previous page in the browser history.
+     */
+    back(): Promise<void>;
+
+    /**
+     * Navigate forward to the next page in the browser history.
+     */
+    forward(): Promise<void>;
 }
