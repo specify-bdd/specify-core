@@ -38,33 +38,33 @@ export const TEST_COMMAND_DEFAULT_OPTS: TestCommandOptions = {
 };
 
 export interface TestCommandArguments {
-    parallel?: number;
-    paths?: string[];
-    rerun?: string;
-    rerunFile?: string;
-    retry?: number;
-    retryTag?: string;
-    tags?: string[];
-    watch?: boolean;
+    "parallel"?: number;
+    "paths"?: string[];
+    "rerun"?: string;
+    "rerunFile"?: string;
+    "retry"?: number;
+    "retryTag"?: string;
+    "tags"?: string[];
+    "watch"?: boolean;
 }
 
 export interface TestCommandOptions extends CommandOptions {
-    cucumber?: Partial<IConfiguration>;
-    gherkinPaths?: string[];
-    plugins?: string[];
-    testExecutionContextPath?: string;
+    "cucumber"?: Partial<IConfiguration>;
+    "gherkinPaths"?: string[];
+    "plugins"?: string[];
+    "testExecutionContextPath"?: string;
 }
 
 export interface TestCommandResult extends CommandResult {
-    debug?: TestCommandResultDebugInfo;
+    "debug"?: TestCommandResultDebugInfo;
 }
 
 export interface TestCommandResultDebugInfo extends CommandResultDebugInfo {
-    args?: TestCommandArguments;
-    cucumber?: {
-        runConfiguration?: IRunConfiguration;
-        runEnvironment?: IRunEnvironment;
-        runResult?: IRunResult;
+    "args"?: TestCommandArguments;
+    "cucumber"?: {
+        "runConfiguration"?: IRunConfiguration;
+        "runEnvironment"?: IRunEnvironment;
+        "runResult"?: IRunResult;
     };
 }
 

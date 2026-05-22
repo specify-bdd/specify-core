@@ -18,10 +18,10 @@ type DirectoryString = string;
 type WatchEventString = "add" | "change" | "unlink" | "addDir" | "unlinkDir";
 
 export type WatchConfig = {
-    debug?: boolean;
-    paths: DirectoryString[];
-    ignore: RegExpString[];
-    events?: WatchEventString[];
+    "debug"?: boolean;
+    "paths": DirectoryString[];
+    "ignore": RegExpString[];
+    "events"?: WatchEventString[];
 };
 
 export const watch: WatchConfig = {

@@ -162,7 +162,7 @@ export class SessionManager {
             session = this.#sessions[selector];
             message = `No browser session at index ${selector}.`;
         } else {
-            session = this.#sessions.find((s) => (s as { name?: string }).name === selector);
+            session = this.#sessions.find((s) => (s as { "name"?: string }).name === selector);
             message = `No browser session named "${selector}".`;
         }
 

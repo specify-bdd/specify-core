@@ -4,8 +4,8 @@ import { TSESTree } from "@typescript-eslint/utils";
 import { isMultiLineNode, isSingleLineNode, hasEmptyLineBetween } from "../lib/utils";
 
 type NodeGroup = {
-    values: Rule.Node[];
-    targetValueStartingPosition: number;
+    "values": Rule.Node[];
+    "targetValueStartingPosition": number;
 };
 
 export default {

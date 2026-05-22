@@ -23,7 +23,7 @@ const exports = [] as string[];
 
 for (const scriptPath of typeScripts) {
     const { generateTypeExport } = (await import(scriptPath)) as {
-        generateTypeExport: (opts: InterfaceExportOptions) => string;
+        "generateTypeExport": (opts: InterfaceExportOptions) => string;
     };
 
     // run the type generation script (no need to await)

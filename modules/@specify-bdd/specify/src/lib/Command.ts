@@ -15,26 +15,26 @@ export const COMMAND_DEFAULT_OPTS: CommandOptions = {
 };
 
 export interface CommandOptions {
-    debug?: boolean;
-    logPath?: string;
+    "debug"?: boolean;
+    "logPath"?: string;
 }
 
 export interface CommandResult {
-    ok: boolean;
-    status: CommandResultStatus;
-    error?: JsonObject;
-    result?: JsonValue;
-    debug?: CommandResultDebugInfo;
+    "ok": boolean;
+    "status": CommandResultStatus;
+    "error"?: JsonObject;
+    "result"?: JsonValue;
+    "debug"?: CommandResultDebugInfo;
 }
 
 export interface CommandResultDebugInfo {
-    args?: object;
+    "args"?: object;
 }
 
 export enum CommandResultStatus {
-    success,
-    failure,
-    error,
+    "success",
+    "failure",
+    "error",
 }
 
 export abstract class Command {

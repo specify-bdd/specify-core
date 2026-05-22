@@ -29,7 +29,7 @@ export default {
             const group = [startNode] as Assignment[];
 
             // known structure of the AST parent nodes
-            type ParentWithBody = { body: TSESTree.Node[] };
+            type ParentWithBody = { "body": TSESTree.Node[] };
 
             const parentBody =
                 nodeType === "VariableDeclaration"

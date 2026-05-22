@@ -15,16 +15,16 @@ import type { SystemIOSession } from "@/interfaces/SystemIOSession";
  * A metadata object representing one executed command.
  */
 export interface CommandMeta {
-    command: string;
-    delimiter?: Delimiter;
-    exitCode?: number;
-    hidden?: boolean;
-    output: OutputMeta[];
-    promise?: Promise<CommandMeta>;
-    reject?: ((err: Error) => void) | null;
-    resolve?: ((cmdMeta: CommandMeta) => void) | null;
-    timeEnd?: number;
-    timeStart?: number;
+    "command": string;
+    "delimiter"?: Delimiter;
+    "exitCode"?: number;
+    "hidden"?: boolean;
+    "output": OutputMeta[];
+    "promise"?: Promise<CommandMeta>;
+    "reject"?: ((err: Error) => void) | null;
+    "resolve"?: ((cmdMeta: CommandMeta) => void) | null;
+    "timeEnd"?: number;
+    "timeStart"?: number;
 }
 
 /**
@@ -32,11 +32,11 @@ export interface CommandMeta {
  * session output.
  */
 interface Delimiter {
-    command: string;
-    prefix: string;
-    regexp: RegExp;
-    suffix: string;
-    uuid: string;
+    "command": string;
+    "prefix": string;
+    "regexp": RegExp;
+    "suffix": string;
+    "uuid": string;
 }
 
 /**
@@ -44,35 +44,35 @@ interface Delimiter {
  *  delimiter string.
  */
 interface DelimiterPayload {
-    cwd: string;
-    exitCode: string; // this is initially set with a util.format placeholder (%d) so it must be a string type
-    uuid: string;
+    "cwd": string;
+    "exitCode": string; // this is initially set with a util.format placeholder (%d) so it must be a string type
+    "uuid": string;
 }
 
 /**
  * A metadata object representing a single chunk of output from a command.
  */
 export interface OutputMeta {
-    output: string;
-    stream: IOStream;
-    timestamp: number;
+    "output": string;
+    "stream": IOStream;
+    "timestamp": number;
 }
 
 /**
  * A metadata object representing a managed session.
  */
 export interface SessionMeta {
-    commands: CommandMeta[];
-    cwd: string;
-    name?: string;
-    session: SystemIOSession;
+    "commands": CommandMeta[];
+    "cwd": string;
+    "name"?: string;
+    "session": SystemIOSession;
 }
 
 /**
  * The basic option set common to all options-accepting SessionManager methods.
  */
 export interface SessionManagerOptions {
-    sessionMeta?: SessionMeta;
+    "sessionMeta"?: SessionMeta;
 }
 
 /**
@@ -80,25 +80,25 @@ export interface SessionManagerOptions {
  * getLastCommand().
  */
 export interface CommandOptions extends SessionManagerOptions {
-    hidden?: boolean;
+    "hidden"?: boolean;
 }
 
 /**
  * The option set for SessionManager.waitForOutputOptions().
  */
 export interface WaitForOutputOptions extends SessionManagerOptions {
-    pattern?: RegExp | string;
-    stream?: IOStream;
+    "pattern"?: RegExp | string;
+    "stream"?: IOStream;
 }
 
 /**
  * A standard IO stream.
  */
 export enum IOStream {
-    STDIN, // we aren't likely to use this, but keeping it at index 0 helps us stay consistent with Node.js conventions
-    STDOUT,
-    STDERR,
-    ANY, // in practice, this represents STDOUT+STDERR
+    "STDIN", // we aren't likely to use this, but keeping it at index 0 helps us stay consistent with Node.js conventions
+    "STDOUT",
+    "STDERR",
+    "ANY", // in practice, this represents STDOUT+STDERR
 }
 
 /**

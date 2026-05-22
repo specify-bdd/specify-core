@@ -17,18 +17,18 @@ export interface BrowserSessionStartOptions {
     /**
      * The name of the browser to launch (e.g. `"chrome"`, `"firefox"`).
      */
-    browser?: string;
+    "browser"?: string;
 
     /**
      * The browser execution mode.
      */
-    mode?: BrowserMode;
+    "mode"?: BrowserMode;
 
     /**
      * The URL of the Selenium Grid to connect to. Only applicable when
      * `mode` is `"grid"`.
      */
-    gridUrl?: string;
+    "gridUrl"?: string;
 }
 
 /**
@@ -36,10 +36,10 @@ export interface BrowserSessionStartOptions {
  */
 export interface TabMeta {
     /** Optional display name assigned when the tab was opened. */
-    name?: string;
+    "name"?: string;
 
     /** The opaque WDIO window handle string returned by `getWindowHandle()`. */
-    handle: string;
+    "handle": string;
 }
 
 /**
@@ -59,10 +59,10 @@ export interface BrowserSession {
     end(): Promise<void>;
 
     /** All tabs currently open in this session, in the order they were opened. */
-    readonly tabs: TabMeta[];
+    readonly "tabs": TabMeta[];
 
     /** The currently active tab, or `null` if the session has not been started. */
-    readonly activeTab: TabMeta | null;
+    readonly "activeTab": TabMeta | null;
 
     /**
      * Open a new browser tab and make it active.
@@ -114,7 +114,7 @@ export interface BrowserSession {
      *
      * @returns The current window dimensions in pixels
      */
-    getWindowSize(): Promise<{ width: number; height: number }>;
+    getWindowSize(): Promise<{ "width": number; "height": number }>;
 
     /**
      * Navigate the active browser tab to the given URL.

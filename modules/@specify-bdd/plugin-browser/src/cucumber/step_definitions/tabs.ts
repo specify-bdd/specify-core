@@ -11,8 +11,8 @@ import { defineStep } from "@specify-bdd/specify";
 import type { SessionManager } from "@/lib/SessionManager";
 
 interface WorldWithBrowser {
-    browser: {
-        manager: SessionManager;
+    "browser": {
+        "manager": SessionManager;
     };
 }
 

@@ -12,19 +12,19 @@ import type {
 import { Logger } from "./Logger";
 
 interface StepResult {
-    status: string;
+    "status": string;
 }
 
 interface Step {
-    result: StepResult;
+    "result": StepResult;
 }
 
 interface Element {
-    steps: Step[];
+    "steps": Step[];
 }
 
 interface ScenarioResult {
-    elements: Element[];
+    "elements": Element[];
 }
 
 /**

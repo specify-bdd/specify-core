@@ -21,7 +21,7 @@ export class RerunFile {
             return contents ? contents.split("\n") : [];
         } catch (error) {
             if (error.message.includes("no such file or directory")) {
-                throw Error(`No rerun file found at path: ${filepath}`);
+                throw Error(`No rerun file found at path: ${filepath}`, { "cause": error });
             } else {
                 throw error;
             }

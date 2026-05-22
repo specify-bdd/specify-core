@@ -72,9 +72,9 @@ type EventName =
  */
 async function rebuildPackage<
     PackageOpts extends {
-        event: EventName;
-        path: string;
-        moduleSrcDir: string;
+        "event": EventName;
+        "path": string;
+        "moduleSrcDir": string;
     },
 >({ event, path, moduleSrcDir }: PackageOpts): Promise<void> {
     const moduleRootDir = dirname(moduleSrcDir);

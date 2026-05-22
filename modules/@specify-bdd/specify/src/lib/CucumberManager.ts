@@ -3,17 +3,17 @@ import assert from "node:assert";
 import * as Cucumber from "@cucumber/cucumber";
 
 enum Hook {
-    BeforeAll,
-    BeforeScenario,
-    BeforeStep,
-    AfterStep,
-    AfterScenario,
-    AfterAll,
+    "BeforeAll",
+    "BeforeScenario",
+    "BeforeStep",
+    "AfterStep",
+    "AfterScenario",
+    "AfterAll",
 }
 
 interface ExpressionVariant {
-    keyword: string;
-    pattern: RegExp | string;
+    "keyword": string;
+    "pattern": RegExp | string;
 }
 
 export interface HookHandler {
@@ -21,21 +21,21 @@ export interface HookHandler {
 }
 
 export interface HookOptions {
-    name?: string;
-    tags?: string;
-    timeout?: number;
+    "name"?: string;
+    "tags"?: string;
+    "timeout"?: number;
 }
 
 interface ManagerOptions {
-    subjects?: string[];
+    "subjects"?: string[];
 }
 
 export interface ParamTypeOptions {
-    name: string;
-    preferForRegexpMatch?: boolean;
-    regexp: RegExp;
-    transformer?: (...args: string[]) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
-    useForSnippets?: boolean;
+    "name": string;
+    "preferForRegexpMatch"?: boolean;
+    "regexp": RegExp;
+    "transformer"?: (...args: string[]) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    "useForSnippets"?: boolean;
 }
 
 export interface StepDefHandler {
@@ -43,7 +43,7 @@ export interface StepDefHandler {
 }
 
 export interface StepDefOptions {
-    timeout?: number;
+    "timeout"?: number;
 }
 
 export type CucumberLike = typeof Cucumber;

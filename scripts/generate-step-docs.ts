@@ -22,16 +22,16 @@ import type { JSDoc, JSDocTag, StringLiteral } from "ts-morph";
 // ---------------------------------------------------------------------------
 
 interface ModuleDoc {
-    name: string;
-    description: string;
+    "name": string;
+    "description": string;
 }
 
 interface ParsedJSDoc {
-    title: string;
-    description: string;
-    remarks: string;
-    params: string[];
-    throws: Array<{ type: string; description: string }>;
+    "title": string;
+    "description": string;
+    "remarks": string;
+    "params": string[];
+    "throws": Array<{ "type": string; "description": string }>;
 }
 
 // ---------------------------------------------------------------------------

@@ -148,7 +148,7 @@ describe("WDIOBrowserSession", () => {
             await session.start({ "browser": "chrome", "mode": "visual" });
 
             const call = vi.mocked(remote).mock.calls[0][0] as {
-                capabilities: Record<string, unknown>;
+                "capabilities": Record<string, unknown>;
             };
 
             expect(call.capabilities["goog:chromeOptions"]).toBeUndefined();
@@ -187,7 +187,7 @@ describe("WDIOBrowserSession", () => {
             await session.start({ "browser": "chrome" });
 
             const call = vi.mocked(remote).mock.calls[0][0] as {
-                capabilities: Record<string, unknown>;
+                "capabilities": Record<string, unknown>;
             };
 
             expect(call.capabilities["wdio:chromedriverOptions"]).toBeUndefined();
@@ -226,7 +226,7 @@ describe("WDIOBrowserSession", () => {
             await session.start({ "browser": "chrome", "mode": "visual" });
 
             const call = vi.mocked(remote).mock.calls[0][0] as {
-                capabilities: Record<string, unknown>;
+                "capabilities": Record<string, unknown>;
             };
 
             // visual mode + no CHROME_PATH → no goog:chromeOptions at all

@@ -2,8 +2,8 @@ import os from "node:os";
 
 export type PathsConfig = {
     [key: string]: string;
-    gherkin: string;
-    logs: string;
+    "gherkin": string;
+    "logs": string;
 };
 
 export const paths: PathsConfig = {

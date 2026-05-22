@@ -19,15 +19,15 @@ const defaultLoader: ModuleLoader = {
  * Shape every cucumber module under `cucumber/` must conform to.
  */
 interface RegisterableModule {
-    register: () => void | Promise<void>;
+    "register": () => void | Promise<void>;
 }
 
 /**
  * Injection point for {@link registerSupportCode} so tests can avoid disk I/O.
  */
 export interface ModuleLoader {
-    glob: (pattern: string) => Promise<string[]>;
-    loadModule: (modulePath: string) => Promise<unknown>;
+    "glob": (pattern: string) => Promise<string[]>;
+    "loadModule": (modulePath: string) => Promise<unknown>;
 }
 
 /**

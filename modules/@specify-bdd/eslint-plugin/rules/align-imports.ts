@@ -3,10 +3,10 @@ import { Rule } from "eslint";
 import { isMultiLineNode, isSingleLineNode, hasEmptyLineBetween } from "../lib/utils";
 
 type NodeGroup = {
-    hasDestructuredImport: boolean;
-    imports: Rule.Node[];
-    targetClosingBracePosition?: number;
-    targetFromPosition: number;
+    "hasDestructuredImport": boolean;
+    "imports": Rule.Node[];
+    "targetClosingBracePosition"?: number;
+    "targetFromPosition": number;
 };
 
 export default {

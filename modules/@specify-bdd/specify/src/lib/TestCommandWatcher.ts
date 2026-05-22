@@ -15,8 +15,8 @@ import { config            } from "@/config/all";
 import type { TestCommand, TestCommandArguments } from "./TestCommand";
 
 export interface TestCommandWatcherOptions {
-    debounceMs?: number;
-    packageName?: string;
+    "debounceMs"?: number;
+    "packageName"?: string;
 }
 
 const PACKAGE_NAME = "@specify-bdd/specify";

@@ -69,15 +69,15 @@ export interface WaitForOptions {
     /**
      * The error thrown on timeout.
      */
-    error?: Error;
+    "error"?: Error;
 
     /**
      * Time to wait after a predicate returns before calling it again, in milliseconds.
      */
-    interval?: number;
+    "interval"?: number;
 
     /**
      * Maximum time to wait before giving up, in milliseconds.
      */
-    timeout?: number;
+    "timeout"?: number;
 }

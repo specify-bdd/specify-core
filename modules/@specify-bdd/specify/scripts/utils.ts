@@ -8,7 +8,7 @@ import path                    from "node:path";
 import type { SourceFile } from "ts-morph";
 
 export type InterfaceExportOptions = {
-    outputFile: string;
+    "outputFile": string;
 };
 
 /**

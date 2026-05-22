@@ -81,7 +81,7 @@ async function startWatcher(watcher: TestCommandWatcher, args: TestCommandArgume
 describe("TestCommandWatcher", () => {
     let mockCommand: TestCommand;
     let watcher: TestCommandWatcher;
-    let mockWatcherInstance: { on: ReturnType<typeof vi.fn> };
+    let mockWatcherInstance: { "on": ReturnType<typeof vi.fn> };
 
     // helper functions for tests
     const getFileChangeHandler = () => {

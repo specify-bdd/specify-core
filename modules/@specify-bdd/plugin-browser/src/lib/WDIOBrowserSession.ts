@@ -209,7 +209,7 @@ export class WDIOBrowserSession implements BrowserSession {
      *
      * @returns The current window dimensions in pixels
      */
-    async getWindowSize(): Promise<{ width: number; height: number }> {
+    async getWindowSize(): Promise<{ "width": number; "height": number }> {
         return this.#driver!.getWindowSize();
     }
 

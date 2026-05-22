@@ -8,9 +8,9 @@ type DirMaker = (path: string) => Promise<string>;
 type Reader = (path: string) => Promise<string>;
 
 interface LoggerOptions {
-    deleter?: Deleter;
-    dirMaker?: DirMaker;
-    reader?: Reader;
+    "deleter"?: Deleter;
+    "dirMaker"?: DirMaker;
+    "reader"?: Reader;
 }
 
 /**

@@ -1,5 +1,5 @@
 export type TimeConfig = {
-    implicitWait?: number;
+    "implicitWait"?: number;
 };
 
 export const time: TimeConfig = {
