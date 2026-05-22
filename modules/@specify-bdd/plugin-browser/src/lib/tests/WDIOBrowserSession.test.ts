@@ -418,7 +418,7 @@ describe("WDIOBrowserSession", () => {
             expect(session.activeTab?.handle).toBe("handle-1");
         });
 
-        it("closing the first active tab wraps activeTab to the last tab", async () => {
+        it("wraps activeTab to the last position when the active first tab is closed", async () => {
             const session = await startWithTabs(3); // tabs: h0, h1, h2 — active: h2
 
             await session.switchToTab(0); // make h0 (index 0) active

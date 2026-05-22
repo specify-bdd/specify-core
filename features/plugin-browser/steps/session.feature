@@ -39,6 +39,10 @@ Feature: Browser Session Step Definitions
             And another chrome browser session
             And another chrome browser session
 
+        Scenario: Switching to a session by ordinal index makes it the active session
+            When the user switches to the 2nd browser session
+            Then the 2nd browser session should be active
+
         Scenario: Switching to the next session makes it the active session
             When the user switches to the 1st browser session
             And switches to the next browser session
@@ -56,7 +60,3 @@ Feature: Browser Session Step Definitions
             When the user switches to the 1st browser session
             And switches to the previous browser session
             Then the 3rd browser session should be active
-
-        Scenario: Switching to a session by ordinal index makes it the active session
-            When the user switches to the 2nd browser session
-            Then the 2nd browser session should be active
