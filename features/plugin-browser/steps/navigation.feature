@@ -24,3 +24,18 @@ Feature: Browser Navigation Step Definitions
             Given that the user is at the URL https://example.com
             When the user refreshes the page
             Then the browser URL should be https://example.com
+
+    Rule: The user can navigate browser history
+
+        Scenario: Clicking the back button navigates to the previous page
+            Given that the user is at the URL https://example.com
+            When the user goes to the URL https://example.org
+            And clicks the browser's back button
+            Then the browser URL should be https://example.com
+
+        Scenario: Clicking the forward button navigates to the next page
+            Given that the user is at the URL https://example.com
+            When the user goes to the URL https://example.org
+            And clicks the browser's back button
+            And clicks the browser's forward button
+            Then the browser URL should be https://example.org

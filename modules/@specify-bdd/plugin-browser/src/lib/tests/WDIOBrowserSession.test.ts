@@ -5,8 +5,10 @@ import { WDIOBrowserSession } from "@/lib/WDIOBrowserSession";
 vi.mock("webdriverio");
 
 const mockDriver = {
+    "back":            vi.fn(),
     "closeWindow":     vi.fn(),
     "deleteSession":   vi.fn(),
+    "forward":         vi.fn(),
     "getWindowHandle": vi.fn(),
     "getWindowSize":   vi.fn(),
     "newWindow":       vi.fn(),
@@ -682,6 +684,36 @@ describe("WDIOBrowserSession", () => {
             await session.refresh();
 
             expect(mockDriver.refresh).toHaveBeenCalledOnce();
+        });
+    });
+
+    describe("back()", () => {
+        it("calls driver.back()", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.back();
+
+            expect(mockDriver.back).toHaveBeenCalledOnce();
+        });
+    });
+
+    describe("forward()", () => {
+        it("calls driver.forward()", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.forward();
+
+            expect(mockDriver.forward).toHaveBeenCalledOnce();
         });
     });
 });

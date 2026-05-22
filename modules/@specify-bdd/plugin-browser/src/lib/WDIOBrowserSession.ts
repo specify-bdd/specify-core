@@ -237,6 +237,20 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
+     * Navigate back to the previous page in the browser history.
+     */
+    async back(): Promise<void> {
+        await this.#driver!.back();
+    }
+
+    /**
+     * Navigate forward to the next page in the browser history.
+     */
+    async forward(): Promise<void> {
+        await this.#driver!.forward();
+    }
+
+    /**
      * Find a tab by 0-based index or by name.
      *
      * @param selector - A 0-based index or a tab name
