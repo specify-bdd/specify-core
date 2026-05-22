@@ -127,4 +127,9 @@ export interface BrowserSession {
      * Return the current URL of the active browser tab.
      */
     getURL(): Promise<string>;
+
+    /**
+     * Reload the current page in the active browser tab.
+     */
+    refresh(): Promise<void>;
 }

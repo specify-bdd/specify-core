@@ -230,6 +230,13 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
+     * Reload the current page in the active browser tab.
+     */
+    async refresh(): Promise<void> {
+        await this.#driver!.refresh();
+    }
+
+    /**
      * Find a tab by 0-based index or by name.
      *
      * @param selector - A 0-based index or a tab name
