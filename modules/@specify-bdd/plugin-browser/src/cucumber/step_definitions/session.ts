@@ -30,6 +30,23 @@ export function register(): void {
     );
 
     defineStep("Then there should be {int} (open )browser session(s)", verifySessionCount);
+
+    defineStep("Then the {ordinal} browser session should be active", verifyActiveSession);
+
+    defineStep(
+        "When [I switch/the user switches] to the next browser( session)",
+        switchToNextSession,
+    );
+
+    defineStep(
+        "When [I switch/the user switches] to the previous browser( session)",
+        switchToPreviousSession,
+    );
+
+    defineStep(
+        "When [I switch/the user switches] to the {ordinal} browser( session)",
+        switchToSessionByIndex,
+    );
 }
 
 /**
@@ -72,4 +89,43 @@ export async function endBrowserSession(): Promise<void> {
  */
 export function verifySessionCount(count: number): void {
     assert.equal(this.browser.manager.sessions.length, count);
+}
+
+/**
+ * Assert that the session at the given 1-based ordinal position is the active
+ * browser session.
+ *
+ * @param index - The 1-based ordinal position of the expected active session
+ */
+export function verifyActiveSession(index: number): void {
+    const session = this.browser.manager.sessions[index - 1];
+
+    assert.ok(session, `No browser session at position ${index}.`);
+    assert.equal(this.browser.manager.activeSession, session);
+}
+
+/**
+ * Switch the active browser session to the next one, wrapping to the first
+ * session when the current session is the last.
+ */
+export function switchToNextSession(): void {
+    this.browser.manager.switchToNextSession();
+}
+
+/**
+ * Switch the active browser session to the previous one, wrapping to the last
+ * session when the current session is the first.
+ */
+export function switchToPreviousSession(): void {
+    this.browser.manager.switchToPreviousSession();
+}
+
+/**
+ * Switch the active browser session to the session at the given 1-based
+ * ordinal position.
+ *
+ * @param index - The 1-based ordinal position of the target session
+ */
+export function switchToSessionByIndex(index: number): void {
+    this.browser.manager.switchToSession(index - 1);
 }
