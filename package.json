@@ -27,6 +27,7 @@
         "type-check:watch": "rimraf **/dist/tsconfig.tsbuildinfo && tsc -b --noEmit --watch"
     },
     "dependencies": {
+        "@specify-bdd/plugin-browser": "workspace:*",
         "@specify-bdd/plugin-cli": "workspace:*",
         "@specify-bdd/quick-ref": "workspace:*",
         "@specify-bdd/specify": "workspace:*"

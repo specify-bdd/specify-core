@@ -27,5 +27,7 @@
             "\\.ts$"
         ]
     },
-    "plugins": [ "@specify-bdd/plugin-cli" ]
+    "plugins": [
+        "@specify-bdd/plugin-cli", "@specify-bdd/plugin-browser" 
+    ]
 }

@@ -47,12 +47,19 @@ jobs:
       - name: Audit
         if: ${{ inputs.audit == true }}
         run: pnpm audit --prod --audit-level=moderate
+      - name: Setup Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v2
+        with:
+          install-chromedriver: true
       - name: Generate types
         run: pnpm generate-types
       - name: Build
         run: pnpm build
       - name: Test
         run: pnpm test
+        env:
+          CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
       - name: Upload build artifacts
         if: ${{ inputs.store_artifacts == true }}
         uses: actions/upload-artifact@v6

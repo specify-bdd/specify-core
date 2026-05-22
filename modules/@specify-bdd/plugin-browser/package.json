@@ -1,0 +1,38 @@
+{
+  "name": "@specify-bdd/plugin-browser",
+  "version": "0.4.0",
+  "description": "A plugin for Specify BDD adding browser testing support.",
+  "type": "module",
+  "contributors": [
+    "Adam Lacoste"
+  ],
+  "license": "MIT",
+  "exports": {
+    ".": "./dist/main.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json && tsc-alias --resolve-full-paths",
+    "generate-docs": "typedoc --options typedoc.json",
+    "test:unit": "vitest run"
+  },
+  "dependencies": {
+    "@specify-bdd/specify": "workspace:*",
+    "webdriverio": "^9"
+  },
+  "devDependencies": {
+    "@wdio/types": "^9",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specify-bdd/specify-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/specify-bdd/specify-core/issues"
+  },
+  "homepage": "https://github.com/specify-bdd/specify-core#readme"
+}
