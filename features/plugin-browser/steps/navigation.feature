@@ -16,6 +16,10 @@ Feature: Browser Navigation Step Definitions
 
     Rule: The user can refresh the current page
 
+        # TODO: This scenario only verifies we stay on the same URL, which a no-op
+        # implementation would also satisfy.  Revisit once we have a test page that
+        # can expose page-load counts (e.g. via a cookie or DOM element), so that
+        # we can assert the page was actually reloaded.
         Scenario: Refreshing the page reloads the current URL
             Given that the user is at the URL https://example.com
             When the user refreshes the page
