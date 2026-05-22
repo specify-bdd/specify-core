@@ -12,6 +12,7 @@ const mockDriver = {
     "newWindow":       vi.fn(),
     "setWindowSize":   vi.fn(),
     "switchToWindow":  vi.fn(),
+    "url":             vi.fn(),
 };
 
 beforeEach(() => {
@@ -650,6 +651,21 @@ describe("WDIOBrowserSession", () => {
             const size = await session.getWindowSize();
 
             expect(size).toEqual({ "width": 1280, "height": 720 });
+        });
+    });
+
+    describe("navigateTo()", () => {
+        it("calls driver.url() with the href of the provided URL object", async () => {
+            const { remote } = await import("webdriverio");
+
+            vi.mocked(remote).mockResolvedValue(mockDriver as never);
+
+            const session = new WDIOBrowserSession();
+
+            await session.start({ "browser": "chrome" });
+            await session.navigateTo(new URL("https://example.com/path?q=1"));
+
+            expect(mockDriver.url).toHaveBeenCalledWith("https://example.com/path?q=1");
         });
     });
 });

@@ -25,4 +25,10 @@ export function register(): void {
         },
         "useForSnippets": false,
     });
+
+    defineParamType({
+        "name":        "url",
+        "regexp":      /[^\s]+/,
+        "transformer": (value: string) => new URL(value),
+    });
 }

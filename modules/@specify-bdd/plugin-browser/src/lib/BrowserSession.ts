@@ -115,4 +115,16 @@ export interface BrowserSession {
      * @returns The current window dimensions in pixels
      */
     getWindowSize(): Promise<{ width: number; height: number }>;
+
+    /**
+     * Navigate the active browser tab to the given URL.
+     *
+     * @param url - The URL to navigate to
+     */
+    navigateTo(url: URL): Promise<void>;
+
+    /**
+     * Return the current URL of the active browser tab.
+     */
+    getURL(): Promise<string>;
 }

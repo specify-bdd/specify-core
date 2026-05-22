@@ -214,6 +214,22 @@ export class WDIOBrowserSession implements BrowserSession {
     }
 
     /**
+     * Navigate the active browser tab to the given URL.
+     *
+     * @param url - The URL to navigate to
+     */
+    async navigateTo(url: URL): Promise<void> {
+        await this.#driver!.url(url.href);
+    }
+
+    /**
+     * Return the current URL of the active browser tab.
+     */
+    async getURL(): Promise<string> {
+        return this.#driver!.getUrl();
+    }
+
+    /**
      * Find a tab by 0-based index or by name.
      *
      * @param selector - A 0-based index or a tab name
