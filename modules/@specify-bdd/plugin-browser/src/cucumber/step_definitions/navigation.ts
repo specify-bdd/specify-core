@@ -22,7 +22,8 @@ export function register(): void {
     defineStep(
         [
             "When [I click/the user clicks] the browser's refresh/reload button",
-            "When [I refresh/reload/the user refreshes/reloads] the page",
+            "When [I refresh/the user refreshes] the page",
+            "When [I reload/the user reloads] the page",
         ],
         refreshPage,
     );
