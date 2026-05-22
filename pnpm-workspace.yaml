@@ -1,4 +1,7 @@
 packages:
   - modules/@specify-bdd/*
+
 onlyBuiltDependencies:
+  - edgedriver
   - esbuild
+  - geckodriver

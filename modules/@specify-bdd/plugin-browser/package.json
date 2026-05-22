@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@specify-bdd/specify": "workspace:*",
-    "webdriverio": "^9"
+    "webdriverio": "^9.27.1"
   },
   "devDependencies": {
     "@wdio/types": "^9",
