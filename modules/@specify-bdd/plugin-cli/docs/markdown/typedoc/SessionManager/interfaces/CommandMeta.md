@@ -6,7 +6,7 @@
 
 # Interface: CommandMeta
 
-Defined in: [SessionManager.ts:17](https://github.com/specify-bdd/specify-core/blob/920dfd7f743db924ec53105594e27d6e91321637/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L17)
+Defined in: [SessionManager.ts:17](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L17)
 
 A metadata object representing one executed command.
 
@@ -16,7 +16,7 @@ A metadata object representing one executed command.
 
 > **command**: `string`
 
-Defined in: [SessionManager.ts:18](https://github.com/specify-bdd/specify-core/blob/920dfd7f743db924ec53105594e27d6e91321637/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L18)
+Defined in: [SessionManager.ts:18](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L18)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [SessionManager.ts:18](https://github.com/specify-bdd/specify-core/b
 
 > `optional` **delimiter**: `Delimiter`
 
-Defined in: [SessionManager.ts:19](https://github.com/specify-bdd/specify-core/blob/920dfd7f743db924ec53105594e27d6e91321637/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L19)
+Defined in: [SessionManager.ts:19](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L19)
 
 ***
 
@@ -32,7 +32,15 @@ Defined in: [SessionManager.ts:19](https://github.com/specify-bdd/specify-core/b
 
 > `optional` **exitCode**: `number`
 
-Defined in: [SessionManager.ts:20](https://github.com/specify-bdd/specify-core/blob/920dfd7f743db924ec53105594e27d6e91321637/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L20)
+Defined in: [SessionManager.ts:20](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L20)
+
+***
+
+### hidden?
+
+> `optional` **hidden**: `boolean`
+
+Defined in: [SessionManager.ts:21](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L21)
 
 ***
 
@@ -40,7 +48,7 @@ Defined in: [SessionManager.ts:20](https://github.com/specify-bdd/specify-core/b
 
 > **output**: [`OutputMeta`](OutputMeta.md)[]
 
-Defined in: [SessionManager.ts:21](https://github.com/specify-bdd/specify-core/blob/920dfd7f743db924ec53105594e27d6e91321637/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L21)
+Defined in: [SessionManager.ts:22](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L22)
 
 ***
 
@@ -48,7 +56,7 @@ Defined in: [SessionManager.ts:21](https://github.com/specify-bdd/specify-core/b
 
 > `optional` **promise**: `Promise`\<`CommandMeta`\>
 
-Defined in: [SessionManager.ts:22](https://github.com/specify-bdd/specify-core/blob/920dfd7f743db924ec53105594e27d6e91321637/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L22)
+Defined in: [SessionManager.ts:23](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L23)
 
 ***
 
@@ -56,7 +64,7 @@ Defined in: [SessionManager.ts:22](https://github.com/specify-bdd/specify-core/b
 
 > `optional` **reject**: (`err`) => `void`
 
-Defined in: [SessionManager.ts:23](https://github.com/specify-bdd/specify-core/blob/920dfd7f743db924ec53105594e27d6e91321637/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L23)
+Defined in: [SessionManager.ts:24](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L24)
 
 #### Parameters
 
@@ -74,7 +82,7 @@ Defined in: [SessionManager.ts:23](https://github.com/specify-bdd/specify-core/b
 
 > `optional` **resolve**: (`cmdMeta`) => `void`
 
-Defined in: [SessionManager.ts:24](https://github.com/specify-bdd/specify-core/blob/920dfd7f743db924ec53105594e27d6e91321637/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L24)
+Defined in: [SessionManager.ts:25](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L25)
 
 #### Parameters
 
@@ -92,7 +100,7 @@ Defined in: [SessionManager.ts:24](https://github.com/specify-bdd/specify-core/b
 
 > `optional` **timeEnd**: `number`
 
-Defined in: [SessionManager.ts:25](https://github.com/specify-bdd/specify-core/blob/920dfd7f743db924ec53105594e27d6e91321637/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L25)
+Defined in: [SessionManager.ts:26](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L26)
 
 ***
 
@@ -100,4 +108,4 @@ Defined in: [SessionManager.ts:25](https://github.com/specify-bdd/specify-core/b
 
 > `optional` **timeStart**: `number`
 
-Defined in: [SessionManager.ts:26](https://github.com/specify-bdd/specify-core/blob/920dfd7f743db924ec53105594e27d6e91321637/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L26)
+Defined in: [SessionManager.ts:27](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L27)

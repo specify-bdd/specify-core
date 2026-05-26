@@ -17,6 +17,7 @@
 ## Interfaces
 
 - [CommandMeta](interfaces/CommandMeta.md)
+- [CommandOptions](interfaces/CommandOptions.md)
 - [OutputMeta](interfaces/OutputMeta.md)
 - [SessionManagerOptions](interfaces/SessionManagerOptions.md)
 - [SessionMeta](interfaces/SessionMeta.md)
