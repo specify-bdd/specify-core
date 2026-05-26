@@ -142,6 +142,7 @@ describe("WDIOBrowserSession", () => {
             const { remote } = await import("webdriverio");
 
             vi.mocked(remote).mockResolvedValue(mockDriver as never);
+            vi.stubEnv("CHROME_PATH", "");
 
             const session = new WDIOBrowserSession();
 
