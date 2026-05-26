@@ -59,6 +59,7 @@ jobs:
       - name: Test
         run: pnpm test
         env:
+          CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
           CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
       - name: Upload build artifacts
         if: ${{ inputs.store_artifacts == true }}

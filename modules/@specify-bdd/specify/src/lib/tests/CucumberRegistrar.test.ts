@@ -50,7 +50,8 @@ describe("registerSupportCode", () => {
 
         await registerSupportCode(REGISTER_DIR, loader);
 
-        expect(calls.sort()).toEqual(["stepdefs", "support"]);
+        // step_definitions sorts before support, so "stepdefs" is called first
+        expect(calls).toEqual(["stepdefs", "support"]);
     });
 
     test("invokes multiple modules within a single directory", async () => {
@@ -59,7 +60,18 @@ describe("registerSupportCode", () => {
 
         await registerSupportCode(REGISTER_DIR, loader);
 
-        expect(calls.sort()).toEqual(["first", "second"]);
+        expect(calls).toEqual(["first", "second"]);
+    });
+
+    test("invokes modules in sorted path order regardless of glob return order", async () => {
+        // Add z_module first (so the glob mock returns it first), then a_module
+        addModule(SUPPORT_DIR, "z_module", fakeModule("z_module"));
+        addModule(SUPPORT_DIR, "a_module", fakeModule("a_module"));
+
+        await registerSupportCode(REGISTER_DIR, loader);
+
+        // a_module has a lower sorted path so it must be registered first
+        expect(calls).toEqual(["a_module", "z_module"]);
     });
 
     test("throws when a module is missing a register export", async () => {
