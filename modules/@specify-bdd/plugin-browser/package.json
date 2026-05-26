@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig.build.json && tsc-alias --resolve-full-paths",
-    "generate-docs": "typedoc --options typedoc.json",
+    "generate-docs": "tsx ../../../scripts/generate-step-docs.ts && typedoc --options typedoc.json",
     "test:unit": "vitest run"
   },
   "dependencies": {
