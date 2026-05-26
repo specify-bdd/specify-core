@@ -38,5 +38,13 @@ jobs:
       - name: Update submodule code
         run: git fetch origin --tags && git switch -d ${{ inputs.git_tag }}
         working-directory: ./specify
+      - name: Setup Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v2
+        with:
+          install-chromedriver: true
       - name: Run test suite
         run: npx specify test specify/features
+        env:
+          CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+          CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
