@@ -35,8 +35,11 @@ export interface ModuleLoader {
  * `cucumber/` directory, except modules under `cucumber/register/`.
  *
  * @remarks
- * Modules are imported and registered in parallel; load order is not
- * significant.
+ * Modules are imported and registered in sorted path order to guarantee
+ * a consistent, deterministic registration sequence.  This is critical for
+ * Cucumber's parallel mode: workers assign step-definition IDs by index
+ * position, so every process (main + workers) must produce the same ordering
+ * or IDs will be mismatched and expression matching will fail.
  *
  * @param registerScriptDir - The absolute path of the directory containing
  *                            the package's `register` script (typically passed
@@ -55,19 +58,17 @@ export async function registerSupportCode(
 ): Promise<void> {
     const cucumberDir = path.dirname(registerScriptDir);
 
-    const modulePaths = await loader.glob(path.join(cucumberDir, MODULE_GLOB));
+    const modulePaths = (await loader.glob(path.join(cucumberDir, MODULE_GLOB))).sort();
 
-    await Promise.all(
-        modulePaths.map(async (modulePath) => {
-            const mod = (await loader.loadModule(modulePath)) as Partial<RegisterableModule>;
+    for (const modulePath of modulePaths) {
+        const mod = (await loader.loadModule(modulePath)) as Partial<RegisterableModule>;
 
-            if (typeof mod.register !== "function") {
-                throw new Error(
-                    `Cucumber module at ${modulePath} does not export a register() function.`,
-                );
-            }
+        if (typeof mod.register !== "function") {
+            throw new Error(
+                `Cucumber module at ${modulePath} does not export a register() function.`,
+            );
+        }
 
-            await mod.register();
-        }),
-    );
+        await mod.register();
+    }
 }
