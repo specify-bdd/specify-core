@@ -1,6 +1,6 @@
 {
   "name": "@specify-bdd/plugin-browser",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A plugin for Specify BDD adding browser testing support.",
   "type": "module",
   "contributors": [

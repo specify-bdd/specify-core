@@ -6,7 +6,7 @@
 
 # Interface: TestCommandWatcherOptions
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts:17](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L17)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts:17](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L17)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts:17](http
 
 > `optional` **debounceMs**: `number`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts:18](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L18)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts:18](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L18)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts:18](http
 
 > `optional` **packageName**: `string`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts:19](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L19)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts:19](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommandWatcher.ts#L19)

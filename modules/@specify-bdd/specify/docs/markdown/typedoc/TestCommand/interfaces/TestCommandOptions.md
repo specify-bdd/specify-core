@@ -6,7 +6,7 @@
 
 # Interface: TestCommandOptions
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:51](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L51)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:51](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L51)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:51](https://git
 
 > `optional` **cucumber**: `Partial`\<`IConfiguration`\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:52](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L52)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:52](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L52)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:52](https://git
 
 > `optional` **debug**: `boolean`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:18](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/specify/src/lib/Command.ts#L18)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:18](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/Command.ts#L18)
 
 #### Inherited from
 
@@ -38,7 +38,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:18](https://github.
 
 > `optional` **gherkinPaths**: `string`[]
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:53](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L53)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:53](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L53)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:53](https://git
 
 > `optional` **logPath**: `string`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:19](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/specify/src/lib/Command.ts#L19)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:19](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/Command.ts#L19)
 
 #### Inherited from
 
@@ -58,7 +58,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:19](https://github.
 
 > `optional` **plugins**: `string`[]
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:54](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L54)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:54](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L54)
 
 ***
 
@@ -66,4 +66,4 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:54](https://git
 
 > `optional` **testExecutionContextPath**: `string`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:55](https://github.com/specify-bdd/specify-core/blob/21f5826087c042384def43d419ce475dc993027a/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L55)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:55](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L55)
