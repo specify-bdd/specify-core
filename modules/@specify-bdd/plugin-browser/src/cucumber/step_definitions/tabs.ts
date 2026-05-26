@@ -17,7 +17,7 @@ interface WorldWithBrowser {
 }
 
 export function register(): void {
-    defineStep("When [I open/the user opens] a/another new browser tab", openNewTab);
+    defineStep("When [I open/the user opens] a/another new browser tab", openUnnamedTab);
 
     defineStep(
         "When [I open/the user opens] a/another new browser tab named {string}",
@@ -39,12 +39,12 @@ export function register(): void {
             "When [I switch/the user switches] browser tabs",
             "When [I switch/the user switches] to the next browser tab",
         ],
-        switchToNextBrowserTab,
+        switchToNextTab,
     );
 
     defineStep(
         "When [I switch/the user switches] to the previous browser tab",
-        switchToPreviousBrowserTab,
+        switchToPreviousTab,
     );
 
     defineStep(
@@ -52,16 +52,16 @@ export function register(): void {
         switchToTabByOrdinal,
     );
 
-    defineStep("When [I switch/the user switches] to the last browser tab", switchToLastBrowserTab);
+    defineStep("When [I switch/the user switches] to the last browser tab", switchToLastTab);
 
     defineStep(
         "When [I switch/the user switches] to the browser tab named {string}",
         switchToTabByName,
     );
 
-    defineStep("Then the {ordinal} browser tab should be active", verifyTabByOrdinalIsActive);
+    defineStep("Then the {ordinal} browser tab should be active", verifyActiveTabByOrdinal);
 
-    defineStep("Then the browser tab named {string} should be active", verifyTabByNameIsActive);
+    defineStep("Then the browser tab named {string} should be active", verifyActiveTabByName);
 }
 
 // ---------------------------------------------------------------------------
@@ -73,7 +73,7 @@ export function register(): void {
  *
  * @throws AssertionError If there is no active browser session.
  */
-export async function openNewTab(this: WorldWithBrowser): Promise<void> {
+export async function openUnnamedTab(this: WorldWithBrowser): Promise<void> {
     await openTab.call(this);
 }
 
@@ -131,24 +131,6 @@ export async function closeTabByName(this: WorldWithBrowser, name: string): Prom
 }
 
 /**
- * Switch to the next browser tab, wrapping to the first when the current tab is the last.
- *
- * @throws AssertionError If there is no active browser session.
- */
-export async function switchToNextBrowserTab(this: WorldWithBrowser): Promise<void> {
-    await switchToNextTab.call(this);
-}
-
-/**
- * Switch to the previous browser tab, wrapping to the last when the current tab is the first.
- *
- * @throws AssertionError If there is no active browser session.
- */
-export async function switchToPreviousBrowserTab(this: WorldWithBrowser): Promise<void> {
-    await switchToPreviousTab.call(this);
-}
-
-/**
  * Switch to the browser tab at the given 1-based ordinal position.
  *
  * @param index - The 1-based position of the tab to switch to
@@ -164,7 +146,7 @@ export async function switchToTabByOrdinal(this: WorldWithBrowser, index: number
  *
  * @throws AssertionError If there is no active browser session.
  */
-export async function switchToLastBrowserTab(this: WorldWithBrowser): Promise<void> {
+export async function switchToLastTab(this: WorldWithBrowser): Promise<void> {
     assert.ok(
         this.browser.manager.activeSession,
         new AssertionError({ "message": "No active browser session." }),
@@ -192,7 +174,7 @@ export async function switchToTabByName(this: WorldWithBrowser, name: string): P
  * @throws AssertionError If there is no active browser session.
  * @throws AssertionError If the active tab does not match the expected position.
  */
-export function verifyTabByOrdinalIsActive(this: WorldWithBrowser, index: number): void {
+export function verifyActiveTabByOrdinal(this: WorldWithBrowser, index: number): void {
     verifyActiveTab.call(this, index - 1);
 }
 
@@ -204,13 +186,9 @@ export function verifyTabByOrdinalIsActive(this: WorldWithBrowser, index: number
  * @throws AssertionError If there is no active browser session.
  * @throws AssertionError If the active tab does not have the expected name.
  */
-export function verifyTabByNameIsActive(this: WorldWithBrowser, name: string): void {
+export function verifyActiveTabByName(this: WorldWithBrowser, name: string): void {
     verifyActiveTab.call(this, name);
 }
-
-// ---------------------------------------------------------------------------
-// Implementation helpers
-// ---------------------------------------------------------------------------
 
 /**
  * Assert the number of tabs open in the active session.
