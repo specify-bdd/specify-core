@@ -31,16 +31,16 @@ importers:
   .:
     dependencies:
       '@specify-bdd/plugin-browser':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:modules/@specify-bdd/plugin-browser
       '@specify-bdd/plugin-cli':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:modules/@specify-bdd/plugin-cli
       '@specify-bdd/quick-ref':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:modules/@specify-bdd/quick-ref
       '@specify-bdd/specify':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:modules/@specify-bdd/specify
     devDependencies:
       '@eslint/js':
@@ -53,7 +53,7 @@ importers:
         specifier: ^0.17.1
         version: 0.17.1
       '@specify-bdd/eslint-plugin':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:modules/@specify-bdd/eslint-plugin
       '@stylistic/eslint-plugin-js':
         specifier: ^4.4.1
@@ -156,7 +156,7 @@ importers:
   modules/@specify-bdd/plugin-browser:
     dependencies:
       '@specify-bdd/specify':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../specify
       webdriverio:
         specifier: ^9
@@ -175,7 +175,7 @@ importers:
   modules/@specify-bdd/plugin-cli:
     dependencies:
       '@specify-bdd/specify':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../specify
       ps-list:
         specifier: ^9.0.0
@@ -219,7 +219,7 @@ importers:
         specifier: ^12.7.0
         version: 12.7.0
       '@specify-bdd/quick-ref':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../quick-ref
       chalk:
         specifier: ^5.6.2
