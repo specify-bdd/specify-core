@@ -6,7 +6,7 @@
 
 # Interface: CommandOptions
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:17](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/Command.ts#L17)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:17](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/Command.ts#L17)
 
 ## Extended by
 
@@ -18,7 +18,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:17](https://github.
 
 > `optional` **debug**: `boolean`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:18](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/Command.ts#L18)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:18](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/Command.ts#L18)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:18](https://github.
 
 > `optional` **logPath**: `string`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:19](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/Command.ts#L19)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:19](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/Command.ts#L19)

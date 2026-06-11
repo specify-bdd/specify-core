@@ -6,7 +6,7 @@
 
 # Enumeration: IOStream
 
-Defined in: [SessionManager.ts:97](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L97)
+Defined in: [SessionManager.ts:97](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L97)
 
 A standard IO stream.
 
@@ -16,7 +16,7 @@ A standard IO stream.
 
 > **ANY**: `3`
 
-Defined in: [SessionManager.ts:101](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L101)
+Defined in: [SessionManager.ts:101](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L101)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [SessionManager.ts:101](https://github.com/specify-bdd/specify-core/
 
 > **STDERR**: `2`
 
-Defined in: [SessionManager.ts:100](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L100)
+Defined in: [SessionManager.ts:100](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L100)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [SessionManager.ts:100](https://github.com/specify-bdd/specify-core/
 
 > **STDIN**: `0`
 
-Defined in: [SessionManager.ts:98](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L98)
+Defined in: [SessionManager.ts:98](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L98)
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: [SessionManager.ts:98](https://github.com/specify-bdd/specify-core/b
 
 > **STDOUT**: `1`
 
-Defined in: [SessionManager.ts:99](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L99)
+Defined in: [SessionManager.ts:99](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L99)

@@ -6,7 +6,7 @@
 
 # Class: TestCommand
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:71](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L71)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:71](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L71)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:71](https://git
 
 > **new TestCommand**(`userOpts`): `TestCommand`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:102](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L102)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:102](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L102)
 
 Parse user arguments and options data to prepare operational parameters
 
@@ -44,7 +44,7 @@ User-supplied options
 
 > **cucumber**: `Partial`\<`IConfiguration`\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:75](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L75)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:75](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L75)
 
 A raw Cucumber configuration.
 
@@ -54,7 +54,7 @@ A raw Cucumber configuration.
 
 > **debug**: `boolean`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:44](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/Command.ts#L44)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:44](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/Command.ts#L44)
 
 Output debug info for this command.
 
@@ -68,7 +68,7 @@ Output debug info for this command.
 
 > **gherkinPaths**: `string`[]
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:80](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L80)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:80](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L80)
 
 A list of paths to Gherkin feature files this Command should execute.
 
@@ -78,7 +78,7 @@ A list of paths to Gherkin feature files this Command should execute.
 
 > **logPath**: `string`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:49](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/Command.ts#L49)
+Defined in: [modules/@specify-bdd/specify/src/lib/Command.ts:49](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/Command.ts#L49)
 
 The file system path to write log output to.
 
@@ -92,7 +92,7 @@ The file system path to write log output to.
 
 > **testExecutionContextPath**: `string`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:95](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L95)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:95](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L95)
 
 The context in which this command's test execution will take place.
 
@@ -102,7 +102,7 @@ The context in which this command's test execution will take place.
 
 > **execute**(`userArgs`): `Promise`\<[`TestCommandResult`](../interfaces/TestCommandResult.md)\>
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:131](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L131)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:131](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L131)
 
 Execute tests with Cucumber.  Consider a no-op result from Cucumber to
 be an error condition.

@@ -6,7 +6,7 @@
 
 # Interface: OutputMeta
 
-Defined in: [SessionManager.ts:55](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L55)
+Defined in: [SessionManager.ts:55](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L55)
 
 A metadata object representing a single chunk of output from a command.
 
@@ -16,7 +16,7 @@ A metadata object representing a single chunk of output from a command.
 
 > **output**: `string`
 
-Defined in: [SessionManager.ts:56](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L56)
+Defined in: [SessionManager.ts:56](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L56)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [SessionManager.ts:56](https://github.com/specify-bdd/specify-core/b
 
 > **stream**: [`IOStream`](../enumerations/IOStream.md)
 
-Defined in: [SessionManager.ts:57](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L57)
+Defined in: [SessionManager.ts:57](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L57)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [SessionManager.ts:57](https://github.com/specify-bdd/specify-core/b
 
 > **timestamp**: `number`
 
-Defined in: [SessionManager.ts:58](https://github.com/specify-bdd/specify-core/blob/7ca8aaa49e513e4ce7a17060b2bffd3701db5f36/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L58)
+Defined in: [SessionManager.ts:58](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L58)
