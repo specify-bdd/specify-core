@@ -20,7 +20,7 @@ jobs:
         with:
           ref: ${{ env.GIT_BRANCH }}
       - name: Setup PNPM
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           run_install: true
       - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
@@ -42,6 +42,7 @@ jobs:
     name: Publish package to NPM
     runs-on: ubuntu-${{ vars.UBUNTU_VERSION }}
     env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       GIT_BRANCH: main
     steps:
       - name: Check out repository code
@@ -49,7 +50,7 @@ jobs:
         with:
           ref: ${{ env.GIT_BRANCH }}
       - name: Setup PNPM
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           run_install: true
       - name: Setup Node.js ${{ vars.NODE_LTS_ACTIVE_VERSION }}
