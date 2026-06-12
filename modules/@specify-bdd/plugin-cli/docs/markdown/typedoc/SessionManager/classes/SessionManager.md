@@ -6,7 +6,7 @@
 
 # Class: SessionManager
 
-Defined in: [SessionManager.ts:110](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L110)
+Defined in: [SessionManager.ts:110](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L110)
 
 Session Manager
 
@@ -31,7 +31,7 @@ runs at a time, and tracks command output and exit code.
 
 > **get** **activeSession**(): [`SessionMeta`](../interfaces/SessionMeta.md)
 
-Defined in: [SessionManager.ts:124](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L124)
+Defined in: [SessionManager.ts:124](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L124)
 
 The managed session which is currently active
 
@@ -47,7 +47,7 @@ The managed session which is currently active
 
 > **get** **commandElapsedTime**(): `number`
 
-Defined in: [SessionManager.ts:131](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L131)
+Defined in: [SessionManager.ts:131](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L131)
 
 The elapsed time, in milliseconds, of the active session's last completed command.
 
@@ -63,7 +63,7 @@ The elapsed time, in milliseconds, of the active session's last completed comman
 
 > **get** **commandEndTime**(): `number`
 
-Defined in: [SessionManager.ts:138](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L138)
+Defined in: [SessionManager.ts:138](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L138)
 
 The end time of the active session's last completed command.
 
@@ -79,7 +79,7 @@ The end time of the active session's last completed command.
 
 > **get** **commandStartTime**(): `number`
 
-Defined in: [SessionManager.ts:145](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L145)
+Defined in: [SessionManager.ts:145](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L145)
 
 The start time of the active session's last completed command.
 
@@ -95,7 +95,7 @@ The start time of the active session's last completed command.
 
 > **get** **cwd**(): `string`
 
-Defined in: [SessionManager.ts:152](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L152)
+Defined in: [SessionManager.ts:152](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L152)
 
 The current working directory of the active session.
 
@@ -111,7 +111,7 @@ The current working directory of the active session.
 
 > **get** **exitCode**(): `number`
 
-Defined in: [SessionManager.ts:159](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L159)
+Defined in: [SessionManager.ts:159](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L159)
 
 The numeric exit code of the active session's last completed command.
 
@@ -127,7 +127,7 @@ The numeric exit code of the active session's last completed command.
 
 > **get** **output**(): `string`
 
-Defined in: [SessionManager.ts:167](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L167)
+Defined in: [SessionManager.ts:167](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L167)
 
 The output from the active session's last executed command. Whitespace is
 trimmed from both ends.
@@ -144,7 +144,7 @@ trimmed from both ends.
 
 > **get** **sessions**(): [`SessionMeta`](../interfaces/SessionMeta.md)[]
 
-Defined in: [SessionManager.ts:183](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L183)
+Defined in: [SessionManager.ts:183](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L183)
 
 The list of managed sessions
 
@@ -158,7 +158,7 @@ The list of managed sessions
 
 > **addSession**(`session`, `name?`, `cwd?`, `activate?`): [`SessionMeta`](../interfaces/SessionMeta.md)
 
-Defined in: [SessionManager.ts:196](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L196)
+Defined in: [SessionManager.ts:196](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L196)
 
 Adds a new managed session.
 
@@ -199,7 +199,7 @@ Activate the new session
 
 > **findSession**(`selector`): [`SessionMeta`](../interfaces/SessionMeta.md)
 
-Defined in: [SessionManager.ts:229](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L229)
+Defined in: [SessionManager.ts:229](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L229)
 
 Find the SessionMeta that matches the given selector.
 
@@ -228,7 +228,7 @@ If there is no matching session
 
 > **killAllSessions**(): `Promise`\<`void`\>
 
-Defined in: [SessionManager.ts:276](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L276)
+Defined in: [SessionManager.ts:276](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L276)
 
 Gracefully terminate all managed sessions.  Resolves once all sessions
 are fully closed.
@@ -243,7 +243,7 @@ are fully closed.
 
 > **killCommand**(`opts`, `signal`): `Promise`\<`void`\>
 
-Defined in: [SessionManager.ts:249](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L249)
+Defined in: [SessionManager.ts:249](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L249)
 
 Gracefully terminates the command in a managed session. Resolves once the command is killed.
 
@@ -269,7 +269,7 @@ Options to modify the behavior of killSession()
 
 > **killSession**(`opts`, `signal`): `Promise`\<`void`\>
 
-Defined in: [SessionManager.ts:261](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L261)
+Defined in: [SessionManager.ts:261](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L261)
 
 Gracefully terminates a managed session. Resolves once the session is
 fully closed.
@@ -296,7 +296,7 @@ Options to modify the behavior of killSession()
 
 > **removeSession**(`opts`): `void`
 
-Defined in: [SessionManager.ts:291](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L291)
+Defined in: [SessionManager.ts:291](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L291)
 
 Remove a managed session.
 
@@ -318,7 +318,7 @@ Options to modify the behavior of removeSession()
 
 > **run**(`command`, `opts`): [`CommandMeta`](../interfaces/CommandMeta.md)
 
-Defined in: [SessionManager.ts:324](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L324)
+Defined in: [SessionManager.ts:324](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L324)
 
 Executes a single command within a managed session.
 
@@ -359,7 +359,7 @@ If another command is already in progress
 
 > **sendInput**(`input`, `opts`): `void`
 
-Defined in: [SessionManager.ts:361](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L361)
+Defined in: [SessionManager.ts:361](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L361)
 
 Send input to the active (or specified) session. Will not automatically
 append a newline, so this can be used for interactive input.
@@ -388,7 +388,7 @@ Options to modify the behavior of sendInput()
 
 > **switchToNextSession**(): `void`
 
-Defined in: [SessionManager.ts:373](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L373)
+Defined in: [SessionManager.ts:373](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L373)
 
 Switch to the next session in the list.
 
@@ -406,7 +406,7 @@ If there is no next session, the first session in the list is activated.
 
 > **switchToSession**(`opts`): `void`
 
-Defined in: [SessionManager.ts:388](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L388)
+Defined in: [SessionManager.ts:388](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L388)
 
 Switch to the given session.
 
@@ -433,7 +433,7 @@ If the given session is invalid
 
 > **validateShell**(`shellType`): `Promise`\<`boolean`\>
 
-Defined in: [SessionManager.ts:403](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L403)
+Defined in: [SessionManager.ts:403](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L403)
 
 Validate the shell type of the active session.
 
@@ -457,7 +457,7 @@ Whether its the correct type or not
 
 > **waitForOutput**(`opts`): `Promise`\<[`OutputMeta`](../interfaces/OutputMeta.md)\>
 
-Defined in: [SessionManager.ts:422](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L422)
+Defined in: [SessionManager.ts:422](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L422)
 
 Wait for the last command in a managed session to produce output.
 
@@ -479,7 +479,7 @@ Options to modify the behavior of waitForOutput()
 
 > **waitForReturn**(`opts`): `Promise`\<[`CommandMeta`](../interfaces/CommandMeta.md)\>
 
-Defined in: [SessionManager.ts:446](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L446)
+Defined in: [SessionManager.ts:446](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/SessionManager.ts#L446)
 
 Wait for the last command in a managed session to return.
 

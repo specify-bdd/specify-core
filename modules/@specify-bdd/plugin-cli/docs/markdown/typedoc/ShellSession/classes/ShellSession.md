@@ -6,7 +6,7 @@
 
 # Class: ShellSession
 
-Defined in: [ShellSession.ts:16](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L16)
+Defined in: [ShellSession.ts:16](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L16)
 
 ## Implements
 
@@ -18,7 +18,7 @@ Defined in: [ShellSession.ts:16](https://github.com/specify-bdd/specify-core/blo
 
 > **new ShellSession**(`shellType`, `options`): `ShellSession`
 
-Defined in: [ShellSession.ts:29](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L29)
+Defined in: [ShellSession.ts:29](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L29)
 
 Creates a new interactive shell session.
 
@@ -51,7 +51,7 @@ environment variable for this session.
 
 > **killCommand**(`signal`): `Promise`\<`void`\>
 
-Defined in: [ShellSession.ts:40](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L40)
+Defined in: [ShellSession.ts:40](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L40)
 
 Gracefully terminates the current command process.
 
@@ -77,7 +77,7 @@ The system signal to pass to kill()
 
 > **killSession**(`signal`): `void`
 
-Defined in: [ShellSession.ts:53](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L53)
+Defined in: [ShellSession.ts:53](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L53)
 
 Gracefully terminates the shell session.
 
@@ -103,7 +103,7 @@ The system signal to pass to kill()
 
 > **onClose**(`callback`): `void`
 
-Defined in: [ShellSession.ts:62](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L62)
+Defined in: [ShellSession.ts:62](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L62)
 
 Registers a callback to be invoked when the shell session closes.
 
@@ -129,7 +129,7 @@ function to call when the shell session ends
 
 > **onError**(`callback`): `void`
 
-Defined in: [ShellSession.ts:71](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L71)
+Defined in: [ShellSession.ts:71](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L71)
 
 Registers a callback to handle error output from the shell session.
 
@@ -155,7 +155,7 @@ function that receives error data as a string
 
 > **onOutput**(`callback`): `void`
 
-Defined in: [ShellSession.ts:80](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L80)
+Defined in: [ShellSession.ts:80](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L80)
 
 Registers a callback to handle standard output from the shell session.
 
@@ -181,7 +181,7 @@ function that receives output data as a string.
 
 > **write**(`input`, `appendNewline`): `void`
 
-Defined in: [ShellSession.ts:91](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L91)
+Defined in: [ShellSession.ts:91](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/plugin-cli/src/lib/ShellSession.ts#L91)
 
 Writes input to the shell session's stdin. Also appends a newline
 to immediately run the input as a command by default.

@@ -6,7 +6,7 @@
 
 # Interface: TestCommandResultDebugInfo
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:62](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L62)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:62](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L62)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:62](https://git
 
 > `optional` **args**: [`TestCommandArguments`](TestCommandArguments.md)
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:63](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L63)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:63](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L63)
 
 #### Overrides
 
@@ -30,7 +30,7 @@ Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:63](https://git
 
 > `optional` **cucumber**: `object`
 
-Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:64](https://github.com/specify-bdd/specify-core/blob/633c1a6bfae0b89153193b977d47e39a3fb1605c/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L64)
+Defined in: [modules/@specify-bdd/specify/src/lib/TestCommand.ts:64](https://github.com/specify-bdd/specify-core/blob/080c97dfd02168d35a02bc314262f4663a80dcd5/modules/@specify-bdd/specify/src/lib/TestCommand.ts#L64)
 
 #### runConfiguration?
 
